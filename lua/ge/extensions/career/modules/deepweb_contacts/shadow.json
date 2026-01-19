@@ -1,0 +1,344 @@
+{
+  "id": "shadow",
+  "name": "Shadow",
+  "personality": "mysterious",
+  "specialty": "Untraceable parts and services",
+  "description": "Operates in complete secrecy, values operational security above all else",
+  "traits": {
+    "values": ["professional", "discrete", "efficient", "ruthless", "silent"],
+    "dislikes": ["careless", "talkative", "emotional", "trusting", "slow"],
+    "scoring": {
+      "professional": 3,
+      "discrete": 3,
+      "efficient": 2,
+      "ruthless": 2,
+      "silent": 3,
+      "careless": -3,
+      "talkative": -3,
+      "emotional": -2,
+      "trusting": -2,
+      "slow": -1
+    }
+  },
+  "rivals": ["ghost"],
+  "allies": [],
+  "neutral": ["techie", "muscle", "import"],
+  "confrontations": [
+    {
+      "trigger": "random",
+      "chance": 0.15,
+      "minTrust": 2,
+      "text": "Your operational security has been... lacking. Noticed?",
+      "responses": [
+        { "id": "a", "text": "I'll tighten up. What did you see?", "traits": ["professional", "efficient"], "points": 15 },
+        { "id": "b", "text": "I've been careful", "traits": ["defensive"], "points": -5 },
+        { "id": "c", "text": "It's fine, no one's watching", "traits": ["careless"], "points": -20 }
+      ]
+    },
+    {
+      "trigger": "random",
+      "chance": 0.12,
+      "minTrust": 3,
+      "text": "Ghost has been asking about our arrangement. Interesting.",
+      "responses": [
+        { "id": "a", "text": "He knows nothing. I keep my sources compartmentalized", "traits": ["discrete", "professional"], "points": 20 },
+        { "id": "b", "text": "I might have mentioned something", "traits": ["talkative"], "points": -25 },
+        { "id": "c", "text": "What's his problem?", "traits": ["emotional"], "points": -10 }
+      ]
+    },
+    {
+      "trigger": "random",
+      "chance": 0.18,
+      "minTrust": 4,
+      "text": "A mutual acquaintance disappeared last week. You know anything?",
+      "responses": [
+        { "id": "a", "text": "I don't know that person. Never did", "traits": ["discrete", "silent"], "points": 25 },
+        { "id": "b", "text": "What happened?", "traits": ["curious"], "points": 5 },
+        { "id": "c", "text": "Should I be worried?", "traits": ["emotional", "trusting"], "points": -15 }
+      ]
+    }
+  ],
+  "questionPools": {
+    "unknown": [
+      { "text": "...", "best": "a", "responses": [
+        { "id": "a", "text": "I was told you could help", "points": 10 },
+        { "id": "b", "text": "Need special parts", "points": 5 },
+        { "id": "c", "text": "Are you Shadow?", "points": -5 }
+      ]},
+      { "text": "You were sent. By whom?", "best": "b", "responses": [
+        { "id": "a", "text": "Can't remember", "points": -10, "next": "reject" },
+        { "id": "b", "text": "Someone who trusts you", "points": 15 },
+        { "id": "c", "text": "Does it matter?", "points": 0 }
+      ]},
+      { "text": "What do you want?", "best": "c", "responses": [
+        { "id": "a", "text": "Information", "points": -5 },
+        { "id": "b", "text": "Just looking", "points": -10, "next": "reject" },
+        { "id": "c", "text": "Parts that can't be traced", "points": 15 }
+      ]},
+      { "text": "How did you find this channel?", "best": "a", "responses": [
+        { "id": "a", "text": "Through the right people", "points": 15 },
+        { "id": "b", "text": "Accident", "points": -10, "next": "reject" },
+        { "id": "c", "text": "Online search", "points": -15, "next": "angry" }
+      ]},
+      { "text": "You're taking a risk contacting me.", "best": "b", "responses": [
+        { "id": "a", "text": "I know", "points": 10 },
+        { "id": "b", "text": "Calculated risk", "points": 15 },
+        { "id": "c", "text": "What risk?", "points": -5 }
+      ]},
+      { "text": "Turn around.", "best": "b", "responses": [
+        { "id": "a", "text": "Why?", "points": -5 },
+        { "id": "b", "text": "...Fine.", "points": 15 },
+        { "id": "c", "text": "No", "points": -15, "next": "reject" }
+      ]},
+      { "text": "What's in your pockets?", "best": "a", "responses": [
+        { "id": "a", "text": "Keys. Cash. Nothing else", "points": 15 },
+        { "id": "b", "text": "None of your business", "points": -10, "next": "reject" },
+        { "id": "c", "text": "Why do you need to know?", "points": -5 }
+      ]},
+      { "text": "You wearing a wire?", "best": "a", "responses": [
+        { "id": "a", "text": "Search me if you want", "points": 20 },
+        { "id": "b", "text": "Of course not", "points": 5 },
+        { "id": "c", "text": "What's a wire?", "points": -15, "next": "reject" }
+      ]}
+    ],
+    "acquaintance": [
+      { "text": "Can you keep quiet?", "best": "a", "responses": [
+        { "id": "a", "text": "Always", "points": 20 },
+        { "id": "b", "text": "Of course", "points": 10 },
+        { "id": "c", "text": "Depends", "points": -15, "next": "reject" }
+      ]},
+      { "text": "Police ever ask about your car?", "best": "a", "responses": [
+        { "id": "a", "text": "I stay off their radar", "points": 20 },
+        { "id": "b", "text": "Once or twice, nothing serious", "points": 10 },
+        { "id": "c", "text": "Yeah, but I cooperated", "points": -20, "next": "angry" }
+      ]},
+      { "text": "Your phone - is it clean?", "best": "a", "responses": [
+        { "id": "a", "text": "Burner, always", "points": 25 },
+        { "id": "b", "text": "I think so", "points": 0 },
+        { "id": "c", "text": "It's my regular phone", "points": -15, "next": "reject" }
+      ]},
+      { "text": "How do you prefer to communicate?", "best": "c", "responses": [
+        { "id": "a", "text": "Phone calls", "points": -10 },
+        { "id": "b", "text": "Text messages", "points": -5 },
+        { "id": "c", "text": "Encrypted channels only", "points": 20 }
+      ]},
+      { "text": "What's your alibi tonight?", "best": "b", "responses": [
+        { "id": "a", "text": "Don't need one", "points": 5 },
+        { "id": "b", "text": "Already prepared", "points": 20 },
+        { "id": "c", "text": "What do you mean?", "points": -10 }
+      ]},
+      { "text": "Anyone know you're here?", "best": "a", "responses": [
+        { "id": "a", "text": "No one", "points": 20 },
+        { "id": "b", "text": "One person I trust", "points": -5 },
+        { "id": "c", "text": "A few people", "points": -15, "next": "reject" }
+      ]},
+      { "text": "Ever been followed?", "best": "b", "responses": [
+        { "id": "a", "text": "All the time", "points": 0 },
+        { "id": "b", "text": "Once. Lost them easily", "points": 20 },
+        { "id": "c", "text": "I don't think so", "points": 5 }
+      ]},
+      { "text": "Payment method?", "best": "a", "responses": [
+        { "id": "a", "text": "Cash, crypto, or trade", "points": 20 },
+        { "id": "b", "text": "Bank transfer", "points": -20, "next": "angry" },
+        { "id": "c", "text": "PayPal", "points": -15, "next": "reject" }
+      ]},
+      { "text": "What happens if you get stopped with my goods?", "best": "a", "responses": [
+        { "id": "a", "text": "I handle it. You don't exist", "points": 25 },
+        { "id": "b", "text": "I'd figure something out", "points": 5 },
+        { "id": "c", "text": "I'd explain the situation", "points": -25, "next": "angry" }
+      ]},
+      { "text": "Know how to disappear?", "best": "a", "responses": [
+        { "id": "a", "text": "Multiple identities, multiple locations ready", "points": 20 },
+        { "id": "b", "text": "I could figure it out", "points": 5 },
+        { "id": "c", "text": "Never needed to", "points": 0 }
+      ]}
+    ],
+    "associate": [
+      { "text": "What do you do if something goes wrong?", "best": "a", "responses": [
+        { "id": "a", "text": "Handle it myself, no witnesses", "points": 25 },
+        { "id": "b", "text": "Disappear, start over", "points": 15 },
+        { "id": "c", "text": "Call for help", "points": -25, "next": "angry" }
+      ]},
+      { "text": "Ever dealt with hot parts before?", "best": "b", "responses": [
+        { "id": "a", "text": "Never", "points": 0 },
+        { "id": "b", "text": "Let's just say I know how to disappear VINs", "points": 20 },
+        { "id": "c", "text": "What's a hot part?", "points": -10, "next": "reject" }
+      ]},
+      { "text": "What's your escape plan?", "best": "c", "responses": [
+        { "id": "a", "text": "Don't have one", "points": -10 },
+        { "id": "b", "text": "Drive fast", "points": 5 },
+        { "id": "c", "text": "Multiple routes, multiple vehicles ready", "points": 20 }
+      ]},
+      { "text": "What happens if we're watched?", "best": "a", "responses": [
+        { "id": "a", "text": "We're not. I swept the area", "points": 20 },
+        { "id": "b", "text": "Abort mission", "points": 10 },
+        { "id": "c", "text": "Just act normal", "points": 0 }
+      ]},
+      { "text": "Your tools - clean?", "best": "a", "responses": [
+        { "id": "a", "text": "Serial numbers filed, no prints", "points": 20 },
+        { "id": "b", "text": "Should be", "points": 0 },
+        { "id": "c", "text": "They're just tools", "points": -10 }
+      ]},
+      { "text": "Can you be trusted?", "best": "b", "responses": [
+        { "id": "a", "text": "You'll have to find out", "points": 5 },
+        { "id": "b", "text": "My word is my bond in this world", "points": 20 },
+        { "id": "c", "text": "Mostly", "points": -10, "next": "reject" }
+      ]},
+      { "text": "Ever double-cross someone?", "best": "b", "responses": [
+        { "id": "a", "text": "When necessary", "points": -15, "next": "angry" },
+        { "id": "b", "text": "Never. Bad for business, worse for health", "points": 20 },
+        { "id": "c", "text": "Not yet", "points": 0 }
+      ]},
+      { "text": "Someone's asking questions about you. What do I say?", "best": "a", "responses": [
+        { "id": "a", "text": "Never heard of me. Deny everything", "points": 20 },
+        { "id": "b", "text": "Depends who's asking", "points": 10 },
+        { "id": "c", "text": "The truth", "points": -20, "next": "angry" }
+      ]},
+      { "text": "You know what a dead drop is?", "best": "a", "responses": [
+        { "id": "a", "text": "Location for untraceable exchanges. Essential", "points": 20 },
+        { "id": "b", "text": "Some kind of hiding spot?", "points": 5 },
+        { "id": "c", "text": "No", "points": -5 }
+      ]},
+      { "text": "What's the most important thing in this business?", "best": "c", "responses": [
+        { "id": "a", "text": "Money", "points": 0 },
+        { "id": "b", "text": "Connections", "points": 10 },
+        { "id": "c", "text": "Silence", "points": 25 }
+      ]},
+      { "text": "Heat's getting too high. What do you do?", "best": "b", "responses": [
+        { "id": "a", "text": "Keep operating", "points": -10 },
+        { "id": "b", "text": "Go dark. Wait it out", "points": 20 },
+        { "id": "c", "text": "Leave town", "points": 10 }
+      ]},
+      { "text": "A deal goes bad. Someone gets hurt. Now what?", "best": "a", "responses": [
+        { "id": "a", "text": "Clean the scene. Forget it happened", "points": 20 },
+        { "id": "b", "text": "Depends on who got hurt", "points": 5 },
+        { "id": "c", "text": "Call for help", "points": -20, "next": "angry" }
+      ]}
+    ],
+    "trusted": [
+      { "text": "Why should I trust you?", "best": "b", "responses": [
+        { "id": "a", "text": "You shouldn't fully. That's smart", "points": 15 },
+        { "id": "b", "text": "Because we're in this together now", "points": 20 },
+        { "id": "c", "text": "I have money", "points": -5 }
+      ]},
+      { "text": "After this deal, what happens?", "best": "a", "responses": [
+        { "id": "a", "text": "We never met", "points": 25 },
+        { "id": "b", "text": "We stay in touch", "points": 0 },
+        { "id": "c", "text": "I'll tell people about you", "points": -25, "next": "angry" }
+      ]},
+      { "text": "One rule in this world. What is it?", "best": "c", "responses": [
+        { "id": "a", "text": "Make money", "points": 5 },
+        { "id": "b", "text": "Trust no one", "points": 10 },
+        { "id": "c", "text": "Silence is survival", "points": 25 }
+      ]},
+      { "text": "I've been doing this for years. Why?", "best": "b", "responses": [
+        { "id": "a", "text": "The money", "points": 0 },
+        { "id": "b", "text": "Because the system doesn't work for everyone", "points": 20 },
+        { "id": "c", "text": "The thrill", "points": 10 }
+      ]},
+      { "text": "You ever think about getting out?", "best": "b", "responses": [
+        { "id": "a", "text": "All the time", "points": 10 },
+        { "id": "b", "text": "There is no out. Only forward", "points": 20 },
+        { "id": "c", "text": "Never", "points": 5 }
+      ]},
+      { "text": "Most people don't make it in this world. Why?", "best": "a", "responses": [
+        { "id": "a", "text": "They talk too much", "points": 25 },
+        { "id": "b", "text": "Bad luck", "points": 0 },
+        { "id": "c", "text": "They're not smart enough", "points": 10 }
+      ]},
+      { "text": "I can clear heat. For a price. You know that?", "best": "a", "responses": [
+        { "id": "a", "text": "That's exactly what I need", "points": 20 },
+        { "id": "b", "text": "How does that work?", "points": 10 },
+        { "id": "c", "text": "Sounds illegal", "points": -10 }
+      ]},
+      { "text": "There are people looking for me. Always.", "best": "b", "responses": [
+        { "id": "a", "text": "Then why risk this?", "points": 5 },
+        { "id": "b", "text": "You do what you have to do", "points": 20 },
+        { "id": "c", "text": "Sounds stressful", "points": 0 }
+      ]},
+      { "text": "What would you do for the right amount of money?", "best": "b", "responses": [
+        { "id": "a", "text": "Anything", "points": -10 },
+        { "id": "b", "text": "Depends on the job. I have limits", "points": 20 },
+        { "id": "c", "text": "Not much", "points": 0 }
+      ]},
+      { "text": "You remind me of someone. Someone who didn't make it.", "best": "a", "responses": [
+        { "id": "a", "text": "I intend to make it", "points": 20 },
+        { "id": "b", "text": "What happened to them?", "points": 10 },
+        { "id": "c", "text": "That's ominous", "points": 0 }
+      ]}
+    ],
+    "innerCircle": [
+      { "text": "Last question. Who sent you, really?", "best": "c", "responses": [
+        { "id": "a", "text": "I can't say", "points": 10 },
+        { "id": "b", "text": "Someone from the scene", "points": 5 },
+        { "id": "c", "text": "Import vouched for me. Through the chain", "points": 25 }
+      ]},
+      { "text": "If this goes south, what do you do?", "best": "a", "responses": [
+        { "id": "a", "text": "Vanish. You never knew me", "points": 25 },
+        { "id": "b", "text": "Figure it out", "points": 10 },
+        { "id": "c", "text": "Call for help", "points": -15, "next": "reject" }
+      ]},
+      { "text": "I don't have many people I trust. You're one now.", "best": "a", "responses": [
+        { "id": "a", "text": "That trust won't be broken", "points": 25 },
+        { "id": "b", "text": "Appreciated", "points": 10 },
+        { "id": "c", "text": "Good to know", "points": 0 }
+      ]},
+      { "text": "There's a job coming. Big one. You in?", "best": "a", "responses": [
+        { "id": "a", "text": "Tell me when and where", "points": 25 },
+        { "id": "b", "text": "What's the risk?", "points": 10 },
+        { "id": "c", "text": "I need to think about it", "points": 0 }
+      ]},
+      { "text": "The network... it's bigger than you know.", "best": "a", "responses": [
+        { "id": "a", "text": "I'm ready to see more", "points": 20 },
+        { "id": "b", "text": "How big?", "points": 10 },
+        { "id": "c", "text": "I prefer not knowing", "points": 5 }
+      ]},
+      { "text": "When I'm gone, someone needs to take my place.", "best": "a", "responses": [
+        { "id": "a", "text": "I understand what you're saying", "points": 25 },
+        { "id": "b", "text": "Don't talk like that", "points": 5 },
+        { "id": "c", "text": "That's not my problem", "points": -10 }
+      ]},
+      { "text": "The shadows have been good to us. Remember that.", "best": "a", "responses": [
+        { "id": "a", "text": "The shadows are home now", "points": 25 },
+        { "id": "b", "text": "I won't forget", "points": 15 },
+        { "id": "c", "text": "It's just business", "points": -5 }
+      ]},
+      { "text": "One last thing. If they come for me... you know nothing.", "best": "a", "responses": [
+        { "id": "a", "text": "I never heard that name. We never met", "points": 30 },
+        { "id": "b", "text": "Of course", "points": 15 },
+        { "id": "c", "text": "Depends on the situation", "points": -20, "next": "angry" }
+      ]},
+      { "text": "You've earned something few have. My respect.", "best": "a", "responses": [
+        { "id": "a", "text": "It's mutual. We're in this together", "points": 25 },
+        { "id": "b", "text": "Thank you", "points": 10 },
+        { "id": "c", "text": "Cool", "points": 0 }
+      ]},
+      { "text": "The darkness isn't something to fear. It's where we thrive.", "best": "a", "responses": [
+        { "id": "a", "text": "I've learned to see in the dark", "points": 25 },
+        { "id": "b", "text": "You're right", "points": 10 },
+        { "id": "c", "text": "That's poetic", "points": 5 }
+      ]}
+    ],
+    "intro": [
+      { "text": "...", "best": "a", "responses": [
+        { "id": "a", "text": "I was told you could help", "points": 10 },
+        { "id": "b", "text": "Need special parts", "points": 5 },
+        { "id": "c", "text": "Are you Shadow?", "points": -5 }
+      ]}
+    ],
+    "questions": [
+      { "text": "Can you keep quiet?", "best": "a", "responses": [
+        { "id": "a", "text": "Always", "points": 20 },
+        { "id": "b", "text": "Of course", "points": 10 },
+        { "id": "c", "text": "Depends", "points": -15, "next": "reject" }
+      ]}
+    ],
+    "final": [
+      { "text": "One rule in this world. What is it?", "best": "c", "responses": [
+        { "id": "a", "text": "Make money", "points": 5 },
+        { "id": "b", "text": "Trust no one", "points": 10 },
+        { "id": "c", "text": "Silence is survival", "points": 25 }
+      ]}
+    ]
+  }
+}

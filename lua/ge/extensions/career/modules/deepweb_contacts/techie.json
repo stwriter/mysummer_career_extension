@@ -1,0 +1,270 @@
+{
+  "id": "techie",
+  "name": "Techie",
+  "personality": "analytical",
+  "specialty": "High-performance tuning parts",
+  "description": "Data-driven engineer who values technical knowledge and precision",
+  "traits": {
+    "values": ["technical", "methodical", "curious", "precise", "innovative"],
+    "dislikes": ["ignorant", "reckless", "vague", "emotional", "traditional"],
+    "scoring": {
+      "technical": 3,
+      "methodical": 2,
+      "curious": 2,
+      "precise": 3,
+      "innovative": 2,
+      "ignorant": -3,
+      "reckless": -2,
+      "vague": -2,
+      "emotional": -1,
+      "traditional": -1
+    }
+  },
+  "rivals": ["muscle"],
+  "allies": [],
+  "neutral": ["ghost", "import", "shadow"],
+  "confrontations": [
+    {
+      "trigger": "random",
+      "chance": 0.15,
+      "minTrust": 2,
+      "text": "Your last data logs showed some anomalies. Explain.",
+      "responses": [
+        { "id": "a", "text": "I noticed. Fuel trim was off - adjusted injector timing", "traits": ["technical", "methodical"], "points": 20 },
+        { "id": "b", "text": "What anomalies?", "traits": ["ignorant"], "points": -15 },
+        { "id": "c", "text": "Seemed fine to me", "traits": ["vague"], "points": -10 }
+      ]
+    },
+    {
+      "trigger": "random",
+      "chance": 0.12,
+      "minTrust": 3,
+      "text": "I see you've been consulting Muscle. His methods are... antiquated.",
+      "responses": [
+        { "id": "a", "text": "Different perspectives can be valuable for problem solving", "traits": ["curious", "methodical"], "points": 15 },
+        { "id": "b", "text": "His experience has merit", "traits": ["traditional"], "points": -10 },
+        { "id": "c", "text": "Data always wins. He's just a source", "traits": ["precise"], "points": 10 }
+      ]
+    },
+    {
+      "trigger": "memory",
+      "condition": "hasDataLogging",
+      "chance": 0.2,
+      "minTrust": 2,
+      "text": "Your data logging setup - have you maintained calibration?",
+      "responses": [
+        { "id": "a", "text": "Monthly calibration checks, all sensors within spec", "traits": ["methodical", "precise"], "points": 20 },
+        { "id": "b", "text": "Should be fine", "traits": ["vague"], "points": -10 },
+        { "id": "c", "text": "I trust the readings", "traits": ["emotional"], "points": -5 }
+      ]
+    }
+  ],
+  "questionPools": {
+    "unknown": [
+      { "text": "State your requirements.", "best": "a", "responses": [
+        { "id": "a", "text": "Need performance parts for ETK-I", "points": 10, "setsMemory": { "mentionedProject": true } },
+        { "id": "b", "text": "Got any turbo stuff?", "points": 5 },
+        { "id": "c", "text": "What do you have?", "points": 0 }
+      ]},
+      { "text": "What's your technical background?", "best": "b", "responses": [
+        { "id": "a", "text": "Self-taught mechanic", "points": 10 },
+        { "id": "b", "text": "Engineering background, hands-on experience", "points": 15, "setsMemory": { "hasEngineering": true } },
+        { "id": "c", "text": "I watch YouTube videos", "points": -5, "next": "reject" }
+      ]},
+      { "text": "Engine code?", "best": "c", "responses": [
+        { "id": "a", "text": "Not sure", "points": -5 },
+        { "id": "b", "text": "The turbo one", "points": 0 },
+        { "id": "c", "text": "2.4L DOHC turbo, factory forged internals", "points": 15, "setsMemory": { "knowsEngine": true } }
+      ]},
+      { "text": "Power goals?", "best": "b", "responses": [
+        { "id": "a", "text": "More than stock", "points": 5 },
+        { "id": "b", "text": "350-400hp, reliable daily setup", "points": 15, "setsMemory": { "realisticGoals": true } },
+        { "id": "c", "text": "As much as possible", "points": 0 }
+      ]},
+      { "text": "What's your AFR target at WOT?", "best": "a", "responses": [
+        { "id": "a", "text": "11.5-12 for pump gas, richer with E85", "points": 20, "setsMemory": { "knowsTuning": true } },
+        { "id": "b", "text": "Rich", "points": 5 },
+        { "id": "c", "text": "What's AFR?", "points": -10, "next": "reject" }
+      ]},
+      { "text": "What ECU are you running?", "best": "c", "responses": [
+        { "id": "a", "text": "Stock", "points": -5 },
+        { "id": "b", "text": "Piggyback", "points": 5 },
+        { "id": "c", "text": "Standalone with wideband feedback", "points": 20, "setsMemory": { "hasStandalone": true } }
+      ]},
+      { "text": "Boost pressure target?", "best": "b", "responses": [
+        { "id": "a", "text": "Max it out", "points": -5 },
+        { "id": "b", "text": "1.2-1.5 bar for reliability on stock internals", "points": 20 },
+        { "id": "c", "text": "Whatever the turbo can do", "points": 0 }
+      ]},
+      { "text": "Data logging setup?", "best": "c", "responses": [
+        { "id": "a", "text": "I trust my butt dyno", "points": -10, "next": "reject" },
+        { "id": "b", "text": "OBD2 scanner", "points": 5 },
+        { "id": "c", "text": "Full ECU logging, AIM dash, external sensors", "points": 20, "setsMemory": { "hasDataLogging": true } }
+      ]}
+    ],
+    "acquaintance": [
+      { "text": "What's your power-to-weight target?", "best": "a", "responses": [
+        { "id": "a", "text": "Under 4.5 kg/hp for good track performance", "points": 20 },
+        { "id": "b", "text": "As much power as possible", "points": 5 },
+        { "id": "c", "text": "I don't know, just want it fast", "points": -5 }
+      ]},
+      { "text": "Fuel system upgrades?", "best": "a", "responses": [
+        { "id": "a", "text": "1000cc injectors, walbro 450, flex fuel sensor", "points": 20 },
+        { "id": "b", "text": "Bigger injectors", "points": 5 },
+        { "id": "c", "text": "Stock should handle it", "points": -10 }
+      ]},
+      { "text": "Cooling strategy for track use?", "best": "b", "responses": [
+        { "id": "a", "text": "Bigger radiator", "points": 10 },
+        { "id": "b", "text": "Upgraded rad, oil cooler, intercooler, ducting", "points": 20 },
+        { "id": "c", "text": "It'll be fine", "points": -10 }
+      ]},
+      { "text": "Understanding of brake bias for RWD setup?", "best": "a", "responses": [
+        { "id": "a", "text": "Around 70/30 front/rear for balanced braking", "points": 20 },
+        { "id": "b", "text": "More front than rear?", "points": 5 },
+        { "id": "c", "text": "Just install the biggest brakes", "points": -10 }
+      ]},
+      { "text": "Suspension geometry considerations?", "best": "c", "responses": [
+        { "id": "a", "text": "Lower is better", "points": -5 },
+        { "id": "b", "text": "Coilovers and call it done", "points": 5 },
+        { "id": "c", "text": "Camber, caster, toe, roll center - all need retuning", "points": 20 }
+      ]},
+      { "text": "LSD or open diff?", "best": "a", "responses": [
+        { "id": "a", "text": "LSD with proper preload for power delivery", "points": 20 },
+        { "id": "b", "text": "LSD is better, right?", "points": 5 },
+        { "id": "c", "text": "Whatever's cheapest", "points": -10 }
+      ]},
+      { "text": "Clutch upgrade plan?", "best": "b", "responses": [
+        { "id": "a", "text": "Stock can handle it", "points": -5 },
+        { "id": "b", "text": "Twin-disc organic for streetability with holding power", "points": 20 },
+        { "id": "c", "text": "Single puck race clutch", "points": 5 }
+      ]},
+      { "text": "Your approach to troubleshooting?", "best": "a", "responses": [
+        { "id": "a", "text": "Systematic, isolate variables, test hypothesis", "points": 20, "setsMemory": { "methodical": true } },
+        { "id": "b", "text": "Replace parts until it works", "points": -10 },
+        { "id": "c", "text": "Ask forums", "points": 5 }
+      ]}
+    ],
+    "associate": [
+      { "text": "I've been analyzing your data. You're improving.", "best": "a", "responses": [
+        { "id": "a", "text": "I appreciate the feedback. Where can I improve more?", "points": 15 },
+        { "id": "b", "text": "Thanks", "points": 5 },
+        { "id": "c", "text": "You've been watching my data?", "points": 0 }
+      ]},
+      { "text": "Your tuning shows understanding. Self-taught?", "best": "b", "condition": "knowsTuning", "responses": [
+        { "id": "a", "text": "Mostly trial and error", "points": 10 },
+        { "id": "b", "text": "Research, testing, iteration. The scientific method.", "points": 15 },
+        { "id": "c", "text": "Just natural talent", "points": -5 }
+      ]},
+      { "text": "Dyno tuning or road tuning?", "best": "a", "responses": [
+        { "id": "a", "text": "Dyno for baseline, road for real-world refinement", "points": 15 },
+        { "id": "b", "text": "Just dyno", "points": 10 },
+        { "id": "c", "text": "Road tune is fine", "points": 0 }
+      ]},
+      { "text": "Weight reduction philosophy?", "best": "c", "responses": [
+        { "id": "a", "text": "Strip everything", "points": 10 },
+        { "id": "b", "text": "Keep it stock", "points": -5 },
+        { "id": "c", "text": "Strategic removal of non-essentials, maintain rigidity", "points": 20 }
+      ]},
+      { "text": "Documentation approach?", "best": "b", "responses": [
+        { "id": "a", "text": "I remember everything", "points": -5 },
+        { "id": "b", "text": "Build log, receipts, torque specs, maintenance schedule", "points": 20, "setsMemory": { "documentsWell": true } },
+        { "id": "c", "text": "Some notes here and there", "points": 5 }
+      ]},
+      { "text": "How do you validate your setups?", "best": "a", "responses": [
+        { "id": "a", "text": "Track testing with data analysis", "points": 20 },
+        { "id": "b", "text": "Street testing", "points": 5 },
+        { "id": "c", "text": "If it feels fast, it's good", "points": -5 }
+      ]},
+      { "text": "Your build philosophy?", "best": "b", "responses": [
+        { "id": "a", "text": "All show", "points": -10, "next": "reject" },
+        { "id": "b", "text": "Form follows function, data-driven decisions", "points": 20 },
+        { "id": "c", "text": "Whatever works", "points": 0 }
+      ]},
+      { "text": "One last thing - your safety equipment?", "best": "c", "responses": [
+        { "id": "a", "text": "Seatbelt is fine", "points": -10 },
+        { "id": "b", "text": "Roll bar", "points": 10 },
+        { "id": "c", "text": "Full cage, harness, HANS device, fire system", "points": 20, "setsMemory": { "safetyConscious": true } }
+      ]}
+    ],
+    "trusted": [
+      { "text": "I've been working on a new ECU mapping algorithm.", "best": "a", "responses": [
+        { "id": "a", "text": "I'd love to see the data", "points": 15 },
+        { "id": "b", "text": "Sounds complex", "points": 5 },
+        { "id": "c", "text": "Does it make more power?", "points": 0 }
+      ]},
+      { "text": "Your documentation is thorough. I've been using it as reference.", "best": "b", "condition": "documentsWell", "responses": [
+        { "id": "a", "text": "Really? That's surprising", "points": 5 },
+        { "id": "b", "text": "Good data helps everyone improve", "points": 15 },
+        { "id": "c", "text": "Just doing my job", "points": 10 }
+      ]},
+      { "text": "There's a new sensor technology I'm testing. Interested?", "best": "a", "responses": [
+        { "id": "a", "text": "Always interested in better data", "points": 15, "setsMemory": { "testedNewTech": true } },
+        { "id": "b", "text": "Maybe later", "points": 5 },
+        { "id": "c", "text": "Is it expensive?", "points": 0 }
+      ]},
+      { "text": "I don't share my research with many people.", "best": "b", "responses": [
+        { "id": "a", "text": "I'm honored", "points": 10 },
+        { "id": "b", "text": "I'll treat it with the respect it deserves", "points": 15 },
+        { "id": "c", "text": "Why me?", "points": 5 }
+      ]},
+      { "text": "The numbers don't lie. You've got talent.", "best": "c", "responses": [
+        { "id": "a", "text": "Thanks", "points": 5 },
+        { "id": "b", "text": "I just follow the data", "points": 10 },
+        { "id": "c", "text": "Talent is just consistent effort applied correctly", "points": 15 }
+      ]},
+      { "text": "I've been wrong before. Twice. Those were hard lessons.", "best": "a", "responses": [
+        { "id": "a", "text": "Failure is just data. What did you learn?", "points": 15 },
+        { "id": "b", "text": "We all make mistakes", "points": 10 },
+        { "id": "c", "text": "What happened?", "points": 5 }
+      ]}
+    ],
+    "innerCircle": [
+      { "text": "I'm developing something new. No one else knows.", "best": "a", "responses": [
+        { "id": "a", "text": "I can keep a secret. Tell me more.", "points": 20 },
+        { "id": "b", "text": "Sounds interesting", "points": 10 },
+        { "id": "c", "text": "Should I be excited?", "points": 5 }
+      ]},
+      { "text": "The algorithms I use... they're not public. Want access?", "best": "b", "responses": [
+        { "id": "a", "text": "Yes, absolutely", "points": 15 },
+        { "id": "b", "text": "I'll use them responsibly and contribute back", "points": 20, "setsMemory": { "hasSecretAccess": true } },
+        { "id": "c", "text": "What's the catch?", "points": 5 }
+      ]},
+      { "text": "You understand the code. Few people do.", "best": "a", "responses": [
+        { "id": "a", "text": "It's a language. You taught me to read it.", "points": 20 },
+        { "id": "b", "text": "I just pay attention", "points": 10 },
+        { "id": "c", "text": "Thanks", "points": 5 }
+      ]},
+      { "text": "There's a project I've been planning for years. I need a partner.", "best": "a", "responses": [
+        { "id": "a", "text": "I'm in. What are the parameters?", "points": 20 },
+        { "id": "b", "text": "Tell me more first", "points": 10 },
+        { "id": "c", "text": "What's in it for me?", "points": 0 }
+      ]},
+      { "text": "The future is in data. We're ahead of everyone else.", "best": "b", "responses": [
+        { "id": "a", "text": "Let's stay ahead", "points": 15 },
+        { "id": "b", "text": "Data is power. We use it responsibly.", "points": 20 },
+        { "id": "c", "text": "I hope so", "points": 5 }
+      ]}
+    ],
+    "intro": [
+      { "text": "State your requirements.", "best": "a", "responses": [
+        { "id": "a", "text": "Need performance parts for ETK-I", "points": 10 },
+        { "id": "b", "text": "Got any turbo stuff?", "points": 5 },
+        { "id": "c", "text": "What do you have?", "points": 5 }
+      ]}
+    ],
+    "questions": [
+      { "text": "Boost pressure target?", "best": "b", "responses": [
+        { "id": "a", "text": "Max it out", "points": -5 },
+        { "id": "b", "text": "1.2-1.5 bar for reliability on stock internals", "points": 20 },
+        { "id": "c", "text": "Whatever the turbo can do", "points": 0 }
+      ]}
+    ],
+    "final": [
+      { "text": "Final question: your build philosophy?", "best": "b", "responses": [
+        { "id": "a", "text": "All show", "points": -10, "next": "reject" },
+        { "id": "b", "text": "Form follows function, data-driven decisions", "points": 20 },
+        { "id": "c", "text": "Whatever works", "points": 0 }
+      ]}
+    ]
+  }
+}

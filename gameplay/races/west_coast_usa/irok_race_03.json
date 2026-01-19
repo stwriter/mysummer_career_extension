@@ -1,0 +1,695 @@
+{
+  "name": "I.R.O.K. Race #3",
+  "description": "Race Rod Speed's Kustom D-Series pickup truck in a street race with up to 9 opponents in completely different vehicles. Rod Speed has a rugged appearance, a thick beard, and a cowboy hat. He used to be a stunt driver for Hollywood movies, but the advent of CGI put him out of work.",
+  "author": "ToeBee",
+  "type": "circuit",
+  "laps": 3,
+  "difficulty": "high",
+  "rewards": {
+    "money": {
+      "first": 7000,
+      "second": 4500,
+      "third": 3000
+    },
+    "reputation": 50
+  },
+  "aiConfig": {
+    "count": 9,
+    "aggression": 0.8999999762,
+    "vehicles": [
+      {
+        "config": "IROK Race Series",
+        "model": "autobello"
+      },
+      {
+        "config": "IROK Race Series",
+        "model": "legran"
+      },
+      {
+        "config": "IROK Race Series",
+        "model": "etki"
+      },
+      {
+        "config": "IROK Race Series",
+        "model": "barstow"
+      },
+      {
+        "config": "IROK Race Series",
+        "model": "fullsize"
+      },
+      {
+        "config": "IROK Race Series",
+        "model": "covet"
+      },
+      {
+        "config": "IROK Mia Fast",
+        "model": "bx"
+      },
+      {
+        "config": "IROK Race Series",
+        "model": "bluebuck"
+      },
+      {
+        "config": "IROK Race Series",
+        "model": "burnside"
+      }
+    ]
+  },
+  "pathData": {
+    "authors": "Anonymous",
+    "classification": {
+      "allowRollingStart": false,
+      "branching": false,
+      "closed": true,
+      "reversible": false
+    },
+    "date": 1727051960,
+    "defaultLaps": 3,
+    "defaultStartPosition": 2,
+    "description": "Description",
+    "difficulty": 24,
+    "endNode": -1,
+    "forwardPrefabs": {},
+    "hideMission": false,
+    "name": "Path",
+    "pacenotes": {},
+    "pathnodes": [
+      {
+        "customFields": {
+          "names": {},
+          "tags": {},
+          "types": {},
+          "values": {}
+        },
+        "mode": "manual",
+        "name": "Pathnode 2",
+        "navRadiusScale": 1,
+        "normal": [
+          -0.6187638923,
+          -0.785491509,
+          0.01159029515
+        ],
+        "oldId": 12,
+        "pos": [
+          -768.2830811,
+          -634.9651489,
+          106.1729584
+        ],
+        "radius": 6.717514108,
+        "recovery": -1,
+        "reverseRecovery": -1,
+        "sidePadding": [
+          1,
+          3
+        ],
+        "visible": true
+      },
+      {
+        "customFields": {
+          "names": {},
+          "tags": {},
+          "types": {},
+          "values": {}
+        },
+        "mode": "manual",
+        "name": "Pathnode 3",
+        "navRadiusScale": 1,
+        "normal": [
+          -0.7840445598,
+          0.6198857655,
+          -0.03187108441
+        ],
+        "oldId": 13,
+        "pos": [
+          -932.6184082,
+          -754.1268311,
+          113.0581512
+        ],
+        "radius": 8.55004119,
+        "recovery": -1,
+        "reverseRecovery": -1,
+        "sidePadding": [
+          1,
+          3
+        ],
+        "visible": true
+      },
+      {
+        "customFields": {
+          "names": {},
+          "tags": {},
+          "types": {},
+          "values": {}
+        },
+        "mode": "manual",
+        "name": "Pathnode 5",
+        "navRadiusScale": 1,
+        "normal": [
+          0.7108440329,
+          0.7033489398,
+          0.001014780945
+        ],
+        "oldId": 14,
+        "pos": [
+          -867.2720337,
+          -552.2488403,
+          106.6329727
+        ],
+        "radius": 4.475303193,
+        "recovery": -1,
+        "reverseRecovery": -1,
+        "sidePadding": [
+          1,
+          3
+        ],
+        "visible": true
+      },
+      {
+        "customFields": {
+          "names": {},
+          "tags": {},
+          "types": {},
+          "values": {}
+        },
+        "mode": "manual",
+        "name": "Pathnode 7",
+        "navRadiusScale": 1,
+        "normal": [
+          0.9050089964,
+          0.4252213323,
+          -0.01206378712
+        ],
+        "oldId": 15,
+        "pos": [
+          -690.5477295,
+          -408.3143311,
+          105.4870453
+        ],
+        "radius": 9.970752381,
+        "recovery": -1,
+        "reverseRecovery": -1,
+        "sidePadding": [
+          1,
+          3
+        ],
+        "visible": true
+      },
+      {
+        "customFields": {
+          "names": {},
+          "tags": {},
+          "types": {},
+          "values": {}
+        },
+        "mode": "manual",
+        "name": "Pathnode 9",
+        "navRadiusScale": 1,
+        "normal": [
+          0.8178178806,
+          -0.5738835597,
+          0.04279689307
+        ],
+        "oldId": 16,
+        "pos": [
+          -371.0951843,
+          -489.6098022,
+          107.55056
+        ],
+        "radius": 9.094434995,
+        "recovery": -1,
+        "reverseRecovery": -1,
+        "sidePadding": [
+          1,
+          3
+        ],
+        "visible": true
+      },
+      {
+        "customFields": {
+          "names": {},
+          "tags": {},
+          "types": {},
+          "values": {}
+        },
+        "mode": "manual",
+        "name": "Pathnode 11",
+        "navRadiusScale": 1,
+        "normal": [
+          0.7335926062,
+          -0.6781818617,
+          0.04371785209
+        ],
+        "oldId": 17,
+        "pos": [
+          -80.65556335,
+          -837.1112061,
+          122.4915848
+        ],
+        "radius": 5.174177313,
+        "recovery": -1,
+        "reverseRecovery": -1,
+        "sidePadding": [
+          1,
+          3
+        ],
+        "visible": true
+      },
+      {
+        "customFields": {
+          "names": {},
+          "tags": {},
+          "types": {},
+          "values": {}
+        },
+        "mode": "manual",
+        "name": "Pathnode 13",
+        "navRadiusScale": 1,
+        "normal": [
+          0.7413072048,
+          -0.670023176,
+          0.03914807291
+        ],
+        "oldId": 18,
+        "pos": [
+          -20.93476868,
+          -908.0471191,
+          125.4123993
+        ],
+        "radius": 6.764283273,
+        "recovery": -1,
+        "reverseRecovery": -1,
+        "sidePadding": [
+          1,
+          3
+        ],
+        "visible": true
+      },
+      {
+        "customFields": {
+          "names": {},
+          "tags": {},
+          "types": {},
+          "values": {}
+        },
+        "mode": "manual",
+        "name": "Pathnode 15",
+        "navRadiusScale": 1,
+        "normal": [
+          -0.8917943286,
+          0.4521894823,
+          0.01508468146
+        ],
+        "oldId": 19,
+        "pos": [
+          -217.2026062,
+          -909.7030029,
+          133.2605591
+        ],
+        "radius": 6.504445742,
+        "recovery": -1,
+        "reverseRecovery": -1,
+        "sidePadding": [
+          1,
+          3
+        ],
+        "visible": true
+      },
+      {
+        "customFields": {
+          "names": {},
+          "tags": {},
+          "types": {},
+          "values": {}
+        },
+        "mode": "manual",
+        "name": "Pathnode 17",
+        "navRadiusScale": 1,
+        "normal": [
+          -0.1952081201,
+          0.9798992834,
+          0.04112401039
+        ],
+        "oldId": 20,
+        "pos": [
+          -333.807373,
+          -828.7797852,
+          136.3569183
+        ],
+        "radius": 5.62316141,
+        "recovery": -1,
+        "reverseRecovery": -1,
+        "sidePadding": [
+          1,
+          3
+        ],
+        "visible": true
+      },
+      {
+        "customFields": {
+          "names": {},
+          "tags": {},
+          "types": {},
+          "values": {}
+        },
+        "mode": "manual",
+        "name": "Pathnode 19",
+        "navRadiusScale": 1,
+        "normal": [
+          0.4817934547,
+          0.8762551759,
+          0.007206500143
+        ],
+        "oldId": 21,
+        "pos": [
+          -301.5675354,
+          -770.9082642,
+          137.5259857
+        ],
+        "radius": 7.29220405,
+        "recovery": -1,
+        "reverseRecovery": -1,
+        "sidePadding": [
+          1,
+          3
+        ],
+        "visible": true
+      },
+      {
+        "customFields": {
+          "names": {},
+          "tags": {},
+          "types": {},
+          "values": {}
+        },
+        "mode": "manual",
+        "name": "Pathnode 21",
+        "navRadiusScale": 1,
+        "normal": [
+          -0.7804034489,
+          0.6249343084,
+          -0.02067769472
+        ],
+        "oldId": 22,
+        "pos": [
+          -414.8380432,
+          -619.5009155,
+          129.9347534
+        ],
+        "radius": 7.24578111,
+        "recovery": -1,
+        "reverseRecovery": -1,
+        "sidePadding": [
+          1,
+          3
+        ],
+        "visible": true
+      },
+      {
+        "customFields": {
+          "names": {},
+          "tags": {},
+          "types": {},
+          "values": {}
+        },
+        "mode": "manual",
+        "name": "Pathnode 23",
+        "navRadiusScale": 1,
+        "normal": [
+          -0.9992743698,
+          -0.002186315405,
+          -0.03802569906
+        ],
+        "oldId": 23,
+        "pos": [
+          -621.6619263,
+          -528.105835,
+          114.3764038
+        ],
+        "radius": 9.519664103,
+        "recovery": -1,
+        "reverseRecovery": -1,
+        "sidePadding": [
+          1,
+          3
+        ],
+        "visible": true
+      }
+    ],
+    "prefabs": {},
+    "reversePrefabs": {},
+    "reverseStartPosition": -1,
+    "rollingReverseStartPosition": -1,
+    "rollingStartPosition": -1,
+    "segments": [
+      {
+        "capsules": {},
+        "from": 12,
+        "mode": "waypoint",
+        "name": "Segment 4",
+        "oldId": 24,
+        "to": 13
+      },
+      {
+        "capsules": {},
+        "from": 13,
+        "mode": "waypoint",
+        "name": "Segment 6",
+        "oldId": 25,
+        "to": 14
+      },
+      {
+        "capsules": {},
+        "from": 14,
+        "mode": "waypoint",
+        "name": "Segment 8",
+        "oldId": 26,
+        "to": 15
+      },
+      {
+        "capsules": {},
+        "from": 15,
+        "mode": "waypoint",
+        "name": "Segment 10",
+        "oldId": 27,
+        "to": 16
+      },
+      {
+        "capsules": {},
+        "from": 16,
+        "mode": "waypoint",
+        "name": "Segment 12",
+        "oldId": 28,
+        "to": 17
+      },
+      {
+        "capsules": {},
+        "from": 17,
+        "mode": "waypoint",
+        "name": "Segment 14",
+        "oldId": 29,
+        "to": 18
+      },
+      {
+        "capsules": {},
+        "from": 18,
+        "mode": "waypoint",
+        "name": "Segment 16",
+        "oldId": 30,
+        "to": 19
+      },
+      {
+        "capsules": {},
+        "from": 19,
+        "mode": "waypoint",
+        "name": "Segment 18",
+        "oldId": 31,
+        "to": 20
+      },
+      {
+        "capsules": {},
+        "from": 20,
+        "mode": "waypoint",
+        "name": "Segment 20",
+        "oldId": 32,
+        "to": 21
+      },
+      {
+        "capsules": {},
+        "from": 21,
+        "mode": "waypoint",
+        "name": "Segment 22",
+        "oldId": 33,
+        "to": 22
+      },
+      {
+        "capsules": {},
+        "from": 22,
+        "mode": "waypoint",
+        "name": "Segment 24",
+        "oldId": 34,
+        "to": 23
+      },
+      {
+        "capsules": {},
+        "from": 23,
+        "mode": "waypoint",
+        "name": "Segment 25",
+        "oldId": 35,
+        "to": 12
+      }
+    ],
+    "startNode": 12,
+    "startPositions": [
+      {
+        "name": "Racer Start 1",
+        "oldId": 2,
+        "pos": [
+          -866.953125,
+          -750.9853516,
+          112.9075546
+        ],
+        "rot": [
+          0.004068251692,
+          0.01248214807,
+          0.9506931066,
+          -0.3098552282
+        ]
+      },
+      {
+        "name": "Racer Start 2",
+        "oldId": 3,
+        "pos": [
+          -852.5371094,
+          -732.2841187,
+          112.274704
+        ],
+        "rot": [
+          0.006239444247,
+          0.01753068292,
+          0.9419444419,
+          -0.3352527597
+        ]
+      },
+      {
+        "name": "Racer Start 3",
+        "oldId": 4,
+        "pos": [
+          -838.0342407,
+          -715.9139404,
+          111.4897614
+        ],
+        "rot": [
+          0.006739173331,
+          0.02029228191,
+          0.9488153954,
+          -0.3151065729
+        ]
+      },
+      {
+        "name": "Racer Start 4",
+        "oldId": 5,
+        "pos": [
+          -824.9442139,
+          -699.9277344,
+          110.6036301
+        ],
+        "rot": [
+          0.006630267246,
+          0.01817820786,
+          0.9392850324,
+          -0.3425921209
+        ]
+      },
+      {
+        "name": "Racer Start 5",
+        "oldId": 6,
+        "pos": [
+          -813.8922729,
+          -685.9202881,
+          109.913147
+        ],
+        "rot": [
+          0.008344592802,
+          0.02389568271,
+          0.9437884463,
+          -0.3295796304
+        ]
+      },
+      {
+        "name": "Racer Start 6",
+        "oldId": 7,
+        "pos": [
+          -800.199707,
+          -669.4749756,
+          108.9781418
+        ],
+        "rot": [
+          0.009341897917,
+          0.0244041945,
+          0.9335939329,
+          -0.3573786964
+        ]
+      },
+      {
+        "name": "Racer Start 7",
+        "oldId": 8,
+        "pos": [
+          -786.3151855,
+          -653.0792236,
+          108.0134888
+        ],
+        "rot": [
+          0.009470321512,
+          0.02569761546,
+          0.9379582388,
+          -0.3456649937
+        ]
+      },
+      {
+        "name": "Racer Start 8",
+        "oldId": 9,
+        "pos": [
+          -769.5666504,
+          -633.2599487,
+          107.0052185
+        ],
+        "rot": [
+          0.009914701336,
+          0.02632895566,
+          0.9354747968,
+          -0.3522719753
+        ]
+      },
+      {
+        "name": "Racer Start 9",
+        "oldId": 10,
+        "pos": [
+          -752.729248,
+          -613.4959717,
+          105.9851074
+        ],
+        "rot": [
+          0.00907196986,
+          0.02355883573,
+          0.9329037222,
+          -0.3592399279
+        ]
+      },
+      {
+        "name": "Racer Start 10",
+        "oldId": 11,
+        "pos": [
+          -732.4217529,
+          -590.9506836,
+          105.0379944
+        ],
+        "rot": [
+          0.007666080757,
+          0.02042152254,
+          0.935985644,
+          -0.3513617322
+        ]
+      }
+    ]
+  }
+}

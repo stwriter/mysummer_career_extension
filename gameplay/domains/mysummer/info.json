@@ -1,0 +1,17 @@
+{
+  "name": "MySummer",
+  "description": "Street racing reputation and underground progression",
+  "order": 1200,
+  "icon": "flag4",
+  "color": "var(--bng-orange-b400-rgb)",
+  "accentColor": "var(--bng-add-red-500-rgb)",
+  "isDomain": true,
+  "defaultRewardMultipliers": false,
+  "levels": [
+    {"requiredValue": 0},
+    {"requiredValue": 500},
+    {"requiredValue": 1500},
+    {"requiredValue": 3500},
+    {"requiredValue": 7000}
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "name": "Import Network",
+  "description": "JDM specialist. If it's not Japanese tuner culture, not interested.",
+  "order": 2500,
+  "isSkill": true,
+  "icon": "car",
+  "parentBranch": "mysummer",
+  "startLocked": true,
+  "levels": [
+    {
+      "requiredValue": 0,
+      "description": {
+        "type": "unlockCard",
+        "icon": "question",
+        "heading": "Unknown",
+        "description": "You don't know this contact yet. Muscle can introduce you."
+      }
+    },
+    {
+      "requiredValue": 50,
+      "description": {
+        "type": "unlockCard",
+        "icon": "handshake",
+        "heading": "Acquaintance",
+        "description": "Import sees you appreciate the culture."
+      },
+      "unlockFlags": ["import_basic_leads"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "search",
+          "heading": "Basic Leads",
+          "description": "Access to Import's basic part leads."
+        }
+      ]
+    },
+    {
+      "requiredValue": 150,
+      "description": {
+        "type": "unlockCard",
+        "icon": "users",
+        "heading": "Associate",
+        "description": "Import respects your dedication to the scene."
+      },
+      "unlockFlags": ["import_race_challenge", "import_medium_leads", "shadow_available"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "racingFlag",
+          "heading": "Race Challenge",
+          "description": "Challenge Import to a touge battle."
+        },
+        {
+          "type": "unlockCard",
+          "icon": "user",
+          "heading": "New Contact",
+          "description": "Import introduces you to Shadow."
+        }
+      ]
+    },
+    {
+      "requiredValue": 350,
+      "description": {
+        "type": "unlockCard",
+        "icon": "shield",
+        "heading": "Trusted",
+        "description": "Import shares his exclusive JDM connections."
+      },
+      "unlockFlags": ["import_premium_leads", "import_exclusive_parts"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "star",
+          "heading": "Premium Leads",
+          "description": "Access to Import's rare JDM parts."
+        }
+      ]
+    },
+    {
+      "requiredValue": 600,
+      "description": {
+        "type": "unlockCard",
+        "icon": "heart",
+        "heading": "Inner Circle",
+        "description": "You're living the culture now. Import trusts you completely."
+      },
+      "unlockFlags": ["import_all_access"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "crown",
+          "heading": "Full Access",
+          "description": "Complete access to Import's JDM network."
+        }
+      ]
+    }
+  ]
+}

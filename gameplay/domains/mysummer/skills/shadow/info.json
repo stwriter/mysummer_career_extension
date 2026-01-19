@@ -1,0 +1,98 @@
+{
+  "name": "Shadow Network",
+  "description": "Black market connections. Ask no questions, tell no lies.",
+  "order": 2600,
+  "isSkill": true,
+  "icon": "eyeSlash",
+  "parentBranch": "mysummer",
+  "startLocked": true,
+  "levels": [
+    {
+      "requiredValue": 0,
+      "description": {
+        "type": "unlockCard",
+        "icon": "question",
+        "heading": "Unknown",
+        "description": "You don't know this contact yet. Import can introduce you."
+      }
+    },
+    {
+      "requiredValue": 50,
+      "description": {
+        "type": "unlockCard",
+        "icon": "handshake",
+        "heading": "Acquaintance",
+        "description": "Shadow has noticed you. You've survived the first test."
+      },
+      "unlockFlags": ["shadow_basic_leads"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "search",
+          "heading": "Basic Leads",
+          "description": "Access to Shadow's basic part leads."
+        }
+      ]
+    },
+    {
+      "requiredValue": 150,
+      "description": {
+        "type": "unlockCard",
+        "icon": "users",
+        "heading": "Associate",
+        "description": "Shadow considers you reliable. A rare distinction."
+      },
+      "unlockFlags": ["shadow_race_challenge", "shadow_medium_leads", "shadow_heat_cleaning"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "racingFlag",
+          "heading": "Race Challenge",
+          "description": "Challenge Shadow to a midnight run."
+        },
+        {
+          "type": "unlockCard",
+          "icon": "shield",
+          "heading": "Heat Cleaning",
+          "description": "Shadow can clean your police heat for a price."
+        }
+      ]
+    },
+    {
+      "requiredValue": 350,
+      "description": {
+        "type": "unlockCard",
+        "icon": "shield",
+        "heading": "Trusted",
+        "description": "Shadow trusts you with the serious merchandise."
+      },
+      "unlockFlags": ["shadow_premium_leads", "shadow_exclusive_parts"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "star",
+          "heading": "Premium Leads",
+          "description": "Access to Shadow's highest-value stolen parts."
+        }
+      ]
+    },
+    {
+      "requiredValue": 600,
+      "description": {
+        "type": "unlockCard",
+        "icon": "heart",
+        "heading": "Inner Circle",
+        "description": "You're in the shadows now. Welcome to the family."
+      },
+      "unlockFlags": ["shadow_all_access"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "crown",
+          "heading": "Full Access",
+          "description": "Complete access to Shadow's black market network."
+        }
+      ]
+    }
+  ]
+}

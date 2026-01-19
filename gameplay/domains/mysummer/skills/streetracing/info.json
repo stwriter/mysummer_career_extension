@@ -1,0 +1,96 @@
+{
+  "name": "Street Racing",
+  "description": "Illegal street racing reputation in the underground scene",
+  "order": 2100,
+  "isSkill": true,
+  "icon": "racingFlag",
+  "parentBranch": "mysummer",
+  "startLocked": false,
+  "levels": [
+    {
+      "requiredValue": 0,
+      "description": {
+        "type": "unlockCard",
+        "icon": "info",
+        "heading": "Rookie Racer",
+        "description": "You're new to the street racing scene. Win some races to build your reputation."
+      },
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "racingFlag",
+          "heading": "Street Races",
+          "description": "Access to basic street races."
+        }
+      ]
+    },
+    {
+      "requiredValue": 250,
+      "description": {
+        "type": "unlockCard",
+        "icon": "info",
+        "heading": "Known Driver",
+        "description": "People are starting to recognize you at the starting line."
+      },
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "star",
+          "heading": "Growing Reputation",
+          "description": "Other racers know your name."
+        }
+      ]
+    },
+    {
+      "requiredValue": 750,
+      "description": {
+        "type": "unlockCard",
+        "icon": "info",
+        "heading": "Street Regular",
+        "description": "You've become a regular in the street racing circuit."
+      },
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "trophy",
+          "heading": "Respected Racer",
+          "description": "Challengers seek you out for races."
+        }
+      ]
+    },
+    {
+      "requiredValue": 1500,
+      "description": {
+        "type": "unlockCard",
+        "icon": "info",
+        "heading": "Underground Star",
+        "description": "Your reputation precedes you in every underground meet."
+      },
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "crown",
+          "heading": "Racing Elite",
+          "description": "Only the best dare to challenge you."
+        }
+      ]
+    },
+    {
+      "requiredValue": 3000,
+      "description": {
+        "type": "unlockCard",
+        "icon": "info",
+        "heading": "Street Legend",
+        "description": "Your name is feared on the streets. You are the one to beat."
+      },
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "medal",
+          "heading": "Living Legend",
+          "description": "Stories of your victories spread across the city."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "name": "Example Sprint Race",
+  "author": "MySummer",
+  "created": 1704067200,
+  "level": "west_coast_usa",
+  "type": "sprint",
+
+  "checkpoints": [
+    {"pos": [582.64, -930.82, 144.92], "radius": 15, "isStart": true},
+    {"pos": [550.00, -900.00, 145.00], "radius": 15},
+    {"pos": [520.00, -850.00, 144.50], "radius": 15},
+    {"pos": [480.00, -800.00, 143.00], "radius": 15},
+    {"pos": [450.00, -750.00, 142.00], "radius": 15}
+  ],
+
+  "closed": false,
+  "laps": 1,
+
+  "aiConfig": {
+    "count": 4,
+    "gridOrder": "random",
+    "racers": [
+      {"name": "Ray Pacherson", "vehicle": "vivace", "config": "sport", "aggression": 0.9},
+      {"name": "Vax Merstapen", "vehicle": "etki", "config": "base", "aggression": 0.85},
+      {"name": "Lewis Amilton", "vehicle": "covet", "config": "base", "aggression": 0.8},
+      {"name": "Carlo Sunshine", "vehicle": "pessima", "config": "base", "aggression": 0.7}
+    ]
+  },
+
+  "settings": {
+    "traffic": false,
+    "countdown": true
+  },
+
+  "timeAttack": {
+    "gold": 45,
+    "silver": 55,
+    "bronze": 70
+  },
+
+  "rewards": {
+    "reputation": 50,
+    "money": {
+      "first": 5000,
+      "second": 2500,
+      "third": 1000
+    }
+  }
+}

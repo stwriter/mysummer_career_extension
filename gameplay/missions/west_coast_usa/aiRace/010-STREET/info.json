@@ -1,0 +1,200 @@
+{
+  "additionalAttributes": {
+    "difficulty": "high"
+  },
+  "author": "ToeBee",
+  "careerSetup": {
+    "defaultStarKeys": [
+      "justFinish",
+      "finishSilver",
+      "finishGold"
+    ],
+    "showInCareer": false,
+    "showInFreeroam": true,
+    "skill": "(none)",
+    "starOutroTexts": {
+      "cleanGoldRace": "Way to go!",
+      "noStarUnlocked": "Tough luck. Want to try again?"
+    },
+    "starRewards": {
+      "beatGoalTime": [
+        {
+          "attributeKey": "bonusStars",
+          "rewardAmount": 1
+        }
+      ],
+      "cleanGoldRace": [
+        {
+          "attributeKey": "bonusStars",
+          "rewardAmount": 1
+        }
+      ],
+      "finishBronze": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 100
+        },
+        {
+          "attributeKey": "beamXP",
+          "rewardAmount": 50
+        }
+      ],
+      "finishGold": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 3000
+        },
+        {
+          "attributeKey": "beamXP",
+          "rewardAmount": 15
+        },
+        {
+          "attributeKey": "mysummer-streetracing",
+          "rewardAmount": 200
+        }
+      ],
+      "finishSilver": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 1500
+        },
+        {
+          "attributeKey": "beamXP",
+          "rewardAmount": 10
+        },
+        {
+          "attributeKey": "mysummer-streetracing",
+          "rewardAmount": 100
+        }
+      ],
+      "justFinish": [
+        {
+          "attributeKey": "beamXP",
+          "rewardAmount": 5
+        },
+        {
+          "attributeKey": "mysummer-streetracing",
+          "rewardAmount": 50
+        }
+      ]
+    },
+    "starsActive": {
+      "beatGoalTime": true,
+      "cleanGoldRace": true,
+      "finishBronze": false,
+      "finishGold": true,
+      "finishSilver": true,
+      "justFinish": true
+    }
+  },
+  "customAdditionalAttributes": {},
+  "date": 1699022191,
+  "description": "Race Chase Speeder's Gavril Grand Marshal in a street race with up to 9 opponents in completely different vehicles. Chase is a retired police officer. After years of trying to catch the fastest street racers and coming up empty handed. He decided to retire and to try building a car that could catch and even beat the fastest of rivals.",
+  "devMission": false,
+  "grouping": {
+    "id": "STREETRACE",
+    "label": "Street Races"
+  },
+  "isAvailableAsScenario": true,
+  "layers": [
+    {
+      "dir": "/gameplay/missions/west_coast_usa/aiRace/010-STREET/",
+      "fixed": true,
+      "isMissionFolderDir": true,
+      "isMissionTypeDir": false
+    },
+    {
+      "dir": "/gameplay/missionTypes/aiRace/",
+      "fixed": true,
+      "isMissionFolderDir": false,
+      "isMissionTypeDir": true
+    }
+  ],
+  "missionType": "aiRace",
+  "missionTypeData": {
+    "allowFlip": true,
+    "allowRecover": true,
+    "camPathActive": true,
+    "damageFailActive": false,
+    "damageFailText": "You got wrecked!",
+    "damageLimit": 10000,
+    "flipLimit": -1,
+    "goalCollisionsLimit": 1,
+    "goalCollisionsTarget": 5,
+    "goalLaps": 3,
+    "goalRecoveries": 0,
+    "goalTime": 255,
+    "lapCount": 2,
+    "mapPreviewMode": "navgraph",
+    "maxRacerCount": 9,
+    "minRacerCount": 1,
+    "prefabActive": false,
+    "raceFile": "/gameplay/missions/west_coast_usa/aiRace/010-STREET/race.race.json",
+    "racerAggression": 1.179999948,
+    "racerAwareness": true,
+    "racerCount": 9,
+    "racerRandomnessScale": 1,
+    "racerRough": false,
+    "racerRubberbandMode": false,
+    "racerSkill": 1,
+    "recoverLimit": -1,
+    "shuffleGroup": true,
+    "smartStartPlace": true,
+    "startText": "These races are designed to have a high level of carnage. If you would like less carnage and more racing try turning off traffic. If your FPS gets too low the AI will drive badly. Try lowering the number of AI cars if you need more FPS.",
+    "startTitle": "Street Race #10",
+    "stoppedLimit": 0,
+    "useGroundmarkers": false,
+    "vehicleGroupActive": true
+  },
+  "name": "Street Race #10",
+  "retryBehaviour": "infiniteRetries",
+  "setupModules": {
+    "environment": {
+      "enabled": true,
+      "fogDensity": 0,
+      "time": 0.2083333333,
+      "timeScale": 0,
+      "windDirAngle": 0,
+      "windSpeed": 0
+    },
+    "traffic": {
+      "activeAmount": 1,
+      "amount": 10,
+      "enabled": true,
+      "parkedAmount": 0,
+      "respawnRate": 3,
+      "useGameOptions": false,
+      "usePrevTraffic": false,
+      "useSimpleVehs": true,
+      "useTraffic": true
+    },
+    "vehicles": {
+      "enabled": true,
+      "includePlayerVehicle": true,
+      "prioritizePlayerVehicle": true,
+      "vehicles": []
+    }
+  },
+  "startCondition": {
+    "type": "always"
+  },
+  "startTrigger": {
+    "level": "west_coast_usa",
+    "pos": [
+      -106.1132507,
+      1825.43335,
+      101.7489548
+    ],
+    "radius": 3,
+    "rot": [
+      0,
+      0,
+      0.7555139413,
+      0.6551328104
+    ],
+    "type": "coordinates"
+  },
+  "visibleCondition": {
+    "type": "always"
+  }
+}

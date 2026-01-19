@@ -1,0 +1,98 @@
+{
+  "name": "Techie Network",
+  "description": "Technical specialist. Knows every spec, every number. Talk tech or don't talk at all.",
+  "order": 2300,
+  "isSkill": true,
+  "icon": "wrench",
+  "parentBranch": "mysummer",
+  "startLocked": true,
+  "levels": [
+    {
+      "requiredValue": 0,
+      "description": {
+        "type": "unlockCard",
+        "icon": "question",
+        "heading": "Unknown",
+        "description": "You don't know this contact yet. Ghost can introduce you."
+      }
+    },
+    {
+      "requiredValue": 50,
+      "description": {
+        "type": "unlockCard",
+        "icon": "handshake",
+        "heading": "Acquaintance",
+        "description": "Techie recognizes your technical knowledge."
+      },
+      "unlockFlags": ["techie_basic_leads"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "search",
+          "heading": "Basic Leads",
+          "description": "Access to Techie's basic part leads."
+        }
+      ]
+    },
+    {
+      "requiredValue": 150,
+      "description": {
+        "type": "unlockCard",
+        "icon": "users",
+        "heading": "Associate",
+        "description": "Techie respects your builds. You speak the same language."
+      },
+      "unlockFlags": ["techie_race_challenge", "techie_medium_leads", "muscle_available"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "racingFlag",
+          "heading": "Race Challenge",
+          "description": "Challenge Techie to a technical street race."
+        },
+        {
+          "type": "unlockCard",
+          "icon": "user",
+          "heading": "New Contact",
+          "description": "Techie introduces you to Muscle."
+        }
+      ]
+    },
+    {
+      "requiredValue": 350,
+      "description": {
+        "type": "unlockCard",
+        "icon": "shield",
+        "heading": "Trusted",
+        "description": "Techie shares his advanced tuning secrets."
+      },
+      "unlockFlags": ["techie_premium_leads", "techie_exclusive_parts"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "star",
+          "heading": "Premium Leads",
+          "description": "Access to Techie's premium ECU and suspension parts."
+        }
+      ]
+    },
+    {
+      "requiredValue": 600,
+      "description": {
+        "type": "unlockCard",
+        "icon": "heart",
+        "heading": "Inner Circle",
+        "description": "You're one of Techie's trusted collaborators."
+      },
+      "unlockFlags": ["techie_all_access"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "crown",
+          "heading": "Full Access",
+          "description": "Complete access to Techie's technical network."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "name": "Ghost Network",
+  "description": "Underground contact specializing in engines and turbos. Former racer, extremely careful.",
+  "order": 2200,
+  "isSkill": true,
+  "icon": "userSecret",
+  "parentBranch": "mysummer",
+  "startLocked": false,
+  "levels": [
+    {
+      "requiredValue": 0,
+      "description": {
+        "type": "unlockCard",
+        "icon": "question",
+        "heading": "Unknown",
+        "description": "You don't know this contact yet."
+      }
+    },
+    {
+      "requiredValue": 50,
+      "description": {
+        "type": "unlockCard",
+        "icon": "handshake",
+        "heading": "Acquaintance",
+        "description": "Ghost knows your name. He's starting to trust you."
+      },
+      "unlockFlags": ["ghost_basic_leads"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "search",
+          "heading": "Basic Leads",
+          "description": "Access to Ghost's basic part leads."
+        }
+      ]
+    },
+    {
+      "requiredValue": 150,
+      "description": {
+        "type": "unlockCard",
+        "icon": "users",
+        "heading": "Associate",
+        "description": "Ghost trusts you with small jobs. You're part of the network now."
+      },
+      "unlockFlags": ["ghost_race_challenge", "ghost_medium_leads", "techie_available"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "racingFlag",
+          "heading": "Race Challenge",
+          "description": "Challenge Ghost to a street race."
+        },
+        {
+          "type": "unlockCard",
+          "icon": "user",
+          "heading": "New Contact",
+          "description": "Ghost introduces you to Techie."
+        }
+      ]
+    },
+    {
+      "requiredValue": 350,
+      "description": {
+        "type": "unlockCard",
+        "icon": "shield",
+        "heading": "Trusted",
+        "description": "Ghost shares his best contacts. You've proven yourself."
+      },
+      "unlockFlags": ["ghost_premium_leads", "ghost_exclusive_parts"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "star",
+          "heading": "Premium Leads",
+          "description": "Access to Ghost's best part leads."
+        }
+      ]
+    },
+    {
+      "requiredValue": 600,
+      "description": {
+        "type": "unlockCard",
+        "icon": "heart",
+        "heading": "Inner Circle",
+        "description": "You're family now. Ghost trusts you completely."
+      },
+      "unlockFlags": ["ghost_all_access"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "crown",
+          "heading": "Full Access",
+          "description": "Complete access to Ghost's network."
+        }
+      ]
+    }
+  ]
+}

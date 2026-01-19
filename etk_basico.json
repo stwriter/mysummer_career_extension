@@ -1,0 +1,662 @@
+{
+  mainPartName = "etki",
+  mainPartPath = "/etki",
+  model = "etki",
+  paints = { {
+      baseColor = { 0.03, 0.06, 0.2, 1.2 },
+      clearcoat = 0,
+      clearcoatRoughness = 0,
+      metallic = 0,
+      roughness = 0.07
+    }, {
+      baseColor = { 0.03, 0.06, 0.2, 1.2 },
+      clearcoat = 0,
+      clearcoatRoughness = 0,
+      metallic = 0,
+      roughness = 0.07
+    }, {
+      baseColor = { 0.03, 0.06, 0.2, 1.2 },
+      clearcoat = 0,
+      clearcoatRoughness = 0,
+      metallic = 0,
+      roughness = 0.07
+    } },
+  partConfigFilename = "vehicles/etki/rolling.pc",
+  partsTree = {
+    children = {
+      etki_body = {
+        children = {
+          etki_ABS = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_ABS",
+            path = "/etki_body/etki_ABS/",
+            suitablePartNames = { "etki_ABS" },
+            unsuitablePartNames = {}
+          },
+          etki_backlight = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_backlight",
+            path = "/etki_body/etki_backlight/",
+            suitablePartNames = { "etki_backlight" },
+            unsuitablePartNames = {}
+          },
+          etki_bumper_F = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_bumper_F",
+            path = "/etki_body/etki_bumper_F/",
+            suitablePartNames = { "etki_offroad_bumper_f", "etki_bumper_F", "etki_bumper_F_alt", "etki_bumper_F_kit", "etki_bumper_F_kit_alt" },
+            unsuitablePartNames = {}
+          },
+          etki_bumper_R = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_bumper_R",
+            path = "/etki_body/etki_bumper_R/",
+            suitablePartNames = { "etki_bumper_R_kit", "etki_bumper_R", "etki_bumper_R_alt" },
+            unsuitablePartNames = {}
+          },
+          etki_bumperbar_F = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_bumperbar_F",
+            path = "/etki_body/etki_bumperbar_F/",
+            suitablePartNames = { "etki_bumperbar_F" },
+            unsuitablePartNames = {}
+          },
+          etki_door_FL = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_door_FL",
+            path = "/etki_body/etki_door_FL/",
+            suitablePartNames = { "etki_door_FL" },
+            unsuitablePartNames = {}
+          },
+          etki_door_FR = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_door_FR",
+            path = "/etki_body/etki_door_FR/",
+            suitablePartNames = { "etki_door_FR" },
+            unsuitablePartNames = {}
+          },
+          etki_door_RL = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_door_RL",
+            path = "/etki_body/etki_door_RL/",
+            suitablePartNames = { "etki_door_RL" },
+            unsuitablePartNames = {}
+          },
+          etki_door_RR = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_door_RR",
+            path = "/etki_body/etki_door_RR/",
+            suitablePartNames = { "etki_door_RR" },
+            unsuitablePartNames = {}
+          },
+          etki_engine = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_engine",
+            path = "/etki_body/etki_engine/",
+            suitablePartNames = { "etki_engine_3.0", "etki_engine_2.4" },
+            unsuitablePartNames = {}
+          },
+          etki_exhaust = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_exhaust",
+            path = "/etki_body/etki_exhaust/",
+            suitablePartNames = { "etki_exhaust_wide", "etki_exhaust", "etki_exhaust_race", "etki_exhaust_dual" },
+            unsuitablePartNames = {}
+          },
+          etki_fender_L = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_fender_L",
+            path = "/etki_body/etki_fender_L/",
+            suitablePartNames = { "etki_fender_L", "etki_offroad_fender_L" },
+            unsuitablePartNames = {}
+          },
+          etki_fender_R = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_fender_R",
+            path = "/etki_body/etki_fender_R/",
+            suitablePartNames = { "etki_fender_R", "etki_offroad_fender_R" },
+            unsuitablePartNames = {}
+          },
+          etki_fenderflare_R = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_fenderflare_R",
+            path = "/etki_body/etki_fenderflare_R/",
+            suitablePartNames = { "etki_fenderflare_R", "etki_fenderflare_R_kit" },
+            unsuitablePartNames = {}
+          },
+          etki_fueltank = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_fueltank",
+            path = "/etki_body/etki_fueltank/",
+            suitablePartNames = { "etki_fueltank" },
+            unsuitablePartNames = {}
+          },
+          etki_grille = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_grille",
+            path = "/etki_body/etki_grille/",
+            suitablePartNames = { "etki_grille" },
+            unsuitablePartNames = {}
+          },
+          etki_headlight_L = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_headlight_L",
+            path = "/etki_body/etki_headlight_L/",
+            suitablePartNames = { "etki_headlight_L", "etki_headlight_L_alt" },
+            unsuitablePartNames = {}
+          },
+          etki_headlight_R = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_headlight_R",
+            path = "/etki_body/etki_headlight_R/",
+            suitablePartNames = { "etki_headlight_R_alt", "etki_headlight_R" },
+            unsuitablePartNames = {}
+          },
+          etki_hood = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_hood",
+            path = "/etki_body/etki_hood/",
+            suitablePartNames = { "etki_hood", "etki_hood_vents" },
+            unsuitablePartNames = {}
+          },
+          etki_interior = {
+            children = {
+              etki_seat_FL = {
+                chosenPartName = "",
+                decisionMethod = "user-empty",
+                id = "etki_seat_FL",
+                path = "/etki_body/etki_interior/etki_seat_FL/",
+                suitablePartNames = { "etki_seat_FL", "etki_race_seat_FL" },
+                unsuitablePartNames = {}
+              },
+              etki_seat_FR = {
+                chosenPartName = "",
+                decisionMethod = "user-empty",
+                id = "etki_seat_FR",
+                path = "/etki_body/etki_interior/etki_seat_FR/",
+                suitablePartNames = { "etki_race_seat_FR", "etki_seat_FR" },
+                unsuitablePartNames = {}
+              },
+              etki_seats_R = {
+                chosenPartName = "",
+                decisionMethod = "user-empty",
+                id = "etki_seats_R",
+                path = "/etki_body/etki_interior/etki_seats_R/",
+                suitablePartNames = { "etki_seats_R_cargo_load_floor", "etki_seats_R" },
+                unsuitablePartNames = {}
+              },
+              etki_steer = {
+                chosenPartName = "",
+                decisionMethod = "user-empty",
+                id = "etki_steer",
+                path = "/etki_body/etki_interior/etki_steer/",
+                suitablePartNames = { "etki_steer_01a", "etki_steer_corse", "etki_steer_03a", "etki_steer_02a", "etki_steer_05a", "etki_steer_04a", "etki_steer_02c", "etki_steer", "etki_steer_sport", "etki_steer_02b" },
+                unsuitablePartNames = {}
+              },
+              gps = {
+                chosenPartName = "",
+                decisionMethod = "user-empty",
+                id = "gps",
+                path = "/etki_body/etki_interior/gps/",
+                suitablePartNames = { "gps" },
+                unsuitablePartNames = {}
+              },
+              skin_gauges = {
+                chosenPartName = "etki_gauges_metric_ttsport",
+                decisionMethod = "user",
+                id = "skin_gauges",
+                partPath = "/etki_body/etki_interior/skin_gauges/etki_gauges_metric_ttsport",
+                path = "/etki_body/etki_interior/skin_gauges/",
+                suitablePartNames = { "etki_gauges_metric_ttsport", "etki_gauges_metric", "etki_gauges_imperial", "etki_gauges_imperial_ttsport" },
+                unsuitablePartNames = {}
+              },
+              skin_interior = {
+                chosenPartName = "etki_skin_interior_sport",
+                decisionMethod = "user",
+                id = "skin_interior",
+                partPath = "/etki_body/etki_interior/skin_interior/etki_skin_interior_sport",
+                path = "/etki_body/etki_interior/skin_interior/",
+                suitablePartNames = { "etki_skin_interior_cream", "etki_skin_interior_sport", "etki_skin_interior_facelift", "etki_skin_interior" },
+                unsuitablePartNames = {}
+              },
+              soundscape_horn = {
+                chosenPartName = "",
+                decisionMethod = "user-empty",
+                id = "soundscape_horn",
+                path = "/etki_body/etki_interior/soundscape_horn/",
+                suitablePartNames = { "soundscape_horn_103", "soundscape_horn_102", "soundscape_horn_127", "soundscape_horn_111", "soundscape_horn_110", "soundscape_horn_126", "soundscape_horn_108", "soundscape_horn_11", "soundscape_horn_9", "soundscape_horn_107", "soundscape_horn_106", "soundscape_horn_120", "soundscape_horn_4", "soundscape_horn_117", "soundscape_horn_113", "soundscape_horn_131", "soundscape_horn_124", "soundscape_horn_130", "soundscape_horn_122", "soundscape_horn_121", "soundscape_horn_115", "soundscape_horn_109", "soundscape_horn_112", "soundscape_horn_101", "soundscape_horn_10", "soundscape_horn_6", "soundscape_horn_125", "soundscape_horn_114", "soundscape_horn_1", "soundscape_horn_123", "soundscape_horn_3", "soundscape_horn_129", "soundscape_horn_118", "soundscape_horn_116", "soundscape_horn_12", "soundscape_horn_2", "soundscape_horn_5", "soundscape_horn_105", "soundscape_horn_8", "soundscape_horn_104", "soundscape_horn_119", "soundscape_horn_128", "soundscape_horn_7" },
+                unsuitablePartNames = {}
+              }
+            },
+            chosenPartName = "etki_interior",
+            decisionMethod = "user",
+            id = "etki_interior",
+            partPath = "/etki_body/etki_interior/etki_interior",
+            path = "/etki_body/etki_interior/",
+            suitablePartNames = { "etki_interior", "etki_interior_rally" },
+            unsuitablePartNames = {}
+          },
+          etki_licenseplate_R = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_licenseplate_R",
+            path = "/etki_body/etki_licenseplate_R/",
+            suitablePartNames = { "etki_licenseplate_R", "etki_licenseplate_R_EU" },
+            unsuitablePartNames = {}
+          },
+          etki_lip_F = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_lip_F",
+            path = "/etki_body/etki_lip_F/",
+            suitablePartNames = { "etki_chinspoiler", "etki_chinspoiler_kit", "etki_lip_F_base" },
+            unsuitablePartNames = {}
+          },
+          etki_mudflap_R = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_mudflap_R",
+            path = "/etki_body/etki_mudflap_R/",
+            suitablePartNames = { "etki_mudflap_R" },
+            unsuitablePartNames = {}
+          },
+          etki_oilcooler = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_oilcooler",
+            path = "/etki_body/etki_oilcooler/",
+            suitablePartNames = { "etki_oilcooler" },
+            unsuitablePartNames = {}
+          },
+          etki_radiator = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_radiator",
+            path = "/etki_body/etki_radiator/",
+            suitablePartNames = { "etki_radiator_race", "etki_radiator" },
+            unsuitablePartNames = {}
+          },
+          etki_rollcage = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_rollcage",
+            path = "/etki_body/etki_rollcage/",
+            suitablePartNames = { "etki_rollcage", "etki_offroad_rollcage" },
+            unsuitablePartNames = {}
+          },
+          etki_roof_accessory = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_roof_accessory",
+            path = "/etki_body/etki_roof_accessory/",
+            suitablePartNames = { "etki_beaconlight", "etki_concealed_flashers", "etki_cargo_load_roofbars", "etki_roofscoop", "etki_roofscoop_alt" },
+            unsuitablePartNames = {}
+          },
+          etki_roof_antenna = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_roof_antenna",
+            path = "/etki_body/etki_roof_antenna/",
+            suitablePartNames = { "etki_roof_antenna_rally", "etki_roof_antenna" },
+            unsuitablePartNames = {}
+          },
+          etki_sideskirt = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_sideskirt",
+            path = "/etki_body/etki_sideskirt/",
+            suitablePartNames = { "etki_sideskirt_offroad", "etki_sideskirt", "etki_sideskirt_kit" },
+            unsuitablePartNames = {}
+          },
+          etki_skidplate = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_skidplate",
+            path = "/etki_body/etki_skidplate/",
+            suitablePartNames = { "etki_skidplate_rally", "etki_skidplate" },
+            unsuitablePartNames = {}
+          },
+          etki_skidplate_sides = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_skidplate_sides",
+            path = "/etki_body/etki_skidplate_sides/",
+            suitablePartNames = { "etki_skidplate_sides" },
+            unsuitablePartNames = {}
+          },
+          etki_spoiler_window = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_spoiler_window",
+            path = "/etki_body/etki_spoiler_window/",
+            suitablePartNames = { "etki_spoiler_window" },
+            unsuitablePartNames = {}
+          },
+          etki_strut_bar = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_strut_bar",
+            path = "/etki_body/etki_strut_bar/",
+            suitablePartNames = { "etki_strut_bar" },
+            unsuitablePartNames = {}
+          },
+          etki_suspension_F = {
+            children = {
+              etki_brake_F = {
+                chosenPartName = "",
+                decisionMethod = "user-empty",
+                id = "etki_brake_F",
+                path = "/etki_body/etki_suspension_F/etki_brake_F/",
+                suitablePartNames = { "etki_brake_F_race", "etki_brake_F_sport", "etki_brake_F" },
+                unsuitablePartNames = {}
+              },
+              etki_differential_F = {
+                chosenPartName = "",
+                decisionMethod = "user-empty",
+                id = "etki_differential_F",
+                path = "/etki_body/etki_suspension_F/etki_differential_F/",
+                suitablePartNames = { "etki_differential_F", "etki_differential_F_LSD", "etki_differential_F_race" },
+                unsuitablePartNames = {}
+              },
+              etki_steering = {
+                chosenPartName = "",
+                decisionMethod = "user-empty",
+                id = "etki_steering",
+                path = "/etki_body/etki_suspension_F/etki_steering/",
+                suitablePartNames = { "etki_steering", "etki_steering_rally" },
+                unsuitablePartNames = {}
+              },
+              etki_strut_F = {
+                chosenPartName = "",
+                decisionMethod = "user-empty",
+                id = "etki_strut_F",
+                path = "/etki_body/etki_suspension_F/etki_strut_F/",
+                suitablePartNames = { "etki_strut_F_lifted", "etki_strut_F_rally", "etki_strut_F_race", "etki_strut_F_sport", "etki_strut_F" },
+                unsuitablePartNames = {}
+              },
+              etki_swaybar_F = {
+                chosenPartName = "",
+                decisionMethod = "user-empty",
+                id = "etki_swaybar_F",
+                path = "/etki_body/etki_suspension_F/etki_swaybar_F/",
+                suitablePartNames = { "etki_swaybar_F_TT", "etki_swaybar_F_sport", "etki_swaybar_F_race", "etki_swaybar_F" },
+                unsuitablePartNames = {}
+              },
+              etki_wheeldata_F = {
+                chosenPartName = "etki_wheeldata_F",
+                decisionMethod = "user",
+                id = "etki_wheeldata_F",
+                partPath = "/etki_body/etki_suspension_F/etki_wheeldata_F/etki_wheeldata_F",
+                path = "/etki_body/etki_suspension_F/etki_wheeldata_F/",
+                suitablePartNames = { "etki_wheeldata_F" },
+                unsuitablePartNames = {}
+              },
+              wheel_F_5 = {
+                children = {
+                  hubcap_F_14 = {
+                    chosenPartName = "",
+                    decisionMethod = "user-empty",
+                    id = "hubcap_F_14",
+                    path = "/etki_body/etki_suspension_F/wheel_F_5/hubcap_F_14/",
+                    suitablePartNames = { "hubcap_08a_14_F", "hubcap_06a_14_F", "hubcap_07a_14_F", "hubcap_01a_F_14", "bruckell_hubcap_02a_14_F", "bruckell_hubcap_04a_14_F", "bruckell_hubcap_03a_14_F", "bruckell_hubcap_01b_14_F", "ibishu_hubcap_05a_14_F", "ibishu_hubcap_04a_14_F", "ibishu_hubcap_03a_14_F", "ibishu_hubcap_02a_14_F" },
+                    unsuitablePartNames = {}
+                  },
+                  ["tire_F_14x5.5"] = {
+                    chosenPartName = "tire_F_175_65_14_standard",
+                    decisionMethod = "user",
+                    id = "tire_F_14x5.5",
+                    partPath = "/etki_body/etki_suspension_F/wheel_F_5/tire_F_14x5.5/tire_F_175_65_14_standard",
+                    path = "/etki_body/etki_suspension_F/wheel_F_5/tire_F_14x5.5/",
+                    suitablePartNames = { "tire_F_175_65_14_standard", "tire_F_185_70_14_standard", "tire_F_185_75_14_standard_ww", "tire_F_185_75_14_standard", "tire_F_175_65_14_sport", "tire_F_185_70_14_sport", "tire_F_165_70_14_rally", "tire_F_185_70_14_eco" },
+                    unsuitablePartNames = {}
+                  }
+                },
+                chosenPartName = "steelwheel_01a_14x5.5_F_alt",
+                decisionMethod = "user",
+                id = "wheel_F_5",
+                partPath = "/etki_body/etki_suspension_F/wheel_F_5/steelwheel_01a_14x5.5_F_alt",
+                path = "/etki_body/etki_suspension_F/wheel_F_5/",
+                suitablePartNames = { "wheel_38a_15x7_F", "wheel_37b_15x7_F", "wheel_36c_16x8_F", "lansdale_wheel_alloy_A_17x7_F", "wheel_37a_15x7_F", "lansdale_wheel_alloy_C_15x7_F", "wheel_36a_16x8_F", "wheel_38b_15x7_F", "lansdale_wheel_alloy_B_17x7_F", "lansdale_wheel_alloy_D_16x7_F", "wheel_36b_16x8_F", "wheel_25a_16x7_5_F", "wheel_06c_17x9_F", "wheel_25b_16x7_5_F", "wheel_06c_17x8_F", "wheel_06b_17x8_F", "wheel_06a_17x9_F", "wheel_06b_17x9_F", "wheel_06a_17x8_F", "wheel_27a_15x7_F", "wheel_17b_15x7_F_alt", "wheel_26b_15x7_F", "wheel_17d_15x6_F_alt", "wheel_17c_16x8_F", "wheel_dreid_c70_19x10_F", "wheel_17a_15x8_F_alt", "wheel_17c_15x8_F_alt", "wheel_17a_16x8_F", "wheel_26a_17x8_F", "wheel_dreid_c70_19x11_F", "wheel_dreid_c70_18x11_F", "wheel_dreid_c70_19x12_F", "wheel_dreid_c70_18x9_F", "wheel_dreid_c70_19x9_F", "wheel_17b_15x8_F_alt", "wheel_17a_15x7_F_alt", "wheel_26b_16x8_F", "wheel_26a_15x6_F", "wheel_26b_17x8_F", "wheel_17c_15x7_F_alt", "wheel_dreid_c70_18x10_F", "wheel_17b_15x6_F_alt", "wheel_17d_16x8_F", "wheel_17d_15x7_F_alt", "wheel_17a_15x6_F_alt", "wheel_27a_15x6_F", "wheel_17c_15x6_F_alt", "wheel_26a_15x7_F", "wheel_17d_15x8_F_alt", "wheel_26b_15x6_F", "wheel_17b_16x8_F", "wheel_26a_16x8_F", "wheel_square_01a_small_F", "autobello_wheel_03_15x6_F", "autobello_wheel_03_15x8_F", "wheel_09a_15x10_F", "wheel_39d_15x11_F", "wheel_24b_14x7_F", "wheel_39d_15x7_F", "wheel_43b_18x5_F", "wheel_39d_18x10_F", "wheel_39c_15x7_F", "wheel_02b_18x10_F_alt", "wheel_43b_15x4_F", "wheel_15a_15x7_F_altb", "wheel_03a_15x7_F_altb", "wheel_03c_14x7_F_alt", "wheel_40a_17x8_F", "wheel_46a_15x4_F", "wheel_46a_15x7_F", "wheel_13a_15x7_F", "wheel_34b_18x8_F", "wheel_03d_16x8_F", "wheel_11a_17x9_F", "wheel_11a_17x8_F", "wheel_34b_18x9_F", "wheel_15a_16x8_F", "wheel_03c_15x7_F_altb", "wheel_42a_22x9_F", "wheel_40b_17x9_F", "wheel_15b_15x7_F_alt", "wheel_03b_15x8_F_alt", "wheel_07a_19x9_F", "wheel_11b_16x8_F", "wheel_39a_16x8_F", "wheel_07a_20x11_F", "wheel_07a_17x8_F", "wheel_03c_16x8_F", "wheel_07a_19x10_F", "wheel_39b_17x9_F", "wheel_34b_18x10_F", "wheel_34b_19x11_F", "wheel_42c_22x9_F", "wheel_11c_18x9_F", "wheel_04a_15x8_F", "wheel_14a_14x7_F", "wheel_04a_15x9_F", "wheel_02b_16x8_F", "wheel_33a_15x9_F", "wheel_33a_15x8_F", "wheel_43b_15x10_F", "wheel_03d_14x7_F_alt", "wheel_33b_15x7_F", "wheel_14a_15x8_F", "wheel_14b_14x8_F", "wheel_24a_14x7_F", "wheel_11c_16x8_F", "wheel_14a_15x9_F", "wheel_34b_19x10_F", "wheel_39a_15x7_F", "wheel_33b_15x9_F", "wheel_34b_19x9_F", "wheel_43a_15x9_F", "wheel_03a_16x8_F", "wheel_39b_15x7_F", "wheel_14b_15x8_F", "wheel_11c_18x10_F", "wheel_34a_18x10_F", "wheel_43a_15x4_F", "wheel_34a_19x8_F", "wheel_43a_18x5_F", "wheel_11a_18x10_F", "wheel_03b_15x7_F_alt", "wheel_09a_15x9_F", "wheel_11b_18x10_F", "wheel_34a_18x8_F", "wheel_34a_19x11_F", "wheel_34a_19x10_F", "wheel_34a_19x9_F", "wheel_09a_15x8_F", "wheel_39c_15x8_F", "wheel_34b_19x8_F", "wheel_39c_15x9_F", "wheel_07a_18x9_F", "wheel_39b_15x9_F", "wheel_03d_15x8_F_alt", "wheel_07a_18x10_F", "wheel_11c_18x8_F", "wheel_07a_17x10_F", "wheel_07a_17x9_F", "wheel_03d_15x7_F_alt", "wheel_11b_18x8_F", "wheel_39d_15x8_F", "wheel_11d_18x10_F", "wheel_03a_15x7_F_alt", "wheel_11d_18x9_F", "wheel_34a_17x8_F", "wheel_11b_18x9_F", "wheel_15b_15x7_F_altb", "wheel_02a_18x10_F_alt", "wheel_22b_14x7_F", "wheel_03b_15x7_F_altb", "wheel_40c_18x8_F", "wheel_40a_18x9_F", "wheel_11a_18x9_F", "wheel_40c_18x9_F", "wheel_34a_17x9_F", "wheel_03b_16x8_F", "wheel_11d_18x8_F", "wheel_42a_26x9_F", "wheel_39d_15x9_F", "wheel_02b_18x10_F", "wheel_42b_24x9_F", "wheel_11a_18x8_F", "wheel_39b_15x8_F", "wheel_11d_17x8_F", "wheel_14b_15x9_F", "wheel_40b_17x8_F", "wheel_09a_15x4_F", "wheel_03d_15x7_F_altb", "wheel_42c_24x9_F", "wheel_02a_18x10_F", "wheel_39b_15x11_F", "wheel_22a_14x7_F", "wheel_09a_15x7_F", "wheel_11b_17x9_F", "wheel_15a_15x8_F", "wheel_11c_17x9_F", "wheel_11a_16x8_F", "wheel_15b_15x8_F", "wheel_39a_15x9_F", "wheel_43b_15x9_F", "wheel_39b_18x10_F", "wheel_15b_16x8_F", "wheel_14a_14x8_F", "wheel_39a_18x10_F", "wheel_11d_17x9_F", "wheel_46a_15x10_F", "wheel_03b_14x7_F_alt", "wheel_03a_15x8_F_alt", "wheel_15a_15x7_F_alt", "wheel_15b_14x7_F_alt", "wheel_39b_16x8_F", "wheel_42b_26x9_F", "wheel_39a_15x11_F", "wheel_42b_22x9_F", "wheel_03c_15x7_F_alt", "wheel_46a_15x9_F", "wheel_42a_24x9_F", "wheel_02a_16x8_F", "wheel_42c_26x9_F", "wheel_43a_15x10_F", "wheel_40c_17x9_F", "wheel_40c_17x8_F", "wheel_40b_18x9_F", "wheel_40b_18x8_F", "wheel_39d_16x8_F", "wheel_03c_15x8_F_alt", "wheel_34a_18x9_F", "wheel_40a_18x8_F", "wheel_39b_17x8_F", "wheel_11c_17x8_F", "wheel_46a_15x8_F", "wheel_40a_17x9_F", "wheel_39c_15x11_F", "wheel_33a_15x7_F", "wheel_39c_17x9_F", "wheel_39d_17x9_F", "wheel_39c_17x8_F", "wheel_39a_15x8_F", "wheel_11b_17x8_F", "wheel_39a_17x9_F", "wheel_39d_17x8_F", "wheel_14b_14x7_F", "wheel_39c_18x10_F", "wheel_34b_17x9_F", "wheel_39a_17x8_F", "wheel_39c_16x8_F", "wheel_34b_17x8_F", "wheel_13a_15x9_F", "wheel_15a_14x7_F_alt", "wheel_11d_16x8_F", "wheel_33b_15x8_F", "wheel_03a_14x7_F_alt", "etk_wheel_09a_19x10_F", "etk_wheel_07a_16x8_F", "etk_wheel_09b_19x10_F", "etk_wheel_02a_18x9_F", "wheel_21a_15x7_F", "etk_wheel_06b_18x9_F", "etk_wheel_07a_16x7_F", "etk_wheel_06a_19x10_F", "etk_wheel_05a_17x8_F", "etk_wheel_06b_19x10_F", "etk_wheel_09a_19x9_F", "etk_wheel_06b_19x9_F", "etk_wheel_04a_19x9_F", "wheel_21b_15x7_F", "etk_wheel_06a_19x9_F", "etk_wheel_10b_19x9_F", "etk_wheel_04a_19x10_F", "etk_wheel_08a_19x9_F", "wheel_21a_15x8_F", "wheel_19a_15x7_F", "etk_wheel_06a_18x9_F", "wheel_rennspecht_01a_19x9_F", "etk_wheel_10a_19x9_F", "wheel_19b_15x7_F", "etk_wheel_08a_19x10_F", "etk_wheel_03a_18x9_F", "wheel_rennspecht_01b_19x9_F", "etk_wheel_09b_19x9_F", "wheel_21b_15x8_F", "etk_wheel_01a_18x9_F", "steelwheel_01a_14x5.5_F_alt", "steelwheel_01a_15x11_F", "steelwheel_03c_15x6_F", "steelwheel_11a_14x6_F", "steelwheel_09a_15x7_F", "steelwheel_13b_15x7_F", "steelwheel_08a_15x8_F", "steelwheel_05a_15x9_F", "offroadwheel_03a_15x9_F_alt", "offroadwheel_03d_15x8_F_alt", "offroadwheel_03c_15x8_F_alt", "offroadwheel_03b_15x8_F_alt", "offroadwheel_03b_15x9_F_alt", "steelwheel_03a_15x9_F", "steelwheel_03b_15x9_F", "steelwheel_03b_15x7_F", "steelwheel_03c_15x9_F", "steelwheel_01a_15x7_F", "steelwheel_03c_14x6_F", "steelwheel_05a_15x8_F", "steelwheel_01a_17x8_F", "steelwheel_14a_15x7_F", "steelwheel_03b_15x6_F", "steelwheel_16b_16x7_F", "offroadwheel_03d_15x9_F_alt", "steelwheel_08a_14x7_F", "offroadwheel_03c_15x9_F_alt", "steelwheel_03a_15x6_F", "steelwheel_01a_15x8_F", "steelwheel_03c_15x7_F", "steelwheel_03a_15x7_F", "steelwheel_01a_15x7_F_alt", "steelwheel_03a_14x6_F", "steelwheel_03b_14x6_F", "steelwheel_13a_15x7_F", "offroadwheel_03a_15x8_F_alt", "steelwheel_09a_14x7_F", "steelwheel_08a_15x9_F", "ibishu_wheel_07b_15x7_F", "ibishu_wheel_04a_16x7_F", "ibishu_wheel_03a_15x7_F", "ibishu_wheel_05a_15x7_F", "ibishu_wheel_09b_17x7_F", "ibishu_wheel_07a_15x7_F", "ibishu_wheel_01a_15x7_F", "ibishu_wheel_09a_17x7_F", "ibishu_wheel_02a_15x7_F", "wheel_23c_20x11_F", "wheel_18d_17x9_F", "wheel_23b_20x11_F", "wheel_18e_16x8_F", "wheel_18c_16x8_F", "wheel_05a_17x7_F", "wheel_23a_19x9_F", "wheel_23a_17x8_F", "wheel_20a_17x8_F", "wheel_23b_20x9_F", "wheel_23b_17x8_F", "wheel_20b_16x8_F", "wheel_20a_16x8_F", "wheel_20c_16x8_F", "wheel_23c_20x9_F", "wheel_23a_16x8_F", "wheel_20b_17x9_F", "wheel_18d_16x8_F", "wheel_23a_17x9_F", "wheel_18e_17x8_F", "wheel_18a_17x8_F", "wheel_23c_16x8_F", "wheel_23b_19x9_F", "wheel_23a_20x11_F", "wheel_23c_19x9_F", "wheel_23b_17x9_F", "wheel_23c_17x8_F", "wheel_20c_17x8_F", "wheel_18b_16x8_F", "wheel_18c_17x9_F", "wheel_23b_16x8_F", "wheel_23a_20x9_F", "wheel_18b_17x8_F", "wheel_20b_17x8_F", "wheel_18b_17x9_F", "wheel_20a_17x9_F", "wheel_20c_17x9_F", "wheel_18a_16x8_F", "wheel_18d_17x8_F", "wheel_18c_17x8_F", "wheel_23c_17x9_F", "wheel_18a_17x9_F", "wheel_18e_17x9_F", "wheel_nine_17x4_b_F", "wheel_nine_17x4_a_F", "wheel_nine_17x4_c_F", "wheel_08c_15x9_F", "wheel_08b_15x9_F", "wheel_08a_15x9_F", "wheel_civetta_darkowl_22x12_F", "wheel_civetta_stradale_22x12_F", "wheel_civetta_forgiato_20x9_F", "wheel_civetta_fuoco_20x9_F", "super_wheel_15x10_F", "wheel_civetta_scintilla_20x9_F", "super_wheel_15x8_F", "wheel_civetta_velocita_a_20x9_F", "wheel_civetta_velocita_b_20x9_F", "hirochi_wheel_01a_17x9_F", "hirochi_wheel_03a_18x8_F", "hirochi_wheel_05a_18x11_F", "hirochi_wheel_07b_18x11_F", "hirochi_wheel_07a_18x11_F", "hirochi_wheel_05a_18x8_F", "hirochi_wheel_03a_18x11_F", "hirochi_wheel_02a_16x7_F", "hirochi_wheel_04a_19x8_F", "hirochi_wheel_01a_17x7_F", "hirochi_wheel_04a_19x11_F", "hirochi_wheel_06a_19x11_F", "hirochi_wheel_06b_19x11_F", "hirochi_wheel_06a_19x8_F", "hirochi_wheel_06b_19x8_F", "hirochi_wheel_07a_18x8_F", "hirochi_wheel_07b_18x8_F", "faser_offroadwheel_01a_15x6_F", "offroadwheel_08a_15x6_F", "faser_offroadwheel_01a_17x9_F", "offroadwheel_07a_17x9_F", "faser_offroadwheel_01a_17x7_F", "faser_offroadwheel_01b_15x6_F", "faser_offroadwheel_01b_17x9_F", "offroadwheel_07a_17x7_F", "faser_offroadwheel_01c_17x9_F", "faser_offroadwheel_01c_17x7_F", "faser_offroadwheel_01b_17x7_F", "faser_offroadwheel_01c_15x6_F", "cherrier_wheel_02a_19x9_F", "cherrier_wheel_02b_19x9_F", "cherrier_wheel_04a_18x8_F", "steelwheel_16a_16x7_F", "cherrier_wheel_03a_17x7_F", "cherrier_wheel_01a_17x7_F", "cherrier_wheel_04b_18x8_F", "cherrier_wheel_03b_17x7_F", "steelwheel_15a_15x9_F", "steelwheel_15c_15x6_F", "steelwheel_15b_15x10_F", "steelwheel_15c_15x7_F", "steelwheel_15b_15x6_F", "steelwheel_15b_16x4_F", "steelwheel_15c_15x9_F", "steelwheel_15b_15x7_F", "steelwheel_15c_14x6_F", "steelwheel_15a_15x10_F", "steelwheel_15a_15x6_F", "steelwheel_15a_14x6_F", "steelwheel_15a_15x7_F", "steelwheel_15b_14x6_F", "steelwheel_15c_15x10_F", "steelwheel_15a_16x4_a_F", "steelwheel_15b_15x9_F", "steelwheel_15c_16x4_F", "bruckell_wheel_02b_20x9_F", "bruckell_wheel_02b_20x8_F", "bruckell_wheel_02a_18x8_F", "bruckell_wheel_04b_20x11_F", "bruckell_wheel_03a_20x9_F", "bruckell_wheel_01a_17x8_F", "bruckell_wheel_03a_20x8_F", "bruckell_wheel_04a_20x11_F", "bruckell_wheel_02a_20x9_F", "bruckell_wheel_02a_20x8_F", "bruckell_wheel_02b_18x8_F" },
+                unsuitablePartNames = {}
+              }
+            },
+            chosenPartName = "etki_suspension_F",
+            decisionMethod = "user",
+            id = "etki_suspension_F",
+            partPath = "/etki_body/etki_suspension_F/etki_suspension_F",
+            path = "/etki_body/etki_suspension_F/",
+            suitablePartNames = { "etki_suspension_F" },
+            unsuitablePartNames = {}
+          },
+          etki_suspension_R = {
+            children = {
+              etki_brake_R = {
+                chosenPartName = "",
+                decisionMethod = "user-empty",
+                id = "etki_brake_R",
+                path = "/etki_body/etki_suspension_R/etki_brake_R/",
+                suitablePartNames = { "etki_brake_R_sport", "etki_brake_R", "etki_brake_R_race" },
+                unsuitablePartNames = {}
+              },
+              etki_coilover_R = {
+                chosenPartName = "",
+                decisionMethod = "user-empty",
+                id = "etki_coilover_R",
+                path = "/etki_body/etki_suspension_R/etki_coilover_R/",
+                suitablePartNames = { "etki_coilover_R_sport", "etki_coilover_R_lifted", "etki_coilover_R_rally", "etki_coilover_R", "etki_coilover_R_race" },
+                unsuitablePartNames = {}
+              },
+              etki_differential_R = {
+                chosenPartName = "",
+                decisionMethod = "user-empty",
+                id = "etki_differential_R",
+                path = "/etki_body/etki_suspension_R/etki_differential_R/",
+                suitablePartNames = { "etki_differential_R", "etki_differential_R_LSD", "etki_differential_R_race", "etki_differential_R_welded" },
+                unsuitablePartNames = {}
+              },
+              etki_swaybar_R = {
+                chosenPartName = "",
+                decisionMethod = "user-empty",
+                id = "etki_swaybar_R",
+                path = "/etki_body/etki_suspension_R/etki_swaybar_R/",
+                suitablePartNames = { "etki_swaybar_R_race", "etki_swaybar_R_TT", "etki_swaybar_R_sport", "etki_swaybar_R" },
+                unsuitablePartNames = {}
+              },
+              etki_wheeldata_R = {
+                chosenPartName = "etki_wheeldata_R",
+                decisionMethod = "user",
+                id = "etki_wheeldata_R",
+                partPath = "/etki_body/etki_suspension_R/etki_wheeldata_R/etki_wheeldata_R",
+                path = "/etki_body/etki_suspension_R/etki_wheeldata_R/",
+                suitablePartNames = { "etki_wheeldata_R" },
+                unsuitablePartNames = {}
+              },
+              wheel_R_5 = {
+                children = {
+                  hubcap_R_14 = {
+                    chosenPartName = "",
+                    decisionMethod = "user-empty",
+                    id = "hubcap_R_14",
+                    path = "/etki_body/etki_suspension_R/wheel_R_5/hubcap_R_14/",
+                    suitablePartNames = { "hubcap_06a_14_R", "hubcap_08a_14_R", "hubcap_07a_14_R", "hubcap_01a_R_14", "bruckell_hubcap_02a_14_R", "bruckell_hubcap_03a_14_R", "bruckell_hubcap_04a_14_R", "bruckell_hubcap_01b_14_R", "ibishu_hubcap_02a_14_R", "ibishu_hubcap_04a_14_R", "ibishu_hubcap_03a_14_R", "ibishu_hubcap_05a_14_R" },
+                    unsuitablePartNames = {}
+                  },
+                  ["tire_R_14x5.5"] = {
+                    chosenPartName = "tire_R_175_65_14_standard",
+                    decisionMethod = "user",
+                    id = "tire_R_14x5.5",
+                    partPath = "/etki_body/etki_suspension_R/wheel_R_5/tire_R_14x5.5/tire_R_175_65_14_standard",
+                    path = "/etki_body/etki_suspension_R/wheel_R_5/tire_R_14x5.5/",
+                    suitablePartNames = { "tire_R_175_65_14_standard", "tire_R_185_70_14_standard", "tire_R_185_75_14_standard_ww", "tire_R_185_75_14_standard", "tire_R_185_70_14_eco", "tire_R_165_70_14_rally", "tire_R_175_65_14_sport", "tire_R_185_70_14_sport" },
+                    unsuitablePartNames = {}
+                  }
+                },
+                chosenPartName = "steelwheel_01a_14x5.5_R_alt",
+                decisionMethod = "user",
+                id = "wheel_R_5",
+                partPath = "/etki_body/etki_suspension_R/wheel_R_5/steelwheel_01a_14x5.5_R_alt",
+                path = "/etki_body/etki_suspension_R/wheel_R_5/",
+                suitablePartNames = { "autobello_wheel_03_15x6_R", "autobello_wheel_03_15x8_R", "bruckell_wheel_04a_20x11_R", "bruckell_wheel_03a_20x8_R", "bruckell_wheel_02b_20x9_R", "bruckell_wheel_02a_20x8_R", "bruckell_wheel_02a_20x9_R", "bruckell_wheel_02b_20x8_R", "bruckell_wheel_04b_20x11_R", "bruckell_wheel_03a_20x9_R", "bruckell_wheel_01a_17x8_R", "bruckell_wheel_02b_18x8_R", "bruckell_wheel_02a_18x8_R", "offroadwheel_07a_17x9_R", "faser_offroadwheel_01b_17x7_R", "faser_offroadwheel_01b_17x9_R", "faser_offroadwheel_01c_17x9_R", "faser_offroadwheel_01c_15x6_R", "faser_offroadwheel_01a_17x9_R", "faser_offroadwheel_01b_15x6_R", "faser_offroadwheel_01c_17x7_R", "offroadwheel_07a_17x7_R", "faser_offroadwheel_01a_17x7_R", "offroadwheel_08a_15x6_R", "faser_offroadwheel_01a_15x6_R", "steelwheel_15c_15x6_R", "steelwheel_15a_16x4_R", "steelwheel_15b_15x7_R", "steelwheel_15b_15x10_R", "steelwheel_15b_15x6_R", "steelwheel_15c_15x7_R", "steelwheel_15c_14x6_R", "steelwheel_15a_15x10_R", "steelwheel_15b_16x4_R", "steelwheel_15b_15x9_R", "steelwheel_15c_16x4_R", "steelwheel_15a_14x6_R", "steelwheel_15a_15x7_R", "steelwheel_15c_15x9_R", "steelwheel_15b_14x6_R", "steelwheel_15c_15x10_R", "steelwheel_15a_15x6_R", "steelwheel_15a_15x9_R", "steelwheel_01a_14x5.5_R_alt", "steelwheel_14a_15x7_R", "steelwheel_01a_15x8_R", "steelwheel_01a_15x11_R", "steelwheel_08a_15x9_R", "offroadwheel_03b_15x9_R_alt", "offroadwheel_03a_15x9_R_alt", "steelwheel_01a_14x6_R", "offroadwheel_03d_15x8_R_alt", "offroadwheel_03c_15x8_R_alt", "offroadwheel_03b_15x8_R_alt", "offroadwheel_03a_15x8_R_alt", "steelwheel_03c_15x6_R", "steelwheel_08a_14x7_R", "steelwheel_09a_14x7_R", "steelwheel_03b_15x9_R", "steelwheel_01a_15x7_R", "steelwheel_03a_15x9_R", "offroadwheel_03d_15x9_R_alt", "steelwheel_03a_14x6_R", "steelwheel_16b_16x7_R", "steelwheel_01a_17x8_R", "steelwheel_03b_15x6_R", "steelwheel_03a_15x6_R", "steelwheel_05a_15x9_R", "steelwheel_03c_15x7_R", "offroadwheel_03c_15x9_R_alt", "steelwheel_03a_15x7_R", "steelwheel_03c_14x6_R", "steelwheel_03b_14x6_R", "steelwheel_05a_15x8_R", "steelwheel_01a_15x7_R_alt", "steelwheel_03c_15x9_R", "steelwheel_09a_15x7_R", "steelwheel_13a_15x7_R", "steelwheel_13b_15x7_R", "steelwheel_03b_15x7_R", "steelwheel_08a_15x8_R", "wheel_17b_15x6_R_alt", "wheel_17c_16x8_R", "wheel_17d_15x8_R_alt", "wheel_17a_15x8_R_alt", "wheel_dreid_c70_18x10_R", "wheel_17c_15x8_R_alt", "wheel_17a_16x8_R", "wheel_dreid_c70_18x9_R", "wheel_dreid_c70_19x9_R", "wheel_26b_17x8_R", "wheel_26a_15x6_R", "wheel_26a_17x8_R", "wheel_17a_15x7_R_alt", "wheel_17b_16x8_R", "wheel_26a_16x8_R", "wheel_dreid_c70_18x11_R", "wheel_17b_15x8_R_alt", "wheel_17c_15x6_R_alt", "wheel_dreid_c70_19x10_R", "wheel_17d_15x7_R_alt", "wheel_26a_15x7_R", "wheel_dreid_c70_19x12_R", "wheel_26b_15x6_R", "wheel_26b_16x8_R", "wheel_17a_15x6_R_alt", "wheel_17b_15x7_R_alt", "wheel_17c_15x7_R_alt", "wheel_dreid_c70_19x11_R", "wheel_27a_15x7_R", "wheel_17d_15x6_R_alt", "wheel_27a_15x6_R", "wheel_17d_16x8_R", "wheel_26b_15x7_R", "cherrier_wheel_04a_18x8_R", "cherrier_wheel_03a_17x7_R", "cherrier_wheel_02b_19x9_R", "cherrier_wheel_04b_18x8_R", "steelwheel_16a_16x7_R", "cherrier_wheel_02a_19x9_R", "cherrier_wheel_03b_17x7_R", "cherrier_wheel_01a_17x7_R", "etk_wheel_07a_16x7_R", "etk_wheel_03a_18x9_R", "etk_wheel_06a_19x10_R", "etk_wheel_09b_19x9_R", "etk_wheel_04a_19x9_R", "etk_wheel_09a_19x10_R", "etk_wheel_06b_19x10_R", "etk_wheel_01a_18x9_R", "etk_wheel_04a_19x10_R", "etk_wheel_06a_18x9_R", "etk_wheel_02a_18x9_R", "etk_wheel_05a_17x8_R", "etk_wheel_06a_19x9_R", "wheel_19a_15x7_R", "wheel_21a_15x8_R", "etk_wheel_10a_19x10", "wheel_21b_15x7_R", "etk_wheel_06b_18x9_R", "etk_wheel_09b_19x10_R", "wheel_rennspecht_01a_19x10_R", "wheel_rennspecht_01b_19x10_R", "etk_wheel_08a_19x9_R", "wheel_21b_15x8_R", "wheel_21a_15x7_R", "etk_wheel_07a_16x8_R", "etk_wheel_08a_19x10_R", "etk_wheel_10b_19x10", "wheel_19b_15x7_R", "etk_wheel_06b_19x9_R", "etk_wheel_09a_19x9_R", "wheel_25a_16x7_5_R", "wheel_06c_17x9_R", "wheel_06b_17x9_R", "wheel_06c_17x8_R", "wheel_06a_17x9_R", "wheel_06b_17x8_R", "wheel_25b_16x7_5_R", "wheel_06a_17x8_R", "wheel_square_01a_small_R", "wheel_07a_17x9_R", "wheel_39a_15x9_R", "wheel_22b_14x7_R", "wheel_07a_17x8_R", "wheel_13a_15x7_R", "wheel_39d_18x10_R", "wheel_34b_19x8_R", "wheel_39b_15x8_R", "wheel_11a_17x9_R", "wheel_09a_15x10_R", "wheel_39d_15x9_R", "wheel_40b_18x8_R", "wheel_34b_19x9_R", "wheel_15a_15x8_R", "wheel_11a_18x10_R", "wheel_39d_15x8_R", "wheel_11b_17x9_R", "wheel_02b_18x10_R_alt", "wheel_15a_15x7_R_altb", "wheel_03a_15x7_R_altb", "wheel_03c_14x7_R_alt", "wheel_39c_17x8_R", "wheel_03c_16x8_R", "wheel_42b_24x9_R", "wheel_39a_15x7_R", "wheel_09a_15x14_R", "wheel_11c_17x9_R", "wheel_04a_15x8_R", "wheel_07a_17x12_R", "wheel_14a_14x7_R", "wheel_04a_15x9_R", "wheel_02b_16x8_R", "wheel_07a_20x11_R", "wheel_15b_15x7_R_alt", "wheel_39d_15x7_R", "wheel_33a_15x9_R", "wheel_09a_15x9_R", "wheel_33a_15x8_R", "wheel_33b_15x7_R", "wheel_07a_17x10_R", "wheel_14b_14x8_R", "wheel_43b_15x9_R", "wheel_39a_18x10_R", "wheel_14b_15x9_R", "wheel_39b_15x11_R", "wheel_34b_18x10_R", "wheel_03d_14x7_R_alt", "wheel_22a_14x7_R", "wheel_14a_15x8_R", "wheel_09a_15x7_R", "wheel_03d_15x8_R_alt", "wheel_39b_17x8_R", "wheel_43b_18x12_R", "wheel_34a_19x8_R", "wheel_40a_17x8_R", "wheel_34b_17x8_R", "wheel_34b_18x9_R", "wheel_39a_16x8_R", "wheel_34b_18x8_R", "wheel_34a_17x9_R", "wheel_34a_17x8_R", "wheel_39c_16x8_R", "wheel_34a_18x8_R", "wheel_34a_18x9_R", "wheel_03b_16x8_R", "wheel_39b_17x9_R", "wheel_34a_19x9_R", "wheel_46a_15x8_R", "wheel_33b_15x9_R", "wheel_07a_19x10_R", "wheel_03b_15x7_R_alt", "wheel_43b_15x10_R", "wheel_46a_15x9_R", "wheel_07a_19x9_R", "wheel_11a_16x8_R", "wheel_07a_18x10_R", "wheel_09a_15x8_R", "wheel_07a_18x9_R", "wheel_39c_15x9_R", "wheel_42a_26x9_R", "wheel_40b_17x9_R", "wheel_03a_15x7_R_alt", "wheel_43a_18x12_R", "wheel_11d_18x10_R", "wheel_11d_18x9_R", "wheel_02a_18x10_R", "wheel_40c_17x8_R", "wheel_11b_18x9_R", "wheel_11b_16x8_R", "wheel_11a_18x9_R", "wheel_15b_15x8_R", "wheel_39c_17x9_R", "wheel_40c_17x9_R", "wheel_40c_18x9_R", "wheel_11d_16x8_R", "wheel_15b_15x7_R_altb", "wheel_02a_18x10_R_alt", "wheel_34a_19x10_R", "wheel_03b_15x7_R_altb", "wheel_11b_18x8_R", "wheel_11c_18x10_R", "wheel_42a_24x9_R", "wheel_11a_18x8_R", "wheel_11d_17x9_R", "wheel_11c_18x9_R", "wheel_39d_15x11_R", "wheel_02a_16x8_R", "wheel_09a_15x12_R", "wheel_11c_17x8_R", "wheel_03b_15x8_R_alt", "wheel_03c_15x7_R_alt", "wheel_42c_22x9_R", "wheel_34b_19x10_R", "wheel_46a_15x12_R", "wheel_02b_18x10_R", "wheel_39a_15x8_R", "wheel_03d_15x7_R_altb", "wheel_39b_15x7_R", "wheel_11c_16x8_R", "wheel_34b_19x11_R", "wheel_40a_18x8_R", "wheel_39c_15x7_R", "wheel_33a_15x7_R", "wheel_03a_15x8_R_alt", "wheel_34b_17x9_R", "wheel_13a_15x9_R", "wheel_43b_15x12_R", "wheel_03d_15x7_R_alt", "wheel_14b_15x8_R", "wheel_15a_16x8_R", "wheel_14b_14x7_R", "wheel_03d_16x8_R", "wheel_15b_16x8_R", "wheel_46a_15x10_R", "wheel_39a_15x11_R", "wheel_03b_14x7_R_alt", "wheel_14a_14x8_R", "wheel_15a_15x7_R_alt", "wheel_15b_14x7_R_alt", "wheel_33b_15x8_R", "wheel_24a_14x7_R", "wheel_14a_15x9_R", "wheel_42b_22x9_R", "wheel_03c_15x8_R_alt", "wheel_03c_15x7_R_altb", "wheel_39b_15x9_R", "wheel_42c_24x9_R", "wheel_43a_15x9_R", "wheel_40c_18x8_R", "wheel_42b_26x9_R", "wheel_40b_17x8_R", "wheel_34a_18x10_R", "wheel_11a_17x8_R", "wheel_24b_14x7_R", "wheel_39c_15x11_R", "wheel_42a_22x9_R", "wheel_40b_18x9_R", "wheel_46a_15x7_R", "wheel_40a_17x9_R", "wheel_40a_18x9_R", "wheel_43a_15x12_R", "wheel_34a_19x11_R", "wheel_39b_18x10_R", "wheel_11b_18x10_R", "wheel_39d_17x9_R", "wheel_11d_17x8_R", "wheel_39a_17x9_R", "wheel_39d_17x8_R", "wheel_11c_18x8_R", "wheel_39a_17x8_R", "wheel_42c_26x9_R", "wheel_39d_16x8_R", "wheel_39c_18x10_R", "wheel_39b_16x8_R", "wheel_11d_18x8_R", "wheel_11b_17x8_R", "wheel_39c_15x8_R", "wheel_15a_14x7_R_alt", "wheel_03a_16x8_R", "wheel_43a_15x10_R", "wheel_03a_14x7_R_alt", "ibishu_wheel_07a_15x7_R", "ibishu_wheel_07b_15x7_R", "ibishu_wheel_09b_17x7_R", "ibishu_wheel_01a_15x7_R", "ibishu_wheel_03a_15x7_R", "ibishu_wheel_09a_17x7_R", "ibishu_wheel_05a_15x7_R", "ibishu_wheel_04a_16x7_R", "ibishu_wheel_02a_15x7_R", "wheel_18c_16x8_R", "wheel_18e_17x9_R", "wheel_23a_20x11_R", "wheel_20c_17x8_R", "wheel_20c_17x9_R", "wheel_18e_16x8_R", "wheel_23c_20x11_R", "wheel_20a_17x8_R", "wheel_20c_16x8_R", "wheel_23b_17x9_R", "wheel_23b_19x9_R", "wheel_23b_20x11_R", "wheel_18a_17x8_R", "wheel_23b_16x8_R", "wheel_05a_17x7_R", "wheel_18d_17x8_R", "wheel_23a_19x9_R", "wheel_23c_17x8_R", "wheel_23a_16x8_R", "wheel_20a_16x8_R", "wheel_23b_17x8_R", "wheel_23c_16x8_R", "wheel_23a_17x8_R", "wheel_23c_17x9_R", "wheel_18b_17x8_R", "wheel_18a_17x9_R", "wheel_18a_16x8_R", "wheel_18c_17x9_R", "wheel_23b_20x9_R", "wheel_23c_20x9_R", "wheel_18d_16x8_R", "wheel_20b_17x8_R", "wheel_18b_17x9_R", "wheel_23a_17x9_R", "wheel_18c_17x8_R", "wheel_20b_16x8_R", "wheel_18d_17x9_R", "wheel_20a_17x9_R", "wheel_23a_20x9_R", "wheel_18b_16x8_R", "wheel_20b_17x9_R", "wheel_23c_19x9_R", "wheel_18e_17x8_R", "wheel_36b_16x8_R", "wheel_38b_15x7_R", "lansdale_wheel_alloy_C_15x7_R", "wheel_38a_15x7_R", "wheel_37b_15x7_R", "wheel_36a_16x8_R", "wheel_36c_16x8_R", "lansdale_wheel_alloy_A_17x7_R", "lansdale_wheel_alloy_B_17x7_R", "lansdale_wheel_alloy_D_16x7_R", "wheel_37a_15x7_R", "wheel_nine_17x4_b_R", "wheel_nine_17x4_a_R", "wheel_nine_17x4_c_R", "wheel_civetta_forgiato_20x11_R", "wheel_civetta_scintilla_20x11_R", "wheel_civetta_darkowl_22x14_R", "wheel_08c_15x12_R", "super_wheel_15x10_R", "wheel_08b_15x12_R", "wheel_08a_15x12_R", "wheel_civetta_velocita_b_20x11_R", "super_wheel_15x8_R", "wheel_08c_15x9_R", "wheel_civetta_velocita_a_20x11_R", "wheel_08b_15x9_R", "wheel_civetta_stradale_22x14_R", "wheel_civetta_fuoco_20x11_R", "wheel_08a_15x9_R", "wheel_civetta_darkowl_22x12_R", "wheel_civetta_stradale_22x12_R", "hirochi_wheel_06b_19x8_R", "hirochi_wheel_06b_19x11_R", "hirochi_wheel_02a_16x7_R", "hirochi_wheel_07a_18x8_R", "hirochi_wheel_07b_18x11_R", "hirochi_wheel_05a_18x11_R", "hirochi_wheel_01a_17x7_R", "hirochi_wheel_03a_18x11_R", "hirochi_wheel_07a_18x11_R", "hirochi_wheel_03a_18x8_R", "hirochi_wheel_01a_17x9_R", "hirochi_wheel_05a_18x8_R", "hirochi_wheel_04a_19x11_R", "hirochi_wheel_07b_18x8_R", "hirochi_wheel_04a_19x8_R", "hirochi_wheel_06a_19x8_R", "hirochi_wheel_06a_19x11_R" },
+                unsuitablePartNames = {}
+              }
+            },
+            chosenPartName = "etki_suspension_R",
+            decisionMethod = "user",
+            id = "etki_suspension_R",
+            partPath = "/etki_body/etki_suspension_R/etki_suspension_R",
+            path = "/etki_body/etki_suspension_R/",
+            suitablePartNames = { "etki_suspension_R" },
+            unsuitablePartNames = {}
+          },
+          etki_taillight = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_taillight",
+            path = "/etki_body/etki_taillight/",
+            suitablePartNames = { "etki_taillight" },
+            unsuitablePartNames = {}
+          },
+          etki_towhitch = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_towhitch",
+            path = "/etki_body/etki_towhitch/",
+            suitablePartNames = { "etki_towhitch" },
+            unsuitablePartNames = {}
+          },
+          etki_trim = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_trim",
+            path = "/etki_body/etki_trim/",
+            suitablePartNames = { "etki_trim_alt", "etki_trim", "etki_trim_kit" },
+            unsuitablePartNames = {}
+          },
+          etki_trunk = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_trunk",
+            path = "/etki_body/etki_trunk/",
+            suitablePartNames = { "etki_trunk" },
+            unsuitablePartNames = {}
+          },
+          etki_trunk_load = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_trunk_load",
+            path = "/etki_body/etki_trunk_load/",
+            suitablePartNames = { "etki_cargo_load_box_4M_trunk", "etki_fueltank_offroad" },
+            unsuitablePartNames = {}
+          },
+          etki_windshield = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "etki_windshield",
+            path = "/etki_body/etki_windshield/",
+            suitablePartNames = { "etki_windshield" },
+            unsuitablePartNames = {}
+          },
+          linelock = {
+            chosenPartName = "",
+            decisionMethod = "user-empty",
+            id = "linelock",
+            path = "/etki_body/linelock/",
+            suitablePartNames = { "linelock_F", "linelock_R" },
+            unsuitablePartNames = {}
+          },
+          skin_lights = {
+            chosenPartName = "etki_skin_lights_alt",
+            decisionMethod = "user",
+            id = "skin_lights",
+            partPath = "/etki_body/skin_lights/etki_skin_lights_alt",
+            path = "/etki_body/skin_lights/",
+            suitablePartNames = { "etki_skin_lights", "etki_skin_lights_alt" },
+            unsuitablePartNames = {}
+          }
+        },
+        chosenPartName = "etki_body",
+        decisionMethod = "user",
+        id = "etki_body",
+        partPath = "/etki_body/etki_body",
+        path = "/etki_body/",
+        suitablePartNames = { "etki_body_cut", "etki_body" },
+        unsuitablePartNames = {}
+      },
+      etki_mod = {
+        chosenPartName = "",
+        decisionMethod = "user-empty",
+        id = "etki_mod",
+        path = "/etki_mod/",
+        suitablePartNames = {},
+        unsuitablePartNames = {}
+      },
+      licenseplate_design_2_1 = {
+        chosenPartName = "license_plate_italy_old_2_1",
+        decisionMethod = "user",
+        id = "licenseplate_design_2_1",
+        partPath = "/licenseplate_design_2_1/license_plate_italy_old_2_1",
+        path = "/licenseplate_design_2_1/",
+        suitablePartNames = { "license_plate_eca_2_1", "license_plate_jungle_rock_island_2_1", "license_plate_germany_2_1", "license_plate_nz_1", "license_plate_italy_2_1", "license_plate_gridmap_2_1", "license_plate_Utah_2_1", "license_plate_italy_old_2_1", "license_plate_Texas_2_1", "license_plate_wca_2_1" },
+        unsuitablePartNames = {}
+      },
+      paint_design = {
+        chosenPartName = "",
+        decisionMethod = "user-empty",
+        id = "paint_design",
+        path = "/paint_design/",
+        suitablePartNames = { "etki_skin_dreid", "etki_skin_basso", "etki_skin_bodycolored", "etki_skin_offroad", "etki_skin_rotopad", "etki_skin_dynamicTextures" },
+        unsuitablePartNames = {}
+      }
+    },
+    chosenPartName = "etki",
+    id = "main",
+    partPath = "/etki",
+    path = "/",
+    suitablePartNames = { "etki" },
+    unsuitablePartNames = {}
+  },
+  vars = {
+    ["$arb_spring_F"] = 100000,
+    ["$arb_spring_R"] = 30000,
+    ["$brakebias"] = 0.76,
+    ["$brakestrength"] = 1,
+    ["$camber_FR"] = 0.985,
+    ["$camber_RR"] = 1.014,
+    ["$caster_FR"] = 1.01,
+    ["$damp_bump_F"] = 4300,
+    ["$damp_bump_R"] = 4000,
+    ["$damp_rebound_F"] = 11100,
+    ["$damp_rebound_R"] = 9600,
+    ["$lsdlockcoef_R"] = 0.15,
+    ["$lsdlockcoefrev_R"] = 0.15,
+    ["$lsdpreload_R"] = 125,
+    ["$revLimiterRPM"] = 7250,
+    ["$spring_F"] = 100000,
+    ["$spring_R"] = 100000,
+    ["$springheight_F"] = -0.02,
+    ["$springheight_R"] = -0.02,
+    ["$toe_FR"] = 1.002,
+    ["$toe_RR"] = 0.999,
+    ["$trackoffset_F"] = 0.04,
+    ["$trackoffset_R"] = 0.04
+  }
+}

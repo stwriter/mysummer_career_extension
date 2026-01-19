@@ -1,0 +1,335 @@
+{
+  "id": "import",
+  "name": "Import",
+  "personality": "enthusiast",
+  "specialty": "JDM parts and rare imports",
+  "description": "JDM specialist who values authentic culture and passion for Japanese cars",
+  "traits": {
+    "values": ["passionate", "authentic", "knowledgeable", "respectful", "dedicated"],
+    "dislikes": ["poser", "ignorant", "disrespectful", "cheap", "mainstream"],
+    "scoring": {
+      "passionate": 3,
+      "authentic": 3,
+      "knowledgeable": 2,
+      "respectful": 2,
+      "dedicated": 2,
+      "poser": -3,
+      "ignorant": -3,
+      "disrespectful": -3,
+      "cheap": -2,
+      "mainstream": -1
+    }
+  },
+  "rivals": [],
+  "allies": [],
+  "neutral": ["ghost", "techie", "muscle", "shadow"],
+  "confrontations": [
+    {
+      "trigger": "random",
+      "chance": 0.15,
+      "minTrust": 2,
+      "text": "Saw some replica parts in your build photos. What's the deal?",
+      "responses": [
+        { "id": "a", "text": "Temporary. Already ordered authentic replacements", "traits": ["authentic", "dedicated"], "points": 15 },
+        { "id": "b", "text": "Budget constraints, but I know the difference", "traits": ["honest", "knowledgeable"], "points": 5 },
+        { "id": "c", "text": "Who can tell? They look the same", "traits": ["cheap", "poser"], "points": -20 }
+      ]
+    },
+    {
+      "trigger": "random",
+      "chance": 0.12,
+      "minTrust": 3,
+      "text": "Someone at the meet was talking about you. Said you don't really know the culture.",
+      "responses": [
+        { "id": "a", "text": "Let my build speak for itself. Actions over words", "traits": ["dedicated", "authentic"], "points": 20 },
+        { "id": "b", "text": "Who said that?", "traits": ["defensive"], "points": 0 },
+        { "id": "c", "text": "Whatever, I just like the cars", "traits": ["poser"], "points": -15 }
+      ]
+    },
+    {
+      "trigger": "memory",
+      "condition": "mentionedETKI",
+      "chance": 0.2,
+      "minTrust": 2,
+      "text": "Your ETK-I project - still keeping it authentic?",
+      "responses": [
+        { "id": "a", "text": "Period-correct parts only. Respecting the heritage", "traits": ["authentic", "respectful"], "points": 20 },
+        { "id": "b", "text": "Mostly, with some modern touches", "traits": ["practical"], "points": 5 },
+        { "id": "c", "text": "Using whatever works", "traits": ["cheap"], "points": -10 }
+      ]
+    }
+  ],
+  "questionPools": {
+    "unknown": [
+      { "text": "You into Japanese car culture?", "best": "a", "responses": [
+        { "id": "a", "text": "Absolutely. The tuning scene is legendary", "points": 15 },
+        { "id": "b", "text": "I respect it", "points": 5 },
+        { "id": "c", "text": "American/German is better", "points": -10, "next": "reject" }
+      ]},
+      { "text": "What brings you to the import scene?", "best": "b", "responses": [
+        { "id": "a", "text": "Fast and Furious movies", "points": -5 },
+        { "id": "b", "text": "Grew up watching Option videos, Initial D", "points": 15 },
+        { "id": "c", "text": "Just need parts", "points": 0 }
+      ]},
+      { "text": "Know any JDM brands?", "best": "a", "responses": [
+        { "id": "a", "text": "Trust, TRD, Nismo, HKS - the classics", "points": 15 },
+        { "id": "b", "text": "Some brands", "points": 5 },
+        { "id": "c", "text": "Not really", "points": -5 }
+      ]},
+      { "text": "What's a touge?", "best": "a", "responses": [
+        { "id": "a", "text": "Mountain pass. Where legends are made", "points": 20 },
+        { "id": "b", "text": "Some kind of drift event?", "points": 0 },
+        { "id": "c", "text": "No idea", "points": -10, "next": "reject" }
+      ]},
+      { "text": "Why body kits?", "best": "a", "responses": [
+        { "id": "a", "text": "Form follows function - aero and style", "points": 20 },
+        { "id": "b", "text": "Looks cool", "points": 5 },
+        { "id": "c", "text": "Just for show", "points": -10, "next": "reject" }
+      ]},
+      { "text": "You know what Initial D is?", "best": "a", "responses": [
+        { "id": "a", "text": "The anime that made the AE86 a legend", "points": 20 },
+        { "id": "b", "text": "Some racing anime?", "points": 5 },
+        { "id": "c", "text": "Never heard of it", "points": -10, "next": "reject" }
+      ]},
+      { "text": "What does JDM stand for?", "best": "a", "responses": [
+        { "id": "a", "text": "Japanese Domestic Market", "points": 15 },
+        { "id": "b", "text": "Japanese... something", "points": 0 },
+        { "id": "c", "text": "Japanese Design Motors?", "points": -5 }
+      ]},
+      { "text": "Pop-up headlights. Yes or no?", "best": "a", "responses": [
+        { "id": "a", "text": "Peak automotive design. Sleepy eyes forever", "points": 20 },
+        { "id": "b", "text": "They're okay", "points": 5 },
+        { "id": "c", "text": "Outdated safety hazard", "points": -10 }
+      ]}
+    ],
+    "acquaintance": [
+      { "text": "Best JDM era?", "best": "a", "responses": [
+        { "id": "a", "text": "90s golden age - R32, Supra, NSX", "points": 20 },
+        { "id": "b", "text": "2000s - tuning went mainstream", "points": 10 },
+        { "id": "c", "text": "Modern cars are better", "points": -5 }
+      ]},
+      { "text": "Favorite body kit maker?", "best": "b", "responses": [
+        { "id": "a", "text": "Rocket Bunny", "points": 10 },
+        { "id": "b", "text": "Veilside, RE-Amemiya - the OG's", "points": 20 },
+        { "id": "c", "text": "eBay specials", "points": -15, "next": "reject" }
+      ]},
+      { "text": "Stance life or track life?", "best": "a", "responses": [
+        { "id": "a", "text": "Track. Function over form", "points": 15 },
+        { "id": "b", "text": "Balance of both", "points": 10 },
+        { "id": "c", "text": "Stance - lower is better", "points": 0 }
+      ]},
+      { "text": "Drift or grip?", "best": "c", "responses": [
+        { "id": "a", "text": "Drift only", "points": 10 },
+        { "id": "b", "text": "Grip for time attack", "points": 10 },
+        { "id": "c", "text": "Master both disciplines", "points": 15 }
+      ]},
+      { "text": "What's your favorite touge?", "best": "a", "responses": [
+        { "id": "a", "text": "Tsuchisaka, Haruna, Irohazaka - legendary passes", "points": 20 },
+        { "id": "b", "text": "Any mountain road", "points": 10 },
+        { "id": "c", "text": "I prefer highways", "points": -5 }
+      ]},
+      { "text": "Wheels - replica or authentic?", "best": "b", "responses": [
+        { "id": "a", "text": "Replicas are fine", "points": -5 },
+        { "id": "b", "text": "Real Volk, Work, Enkei or nothing", "points": 20 },
+        { "id": "c", "text": "Doesn't matter", "points": -10 }
+      ]},
+      { "text": "Night meets or day shows?", "best": "a", "responses": [
+        { "id": "a", "text": "Night meets - that's where the real scene is", "points": 20 },
+        { "id": "b", "text": "Both have their place", "points": 10 },
+        { "id": "c", "text": "Day shows only", "points": -5 }
+      ]},
+      { "text": "Favorite Initial D character?", "best": "b", "responses": [
+        { "id": "a", "text": "Never watched it properly", "points": -5 },
+        { "id": "b", "text": "Takumi - natural talent", "points": 15 },
+        { "id": "c", "text": "Keisuke - technical skill", "points": 15 }
+      ]},
+      { "text": "What's Mid Night Club?", "best": "a", "responses": [
+        { "id": "a", "text": "The legendary Wangan highway racers. Respect only", "points": 20 },
+        { "id": "b", "text": "Some street racing crew?", "points": 5 },
+        { "id": "c", "text": "Never heard of it", "points": -5 }
+      ]},
+      { "text": "Engine swap thoughts?", "best": "a", "responses": [
+        { "id": "a", "text": "Keep it era-appropriate and meaningful", "points": 20 },
+        { "id": "b", "text": "LS swap everything", "points": -10, "next": "angry" },
+        { "id": "c", "text": "Whatever makes power", "points": 5 }
+      ]}
+    ],
+    "associate": [
+      { "text": "Interior mods?", "best": "c", "responses": [
+        { "id": "a", "text": "Full strip", "points": 10 },
+        { "id": "b", "text": "Stock is best", "points": -5 },
+        { "id": "c", "text": "Bucket seats, Nardi wheel, shift light", "points": 20 }
+      ]},
+      { "text": "Your take on widebody?", "best": "b", "responses": [
+        { "id": "a", "text": "All show", "points": -5 },
+        { "id": "b", "text": "Wider tires, better grip, aggressive looks", "points": 20 },
+        { "id": "c", "text": "Too extreme", "points": 0 }
+      ]},
+      { "text": "Livery design preference?", "best": "c", "responses": [
+        { "id": "a", "text": "Plain is best", "points": 0 },
+        { "id": "b", "text": "Sponsor logos", "points": 10 },
+        { "id": "c", "text": "Team liveries - Falken, JTCC inspired", "points": 20 }
+      ]},
+      { "text": "Aero: functional or aesthetic?", "best": "a", "responses": [
+        { "id": "a", "text": "Functional with good design", "points": 20 },
+        { "id": "b", "text": "Whatever looks good", "points": 5 },
+        { "id": "c", "text": "Massive wings on everything", "points": -5 }
+      ]},
+      { "text": "Carbon fiber parts?", "best": "b", "responses": [
+        { "id": "a", "text": "Just stickers are fine", "points": -15, "next": "angry" },
+        { "id": "b", "text": "Real CF for weight savings and looks", "points": 20 },
+        { "id": "c", "text": "Too expensive", "points": 5 }
+      ]},
+      { "text": "Ever been to a Daikoku meet?", "best": "a", "responses": [
+        { "id": "a", "text": "Dream of mine. The mecca of car culture", "points": 20 },
+        { "id": "b", "text": "Seen videos", "points": 10 },
+        { "id": "c", "text": "What's Daikoku?", "points": -10 }
+      ]},
+      { "text": "Best rotary engine?", "best": "b", "responses": [
+        { "id": "a", "text": "13B-REW twin turbo", "points": 15 },
+        { "id": "b", "text": "20B triple rotor - maximum brap", "points": 20 },
+        { "id": "c", "text": "Rotaries are unreliable", "points": -10, "next": "angry" }
+      ]},
+      { "text": "What does 'kouki' mean?", "best": "a", "responses": [
+        { "id": "a", "text": "Late model facelift version", "points": 20 },
+        { "id": "b", "text": "Something about lights?", "points": 5 },
+        { "id": "c", "text": "No idea", "points": -5 }
+      ]},
+      { "text": "Opinion on Bosozoku style?", "best": "a", "responses": [
+        { "id": "a", "text": "Respect the rebellion and creativity", "points": 20 },
+        { "id": "b", "text": "Too extreme for me", "points": 5 },
+        { "id": "c", "text": "It's ugly", "points": -10, "next": "angry" }
+      ]},
+      { "text": "You build your own car or buy complete?", "best": "a", "responses": [
+        { "id": "a", "text": "Build piece by piece. That's the journey", "points": 20 },
+        { "id": "b", "text": "Mix of both", "points": 10 },
+        { "id": "c", "text": "Buy finished builds", "points": -5 }
+      ]},
+      { "text": "Hashiriya or time attack?", "best": "c", "responses": [
+        { "id": "a", "text": "Hashiriya - street spirit", "points": 15 },
+        { "id": "b", "text": "Time attack - precision matters", "points": 15 },
+        { "id": "c", "text": "Both disciplines deserve respect", "points": 20 }
+      ]},
+      { "text": "Best sounding engine?", "best": "a", "responses": [
+        { "id": "a", "text": "ITB'd 4AGE or a screaming F20C", "points": 20 },
+        { "id": "b", "text": "2JZ turbo spool", "points": 15 },
+        { "id": "c", "text": "V8 rumble", "points": -5 }
+      ]}
+    ],
+    "trusted": [
+      { "text": "What's your connection to the culture?", "best": "c", "responses": [
+        { "id": "a", "text": "Just like Japanese cars", "points": 5 },
+        { "id": "b", "text": "Watch videos online", "points": 0 },
+        { "id": "c", "text": "Living it - meets, builds, community", "points": 20 }
+      ]},
+      { "text": "Would you ever sell your build?", "best": "b", "responses": [
+        { "id": "a", "text": "For the right price", "points": 0 },
+        { "id": "b", "text": "Never - it's more than a car", "points": 20 },
+        { "id": "c", "text": "Already planning the next one", "points": 5 }
+      ]},
+      { "text": "Paint: factory or custom?", "best": "b", "responses": [
+        { "id": "a", "text": "Whatever's cheap", "points": -10 },
+        { "id": "b", "text": "JDM spec colors or period-correct custom", "points": 20 },
+        { "id": "c", "text": "Chrome everything", "points": -15, "next": "angry" }
+      ]},
+      { "text": "Your build represents...?", "best": "a", "responses": [
+        { "id": "a", "text": "My passion and respect for the culture", "points": 20 },
+        { "id": "b", "text": "My investment", "points": -5 },
+        { "id": "c", "text": "A way to meet people", "points": 10 }
+      ]},
+      { "text": "Let me tell you about my first build...", "best": "a", "responses": [
+        { "id": "a", "text": "I'd love to hear it", "points": 15 },
+        { "id": "b", "text": "Maybe later", "points": 0 },
+        { "id": "c", "text": "I'm more interested in parts", "points": -10 }
+      ]},
+      { "text": "The scene has changed since the 90s. Better or worse?", "best": "b", "responses": [
+        { "id": "a", "text": "Better - more access, more parts", "points": 10 },
+        { "id": "b", "text": "Different. The soul is still there if you look", "points": 20 },
+        { "id": "c", "text": "Worse - too many posers now", "points": 5 }
+      ]},
+      { "text": "Ever heard of Keiichi Tsuchiya?", "best": "a", "responses": [
+        { "id": "a", "text": "The Drift King. Legend. Changed everything", "points": 20 },
+        { "id": "b", "text": "The drift guy?", "points": 10 },
+        { "id": "c", "text": "Who?", "points": -10 }
+      ]},
+      { "text": "What makes a car a 'legend'?", "best": "c", "responses": [
+        { "id": "a", "text": "Rarity and value", "points": 0 },
+        { "id": "b", "text": "Race wins", "points": 10 },
+        { "id": "c", "text": "The stories, the culture it creates", "points": 20 }
+      ]},
+      { "text": "I've got access to some rare JDM parts. You interested?", "best": "a", "responses": [
+        { "id": "a", "text": "Absolutely. What do you have?", "points": 15 },
+        { "id": "b", "text": "Depends on price", "points": 5 },
+        { "id": "c", "text": "Are they authentic?", "points": 10 }
+      ]},
+      { "text": "The new generation... they get it?", "best": "b", "responses": [
+        { "id": "a", "text": "They're all about internet clout", "points": 5 },
+        { "id": "b", "text": "Some do. We need to teach them right", "points": 20 },
+        { "id": "c", "text": "Who cares about the new generation", "points": -5 }
+      ]}
+    ],
+    "innerCircle": [
+      { "text": "There's a secret meet this weekend. Underground only.", "best": "a", "responses": [
+        { "id": "a", "text": "I'll be there. What do I need to know?", "points": 20 },
+        { "id": "b", "text": "Sounds risky", "points": 5 },
+        { "id": "c", "text": "I'll think about it", "points": 0 }
+      ]},
+      { "text": "I'm thinking of doing something big. A build no one's attempted.", "best": "a", "responses": [
+        { "id": "a", "text": "Tell me more. I want to help", "points": 20 },
+        { "id": "b", "text": "What kind of build?", "points": 10 },
+        { "id": "c", "text": "Sounds expensive", "points": -5 }
+      ]},
+      { "text": "You know what? You're one of us now.", "best": "a", "responses": [
+        { "id": "a", "text": "That means everything. Thank you", "points": 20 },
+        { "id": "b", "text": "Appreciate it", "points": 10 },
+        { "id": "c", "text": "Cool", "points": 0 }
+      ]},
+      { "text": "Final question - OEM+ or full custom?", "best": "c", "responses": [
+        { "id": "a", "text": "Bone stock", "points": -5 },
+        { "id": "b", "text": "OEM+ subtle", "points": 10 },
+        { "id": "c", "text": "Full custom with respect to heritage", "points": 20 }
+      ]},
+      { "text": "If you could have any JDM car, money no object...", "best": "a", "responses": [
+        { "id": "a", "text": "Something meaningful - a piece of history", "points": 20 },
+        { "id": "b", "text": "Most expensive one", "points": -5 },
+        { "id": "c", "text": "Whatever's rarest", "points": 5 }
+      ]},
+      { "text": "The culture is in our blood now. You feel it?", "best": "a", "responses": [
+        { "id": "a", "text": "Every time I turn the key. It's who I am", "points": 20 },
+        { "id": "b", "text": "Yeah, I guess so", "points": 5 },
+        { "id": "c", "text": "It's just cars", "points": -15, "next": "reject" }
+      ]},
+      { "text": "When I retire, I'm passing my contacts to someone. Maybe you.", "best": "a", "responses": [
+        { "id": "a", "text": "I'd be honored to carry on the legacy", "points": 20 },
+        { "id": "b", "text": "That's a lot of responsibility", "points": 10 },
+        { "id": "c", "text": "Whatever works", "points": 0 }
+      ]},
+      { "text": "Last thing - promise me you'll keep the spirit alive.", "best": "a", "responses": [
+        { "id": "a", "text": "I promise. This is bigger than any of us", "points": 25 },
+        { "id": "b", "text": "I'll try", "points": 10 },
+        { "id": "c", "text": "Sure", "points": 0 }
+      ]}
+    ],
+    "intro": [
+      { "text": "You into Japanese car culture?", "best": "a", "responses": [
+        { "id": "a", "text": "Absolutely. The tuning scene is legendary", "points": 15 },
+        { "id": "b", "text": "I respect it", "points": 5 },
+        { "id": "c", "text": "American/German is better", "points": -10, "next": "reject" }
+      ]}
+    ],
+    "questions": [
+      { "text": "Best JDM era?", "best": "a", "responses": [
+        { "id": "a", "text": "90s golden age - R32, Supra, NSX", "points": 20 },
+        { "id": "b", "text": "2000s - tuning went mainstream", "points": 10 },
+        { "id": "c", "text": "Modern is better", "points": -5 }
+      ]}
+    ],
+    "final": [
+      { "text": "What's your connection to the culture?", "best": "c", "responses": [
+        { "id": "a", "text": "Just like Japanese cars", "points": 5 },
+        { "id": "b", "text": "Watch videos online", "points": 0 },
+        { "id": "c", "text": "Living it - meets, builds, community", "points": 20 }
+      ]}
+    ]
+  }
+}

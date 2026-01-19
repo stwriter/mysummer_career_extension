@@ -1,0 +1,43 @@
+{
+  "data":[
+    {
+      "config":"IROK Race Series",
+      "model":"bluebuck"
+    },
+    {
+      "config":"IROK Race Series",
+      "model":"legran"
+    },
+    {
+      "config":"IROK Race Series",
+      "model":"etki"
+    },
+    {
+      "config":"IROK Race Series",
+      "model":"barstow"
+    },
+    {
+      "config":"IROK Race Series",
+      "model":"fullsize"
+    },
+    {
+      "config":"IROK Race Series",
+      "model":"covet"
+    },
+    {
+      "config":"IROK Mia Fast",
+      "model":"bx"
+    },
+    {
+      "config":"IROK Race Series",
+      "model":"pickup"
+    },
+    {
+      "config":"IROK Race Series",
+      "model":"burnside"
+    }
+  ],
+  "name":"IROK SERIES",
+  "tags":{},
+  "type":"custom"
+}

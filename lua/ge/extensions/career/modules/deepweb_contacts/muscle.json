@@ -1,0 +1,270 @@
+{
+  "id": "muscle",
+  "name": "Muscle",
+  "personality": "old-school",
+  "specialty": "Classic performance parts",
+  "description": "Old-school gearhead who values hands-on experience and respect for tradition",
+  "traits": {
+    "values": ["traditional", "respectful", "hardworking", "passionate", "honest"],
+    "dislikes": ["modern", "electronic", "lazy", "disrespectful", "flashy"],
+    "scoring": {
+      "traditional": 3,
+      "respectful": 3,
+      "hardworking": 2,
+      "passionate": 2,
+      "honest": 2,
+      "modern": -3,
+      "electronic": -2,
+      "lazy": -3,
+      "disrespectful": -3,
+      "flashy": -2
+    }
+  },
+  "rivals": ["techie"],
+  "allies": [],
+  "neutral": ["ghost", "import", "shadow"],
+  "confrontations": [
+    {
+      "trigger": "random",
+      "chance": 0.15,
+      "minTrust": 2,
+      "text": "Kid, someone told me you've been skipping the hands-on work. True?",
+      "responses": [
+        { "id": "a", "text": "Never. Every bolt I turn myself", "traits": ["hardworking", "honest"], "points": 20 },
+        { "id": "b", "text": "Sometimes I need help", "traits": ["honest"], "points": 5 },
+        { "id": "c", "text": "I pay people for that now", "traits": ["lazy"], "points": -20 }
+      ]
+    },
+    {
+      "trigger": "random",
+      "chance": 0.12,
+      "minTrust": 3,
+      "text": "Heard you've been buying computer stuff from Techie. You going soft?",
+      "responses": [
+        { "id": "a", "text": "Tools are tools. The wrench stays in my hand", "traits": ["traditional", "honest"], "points": 15 },
+        { "id": "b", "text": "Modern tuning has its place", "traits": ["modern"], "points": -15 },
+        { "id": "c", "text": "Nothing replaces experience and feel", "traits": ["traditional", "passionate"], "points": 20 }
+      ]
+    },
+    {
+      "trigger": "memory",
+      "condition": "provenMechanic",
+      "chance": 0.2,
+      "minTrust": 2,
+      "text": "You said you built your first engine young. Still got that passion?",
+      "responses": [
+        { "id": "a", "text": "Stronger than ever. It's in my blood", "traits": ["passionate", "honest"], "points": 20 },
+        { "id": "b", "text": "I think so", "traits": ["honest"], "points": 5 },
+        { "id": "c", "text": "It's more of a hobby now", "traits": ["lazy"], "points": -15 }
+      ]
+    }
+  ],
+  "questionPools": {
+    "unknown": [
+      { "text": "What do you want, kid?", "best": "a", "responses": [
+        { "id": "a", "text": "Looking for real performance parts", "points": 10 },
+        { "id": "b", "text": "Heard you have good stuff", "points": 5 },
+        { "id": "c", "text": "Need electronics and computers", "points": -15, "next": "angry" }
+      ]},
+      { "text": "You look young. What's your story?", "best": "b", "responses": [
+        { "id": "a", "text": "Just got my license", "points": -5 },
+        { "id": "b", "text": "Been turning wrenches since I could walk", "points": 15, "setsMemory": { "provenMechanic": true } },
+        { "id": "c", "text": "I'm into cars", "points": 5 }
+      ]},
+      { "text": "Real driving or video game driving?", "best": "a", "responses": [
+        { "id": "a", "text": "Seat time on real tracks", "points": 15, "setsMemory": { "realDriver": true } },
+        { "id": "b", "text": "Mostly simulators", "points": -5 },
+        { "id": "c", "text": "Both", "points": 5 }
+      ]},
+      { "text": "You know how to use a wrench?", "best": "a", "responses": [
+        { "id": "a", "text": "Built my first engine at 15", "points": 15, "setsMemory": { "provenMechanic": true } },
+        { "id": "b", "text": "I know the basics", "points": 5 },
+        { "id": "c", "text": "I prefer to pay someone", "points": -10, "next": "reject" }
+      ]},
+      { "text": "Manual or automatic?", "best": "a", "responses": [
+        { "id": "a", "text": "Manual. Only real way to drive", "points": 20, "setsMemory": { "realDriver": true } },
+        { "id": "b", "text": "Manual, but automatics have their place", "points": 5 },
+        { "id": "c", "text": "Automatic is faster now", "points": -10, "next": "reject" }
+      ]},
+      { "text": "What's your take on electric cars?", "best": "a", "responses": [
+        { "id": "a", "text": "Appliances, not cars", "points": 15 },
+        { "id": "b", "text": "Fast but soulless", "points": 10 },
+        { "id": "c", "text": "The future", "points": -15, "next": "angry" }
+      ]},
+      { "text": "Can you heel-toe downshift?", "best": "a", "responses": [
+        { "id": "a", "text": "Second nature", "points": 20, "setsMemory": { "realDriver": true } },
+        { "id": "b", "text": "Still practicing", "points": 10 },
+        { "id": "c", "text": "My car has auto-rev match", "points": -10, "next": "angry" }
+      ]},
+      { "text": "Ever rebuilt an engine yourself?", "best": "a", "responses": [
+        { "id": "a", "text": "Multiple times, it's therapy", "points": 20, "setsMemory": { "provenMechanic": true } },
+        { "id": "b", "text": "Once, with help", "points": 10 },
+        { "id": "c", "text": "That's what shops are for", "points": -5 }
+      ]}
+    ],
+    "acquaintance": [
+      { "text": "What's more important - horsepower or torque?", "best": "a", "responses": [
+        { "id": "a", "text": "Torque. It's what you feel", "points": 20 },
+        { "id": "b", "text": "Both matter for different reasons", "points": 10 },
+        { "id": "c", "text": "Horsepower is all that counts", "points": 0 }
+      ]},
+      { "text": "What's your favorite era of cars?", "best": "a", "responses": [
+        { "id": "a", "text": "60s and 70s, peak muscle", "points": 20, "setsMemory": { "respectsClassics": true } },
+        { "id": "b", "text": "80s turbo era", "points": 10 },
+        { "id": "c", "text": "Modern cars are best", "points": -10, "next": "reject" }
+      ]},
+      { "text": "Headers: short or long tube?", "best": "b", "responses": [
+        { "id": "a", "text": "Whatever fits", "points": 0 },
+        { "id": "b", "text": "Long tube for top end, short for low-end torque", "points": 20 },
+        { "id": "c", "text": "Stock exhaust is fine", "points": -10 }
+      ]},
+      { "text": "Solid or hydraulic lifters?", "best": "a", "responses": [
+        { "id": "a", "text": "Solid - more control, more power", "points": 20 },
+        { "id": "b", "text": "Hydraulic for street", "points": 10 },
+        { "id": "c", "text": "What are lifters?", "points": -15, "next": "reject" }
+      ]},
+      { "text": "Wheel hop solution?", "best": "c", "responses": [
+        { "id": "a", "text": "Better tires", "points": 5 },
+        { "id": "b", "text": "Launch control", "points": -10 },
+        { "id": "c", "text": "Traction bars and proper suspension setup", "points": 20 }
+      ]},
+      { "text": "Carburetor or fuel injection?", "best": "b", "responses": [
+        { "id": "a", "text": "Carb for sure", "points": 10 },
+        { "id": "b", "text": "Carb for the soul, EFI when needed", "points": 15 },
+        { "id": "c", "text": "EFI only", "points": -5 }
+      ]},
+      { "text": "Your opinion on turbochargers?", "best": "b", "responses": [
+        { "id": "a", "text": "Fake power", "points": 0 },
+        { "id": "b", "text": "They have their place, displacement is king though", "points": 15 },
+        { "id": "c", "text": "Best way to make power", "points": 5 }
+      ]},
+      { "text": "Best exhaust note?", "best": "c", "responses": [
+        { "id": "a", "text": "Quiet is respectful", "points": -10, "next": "reject" },
+        { "id": "b", "text": "Anything loud", "points": 5 },
+        { "id": "c", "text": "Deep rumble at idle, roar at redline", "points": 20 }
+      ]}
+    ],
+    "associate": [
+      { "text": "You know, kid, you remind me of myself at your age.", "best": "b", "responses": [
+        { "id": "a", "text": "I'll take that as a compliment", "points": 10 },
+        { "id": "b", "text": "Then you know I'm not gonna quit", "points": 15 },
+        { "id": "c", "text": "Thanks", "points": 5 }
+      ]},
+      { "text": "Traction control?", "best": "a", "responses": [
+        { "id": "a", "text": "Driver's skill is the only traction control needed", "points": 15 },
+        { "id": "b", "text": "It has its uses", "points": 5 },
+        { "id": "c", "text": "Essential for safety", "points": -5 }
+      ]},
+      { "text": "Fastest you've ever gone?", "best": "a", "responses": [
+        { "id": "a", "text": "Triple digits, on track of course", "points": 15 },
+        { "id": "b", "text": "Fast enough", "points": 5 },
+        { "id": "c", "text": "Speed limits exist for a reason", "points": -10, "next": "reject" }
+      ]},
+      { "text": "Drum or disc brakes?", "best": "b", "responses": [
+        { "id": "a", "text": "Drums have character", "points": 5 },
+        { "id": "b", "text": "Discs front, drums rear is classic", "points": 15 },
+        { "id": "c", "text": "Carbon ceramic", "points": -5 }
+      ]},
+      { "text": "Paint job - original or custom?", "best": "b", "responses": [
+        { "id": "a", "text": "Original only", "points": 10 },
+        { "id": "b", "text": "Period-correct custom or original", "points": 15 },
+        { "id": "c", "text": "Wrap it", "points": -10 }
+      ]},
+      { "text": "What drives you, kid?", "best": "a", "responses": [
+        { "id": "a", "text": "The sound, the smell, the feeling of raw power", "points": 20, "setsMemory": { "understandsPassion": true } },
+        { "id": "b", "text": "Competition", "points": 10 },
+        { "id": "c", "text": "Looking cool", "points": -5 }
+      ]},
+      { "text": "Would you drive your project in the rain?", "best": "b", "responses": [
+        { "id": "a", "text": "Never, too precious", "points": -5 },
+        { "id": "b", "text": "Cars are meant to be driven", "points": 20 },
+        { "id": "c", "text": "Only if I have to", "points": 5 }
+      ]},
+      { "text": "Respect for the old ways?", "best": "b", "responses": [
+        { "id": "a", "text": "Old stuff is just old", "points": -15, "next": "reject" },
+        { "id": "b", "text": "The old ways built everything we have now", "points": 20, "setsMemory": { "respectsClassics": true } },
+        { "id": "c", "text": "Some things are outdated", "points": 0 }
+      ]}
+    ],
+    "trusted": [
+      { "text": "Let me tell you about the old days...", "best": "a", "responses": [
+        { "id": "a", "text": "I'd love to hear it", "points": 15 },
+        { "id": "b", "text": "Was it really that different?", "points": 10 },
+        { "id": "c", "text": "Times have changed", "points": -5 }
+      ]},
+      { "text": "Back then, we didn't have fancy computers.", "best": "b", "condition": "provenMechanic", "responses": [
+        { "id": "a", "text": "Sounds harder", "points": 10 },
+        { "id": "b", "text": "Just you, the car, and your hands. I respect that.", "points": 15 },
+        { "id": "c", "text": "Technology helps though", "points": 0 }
+      ]},
+      { "text": "I raced a lot in my youth. Won some, lost some.", "best": "a", "responses": [
+        { "id": "a", "text": "The losses teach you more", "points": 15, "setsMemory": { "understandsRacing": true } },
+        { "id": "b", "text": "Winning is what matters", "points": -5 },
+        { "id": "c", "text": "Sounds like a good time", "points": 5 }
+      ]},
+      { "text": "There was a race once... cost me a friend.", "best": "b", "responses": [
+        { "id": "a", "text": "What happened?", "points": 10 },
+        { "id": "b", "text": "Racing takes everything. I understand.", "points": 15 },
+        { "id": "c", "text": "That's rough", "points": 5 }
+      ]},
+      { "text": "You got the hands for this. I can see it.", "best": "a", "condition": "provenMechanic", "responses": [
+        { "id": "a", "text": "Learned from the best. And a lot of mistakes.", "points": 15 },
+        { "id": "b", "text": "Thanks", "points": 5 },
+        { "id": "c", "text": "Just doing what I love", "points": 10 }
+      ]},
+      { "text": "Your dream garage?", "best": "c", "responses": [
+        { "id": "a", "text": "Full of exotics", "points": -5 },
+        { "id": "b", "text": "One perfect car", "points": 10 },
+        { "id": "c", "text": "Projects, tools, and a lift", "points": 20 }
+      ]}
+    ],
+    "innerCircle": [
+      { "text": "I'm getting old, kid. Thinking about what I leave behind.", "best": "b", "responses": [
+        { "id": "a", "text": "You've got years left", "points": 5 },
+        { "id": "b", "text": "Your knowledge lives on in people like me", "points": 20, "setsMemory": { "acceptedLegacy": true } },
+        { "id": "c", "text": "What do you mean?", "points": 10 }
+      ]},
+      { "text": "There's a car I've been working on for 20 years. Never finished it.", "best": "a", "responses": [
+        { "id": "a", "text": "Maybe it's time we finish it together", "points": 20 },
+        { "id": "b", "text": "What's stopping you?", "points": 10 },
+        { "id": "c", "text": "That's a long time", "points": 5 }
+      ]},
+      { "text": "Kid, you're alright. Not many like you anymore.", "best": "b", "responses": [
+        { "id": "a", "text": "Thanks, means a lot", "points": 10 },
+        { "id": "b", "text": "The passion doesn't die. It gets passed down.", "points": 20 },
+        { "id": "c", "text": "I try", "points": 5 }
+      ]},
+      { "text": "I got contacts from way back. Real old-school guys. Want to meet them?", "best": "a", "responses": [
+        { "id": "a", "text": "Absolutely. I want to learn everything", "points": 20 },
+        { "id": "b", "text": "That'd be great", "points": 15 },
+        { "id": "c", "text": "Sure, why not", "points": 5 }
+      ]},
+      { "text": "When I'm gone, someone needs to keep this alive.", "best": "a", "responses": [
+        { "id": "a", "text": "I'll make sure of it. This matters.", "points": 20 },
+        { "id": "b", "text": "Don't talk like that", "points": 5 },
+        { "id": "c", "text": "There are others", "points": 0 }
+      ]}
+    ],
+    "intro": [
+      { "text": "What do you want, kid?", "best": "a", "responses": [
+        { "id": "a", "text": "Looking for real performance parts", "points": 10 },
+        { "id": "b", "text": "Heard you have good stuff", "points": 5 },
+        { "id": "c", "text": "Need electronics and computers", "points": -15, "next": "angry" }
+      ]}
+    ],
+    "questions": [
+      { "text": "Manual or automatic?", "best": "a", "responses": [
+        { "id": "a", "text": "Manual. Only real way to drive", "points": 20 },
+        { "id": "b", "text": "Manual, but automatics have their place", "points": 5 },
+        { "id": "c", "text": "Automatic is faster now", "points": -10, "next": "reject" }
+      ]}
+    ],
+    "final": [
+      { "text": "What drives you, kid?", "best": "a", "responses": [
+        { "id": "a", "text": "The sound, the smell, the feeling of raw power", "points": 20 },
+        { "id": "b", "text": "Competition", "points": 10 },
+        { "id": "c", "text": "Looking cool", "points": -5 }
+      ]}
+    ]
+  }
+}

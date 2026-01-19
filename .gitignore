@@ -1,0 +1,24 @@
+# Node modules
+node_modules/
+ui-build-temp/node_modules/
+
+# Build artifacts
+ui-build-temp/dist/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Local config
+.env
+.env.local

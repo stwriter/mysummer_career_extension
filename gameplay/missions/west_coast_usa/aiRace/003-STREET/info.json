@@ -1,0 +1,201 @@
+{
+  "additionalAttributes": {
+    "difficulty": "high"
+  },
+  "author": "ToeBee",
+  "careerSetup": {
+    "defaultStarKeys": [
+      "justFinish",
+      "finishSilver",
+      "finishGold"
+    ],
+    "showInCareer": false,
+    "showInFreeroam": true,
+    "skill": "(none)",
+    "starOutroTexts": {
+      "cleanGoldRace": "Way to go!",
+      "noStarUnlocked": "Tough luck. Want to try again?"
+    },
+    "starRewards": {
+      "beatGoalTime": [
+        {
+          "attributeKey": "bonusStars",
+          "rewardAmount": 1
+        }
+      ],
+      "cleanGoldRace": [
+        {
+          "attributeKey": "bonusStars",
+          "rewardAmount": 1
+        }
+      ],
+      "finishBronze": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 100
+        },
+        {
+          "attributeKey": "beamXP",
+          "rewardAmount": 50
+        }
+      ],
+      "finishGold": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 3000
+        },
+        {
+          "attributeKey": "beamXP",
+          "rewardAmount": 15
+        },
+        {
+          "attributeKey": "mysummer-streetracing",
+          "rewardAmount": 200
+        }
+      ],
+      "finishSilver": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 1500
+        },
+        {
+          "attributeKey": "beamXP",
+          "rewardAmount": 10
+        },
+        {
+          "attributeKey": "mysummer-streetracing",
+          "rewardAmount": 100
+        }
+      ],
+      "justFinish": [
+        {
+          "attributeKey": "beamXP",
+          "rewardAmount": 5
+        },
+        {
+          "attributeKey": "mysummer-streetracing",
+          "rewardAmount": 50
+        }
+      ]
+    },
+    "starsActive": {
+      "beatGoalTime": true,
+      "cleanGoldRace": true,
+      "finishBronze": false,
+      "finishGold": true,
+      "finishSilver": true,
+      "justFinish": true
+    }
+  },
+  "customAdditionalAttributes": {},
+  "date": 1699022137,
+  "description": "Race Rod Speed's Kustom D-Series pickup truck in a street race with up to 9 opponents in completely different vehicles. Rod Speed has a rugged appearance, a thick beard, and a cowboy hat. He used to be a stunt driver for Hollywood movies, but the advent of CGI put him out of work.",
+  "devMission": false,
+  "grouping": {
+    "id": "STREETRACE",
+    "label": "Street Races"
+  },
+  "isAvailableAsScenario": true,
+  "layers": [
+    {
+      "dir": "/gameplay/missions/west_coast_usa/aiRace/003-STREET/",
+      "fixed": true,
+      "isMissionFolderDir": true,
+      "isMissionTypeDir": false
+    },
+    {
+      "dir": "/gameplay/missionTypes/aiRace/",
+      "fixed": true,
+      "isMissionFolderDir": false,
+      "isMissionTypeDir": true
+    }
+  ],
+  "missionType": "aiRace",
+  "missionTypeData": {
+    "allowFlip": true,
+    "allowRecover": true,
+    "camPathActive": true,
+    "damageFailActive": false,
+    "damageFailText": "You got wrecked!",
+    "damageLimit": 10000,
+    "flipLimit": -1,
+    "goalCollisionsLimit": 1,
+    "goalCollisionsTarget": 5,
+    "goalLaps": 3,
+    "goalRecoveries": 0,
+    "goalTime": 245,
+    "lapCount": 3,
+    "mapPreviewMode": "navgraph",
+    "maxRacerCount": 9,
+    "minRacerCount": 1,
+    "prefabActive": false,
+    "raceFile": "/gameplay/missions/west_coast_usa/aiRace/003-STREET/race.race.json",
+    "racerAggression": 0.8999999762,
+    "racerAwareness": true,
+    "racerCount": 9,
+    "racerRandomnessScale": 1,
+    "racerRough": false,
+    "racerRubberbandMode": false,
+    "racerSkill": 1,
+    "recoverLimit": -1,
+    "shuffleGroup": true,
+    "smartStartPlace": true,
+    "startText": "These races are designed to have a high level of carnage. If you would like less carnage and more racing try turning off traffic. If your FPS gets too low the AI will drive badly. Try lowering the number of AI cars if you need more FPS.",
+    "startTitle": "Street Race #3",
+    "stoppedLimit": 0,
+    "useGroundmarkers": false,
+    "vehicleGroupActive": true
+  },
+  "name": "Street Race #3",
+  "retryBehaviour": "infiniteRetries",
+  "setupModules": {
+    "environment": {
+      "enabled": true,
+      "fogDensity": 0,
+      "time": 0.2083333333,
+      "timeScale": 0,
+      "windDirAngle": 0,
+      "windSpeed": 0
+    },
+    "traffic": {
+      "activeAmount": 1,
+      "amount": 10,
+      "enabled": true,
+      "parkedAmount": 0,
+      "respawnRate": 2.999999285,
+      "useGameOptions": false,
+      "usePrevTraffic": false,
+      "useSimpleVehs": true,
+      "useTraffic": true
+    },
+    "vehicles": {
+      "enabled": true,
+      "includePlayerVehicle": true,
+      "prioritizePlayerVehicle": true,
+      "vehicles": []
+    }
+  },
+  "startCondition": {
+    "type": "always"
+  },
+  "startTrigger": {
+    "level": "west_coast_usa",
+    "pos": [
+      -764.3753662,
+      -630.6920166,
+      105.7346573
+    ],
+    "radius": 7.204958439,
+    "rot": [
+      0,
+      0,
+      0.9312645197,
+      -0.364343673
+    ],
+    "type": "coordinates"
+  },
+  "visibleCondition": {
+    "missionId": "west_coast_usa/aiRace/002-STREET",
+    "type": "always"
+  }
+}

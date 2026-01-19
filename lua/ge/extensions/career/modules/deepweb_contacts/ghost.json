@@ -1,0 +1,315 @@
+{
+  "id": "ghost",
+  "name": "Ghost",
+  "personality": "paranoid",
+  "specialty": "Untraceable parts",
+  "description": "A paranoid parts dealer who values discretion above all",
+  "traits": {
+    "values": ["cautious", "discrete", "loyal", "patient", "secretive"],
+    "dislikes": ["reckless", "talkative", "impatient", "flashy", "trusting"],
+    "scoring": {
+      "cautious": 3,
+      "discrete": 3,
+      "loyal": 2,
+      "patient": 1,
+      "secretive": 2,
+      "reckless": -3,
+      "talkative": -3,
+      "impatient": -2,
+      "flashy": -2,
+      "trusting": -1
+    }
+  },
+  "rivals": ["shadow"],
+  "allies": [],
+  "neutral": ["techie", "muscle", "import"],
+  "confrontations": [
+    {
+      "trigger": "random",
+      "chance": 0.15,
+      "minTrust": 2,
+      "text": "Someone's been asking about you. What should I tell them?",
+      "responses": [
+        { "id": "a", "text": "Tell them nothing. I don't exist", "traits": ["discrete", "secretive"], "points": 20 },
+        { "id": "b", "text": "Who's asking?", "traits": ["cautious"], "points": 10 },
+        { "id": "c", "text": "Tell them I'm reliable", "traits": ["talkative"], "points": -15 }
+      ]
+    },
+    {
+      "trigger": "random",
+      "chance": 0.12,
+      "minTrust": 3,
+      "text": "I heard you've been talking to Shadow. That true?",
+      "responses": [
+        { "id": "a", "text": "I keep my business separate. You're my contact", "traits": ["loyal", "discrete"], "points": 15 },
+        { "id": "b", "text": "Just exploring options", "traits": ["reckless"], "points": -20 },
+        { "id": "c", "text": "What's it to you?", "traits": ["impatient"], "points": -10 }
+      ]
+    },
+    {
+      "trigger": "memory",
+      "condition": "keptSecret",
+      "chance": 0.2,
+      "minTrust": 2,
+      "text": "Remember what you said about keeping secrets?",
+      "responses": [
+        { "id": "a", "text": "Still true. Haven't said a word to anyone", "traits": ["loyal", "secretive"], "points": 20 },
+        { "id": "b", "text": "Of course", "traits": ["discrete"], "points": 10 },
+        { "id": "c", "text": "Which secret?", "traits": ["reckless"], "points": -15 }
+      ]
+    }
+  ],
+  "questionPools": {
+    "unknown": [
+      { "text": "Who gave you this number?", "best": "b", "responses": [
+        { "id": "a", "text": "Found it on a forum", "points": -10, "next": "reject" },
+        { "id": "b", "text": "Someone who vouches for me", "points": 10, "setsMemory": { "isHonest": true } },
+        { "id": "c", "text": "I need parts, no questions", "points": -5, "next": "angry" }
+      ]},
+      { "text": "Are you recording this?", "best": "a", "responses": [
+        { "id": "a", "text": "No. I value my privacy too", "points": 15, "setsMemory": { "keptSecret": true } },
+        { "id": "b", "text": "Why would I?", "points": 5 },
+        { "id": "c", "text": "That's paranoid", "points": -10, "next": "angry" }
+      ]},
+      { "text": "Show me your hands.", "best": "b", "responses": [
+        { "id": "a", "text": "Excuse me?", "points": -5 },
+        { "id": "b", "text": "*shows hands* Grease and calluses. Happy?", "points": 15, "setsMemory": { "provenWorker": true } },
+        { "id": "c", "text": "This is ridiculous", "points": -10, "next": "reject" }
+      ]},
+      { "text": "State your business.", "best": "a", "responses": [
+        { "id": "a", "text": "Looking for quality performance parts", "points": 10, "setsMemory": { "mentionedProject": true } },
+        { "id": "b", "text": "I heard you have cheap stuff", "points": -10, "next": "angry" },
+        { "id": "c", "text": "Just browsing", "points": -5, "next": "reject" }
+      ]},
+      { "text": "You're new. Who are you?", "best": "b", "responses": [
+        { "id": "a", "text": "None of your business", "points": -15, "next": "angry" },
+        { "id": "b", "text": "A builder looking for reliable parts", "points": 10, "setsMemory": { "claimedExperience": true } },
+        { "id": "c", "text": "A curious enthusiast", "points": 5 }
+      ]},
+      { "text": "Why should I trust you?", "best": "c", "responses": [
+        { "id": "a", "text": "Because I said so", "points": -10, "next": "reject" },
+        { "id": "b", "text": "Money talks", "points": 0 },
+        { "id": "c", "text": "I'm serious about my build and keep quiet", "points": 15, "setsMemory": { "keptSecret": true, "isHonest": true } }
+      ]},
+      { "text": "Where did you park?", "best": "b", "responses": [
+        { "id": "a", "text": "Right outside", "points": -5 },
+        { "id": "b", "text": "Blocks away. Different car.", "points": 15, "setsMemory": { "isCareful": true } },
+        { "id": "c", "text": "Why does it matter?", "points": 0 }
+      ]},
+      { "text": "Turn around. Slowly.", "best": "a", "responses": [
+        { "id": "a", "text": "*complies calmly*", "points": 10 },
+        { "id": "b", "text": "You're joking, right?", "points": -5 },
+        { "id": "c", "text": "No", "points": -15, "next": "reject" }
+      ]},
+      { "text": "Prove to me you're not a cop.", "best": "a", "responses": [
+        { "id": "a", "text": "A cop wouldn't know the first thing about tuning", "points": 15 },
+        { "id": "b", "text": "I can't really prove that", "points": 0 },
+        { "id": "c", "text": "That's paranoid thinking", "points": -10, "next": "angry" }
+      ]},
+      { "text": "What would you do if police asked about your car?", "best": "b", "responses": [
+        { "id": "a", "text": "Tell them everything", "points": -20, "next": "angry" },
+        { "id": "b", "text": "Play dumb, it's all stock parts", "points": 15 },
+        { "id": "c", "text": "Run", "points": 0 }
+      ]}
+    ],
+    "acquaintance": [
+      { "text": "Been careful since we last talked?", "best": "a", "responses": [
+        { "id": "a", "text": "Always watching my mirrors", "points": 15, "setsMemory": { "isCareful": true } },
+        { "id": "b", "text": "Careful enough", "points": 5 },
+        { "id": "c", "text": "Why, should I be worried?", "points": 0 }
+      ]},
+      { "text": "Anyone asking about me?", "best": "b", "responses": [
+        { "id": "a", "text": "A few people, but I didn't say anything", "points": 10, "setsMemory": { "keptSecret": true } },
+        { "id": "b", "text": "No one. I keep my sources private", "points": 15, "setsMemory": { "keptSecret": true } },
+        { "id": "c", "text": "Why would they?", "points": 0 }
+      ]},
+      { "text": "What are you building?", "best": "a", "responses": [
+        { "id": "a", "text": "ETK-I 2400ti, trying to finish it", "points": 15, "setsMemory": { "mentionedETKI": true, "mentionedProject": true } },
+        { "id": "b", "text": "Something fast", "points": 5, "setsMemory": { "mentionedProject": true } },
+        { "id": "c", "text": "None of your business", "points": -10, "next": "angry" }
+      ]},
+      { "text": "Ever had problems with the police?", "best": "b", "responses": [
+        { "id": "a", "text": "All the time", "points": -5 },
+        { "id": "b", "text": "I keep a low profile", "points": 15 },
+        { "id": "c", "text": "Yeah, but I got away", "points": 0 }
+      ]},
+      { "text": "How do you plan to pay?", "best": "a", "responses": [
+        { "id": "a", "text": "Cash, no trace", "points": 15 },
+        { "id": "b", "text": "Bank transfer", "points": -10, "next": "reject" },
+        { "id": "c", "text": "However you prefer", "points": 5 }
+      ]},
+      { "text": "You changed your route getting here?", "best": "a", "responses": [
+        { "id": "a", "text": "Always do. Habit.", "points": 15, "setsMemory": { "isCareful": true } },
+        { "id": "b", "text": "Didn't think about it", "points": -5 },
+        { "id": "c", "text": "Is that necessary?", "points": 0 }
+      ]},
+      { "text": "What's your experience with these parts?", "best": "b", "responses": [
+        { "id": "a", "text": "I'm new to this", "points": 5 },
+        { "id": "b", "text": "Built several cars, know what I need", "points": 15, "setsMemory": { "claimedExperience": true } },
+        { "id": "c", "text": "What does it matter?", "points": -5 }
+      ]},
+      { "text": "Why this particular project?", "best": "c", "responses": [
+        { "id": "a", "text": "It was cheap", "points": 0 },
+        { "id": "b", "text": "I like the look", "points": 5 },
+        { "id": "c", "text": "It's a classic platform with real potential", "points": 15 }
+      ]},
+      { "text": "Where do you work on your car?", "best": "b", "responses": [
+        { "id": "a", "text": "In the street", "points": -5 },
+        { "id": "b", "text": "Private garage, no neighbors", "points": 15 },
+        { "id": "c", "text": "A friend's shop", "points": 5 }
+      ]},
+      { "text": "Can you keep secrets?", "best": "a", "responses": [
+        { "id": "a", "text": "I've got more secrets than you know", "points": 15, "setsMemory": { "keptSecret": true } },
+        { "id": "b", "text": "Most of the time", "points": 0 },
+        { "id": "c", "text": "Depends on the secret", "points": -5 }
+      ]}
+    ],
+    "associate": [
+      { "text": "I've been watching you. You're different.", "best": "b", "responses": [
+        { "id": "a", "text": "Different how?", "points": 5 },
+        { "id": "b", "text": "I take this seriously. It's not a hobby.", "points": 15 },
+        { "id": "c", "text": "Thanks, I guess", "points": 0 }
+      ]},
+      { "text": "Need to tell you something. You ready?", "best": "a", "responses": [
+        { "id": "a", "text": "I'm listening", "points": 15 },
+        { "id": "b", "text": "Depends what it is", "points": 5 },
+        { "id": "c", "text": "Make it quick", "points": -5 }
+      ]},
+      { "text": "There's a reason I don't work with many people.", "best": "c", "responses": [
+        { "id": "a", "text": "Trust issues?", "points": 5 },
+        { "id": "b", "text": "Bad experiences?", "points": 5 },
+        { "id": "c", "text": "Quality over quantity. I get it.", "points": 15, "setsMemory": { "understandsGhost": true } }
+      ]},
+      { "text": "Ever betray someone's trust?", "best": "b", "responses": [
+        { "id": "a", "text": "Not yet", "points": 5 },
+        { "id": "b", "text": "Never. Loyalty is everything", "points": 20, "setsMemory": { "isHonest": true } },
+        { "id": "c", "text": "Only when necessary", "points": -10, "next": "reject", "setsMemory": { "failedTest": true } }
+      ]},
+      { "text": "I know some people who could use someone like you.", "best": "a", "responses": [
+        { "id": "a", "text": "I'm listening, but I'm careful who I work with", "points": 15 },
+        { "id": "b", "text": "Tell me more", "points": 10 },
+        { "id": "c", "text": "Not interested in expanding", "points": 0 }
+      ]},
+      { "text": "What's your endgame with this build?", "best": "c", "responses": [
+        { "id": "a", "text": "Just to have fun", "points": 5 },
+        { "id": "b", "text": "To show off", "points": -5 },
+        { "id": "c", "text": "To build something I can be proud of", "points": 15 }
+      ]},
+      { "text": "Are you serious about this?", "best": "b", "responses": [
+        { "id": "a", "text": "Maybe", "points": -5, "next": "reject" },
+        { "id": "b", "text": "Dead serious. This is my passion", "points": 15 },
+        { "id": "c", "text": "As serious as the money allows", "points": 5 }
+      ]},
+      { "text": "How long have you been building cars?", "best": "b", "responses": [
+        { "id": "a", "text": "Just started", "points": 5 },
+        { "id": "b", "text": "Years, self-taught mostly", "points": 15 },
+        { "id": "c", "text": "Long enough", "points": 10 }
+      ]},
+      { "text": "What happens if things go wrong?", "best": "c", "responses": [
+        { "id": "a", "text": "I call you", "points": -10 },
+        { "id": "b", "text": "I figure it out", "points": 10 },
+        { "id": "c", "text": "I handle my own problems. You'll never hear about it", "points": 20 }
+      ]},
+      { "text": "What makes you different from everyone else?", "best": "c", "responses": [
+        { "id": "a", "text": "I have money", "points": 0 },
+        { "id": "b", "text": "I'm persistent", "points": 10 },
+        { "id": "c", "text": "I finish what I start, no matter what", "points": 20 }
+      ]}
+    ],
+    "trusted": [
+      { "text": "Let me tell you how I got into this...", "best": "a", "responses": [
+        { "id": "a", "text": "I'd like to hear it", "points": 15 },
+        { "id": "b", "text": "If you want to share", "points": 10 },
+        { "id": "c", "text": "Not really into life stories", "points": -10 }
+      ]},
+      { "text": "You ever think about what happens if this all ends?", "best": "b", "responses": [
+        { "id": "a", "text": "I try not to think about it", "points": 5 },
+        { "id": "b", "text": "I have contingencies. Always.", "points": 15, "setsMemory": { "isPrepared": true } },
+        { "id": "c", "text": "It won't end", "points": 0 }
+      ]},
+      { "text": "I had a partner once. Things went wrong.", "best": "c", "responses": [
+        { "id": "a", "text": "What happened?", "points": 10 },
+        { "id": "b", "text": "I'm sorry", "points": 5 },
+        { "id": "c", "text": "That's why trust is earned, not given", "points": 20, "setsMemory": { "understandsGhost": true } }
+      ]},
+      { "text": "Remember what I said about staying clean?", "best": "a", "condition": "isCareful", "responses": [
+        { "id": "a", "text": "Every day. It's how I operate now", "points": 15 },
+        { "id": "b", "text": "Most of the time", "points": 5 },
+        { "id": "c", "text": "Not really", "points": -10 }
+      ]},
+      { "text": "You've proven yourself. Few people do.", "best": "b", "responses": [
+        { "id": "a", "text": "Thanks, I guess", "points": 5 },
+        { "id": "b", "text": "I just do what needs to be done", "points": 15 },
+        { "id": "c", "text": "I know", "points": -5 }
+      ]},
+      { "text": "There are things I've never told anyone.", "best": "a", "responses": [
+        { "id": "a", "text": "You don't have to tell me unless you want to", "points": 15 },
+        { "id": "b", "text": "I'm curious", "points": 5 },
+        { "id": "c", "text": "Then don't", "points": -5 }
+      ]},
+      { "text": "The paranoia never goes away. You learn to live with it.", "best": "c", "responses": [
+        { "id": "a", "text": "That sounds exhausting", "points": 5 },
+        { "id": "b", "text": "I understand", "points": 10 },
+        { "id": "c", "text": "It's not paranoia if they're really after you", "points": 15 }
+      ]},
+      { "text": "You're one of the few I trust to not be wired.", "best": "a", "responses": [
+        { "id": "a", "text": "That means a lot coming from you", "points": 15 },
+        { "id": "b", "text": "You can count on me", "points": 10 },
+        { "id": "c", "text": "Good", "points": 5 }
+      ]}
+    ],
+    "innerCircle": [
+      { "text": "I'm planning something big. You in?", "best": "a", "responses": [
+        { "id": "a", "text": "Tell me what you need", "points": 20 },
+        { "id": "b", "text": "Depends on what it is", "points": 10 },
+        { "id": "c", "text": "I need more details first", "points": 5 }
+      ]},
+      { "text": "If something happens to me, there's a box...", "best": "b", "responses": [
+        { "id": "a", "text": "Don't talk like that", "points": 5 },
+        { "id": "b", "text": "I'll make sure it gets to the right people", "points": 20, "setsMemory": { "knewAboutBox": true } },
+        { "id": "c", "text": "A box?", "points": 10 }
+      ]},
+      { "text": "You're the only one who knows my real name.", "best": "a", "responses": [
+        { "id": "a", "text": "And it stays that way", "points": 20, "setsMemory": { "knowsRealName": true } },
+        { "id": "b", "text": "I won't forget that", "points": 15 },
+        { "id": "c", "text": "Why tell me?", "points": 5 }
+      ]},
+      { "text": "There's a network. Bigger than you think. I'm just a node.", "best": "b", "responses": [
+        { "id": "a", "text": "How deep does it go?", "points": 10 },
+        { "id": "b", "text": "I suspected as much. I'm ready.", "points": 20 },
+        { "id": "c", "text": "Should I be worried?", "points": 5 }
+      ]},
+      { "text": "If they come for me, you'll be the first to know.", "best": "a", "responses": [
+        { "id": "a", "text": "I'll be ready. We look out for our own.", "points": 20 },
+        { "id": "b", "text": "What should I do if that happens?", "points": 10 },
+        { "id": "c", "text": "Hopefully it never comes to that", "points": 5 }
+      ]},
+      { "text": "After all this time... I'm glad you're on my side.", "best": "b", "responses": [
+        { "id": "a", "text": "Likewise", "points": 15 },
+        { "id": "b", "text": "We're in this together now", "points": 20 },
+        { "id": "c", "text": "Yeah", "points": 5 }
+      ]}
+    ],
+    "intro": [
+      { "text": "Who gave you this number?", "best": "b", "responses": [
+        { "id": "a", "text": "Found it on a forum", "points": 0, "next": "reject" },
+        { "id": "b", "text": "Someone who vouches for me", "points": 10, "setsMemory": { "isHonest": true } },
+        { "id": "c", "text": "I need parts, no questions", "points": -5, "next": "angry" }
+      ]}
+    ],
+    "questions": [
+      { "text": "Can you keep secrets?", "best": "a", "responses": [
+        { "id": "a", "text": "I've got more secrets than you know", "points": 15, "setsMemory": { "keptSecret": true } },
+        { "id": "b", "text": "Most of the time", "points": 0 },
+        { "id": "c", "text": "Depends on the secret", "points": -5 }
+      ]}
+    ],
+    "final": [
+      { "text": "Last question. Why should I help you?", "best": "b", "responses": [
+        { "id": "a", "text": "Because I'll pay well", "points": 5 },
+        { "id": "b", "text": "Because I respect the craft and the code", "points": 20 },
+        { "id": "c", "text": "Why not?", "points": -5 }
+      ]}
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "bindings": {
+    "toggleRaceRecording": {
+      "control": "keyboard 0 b",
+      "modifiers": "shift"
+    }
+  },
+  "actionCategories": {
+    "mysummer": {
+      "title": "MySummer",
+      "order": 100
+    }
+  },
+  "actions": {
+    "toggleRaceRecording": {
+      "cat": "mysummer",
+      "title": "Toggle Race Recording",
+      "desc": "Start/stop recording race checkpoints (Shift+B)",
+      "onChange": "career_modules_mysummerRaceEditor.toggleRecording()",
+      "oncePerPress": true
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "name": "Muscle Network",
+  "description": "Old-school performance enthusiast. No computers, no electronics, just raw power.",
+  "order": 2400,
+  "isSkill": true,
+  "icon": "engine",
+  "parentBranch": "mysummer",
+  "startLocked": true,
+  "levels": [
+    {
+      "requiredValue": 0,
+      "description": {
+        "type": "unlockCard",
+        "icon": "question",
+        "heading": "Unknown",
+        "description": "You don't know this contact yet. Techie can introduce you."
+      }
+    },
+    {
+      "requiredValue": 50,
+      "description": {
+        "type": "unlockCard",
+        "icon": "handshake",
+        "heading": "Acquaintance",
+        "description": "Muscle sees you've got grease under your nails."
+      },
+      "unlockFlags": ["muscle_basic_leads"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "search",
+          "heading": "Basic Leads",
+          "description": "Access to Muscle's basic part leads."
+        }
+      ]
+    },
+    {
+      "requiredValue": 150,
+      "description": {
+        "type": "unlockCard",
+        "icon": "users",
+        "heading": "Associate",
+        "description": "Muscle respects your work ethic. Old school values."
+      },
+      "unlockFlags": ["muscle_race_challenge", "muscle_medium_leads", "import_available"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "racingFlag",
+          "heading": "Race Challenge",
+          "description": "Challenge Muscle to an old-school drag race."
+        },
+        {
+          "type": "unlockCard",
+          "icon": "user",
+          "heading": "New Contact",
+          "description": "Muscle introduces you to Import."
+        }
+      ]
+    },
+    {
+      "requiredValue": 350,
+      "description": {
+        "type": "unlockCard",
+        "icon": "shield",
+        "heading": "Trusted",
+        "description": "Muscle shares his connections to serious hardware."
+      },
+      "unlockFlags": ["muscle_premium_leads", "muscle_exclusive_parts"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "star",
+          "heading": "Premium Leads",
+          "description": "Access to Muscle's heavy-duty performance parts."
+        }
+      ]
+    },
+    {
+      "requiredValue": 600,
+      "description": {
+        "type": "unlockCard",
+        "icon": "heart",
+        "heading": "Inner Circle",
+        "description": "You've earned the old man's complete respect."
+      },
+      "unlockFlags": ["muscle_all_access"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "crown",
+          "heading": "Full Access",
+          "description": "Complete access to Muscle's old-school network."
+        }
+      ]
+    }
+  ]
+}
