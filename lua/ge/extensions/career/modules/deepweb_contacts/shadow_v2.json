@@ -1,0 +1,678 @@
+{
+  "id": "shadow",
+  "name": "Shadow",
+  "personality": "black_market",
+  "specialty": "Black market connections and heat clearance",
+  "description": "A mysterious figure with deep underworld connections who trades in silence and favors",
+  "traits": {
+    "values": ["silence", "reliable", "patient", "cautious", "professional"],
+    "dislikes": ["talkative", "reckless", "emotional", "naive", "flashy"],
+    "scoring": {
+      "silence": 3, "reliable": 3, "patient": 2, "cautious": 2, "professional": 2,
+      "talkative": -3, "reckless": -3, "emotional": -2, "naive": -2, "flashy": -1
+    }
+  },
+  "rivals": ["ghost"],
+  "allies": [],
+  "neutral": ["techie", "muscle", "import"],
+
+  "storyArcs": {
+    "main": {
+      "title": "The Shadow Network",
+      "description": "Gain access to the most secretive dealer in the underground",
+      "chapters": [
+        {
+          "id": "ch1_the_silence",
+          "title": "The Silence",
+          "requiredLevel": 1,
+          "summary": "Shadow tests your ability to keep quiet and stay calm under pressure",
+          "conversations": [
+            {
+              "id": "intro_1",
+              "type": "sequential",
+              "exchanges": [
+                {
+                  "speaker": "shadow",
+                  "text": "..."
+                },
+                {
+                  "pause": 3000
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Import told me about you."
+                },
+                {
+                  "pause": 2000
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Said you know when to talk and when to listen."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "We'll see."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "*waits in silence*",
+                      "traits": ["silence", "patient"],
+                      "points": 25,
+                      "setsMemory": { "stayedSilent": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "I'm here because I was told you can help with... certain things.",
+                      "traits": ["cautious"],
+                      "points": 10,
+                      "setsMemory": { "spokeFirst": true }
+                    },
+                    {
+                      "id": "c",
+                      "text": "So what's the deal? How does this work?",
+                      "traits": ["reckless", "naive"],
+                      "points": -15,
+                      "next": "too_eager"
+                    }
+                  ]
+                }
+              ],
+              "branches": {
+                "too_eager": [
+                  {
+                    "speaker": "shadow",
+                    "text": "..."
+                  },
+                  {
+                    "speaker": "shadow",
+                    "text": "Too eager."
+                  },
+                  {
+                    "speaker": "shadow",
+                    "text": "Eager people make mistakes. Mistakes attract attention."
+                  },
+                  {
+                    "speaker": "shadow",
+                    "text": "Come back when you've learned patience."
+                  },
+                  {
+                    "type": "end",
+                    "result": "rejected",
+                    "cooldown": 172800
+                  }
+                ]
+              }
+            },
+            {
+              "id": "intro_2_silent",
+              "type": "sequential",
+              "condition": { "memory": "stayedSilent" },
+              "exchanges": [
+                {
+                  "speaker": "shadow",
+                  "text": "..."
+                },
+                {
+                  "pause": 4000
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Good."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Most people can't handle silence. They fill it with noise."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Noise is dangerous."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "*nods slightly*",
+                      "traits": ["silence", "professional"],
+                      "points": 20,
+                      "setsMemory": { "maintainedComposure": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "I understand the value of discretion.",
+                      "traits": ["cautious"],
+                      "points": 15,
+                      "setsMemory": { "valuesDscretion": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "intro_3_test",
+              "type": "sequential",
+              "condition": { "completedConversation": "intro_1" },
+              "exchanges": [
+                {
+                  "speaker": "shadow",
+                  "text": "A test."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Someone approaches you. Says they're looking for parts. Mentions my name."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "What do you say?"
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "I've never heard that name.",
+                      "traits": ["silence", "professional"],
+                      "points": 25,
+                      "setsMemory": { "passedSecrecyTest": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "Even if I knew someone by that name, I wouldn't tell you.",
+                      "traits": ["cautious"],
+                      "points": 15,
+                      "setsMemory": { "guardedResponse": true }
+                    },
+                    {
+                      "id": "c",
+                      "text": "I'd ask what they need and maybe point them in the right direction.",
+                      "traits": ["naive", "talkative"],
+                      "points": -20,
+                      "next": "failed_test"
+                    }
+                  ]
+                }
+              ],
+              "branches": {
+                "failed_test": [
+                  {
+                    "speaker": "shadow",
+                    "text": "..."
+                  },
+                  {
+                    "speaker": "shadow",
+                    "text": "Wrong."
+                  },
+                  {
+                    "speaker": "shadow",
+                    "text": "That's how people end up in prison. Or worse."
+                  },
+                  {
+                    "speaker": "shadow",
+                    "text": "Forget you ever heard of me."
+                  },
+                  {
+                    "type": "end",
+                    "result": "rejected",
+                    "cooldown": 259200,
+                    "setsMemory": { "blacklisted": true }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "ch1_conclusion",
+              "type": "sequential",
+              "condition": { "memory": "passedSecrecyTest" },
+              "exchanges": [
+                {
+                  "speaker": "shadow",
+                  "text": "..."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Perfect answer."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "You don't exist. I don't exist. Our conversations never happened."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "If you remember that, we can do business."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "*remains silent, simply meeting their gaze*",
+                      "traits": ["silence"],
+                      "points": 15,
+                      "setsMemory": { "confirmedWithSilence": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "Understood.",
+                      "traits": ["professional"],
+                      "points": 10
+                    }
+                  ]
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "I deal in things that are hard to find. And hard to forget you found."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Specialty parts. Clean documents. Heat clearance."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "You'll know when you need me."
+                },
+                {
+                  "type": "end",
+                  "result": "success",
+                  "rewards": {
+                    "xp": 50,
+                    "unlocks": ["shadow_basic_services"]
+                  },
+                  "setsMemory": { "initialContact": true }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch2_the_network",
+          "title": "The Network",
+          "requiredLevel": 2,
+          "requiredMemory": ["initialContact"],
+          "summary": "Shadow reveals more about the underground network",
+          "conversations": [
+            {
+              "id": "network_1",
+              "type": "sequential",
+              "exchanges": [
+                {
+                  "speaker": "shadow",
+                  "text": "You've been active."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "I hear things. See things."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "You've stayed quiet. Good."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "There's nothing to talk about.",
+                      "traits": ["silence"],
+                      "points": 15,
+                      "setsMemory": { "staysQuiet": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "How do you hear these things?",
+                      "points": 5
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "network_2_reveal",
+              "type": "sequential",
+              "condition": { "memory": "staysQuiet" },
+              "exchanges": [
+                {
+                  "speaker": "shadow",
+                  "text": "There's a network."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Not what you'd call organized. More like... threads. Connected where they need to be."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Mechanics. Drivers. People who move things. People who forget they saw things."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Everyone has their role. Everyone stays in their lane."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "And what's your role?",
+                      "traits": ["cautious"],
+                      "points": 15,
+                      "setsMemory": { "askedRole": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "*doesn't ask, waits*",
+                      "traits": ["patient", "silence"],
+                      "points": 20,
+                      "setsMemory": { "waitedForMore": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "network_3_role",
+              "type": "sequential",
+              "condition": { "memory": "waitedForMore" },
+              "exchanges": [
+                {
+                  "speaker": "shadow",
+                  "text": "*almost smiles*"
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "You didn't ask."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Smart."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "I'm the one who makes problems disappear. Heat. Witnesses. Paper trails."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "It's expensive. But when you need it, price doesn't matter."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "*nods, understanding*",
+                      "traits": ["professional"],
+                      "points": 15
+                    },
+                    {
+                      "id": "b",
+                      "text": "I hope I never need that kind of help.",
+                      "traits": ["honest"],
+                      "points": 10,
+                      "setsMemory": { "hopesNeverNeeds": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "network_4_warning",
+              "type": "sequential",
+              "condition": { "memory": "hopesNeverNeeds" },
+              "exchanges": [
+                {
+                  "speaker": "shadow",
+                  "text": "Everyone says that."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Until they do."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "You deal in gray areas long enough, eventually you'll step too far."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "When that happens... you'll know where to find me."
+                },
+                {
+                  "type": "end",
+                  "result": "success",
+                  "rewards": {
+                    "xp": 75,
+                    "unlocks": ["shadow_advanced_services"]
+                  },
+                  "setsMemory": { "understoodNetwork": true }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch3_the_truth",
+          "title": "The Truth",
+          "requiredLevel": 4,
+          "requiredMemory": ["understoodNetwork"],
+          "summary": "Shadow shares a rare glimpse of their past",
+          "conversations": [
+            {
+              "id": "truth_1",
+              "type": "sequential",
+              "exchanges": [
+                {
+                  "speaker": "shadow",
+                  "text": "I'm going to tell you something."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "I don't know why."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Maybe because you've never asked."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "*listens attentively*",
+                      "traits": ["patient", "silence"],
+                      "points": 20,
+                      "setsMemory": { "listenedAttentively": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "You don't have to.",
+                      "traits": ["professional"],
+                      "points": 15,
+                      "setsMemory": { "offeredOut": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "truth_2_story",
+              "type": "sequential",
+              "condition": { "memory": "listenedAttentively" },
+              "exchanges": [
+                {
+                  "speaker": "shadow",
+                  "text": "I wasn't always this."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Fifteen years ago, I was an accountant. Numbers. Spreadsheets. Legal."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Then I found out what my employer was really doing. Money laundering. Through the automotive business."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "I had two choices. Report it and become a target. Or... adapt."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "You chose survival.",
+                      "traits": ["professional"],
+                      "points": 15,
+                      "setsMemory": { "understoodChoice": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "*says nothing, letting them continue*",
+                      "traits": ["silence", "patient"],
+                      "points": 20,
+                      "setsMemory": { "letThemContinue": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "truth_3_adaptation",
+              "type": "sequential",
+              "condition": { "memory": "letThemContinue" },
+              "exchanges": [
+                {
+                  "speaker": "shadow",
+                  "text": "I learned how the system really works."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Not the legal system. The real one. The one underneath."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Now I use that knowledge to protect people like you."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "People who aren't bad. Just... operating in spaces the law doesn't understand."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "The law isn't always right. Sometimes it's just slow to catch up.",
+                      "traits": ["honest"],
+                      "points": 15,
+                      "setsMemory": { "philosophicalView": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "You turned a prison into a profession.",
+                      "points": 20,
+                      "setsMemory": { "poignantObservation": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "truth_4_trust",
+              "type": "sequential",
+              "condition": { "memory": "poignantObservation" },
+              "exchanges": [
+                {
+                  "speaker": "shadow",
+                  "text": "..."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Yes."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "That's exactly what I did."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "No one's ever put it that way before."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "You understand more than you let on."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "I've learned to observe more than I speak.",
+                      "traits": ["silence", "professional"],
+                      "points": 20
+                    },
+                    {
+                      "id": "b",
+                      "text": "We all have our cages. Some of us just learn to work the locks.",
+                      "traits": ["honest"],
+                      "points": 25,
+                      "setsMemory": { "profoundConnection": true }
+                    }
+                  ]
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "..."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "Full access. Anything I can do, I'll do for you."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "You've earned something rare."
+                },
+                {
+                  "speaker": "shadow",
+                  "text": "My trust."
+                },
+                {
+                  "type": "end",
+                  "result": "success",
+                  "rewards": {
+                    "xp": 150,
+                    "unlocks": ["shadow_premium_services", "shadow_full_access"]
+                  },
+                  "setsMemory": { "earnedFullTrust": true }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+
+  "confrontations": [
+    {
+      "trigger": "random",
+      "chance": 0.1,
+      "minTrust": 2,
+      "text": "Someone's been asking questions. About suppliers. About networks. What do you know?",
+      "responses": [
+        { "id": "a", "text": "I don't know anything. I don't ask questions.", "traits": ["silence", "professional"], "points": 25 },
+        { "id": "b", "text": "If someone's asking, they're not one of us.", "traits": ["cautious"], "points": 15 },
+        { "id": "c", "text": "I haven't heard anything, but I can keep an ear out.", "traits": ["talkative"], "points": -15 }
+      ]
+    }
+  ],
+
+  "fallbackQuestions": {
+    "unknown": [
+      { "text": "...", "responses": [
+        { "id": "a", "text": "*waits patiently*", "points": 15 },
+        { "id": "b", "text": "I'm listening.", "points": 5 },
+        { "id": "c", "text": "Well? What is it?", "points": -10 }
+      ]}
+    ]
+  }
+}

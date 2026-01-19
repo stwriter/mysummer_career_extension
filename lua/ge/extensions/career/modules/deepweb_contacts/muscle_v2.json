@@ -1,0 +1,679 @@
+{
+  "id": "muscle",
+  "name": "Muscle",
+  "personality": "oldschool",
+  "specialty": "Classic performance and heavy hardware",
+  "description": "An old-school mechanic who values tradition, hard work, and proving yourself",
+  "traits": {
+    "values": ["hardworking", "respectful", "experienced", "honest", "dedicated"],
+    "dislikes": ["lazy", "disrespectful", "arrogant", "shortcuts", "excuses"],
+    "scoring": {
+      "hardworking": 3, "respectful": 3, "experienced": 2, "honest": 2, "dedicated": 2,
+      "lazy": -3, "disrespectful": -3, "arrogant": -2, "shortcuts": -2, "excuses": -2
+    }
+  },
+  "rivals": [],
+  "allies": ["techie"],
+  "neutral": ["ghost", "import", "shadow"],
+
+  "storyArcs": {
+    "main": {
+      "title": "Old School Rules",
+      "description": "Earn the respect of a veteran who's seen it all",
+      "chapters": [
+        {
+          "id": "ch1_proving_ground",
+          "title": "The Proving Ground",
+          "requiredLevel": 1,
+          "summary": "Muscle tests whether you have what it takes",
+          "conversations": [
+            {
+              "id": "intro_1",
+              "type": "sequential",
+              "exchanges": [
+                {
+                  "speaker": "muscle",
+                  "text": "Techie sent you, huh?"
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "That kid's smart, but he overthinks everything. All that data and computers..."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "In my day, you tuned by ear and feel. And we made power. Real power."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "There's value in both approaches. Technology helps, but nothing replaces experience.",
+                      "traits": ["respectful", "experienced"],
+                      "points": 20,
+                      "setsMemory": { "showedRespect": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "The old ways still work. Some things don't need computers.",
+                      "traits": ["honest"],
+                      "points": 15,
+                      "setsMemory": { "agreedWithOldWays": true }
+                    },
+                    {
+                      "id": "c",
+                      "text": "Data makes everything easier though.",
+                      "points": -5,
+                      "next": "disappointed_response"
+                    }
+                  ]
+                }
+              ],
+              "branches": {
+                "disappointed_response": [
+                  {
+                    "speaker": "muscle",
+                    "text": "*sighs*"
+                  },
+                  {
+                    "speaker": "muscle",
+                    "text": "Easier isn't better, kid. Easy is how you stay mediocre."
+                  },
+                  {
+                    "speaker": "muscle",
+                    "text": "Come back when you understand that."
+                  },
+                  {
+                    "type": "end",
+                    "result": "partial",
+                    "cooldown": 21600
+                  }
+                ]
+              }
+            },
+            {
+              "id": "intro_2",
+              "type": "sequential",
+              "condition": { "anyMemory": ["showedRespect", "agreedWithOldWays"] },
+              "exchanges": [
+                {
+                  "speaker": "muscle",
+                  "text": "Alright. I can work with that."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "Name's... well, people call me Muscle. Been turning wrenches for forty years."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "Started in my old man's shop. Built my first engine at sixteen."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "What about you? When'd you first get your hands dirty?"
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "Young. Helped my dad work on the family car. That's where the bug bit me.",
+                      "traits": ["honest", "dedicated"],
+                      "points": 20,
+                      "setsMemory": { "familyBackground": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "I'm newer to this, but I'm committed. Learning every day.",
+                      "traits": ["honest", "hardworking"],
+                      "points": 15,
+                      "setsMemory": { "admittedNewbie": true }
+                    },
+                    {
+                      "id": "c",
+                      "text": "Bought my first project car a couple years ago.",
+                      "points": 10,
+                      "setsMemory": { "recentStart": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "intro_3_family",
+              "type": "sequential",
+              "condition": { "memory": "familyBackground" },
+              "exchanges": [
+                {
+                  "speaker": "muscle",
+                  "text": "Family tradition. I respect that."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "My old man taught me everything. Patience. Precision. Pride in your work."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "He's gone now, but every time I rebuild an engine, I hear his voice."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "'Measure twice, cut once. And if you're gonna do it, do it right.'"
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "That's a good philosophy. I try to live by it too.",
+                      "traits": ["respectful"],
+                      "points": 15,
+                      "setsMemory": { "sharesPhilosophy": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "Sounds like he was a good teacher.",
+                      "traits": ["respectful"],
+                      "points": 10,
+                      "setsMemory": { "acknowledgedFather": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "intro_test",
+              "type": "sequential",
+              "condition": { "completedConversation": "intro_2" },
+              "exchanges": [
+                {
+                  "speaker": "muscle",
+                  "text": "Look, I'm gonna be straight with you."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "I deal with serious hardware. Forged internals. Racing cams. Stuff that can make or break an engine."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "I need to know you're not gonna cut corners. Tell me - your project car needs new rod bearings. What do you do?"
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "Pull the engine, inspect the crank, measure the journals, order bearings to spec, and plasti-gauge clearances on assembly.",
+                      "traits": ["experienced", "dedicated"],
+                      "points": 25,
+                      "setsMemory": { "passedTest": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "Drop the pan and replace the bearings in the car. Faster that way.",
+                      "traits": ["shortcuts"],
+                      "points": -15,
+                      "next": "shortcut_response"
+                    },
+                    {
+                      "id": "c",
+                      "text": "Take it to a machine shop and have them do it.",
+                      "points": 5,
+                      "setsMemory": { "wouldOutsource": true }
+                    }
+                  ]
+                }
+              ],
+              "branches": {
+                "shortcut_response": [
+                  {
+                    "speaker": "muscle",
+                    "text": "..."
+                  },
+                  {
+                    "speaker": "muscle",
+                    "text": "And when that crank is scored because you didn't check it? When those bearings spin because the clearance was wrong?"
+                  },
+                  {
+                    "speaker": "muscle",
+                    "text": "Shortcuts cost more in the long run. Always."
+                  },
+                  {
+                    "speaker": "muscle",
+                    "text": "Come back when you're ready to do things right."
+                  },
+                  {
+                    "type": "end",
+                    "result": "rejected",
+                    "cooldown": 86400
+                  }
+                ]
+              }
+            },
+            {
+              "id": "ch1_conclusion",
+              "type": "sequential",
+              "condition": { "memory": "passedTest" },
+              "exchanges": [
+                {
+                  "speaker": "muscle",
+                  "text": "*nods slowly*"
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "That's the right answer. The only answer."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "You can't rush precision work. The engine doesn't care about your schedule."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "Alright, kid. You've got potential. Let's see what you can do."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "I won't let you down.",
+                      "traits": ["dedicated"],
+                      "points": 10
+                    },
+                    {
+                      "id": "b",
+                      "text": "Looking forward to learning from you.",
+                      "traits": ["respectful"],
+                      "points": 15,
+                      "setsMemory": { "wantsToLearn": true }
+                    }
+                  ]
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "I've got some quality rotating assembly parts. Forged pistons, H-beam rods. The good stuff."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "When you're ready to build something serious, come talk to me."
+                },
+                {
+                  "type": "end",
+                  "result": "success",
+                  "rewards": {
+                    "xp": 50,
+                    "unlocks": ["muscle_basic_inventory"]
+                  },
+                  "setsMemory": { "provedYourself": true }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch2_war_stories",
+          "title": "War Stories",
+          "requiredLevel": 2,
+          "requiredMemory": ["provedYourself"],
+          "summary": "Muscle shares stories from his racing days",
+          "conversations": [
+            {
+              "id": "stories_1",
+              "type": "sequential",
+              "exchanges": [
+                {
+                  "speaker": "muscle",
+                  "text": "You ever race, kid?"
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "Not this modern stuff with traction control and ABS. Real racing. Just you, the car, and the road."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "A few times. Nothing serious, but I understand the appeal.",
+                      "traits": ["honest"],
+                      "points": 10,
+                      "setsMemory": { "hasRaced": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "Not yet. But I'm building towards it.",
+                      "traits": ["dedicated"],
+                      "points": 15,
+                      "setsMemory": { "wantsToRace": true }
+                    },
+                    {
+                      "id": "c",
+                      "text": "Racing seems dangerous.",
+                      "points": 0
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "stories_2",
+              "type": "sequential",
+              "condition": { "anyMemory": ["hasRaced", "wantsToRace"] },
+              "exchanges": [
+                {
+                  "speaker": "muscle",
+                  "text": "Back in '84, I was running a Moonhawk with a stroked 440. Built it myself."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "That thing was a monster. Ran 10.8 in the quarter on street tires."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "We'd hit the back roads every Friday night. Twenty, thirty cars sometimes."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "No prize money. No trophies. Just respect."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "That's what it should be about. The love of the sport.",
+                      "traits": ["dedicated"],
+                      "points": 15,
+                      "setsMemory": { "understandsPassion": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "What happened to the Moonhawk?",
+                      "points": 10,
+                      "setsMemory": { "askedAboutCar": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "stories_3_moonhawk",
+              "type": "sequential",
+              "condition": { "memory": "askedAboutCar" },
+              "exchanges": [
+                {
+                  "speaker": "muscle",
+                  "text": "*long pause*"
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "Lost it. In '91."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "Wife got sick. Hospital bills. Had to sell the car to pay for treatment."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "She didn't make it. And neither did my Moonhawk."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "I'm sorry. That's a hell of a loss on both counts.",
+                      "traits": ["respectful"],
+                      "points": 15,
+                      "setsMemory": { "showedCompassion": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "You did the right thing. Family comes first.",
+                      "traits": ["honest"],
+                      "points": 20,
+                      "setsMemory": { "acknowledgedSacrifice": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "stories_4_healing",
+              "type": "sequential",
+              "condition": { "memory": "acknowledgedSacrifice" },
+              "exchanges": [
+                {
+                  "speaker": "muscle",
+                  "text": "Yeah. It was."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "Took me years to touch a wrench again after that. Didn't see the point."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "But eventually... cars called me back. It's in my blood. Can't escape it."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "Now I help other people build their dreams. It's not the same, but it's something."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "Maybe someday you'll find another Moonhawk.",
+                      "traits": ["honest"],
+                      "points": 15,
+                      "setsMemory": { "offeredHope": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "Passing on knowledge is the best legacy.",
+                      "traits": ["respectful"],
+                      "points": 15,
+                      "setsMemory": { "acknowledgedLegacy": true }
+                    }
+                  ]
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "Maybe. We'll see."
+                },
+                {
+                  "type": "end",
+                  "result": "success",
+                  "rewards": {
+                    "xp": 75,
+                    "unlocks": ["muscle_performance_inventory"]
+                  },
+                  "setsMemory": { "heardStory": true, "earnedTrust": true }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch3_legacy",
+          "title": "The Legacy",
+          "requiredLevel": 4,
+          "requiredMemory": ["earnedTrust"],
+          "summary": "Muscle reveals his final project",
+          "conversations": [
+            {
+              "id": "legacy_1",
+              "type": "sequential",
+              "exchanges": [
+                {
+                  "speaker": "muscle",
+                  "text": "Come with me. I want to show you something."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "In the back of my shop, under the tarp."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "It's a '71 Moonhawk. Same year as my old one."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "Found it in a barn three years ago. Rust bucket. But the bones are good."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "You're rebuilding it. Starting over.",
+                      "traits": ["experienced"],
+                      "points": 15,
+                      "setsMemory": { "understoodPlan": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "That's incredible. Can I see it?",
+                      "traits": ["dedicated"],
+                      "points": 15,
+                      "setsMemory": { "wantsToSee": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "legacy_2_reveal",
+              "type": "sequential",
+              "condition": { "anyMemory": ["understoodPlan", "wantsToSee"] },
+              "exchanges": [
+                {
+                  "speaker": "muscle",
+                  "text": "This is my last build, kid."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "Hands aren't what they used to be. Eyes either. I've got maybe a few more years of turning wrenches left."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "I'm putting everything into this car. Every trick I've learned in forty years."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "And when it's done... I'm gonna take it to the track. One last run."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "I'd be honored to help if you need an extra pair of hands.",
+                      "traits": ["dedicated", "respectful"],
+                      "points": 25,
+                      "setsMemory": { "offeredHelp": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "When it's ready, I want to be there to see that run.",
+                      "traits": ["respectful"],
+                      "points": 15,
+                      "setsMemory": { "wantsToWitness": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "legacy_3_offer",
+              "type": "sequential",
+              "condition": { "memory": "offeredHelp" },
+              "exchanges": [
+                {
+                  "speaker": "muscle",
+                  "text": "*gruff smile*"
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "You know what, kid? I might just take you up on that."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "Not many people left who appreciate doing things the right way."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "You remind me of myself. Back when I still had something to prove."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "Tell you what. You help me with the Moonhawk, and I'll make sure you have access to everything I've got."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "It would be an honor to learn from you.",
+                      "traits": ["respectful"],
+                      "points": 15
+                    },
+                    {
+                      "id": "b",
+                      "text": "Let's build something legendary.",
+                      "traits": ["dedicated"],
+                      "points": 20,
+                      "setsMemory": { "acceptedChallenge": true }
+                    }
+                  ]
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "That's the spirit."
+                },
+                {
+                  "speaker": "muscle",
+                  "text": "Now let's get to work."
+                },
+                {
+                  "type": "end",
+                  "result": "success",
+                  "rewards": {
+                    "xp": 150,
+                    "unlocks": ["muscle_premium_inventory", "muscle_moonhawk_parts"]
+                  },
+                  "setsMemory": { "joinedLegacyBuild": true }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+
+  "confrontations": [
+    {
+      "trigger": "random",
+      "chance": 0.15,
+      "minTrust": 2,
+      "text": "Saw a kid at the shop today. Wanted me to install Chinese knockoff rod bolts in his engine. 'They're rated the same,' he said. What would you have told him?",
+      "responses": [
+        { "id": "a", "text": "Walk away. Those bolts fail under stress. It's not worth the risk.", "traits": ["experienced", "honest"], "points": 20 },
+        { "id": "b", "text": "Depends on the application. Street car might be okay.", "traits": ["shortcuts"], "points": -10 },
+        { "id": "c", "text": "Quality fasteners are the foundation of any build. No compromise.", "traits": ["dedicated"], "points": 15 }
+      ]
+    }
+  ],
+
+  "fallbackQuestions": {
+    "unknown": [
+      { "text": "You ever rebuild an engine from the ground up?", "responses": [
+        { "id": "a", "text": "Yes. More than one. It's the best way to learn.", "points": 15 },
+        { "id": "b", "text": "Not yet, but I'm planning to.", "points": 5 },
+        { "id": "c", "text": "No, I usually pay someone else to do it.", "points": -5 }
+      ]}
+    ]
+  }
+}

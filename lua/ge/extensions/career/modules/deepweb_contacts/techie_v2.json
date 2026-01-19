@@ -1,0 +1,698 @@
+{
+  "id": "techie",
+  "name": "Techie",
+  "personality": "technical",
+  "specialty": "ECU tuning and electronics",
+  "description": "A brilliant but obsessive tuner who speaks in data and dyno charts",
+  "traits": {
+    "values": ["technical", "precise", "knowledgeable", "patient", "analytical"],
+    "dislikes": ["ignorant", "sloppy", "impatient", "emotional", "guessing"],
+    "scoring": {
+      "technical": 3, "precise": 3, "knowledgeable": 2, "patient": 1, "analytical": 2,
+      "ignorant": -3, "sloppy": -3, "impatient": -2, "emotional": -1, "guessing": -2
+    }
+  },
+  "rivals": [],
+  "allies": ["ghost"],
+  "neutral": ["muscle", "import", "shadow"],
+
+  "storyArcs": {
+    "main": {
+      "title": "The Data Doesn't Lie",
+      "description": "Prove your technical knowledge to earn Techie's respect",
+      "chapters": [
+        {
+          "id": "ch1_technical_screening",
+          "title": "Technical Screening",
+          "requiredLevel": 1,
+          "summary": "Techie tests your technical knowledge before considering any business",
+          "conversations": [
+            {
+              "id": "intro_1",
+              "type": "sequential",
+              "exchanges": [
+                {
+                  "speaker": "techie",
+                  "text": "Ghost said you know your stuff."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "Ghost's opinion matters to me. But I need to verify everything."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "So let's start simple. What's the difference between MAF and MAP sensors?"
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "MAF measures mass air flow directly. MAP measures manifold absolute pressure to calculate air density.",
+                      "traits": ["technical", "precise"],
+                      "points": 20,
+                      "setsMemory": { "knowsSensors": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "One measures air, the other measures pressure... right?",
+                      "traits": ["guessing"],
+                      "points": 5
+                    },
+                    {
+                      "id": "c",
+                      "text": "I'm more of a hands-on guy. Don't really care about the theory.",
+                      "traits": ["ignorant"],
+                      "points": -15,
+                      "next": "disappointed_response"
+                    }
+                  ]
+                }
+              ],
+              "branches": {
+                "disappointed_response": [
+                  {
+                    "speaker": "techie",
+                    "text": "..."
+                  },
+                  {
+                    "speaker": "techie",
+                    "text": "Hands-on without theory is just guessing. Guessing leads to blown engines."
+                  },
+                  {
+                    "speaker": "techie",
+                    "text": "Come back when you want to learn."
+                  },
+                  {
+                    "type": "end",
+                    "result": "rejected",
+                    "cooldown": 43200
+                  }
+                ]
+              }
+            },
+            {
+              "id": "intro_2",
+              "type": "sequential",
+              "condition": { "memory": "knowsSensors" },
+              "exchanges": [
+                {
+                  "speaker": "techie",
+                  "text": "Good. You actually know the basics."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "Most people who come to me think they can just flash a tune and gain 50 horsepower."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "What's your project?"
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "ETK-I 2400ti. I'm working on the fueling and timing tables right now.",
+                      "traits": ["technical"],
+                      "points": 15,
+                      "setsMemory": { "hasETKI": true, "understandsTuning": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "Building a project car. Need help with the ECU side of things.",
+                      "points": 10,
+                      "setsMemory": { "needsHelp": true }
+                    },
+                    {
+                      "id": "c",
+                      "text": "Just looking for more power. Whatever's fastest.",
+                      "traits": ["impatient"],
+                      "points": -5
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "intro_3_etki",
+              "type": "sequential",
+              "condition": { "memory": "hasETKI" },
+              "exchanges": [
+                {
+                  "speaker": "techie",
+                  "text": "The 2400ti. Solid choice."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "Stock ECU or aftermarket?"
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "Stock for now. Planning to go standalone once I understand the base maps better.",
+                      "traits": ["patient", "analytical"],
+                      "points": 20,
+                      "setsMemory": { "planningStandalone": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "Looking at standalone options. MegaSquirt or Haltech, still researching.",
+                      "traits": ["knowledgeable"],
+                      "points": 15,
+                      "setsMemory": { "researchingECU": true }
+                    },
+                    {
+                      "id": "c",
+                      "text": "Whatever makes the most power.",
+                      "traits": ["impatient"],
+                      "points": -10
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "intro_test",
+              "type": "sequential",
+              "condition": { "completedConversation": "intro_2" },
+              "exchanges": [
+                {
+                  "speaker": "techie",
+                  "text": "One more question."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "You're tuning a turbocharged engine. AFR is reading 12.5 at WOT but you're seeing knock. What do you check first?"
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "Check timing first. AFR is okay for turbo, but timing might be too aggressive for the octane or boost level.",
+                      "traits": ["technical", "analytical"],
+                      "points": 25,
+                      "setsMemory": { "passedTuningTest": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "Add more fuel? Richer AFR should prevent knock.",
+                      "traits": ["guessing"],
+                      "points": 5
+                    },
+                    {
+                      "id": "c",
+                      "text": "I'd take it to a tuner to figure out.",
+                      "points": 0
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "ch1_conclusion",
+              "type": "sequential",
+              "condition": { "memory": "passedTuningTest" },
+              "exchanges": [
+                {
+                  "speaker": "techie",
+                  "text": "Correct."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "12.5 is fine for a turbo application. 11.5-12.5 is the safe range under boost."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "But aggressive timing with low octane or high boost will knock regardless of AFR."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "You actually know what you're talking about. That's... rare."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "I've spent a lot of time reading datasheets and logs.",
+                      "traits": ["patient", "analytical"],
+                      "points": 15,
+                      "setsMemory": { "studiedData": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "I've blown enough engines to learn the hard way.",
+                      "points": 10,
+                      "setsMemory": { "learnedHardWay": true }
+                    }
+                  ]
+                },
+                {
+                  "speaker": "techie",
+                  "text": "Either way, you've earned my attention."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "I have some specialty ECU components. Chips, sensors, harnesses. When you're ready, let me know."
+                },
+                {
+                  "type": "end",
+                  "result": "success",
+                  "rewards": {
+                    "xp": 50,
+                    "unlocks": ["techie_basic_inventory"]
+                  },
+                  "setsMemory": { "completedScreening": true }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch2_deep_dive",
+          "title": "Deep Dive",
+          "requiredLevel": 2,
+          "requiredMemory": ["completedScreening"],
+          "summary": "Techie shares advanced tuning knowledge and his philosophy",
+          "conversations": [
+            {
+              "id": "deep_1",
+              "type": "sequential",
+              "exchanges": [
+                {
+                  "speaker": "techie",
+                  "text": "I've been analyzing some logs."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "Not yours. Just... patterns I've noticed in failed builds."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "You know what the number one cause of engine failure in tuned cars is?"
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "Bad tuning? Running too lean or too much timing?",
+                      "traits": ["analytical"],
+                      "points": 10
+                    },
+                    {
+                      "id": "b",
+                      "text": "Pushing beyond the limits of the internals?",
+                      "traits": ["technical"],
+                      "points": 15,
+                      "setsMemory": { "understandsLimits": true }
+                    },
+                    {
+                      "id": "c",
+                      "text": "Bad fuel?",
+                      "points": 5
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "deep_2_limits",
+              "type": "sequential",
+              "condition": { "memory": "understandsLimits" },
+              "exchanges": [
+                {
+                  "speaker": "techie",
+                  "text": "Close. It's actually impatience."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "People get a taste of power, and they want more. Right now. Before the supporting mods are in place."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "A tune is a calculated risk. Every number is a compromise between power and reliability."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "The data doesn't lie. But people ignore the data."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "I believe in incremental changes. Test, log, adjust, repeat.",
+                      "traits": ["patient", "analytical"],
+                      "points": 20,
+                      "setsMemory": { "sharesPhilosophy": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "How do you balance power and reliability in your tunes?",
+                      "traits": ["technical"],
+                      "points": 15,
+                      "setsMemory": { "askedAboutBalance": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "deep_3_philosophy",
+              "type": "sequential",
+              "condition": { "memory": "sharesPhilosophy" },
+              "exchanges": [
+                {
+                  "speaker": "techie",
+                  "text": "Exactly. That's the scientific method applied to cars."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "You know, I used to work for a big tuning shop. Corporate clients, dyno days, the whole thing."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "They wanted quick turnarounds. Customer in, customer out. Numbers on a sheet."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "I quit when they pushed a tune that I said needed more testing. Engine let go at 8000 RPM."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "That must have been hard. Knowing you were right but couldn't stop it.",
+                      "traits": ["patient"],
+                      "points": 15,
+                      "setsMemory": { "showedEmpathy": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "Is that why you work alone now?",
+                      "points": 10,
+                      "setsMemory": { "askedAboutSolo": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "deep_4_trust",
+              "type": "sequential",
+              "condition": { "memory": "showedEmpathy" },
+              "exchanges": [
+                {
+                  "speaker": "techie",
+                  "text": "It was. The owner blamed me. Said my hesitation cost them the client."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "But I had the logs. Knock counts were through the roof. They just didn't want to hear it."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "Now I work alone. I control the data. I control the outcome."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "And I only work with people who understand that the numbers matter more than the timeline."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "I respect that. Integrity over profit.",
+                      "traits": ["patient"],
+                      "points": 15,
+                      "setsMemory": { "respectsIntegrity": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "The data protects everyone. The tuner and the customer.",
+                      "traits": ["analytical"],
+                      "points": 20,
+                      "setsMemory": { "understandsDataValue": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "ch2_conclusion",
+              "type": "sequential",
+              "condition": { "anyMemory": ["respectsIntegrity", "understandsDataValue"] },
+              "exchanges": [
+                {
+                  "speaker": "techie",
+                  "text": "You get it."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "Most people just want the power number. They don't care how we get there."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "You care about the process. That's why I'm willing to work with you."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "I've got some hardware coming in. Wideband sensors, boost controllers, some standalone ECU units."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "Quality stuff. Not the cheap garbage you find online."
+                },
+                {
+                  "type": "end",
+                  "result": "success",
+                  "rewards": {
+                    "xp": 75,
+                    "unlocks": ["techie_advanced_inventory"]
+                  },
+                  "setsMemory": { "earnedRespect": true }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch3_inner_knowledge",
+          "title": "The Algorithm",
+          "requiredLevel": 4,
+          "requiredMemory": ["earnedRespect"],
+          "summary": "Techie reveals his secret tuning methodology",
+          "conversations": [
+            {
+              "id": "algo_1",
+              "type": "sequential",
+              "exchanges": [
+                {
+                  "speaker": "techie",
+                  "text": "I've been working on something."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "For years actually. A system. An algorithm."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "It analyzes engine logs and predicts optimal parameters. Takes years of tuning experience and turns it into code."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "Machine learning applied to engine tuning? That's incredibly ambitious.",
+                      "traits": ["technical", "analytical"],
+                      "points": 20,
+                      "setsMemory": { "understoodAlgorithm": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "Sounds complicated. Does it actually work?",
+                      "points": 5
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "algo_2_reveal",
+              "type": "sequential",
+              "condition": { "memory": "understoodAlgorithm" },
+              "exchanges": [
+                {
+                  "speaker": "techie",
+                  "text": "It works. Better than any human tuner, including me."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "I've been using it for six months. Zero failures. Perfect AFR curves. Optimal timing for each cylinder."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "The thing is... if I released this, it would put tuning shops out of business."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "Including the people who screwed me over."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "That's a lot of power. Why haven't you released it?",
+                      "traits": ["analytical"],
+                      "points": 15,
+                      "setsMemory": { "askedAboutRelease": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "Revenge is a dish best served with data.",
+                      "points": 10,
+                      "setsMemory": { "joked": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "algo_3_secret",
+              "type": "sequential",
+              "condition": { "memory": "askedAboutRelease" },
+              "exchanges": [
+                {
+                  "speaker": "techie",
+                  "text": "Because knowledge has value. And some knowledge is too valuable to give away."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "I use it for my clients. The ones I trust. The ones who understand."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "You're one of those people now."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "If you ever need a tune, bring me your logs. I'll run them through the system."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "I'm honored. Your data, your rules.",
+                      "traits": ["patient"],
+                      "points": 15
+                    },
+                    {
+                      "id": "b",
+                      "text": "This is incredible. Thank you for trusting me with this.",
+                      "traits": ["analytical"],
+                      "points": 20,
+                      "setsMemory": { "thankedForTrust": true }
+                    }
+                  ]
+                },
+                {
+                  "speaker": "techie",
+                  "text": "Just remember: the data doesn't lie. Trust the numbers, not the feelings."
+                },
+                {
+                  "type": "end",
+                  "result": "success",
+                  "rewards": {
+                    "xp": 150,
+                    "unlocks": ["techie_premium_inventory", "techie_tuning_service"]
+                  },
+                  "setsMemory": { "joinedInnerCircle": true, "hasAlgorithmAccess": true }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "side": {
+      "title": "Technical Discussions",
+      "description": "Optional conversations about specific technical topics",
+      "chapters": [
+        {
+          "id": "side_widebands",
+          "title": "Wideband Talk",
+          "requiredLevel": 2,
+          "conversations": [
+            {
+              "id": "wideband_1",
+              "type": "random",
+              "chance": 0.25,
+              "exchanges": [
+                {
+                  "speaker": "techie",
+                  "text": "Quick tip: if you're running a narrowband O2 sensor, replace it immediately."
+                },
+                {
+                  "speaker": "techie",
+                  "text": "Narrowbands only tell you rich or lean. Widebands give you the actual AFR."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "Already running a wideband. AEM UEGO.",
+                      "traits": ["technical"],
+                      "points": 15,
+                      "setsMemory": { "hasWideband": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "What brands do you recommend?",
+                      "traits": ["knowledgeable"],
+                      "points": 10
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+
+  "confrontations": [
+    {
+      "trigger": "random",
+      "chance": 0.2,
+      "minTrust": 2,
+      "text": "I saw some logs online. Someone running 8 psi on stock internals with a 'custom tune.' 14:1 AFR under boost. What do you think happens next?",
+      "responses": [
+        { "id": "a", "text": "Detonation. That's way too lean for boost. Engine's living on borrowed time.", "traits": ["technical", "analytical"], "points": 20 },
+        { "id": "b", "text": "Probably fine if the timing is conservative?", "traits": ["guessing"], "points": -10 },
+        { "id": "c", "text": "I'd want to see more data before judging.", "traits": ["patient"], "points": 10 }
+      ]
+    }
+  ],
+
+  "fallbackQuestions": {
+    "unknown": [
+      { "text": "What's your experience with ECU tuning?", "responses": [
+        { "id": "a", "text": "I've done some data logging and basic map adjustments.", "points": 10 },
+        { "id": "b", "text": "I know the theory but need hands-on experience.", "points": 5 },
+        { "id": "c", "text": "None, that's why I'm here.", "points": 0 }
+      ]}
+    ]
+  }
+}

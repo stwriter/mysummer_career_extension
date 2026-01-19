@@ -1,0 +1,688 @@
+{
+  "id": "import",
+  "name": "Import",
+  "personality": "jdm_specialist",
+  "specialty": "JDM parts and tuner culture",
+  "description": "A purist who lives and breathes Japanese tuner culture",
+  "traits": {
+    "values": ["authentic", "knowledgeable", "passionate", "respectful", "cultured"],
+    "dislikes": ["poser", "ignorant", "flashy", "disrespectful", "mainstream"],
+    "scoring": {
+      "authentic": 3, "knowledgeable": 3, "passionate": 2, "respectful": 2, "cultured": 2,
+      "poser": -3, "ignorant": -3, "flashy": -2, "disrespectful": -2, "mainstream": -1
+    }
+  },
+  "rivals": [],
+  "allies": ["muscle"],
+  "neutral": ["ghost", "techie", "shadow"],
+
+  "storyArcs": {
+    "main": {
+      "title": "The Spirit of JDM",
+      "description": "Prove you understand and respect the culture",
+      "chapters": [
+        {
+          "id": "ch1_culture_test",
+          "title": "Culture Test",
+          "requiredLevel": 1,
+          "summary": "Import evaluates whether you understand the culture or just the cars",
+          "conversations": [
+            {
+              "id": "intro_1",
+              "type": "sequential",
+              "exchanges": [
+                {
+                  "speaker": "import",
+                  "text": "So Muscle sent you."
+                },
+                {
+                  "speaker": "import",
+                  "text": "He's good people. Old school. Different world from mine, but we respect each other."
+                },
+                {
+                  "speaker": "import",
+                  "text": "But respect doesn't transfer. You have to earn your own."
+                },
+                {
+                  "speaker": "import",
+                  "text": "Tell me - what does JDM mean to you?"
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "It's more than cars. It's a philosophy. Function over form. Building with purpose.",
+                      "traits": ["authentic", "cultured"],
+                      "points": 25,
+                      "setsMemory": { "understandsCulture": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "Japanese Domestic Market. Cars and parts designed for Japanese roads and regulations.",
+                      "traits": ["knowledgeable"],
+                      "points": 15,
+                      "setsMemory": { "knowsDefinition": true }
+                    },
+                    {
+                      "id": "c",
+                      "text": "Fast Japanese cars. Skylines, Supras, that stuff.",
+                      "traits": ["mainstream"],
+                      "points": -5,
+                      "next": "basic_response"
+                    }
+                  ]
+                }
+              ],
+              "branches": {
+                "basic_response": [
+                  {
+                    "speaker": "import",
+                    "text": "*shakes head*"
+                  },
+                  {
+                    "speaker": "import",
+                    "text": "That's what everyone says. The Instagram kids with their fake carbon."
+                  },
+                  {
+                    "speaker": "import",
+                    "text": "JDM is about building something that speaks to you. Not following trends."
+                  },
+                  {
+                    "speaker": "import",
+                    "text": "Come back when you understand that."
+                  },
+                  {
+                    "type": "end",
+                    "result": "partial",
+                    "cooldown": 28800
+                  }
+                ]
+              }
+            },
+            {
+              "id": "intro_2_culture",
+              "type": "sequential",
+              "condition": { "memory": "understandsCulture" },
+              "exchanges": [
+                {
+                  "speaker": "import",
+                  "text": "Finally. Someone who gets it."
+                },
+                {
+                  "speaker": "import",
+                  "text": "Most people come here wanting a big wing and a loud exhaust. Clout."
+                },
+                {
+                  "speaker": "import",
+                  "text": "They don't care about balance. About how a car communicates through the wheel."
+                },
+                {
+                  "speaker": "import",
+                  "text": "What's your build? And don't tell me it's 'for the gram.'"
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "ETK-I 2400ti. I'm focused on suspension and handling. Power means nothing if you can't control it.",
+                      "traits": ["authentic", "knowledgeable"],
+                      "points": 20,
+                      "setsMemory": { "prioritizesHandling": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "Working on a project car. Trying to find the balance between street and track.",
+                      "traits": ["authentic"],
+                      "points": 15,
+                      "setsMemory": { "seekingBalance": true }
+                    },
+                    {
+                      "id": "c",
+                      "text": "Just building something I enjoy driving.",
+                      "traits": ["passionate"],
+                      "points": 10,
+                      "setsMemory": { "buildsForFun": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "intro_3_handling",
+              "type": "sequential",
+              "condition": { "memory": "prioritizesHandling" },
+              "exchanges": [
+                {
+                  "speaker": "import",
+                  "text": "Suspension first. You really do understand."
+                },
+                {
+                  "speaker": "import",
+                  "text": "The Japanese call it 'shikkari' - a car that feels planted, connected."
+                },
+                {
+                  "speaker": "import",
+                  "text": "When the suspension is right, the car tells you what it can do. Before you even push it."
+                },
+                {
+                  "speaker": "import",
+                  "text": "That's the foundation of touge. Mountain driving. Reading the road."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "Touge is an art. It's not about lap times, it's about the dance between driver and machine.",
+                      "traits": ["cultured", "passionate"],
+                      "points": 20,
+                      "setsMemory": { "understandsTouge": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "I've watched a lot of Initial D. Always wanted to experience that feeling.",
+                      "traits": ["honest"],
+                      "points": 10,
+                      "setsMemory": { "influencedByMedia": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "intro_test",
+              "type": "sequential",
+              "condition": { "completedConversation": "intro_2_culture" },
+              "exchanges": [
+                {
+                  "speaker": "import",
+                  "text": "Let me ask you something."
+                },
+                {
+                  "speaker": "import",
+                  "text": "You see two builds. One has every expensive part, professionally installed. The other is budget, mismatched, but the owner did everything themselves."
+                },
+                {
+                  "speaker": "import",
+                  "text": "Which one do you respect more?"
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "The owner-built one. The connection between builder and car matters more than the parts list.",
+                      "traits": ["authentic", "passionate"],
+                      "points": 25,
+                      "setsMemory": { "passedTest": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "Both have merit. Different paths to the same destination.",
+                      "traits": ["respectful"],
+                      "points": 10,
+                      "setsMemory": { "diplomatic": true }
+                    },
+                    {
+                      "id": "c",
+                      "text": "The professional build. Quality matters.",
+                      "traits": ["mainstream"],
+                      "points": -10,
+                      "next": "wrong_answer"
+                    }
+                  ]
+                }
+              ],
+              "branches": {
+                "wrong_answer": [
+                  {
+                    "speaker": "import",
+                    "text": "*sighs*"
+                  },
+                  {
+                    "speaker": "import",
+                    "text": "You can buy a perfect build. But you can't buy soul."
+                  },
+                  {
+                    "speaker": "import",
+                    "text": "Every scratch, every imperfect weld, every late night in the garage - that's what makes a build real."
+                  },
+                  {
+                    "speaker": "import",
+                    "text": "Think about that and come back."
+                  },
+                  {
+                    "type": "end",
+                    "result": "partial",
+                    "cooldown": 43200
+                  }
+                ]
+              }
+            },
+            {
+              "id": "ch1_conclusion",
+              "type": "sequential",
+              "condition": { "memory": "passedTest" },
+              "exchanges": [
+                {
+                  "speaker": "import",
+                  "text": "*smiles*"
+                },
+                {
+                  "speaker": "import",
+                  "text": "That's the right answer."
+                },
+                {
+                  "speaker": "import",
+                  "text": "In Japan, there's a concept called 'wabi-sabi.' Finding beauty in imperfection."
+                },
+                {
+                  "speaker": "import",
+                  "text": "A car with history, with battle scars, with stories... that's more beautiful than any showroom queen."
+                },
+                {
+                  "speaker": "import",
+                  "text": "Alright. You've earned a chance."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "Thank you for giving me that chance.",
+                      "traits": ["respectful"],
+                      "points": 10
+                    },
+                    {
+                      "id": "b",
+                      "text": "I'm looking forward to learning more about the culture.",
+                      "traits": ["passionate"],
+                      "points": 15,
+                      "setsMemory": { "wantsToLearn": true }
+                    }
+                  ]
+                },
+                {
+                  "speaker": "import",
+                  "text": "I have access to authentic parts. Body kits, suspension components, interior pieces."
+                },
+                {
+                  "speaker": "import",
+                  "text": "The real stuff. Not replicas."
+                },
+                {
+                  "type": "end",
+                  "result": "success",
+                  "rewards": {
+                    "xp": 50,
+                    "unlocks": ["import_basic_inventory"]
+                  },
+                  "setsMemory": { "provedAuthenticity": true }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch2_the_scene",
+          "title": "The Scene",
+          "requiredLevel": 2,
+          "requiredMemory": ["provedAuthenticity"],
+          "summary": "Import introduces you to the local tuner scene",
+          "conversations": [
+            {
+              "id": "scene_1",
+              "type": "sequential",
+              "exchanges": [
+                {
+                  "speaker": "import",
+                  "text": "There's a meet this weekend."
+                },
+                {
+                  "speaker": "import",
+                  "text": "Small. Private. The real heads only."
+                },
+                {
+                  "speaker": "import",
+                  "text": "No Instagram photographers. No drama. Just cars and conversation."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "I'd love to be there. That sounds like the real deal.",
+                      "traits": ["passionate"],
+                      "points": 15,
+                      "setsMemory": { "wantsToAttend": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "What kind of cars usually show up?",
+                      "traits": ["knowledgeable"],
+                      "points": 10,
+                      "setsMemory": { "curious": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "scene_2_cars",
+              "type": "sequential",
+              "condition": { "memory": "curious" },
+              "exchanges": [
+                {
+                  "speaker": "import",
+                  "text": "All kinds. A guy with a restored Ibishu Pessima wagon. Another with a right-hand-drive Covet."
+                },
+                {
+                  "speaker": "import",
+                  "text": "There's this woman who built a Sunburst from scratch. Track-prepped. Twelve years in the making."
+                },
+                {
+                  "speaker": "import",
+                  "text": "The diversity is what makes it special. United by passion, not by brand."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "That's the community I want to be part of.",
+                      "traits": ["passionate", "authentic"],
+                      "points": 20,
+                      "setsMemory": { "wantsCommunity": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "Twelve years on one build... that's dedication.",
+                      "traits": ["respectful"],
+                      "points": 15,
+                      "setsMemory": { "respectsDedication": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "scene_3_story",
+              "type": "sequential",
+              "condition": { "anyMemory": ["wantsToAttend", "wantsCommunity"] },
+              "exchanges": [
+                {
+                  "speaker": "import",
+                  "text": "You know how I got into this?"
+                },
+                {
+                  "speaker": "import",
+                  "text": "My grandfather was a machinist in Japan. After the war, he worked at a small tuning shop in Yokohama."
+                },
+                {
+                  "speaker": "import",
+                  "text": "He told me stories about the early days. When people modified cars not for speed, but for survival."
+                },
+                {
+                  "speaker": "import",
+                  "text": "Making do with what you had. Improvising. Creating."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "That heritage is important. It connects you to something bigger.",
+                      "traits": ["respectful", "cultured"],
+                      "points": 20,
+                      "setsMemory": { "respectsHeritage": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "Is that why authenticity matters so much to you?",
+                      "points": 15,
+                      "setsMemory": { "askedAboutValues": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "scene_4_values",
+              "type": "sequential",
+              "condition": { "memory": "askedAboutValues" },
+              "exchanges": [
+                {
+                  "speaker": "import",
+                  "text": "Exactly."
+                },
+                {
+                  "speaker": "import",
+                  "text": "Every fake part, every replica kit, every shortcut... it disrespects that history."
+                },
+                {
+                  "speaker": "import",
+                  "text": "My grandfather didn't have the option to buy cheap knockoffs. He had to make things work."
+                },
+                {
+                  "speaker": "import",
+                  "text": "That ingenuity, that craftsmanship... that's what I try to honor."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "I understand. It's about respecting the craft, not just consuming the product.",
+                      "traits": ["cultured", "authentic"],
+                      "points": 20,
+                      "setsMemory": { "understandsValues": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "That's a beautiful philosophy.",
+                      "traits": ["respectful"],
+                      "points": 10
+                    }
+                  ]
+                },
+                {
+                  "speaker": "import",
+                  "text": "I knew you'd understand."
+                },
+                {
+                  "speaker": "import",
+                  "text": "Here - access to my better inventory. Authentic parts. Some rare pieces."
+                },
+                {
+                  "type": "end",
+                  "result": "success",
+                  "rewards": {
+                    "xp": 75,
+                    "unlocks": ["import_rare_inventory"]
+                  },
+                  "setsMemory": { "earnedRespect": true }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch3_the_gathering",
+          "title": "The Gathering",
+          "requiredLevel": 4,
+          "requiredMemory": ["earnedRespect"],
+          "summary": "Import invites you to an exclusive event",
+          "conversations": [
+            {
+              "id": "gather_1",
+              "type": "sequential",
+              "exchanges": [
+                {
+                  "speaker": "import",
+                  "text": "I'm planning something."
+                },
+                {
+                  "speaker": "import",
+                  "text": "A gathering. Like the ones my grandfather talked about."
+                },
+                {
+                  "speaker": "import",
+                  "text": "No spectators. No social media. Just builders, and a mountain road."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "A modern touge event. Taking it back to the roots.",
+                      "traits": ["cultured", "passionate"],
+                      "points": 20,
+                      "setsMemory": { "understandsGathering": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "That sounds incredible. When?",
+                      "traits": ["passionate"],
+                      "points": 15,
+                      "setsMemory": { "eager": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "gather_2_plan",
+              "type": "sequential",
+              "condition": { "memory": "understandsGathering" },
+              "exchanges": [
+                {
+                  "speaker": "import",
+                  "text": "Exactly. No racing. No competition. Just... experiencing the drive."
+                },
+                {
+                  "speaker": "import",
+                  "text": "I've scouted a route. Twisty, technical. The kind of road that rewards precision."
+                },
+                {
+                  "speaker": "import",
+                  "text": "Sunrise start. Convoy style. Then breakfast at a café at the summit."
+                },
+                {
+                  "speaker": "import",
+                  "text": "I'm only inviting a few people. The ones who truly understand."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "I'm honored to be considered.",
+                      "traits": ["respectful"],
+                      "points": 15
+                    },
+                    {
+                      "id": "b",
+                      "text": "This is what the culture should be about.",
+                      "traits": ["authentic", "passionate"],
+                      "points": 20,
+                      "setsMemory": { "alignedValues": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "gather_3_invitation",
+              "type": "sequential",
+              "condition": { "anyMemory": ["alignedValues", "understandsGathering"] },
+              "exchanges": [
+                {
+                  "speaker": "import",
+                  "text": "You're in."
+                },
+                {
+                  "speaker": "import",
+                  "text": "I've been watching your build. The choices you've made. The way you approach it."
+                },
+                {
+                  "speaker": "import",
+                  "text": "You're not chasing numbers or clout. You're building something you believe in."
+                },
+                {
+                  "speaker": "import",
+                  "text": "That's rare. That's what this community needs more of."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "I learned from watching people like you.",
+                      "traits": ["respectful"],
+                      "points": 15,
+                      "setsMemory": { "showedGratitude": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "The culture saved me. This is how I give back.",
+                      "traits": ["authentic", "passionate"],
+                      "points": 25,
+                      "setsMemory": { "expressedConnection": true }
+                    }
+                  ]
+                },
+                {
+                  "speaker": "import",
+                  "text": "Then let's keep it alive together."
+                },
+                {
+                  "speaker": "import",
+                  "text": "Full access to my network. Anything you need, we'll find it."
+                },
+                {
+                  "speaker": "import",
+                  "text": "Welcome to the family."
+                },
+                {
+                  "type": "end",
+                  "result": "success",
+                  "rewards": {
+                    "xp": 150,
+                    "unlocks": ["import_premium_inventory", "import_network_access"]
+                  },
+                  "setsMemory": { "joinedFamily": true }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+
+  "confrontations": [
+    {
+      "trigger": "random",
+      "chance": 0.2,
+      "minTrust": 2,
+      "text": "Someone offered to sell me a 'JDM' hood with perfect English stickers. Said it was 'imported from Japan.' What do you think?",
+      "responses": [
+        { "id": "a", "text": "Fake. Real JDM parts have Japanese text. Someone's trying to scam you.", "traits": ["knowledgeable", "authentic"], "points": 20 },
+        { "id": "b", "text": "Might be legit? Some parts do get English labels for export.", "traits": ["ignorant"], "points": -10 },
+        { "id": "c", "text": "I'd need to see it in person to judge.", "points": 5 }
+      ]
+    }
+  ],
+
+  "fallbackQuestions": {
+    "unknown": [
+      { "text": "What draws you to Japanese car culture?", "responses": [
+        { "id": "a", "text": "The philosophy. Function over form. Continuous improvement.", "points": 15 },
+        { "id": "b", "text": "The cars. They're well-engineered and fun to drive.", "points": 10 },
+        { "id": "c", "text": "Fast and Furious, honestly.", "points": -5 }
+      ]}
+    ]
+  }
+}

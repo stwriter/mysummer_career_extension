@@ -86,8 +86,20 @@ local function loadContactFromJson(contactId)
     return loadedContactData[contactId]
   end
 
+  -- Try v2 format first (with storyArcs)
+  local v2Path = contactsJsonPath .. contactId .. "_v2.json"
+  local data = jsonReadFile(v2Path)
+
+  if data and data.storyArcs then
+    loadedContactData[contactId] = data
+    loadedContactData[contactId].isV2Format = true
+    log("I", logTag, "Loaded V2 contact data from JSON: " .. contactId)
+    return data
+  end
+
+  -- Fall back to v1 format
   local filePath = contactsJsonPath .. contactId .. ".json"
-  local data = jsonReadFile(filePath)
+  data = jsonReadFile(filePath)
 
   if data then
     loadedContactData[contactId] = data
@@ -97,6 +109,231 @@ local function loadContactFromJson(contactId)
     log("E", logTag, "Failed to load contact JSON: " .. filePath)
     return nil
   end
+end
+
+-- ============================================================================
+-- V2 CONVERSATION SYSTEM - Sequential narratives with chapters
+-- ============================================================================
+
+-- Check if contact uses V2 conversation format
+local function isV2Contact(contactId)
+  local data = loadContactFromJson(contactId)
+  return data and data.isV2Format == true
+end
+
+-- Check if a condition is met based on conversation state
+local function checkConversationCondition(condition, vendorState, contactId)
+  if not condition then return true end
+
+  local memory = vendorState.conversationMemory or {}
+  local progress = vendorState.conversationProgress or {}
+
+  -- Check memory condition (single memory key required)
+  if condition.memory then
+    if not memory[condition.memory] then return false end
+  end
+
+  -- Check anyMemory condition (at least one of the listed keys must exist)
+  if condition.anyMemory then
+    local hasAny = false
+    for _, memKey in ipairs(condition.anyMemory) do
+      if memory[memKey] then
+        hasAny = true
+        break
+      end
+    end
+    if not hasAny then return false end
+  end
+
+  -- Check allMemory condition (all listed keys must exist)
+  if condition.allMemory then
+    for _, memKey in ipairs(condition.allMemory) do
+      if not memory[memKey] then return false end
+    end
+  end
+
+  -- Check NOT condition
+  if condition["not"] then
+    if condition["not"].result then
+      if progress.lastResult == condition["not"].result then return false end
+    end
+    if condition["not"].memory then
+      if memory[condition["not"].memory] then return false end
+    end
+  end
+
+  -- Check completedConversation condition
+  if condition.completedConversation then
+    local convId = condition.completedConversation
+    if not progress.completedConversations or not progress.completedConversations[convId] then
+      return false
+    end
+  end
+
+  return true
+end
+
+-- Get current chapter for a contact based on level and progress
+local function getCurrentChapter(contactId, vendorState)
+  local data = loadContactFromJson(contactId)
+  if not data or not data.storyArcs then return nil end
+
+  local level = getContactLevel(contactId)
+  local memory = vendorState.conversationMemory or {}
+  local progress = vendorState.conversationProgress or {}
+
+  -- Check main arc first
+  local mainArc = data.storyArcs.main
+  if mainArc and mainArc.chapters then
+    for _, chapter in ipairs(mainArc.chapters) do
+      -- Check level requirement
+      if chapter.requiredLevel and level < chapter.requiredLevel then
+        goto continue_chapter
+      end
+
+      -- Check memory requirements
+      if chapter.requiredMemory then
+        local hasAllMemory = true
+        for _, memKey in ipairs(chapter.requiredMemory) do
+          if not memory[memKey] then
+            hasAllMemory = false
+            break
+          end
+        end
+        if not hasAllMemory then goto continue_chapter end
+      end
+
+      -- Check if chapter is already completed
+      if progress.completedChapters and progress.completedChapters[chapter.id] then
+        goto continue_chapter
+      end
+
+      -- This chapter is available
+      return chapter, "main"
+
+      ::continue_chapter::
+    end
+  end
+
+  -- Check side arcs
+  local sideArc = data.storyArcs.side
+  if sideArc and sideArc.chapters then
+    for _, chapter in ipairs(sideArc.chapters) do
+      if chapter.requiredLevel and level < chapter.requiredLevel then
+        goto continue_side
+      end
+
+      if progress.completedChapters and progress.completedChapters[chapter.id] then
+        goto continue_side
+      end
+
+      return chapter, "side"
+
+      ::continue_side::
+    end
+  end
+
+  return nil, nil
+end
+
+-- Get next conversation in current chapter
+local function getNextConversation(chapter, vendorState, contactId)
+  if not chapter or not chapter.conversations then return nil end
+
+  local progress = vendorState.conversationProgress or {}
+
+  for _, conv in ipairs(chapter.conversations) do
+    -- Check if already completed
+    if progress.completedConversations and progress.completedConversations[conv.id] then
+      goto continue_conv
+    end
+
+    -- Check condition
+    if not checkConversationCondition(conv.condition, vendorState, contactId) then
+      goto continue_conv
+    end
+
+    -- Check random chance for random-type conversations
+    if conv.type == "random" and conv.chance then
+      if math.random() > conv.chance then
+        goto continue_conv
+      end
+    end
+
+    return conv
+
+    ::continue_conv::
+  end
+
+  return nil
+end
+
+-- Process a V2 conversation exchange and return messages + choices
+local function processV2Exchange(exchange, vendorState, currentBranch)
+  local messages = {}
+  local choices = nil
+  local nextBranch = nil
+  local endConversation = false
+  local result = nil
+  local rewards = nil
+  local setsMemory = nil
+
+  if exchange.speaker then
+    -- Simple message - map contact names to "vendor" for UI
+    local sender = exchange.speaker
+    if sender ~= "player" then
+      sender = "vendor"  -- All non-player speakers show as vendor in UI
+    end
+    table.insert(messages, {
+      sender = sender,
+      text = exchange.text,
+      pause = exchange.pause
+    })
+  elseif exchange.type == "choice" then
+    -- Player choice
+    choices = {}
+    for _, choice in ipairs(exchange.choices) do
+      table.insert(choices, {
+        id = choice.id,
+        text = choice.text,
+        traits = choice.traits,
+        points = choice.points,
+        setsMemory = choice.setsMemory,
+        next = choice.next
+      })
+    end
+  elseif exchange.type == "end" then
+    endConversation = true
+    result = exchange.result
+    rewards = exchange.rewards
+    setsMemory = exchange.setsMemory
+  end
+
+  return {
+    messages = messages,
+    choices = choices,
+    endConversation = endConversation,
+    result = result,
+    rewards = rewards,
+    setsMemory = setsMemory
+  }
+end
+
+-- Build full conversation state for V2 format
+local function buildV2ConversationState(contactId, vendorState, conversation)
+  return {
+    vendorId = contactId,
+    isV2 = true,
+    conversationId = conversation.id,
+    conversationType = conversation.type,
+    exchanges = conversation.exchanges,
+    branches = conversation.branches or {},
+    currentExchangeIndex = 1,
+    currentBranch = nil,
+    sessionPoints = 0,
+    pendingMemory = {},
+    messagesShown = {}
+  }
 end
 
 -- Get question pools for a contact
@@ -1724,6 +1961,275 @@ end
 -- CONVERSATION SYSTEM
 -- ============================================================================
 
+-- Start a V2 conversation with sequential narrative
+local function startV2Conversation(vendorId)
+  log("I", logTag, "Starting V2 conversation with: " .. tostring(vendorId))
+
+  local vendorDef = vendorDefinitions[vendorId]
+  local vendorState = state.vendors[vendorId]
+
+  if not vendorState then
+    vendorState = { met = false, blacklisted = false, conversationProgress = {}, conversationMemory = {} }
+    state.vendors[vendorId] = vendorState
+  end
+
+  -- Initialize progress if needed
+  vendorState.conversationProgress = vendorState.conversationProgress or {}
+  vendorState.conversationMemory = vendorState.conversationMemory or {}
+
+  -- Mark as met
+  vendorState.met = true
+
+  -- Get current chapter and conversation
+  local chapter, arcType = getCurrentChapter(vendorId, vendorState)
+  if not chapter then
+    log("W", logTag, "No available chapter for " .. vendorId)
+    -- Fall back to legacy system if no V2 content available
+    return nil, "fallback_to_legacy"
+  end
+
+  local conversation = getNextConversation(chapter, vendorState, vendorId)
+  if not conversation then
+    log("W", logTag, "No available conversation in chapter " .. chapter.id)
+    -- Mark chapter as complete if no more conversations
+    vendorState.conversationProgress.completedChapters = vendorState.conversationProgress.completedChapters or {}
+    vendorState.conversationProgress.completedChapters[chapter.id] = true
+    saveState()
+    return nil, "No new conversations available right now."
+  end
+
+  -- Build conversation state
+  state.currentConversation = buildV2ConversationState(vendorId, vendorState, conversation)
+  state.currentConversation.chapterId = chapter.id
+  state.currentConversation.arcType = arcType
+
+  -- Process initial exchanges until we hit a choice or end
+  local allMessages = {}
+  local choices = nil
+  local ended = false
+  local conv = state.currentConversation
+
+  while conv.currentExchangeIndex <= #conv.exchanges do
+    local exchange = conv.exchanges[conv.currentExchangeIndex]
+    local result = processV2Exchange(exchange, vendorState, conv.currentBranch)
+
+    -- Add messages
+    for _, msg in ipairs(result.messages) do
+      table.insert(allMessages, msg)
+    end
+
+    -- Store shown messages
+    table.insert(conv.messagesShown, exchange)
+
+    if result.choices then
+      choices = result.choices
+      break  -- Stop at choice point
+    elseif result.endConversation then
+      ended = true
+      -- Handle end rewards and memory
+      if result.setsMemory then
+        for k, v in pairs(result.setsMemory) do
+          vendorState.conversationMemory[k] = v
+        end
+      end
+      if result.rewards and result.rewards.xp then
+        addContactXP(vendorId, result.rewards.xp)
+        conv.sessionPoints = conv.sessionPoints + result.rewards.xp
+      end
+      -- Mark conversation complete
+      vendorState.conversationProgress.completedConversations = vendorState.conversationProgress.completedConversations or {}
+      vendorState.conversationProgress.completedConversations[conversation.id] = true
+      vendorState.conversationProgress.lastResult = result.result
+
+      -- Check if chapter is complete
+      local nextConv = getNextConversation(chapter, vendorState, vendorId)
+      if not nextConv then
+        vendorState.conversationProgress.completedChapters = vendorState.conversationProgress.completedChapters or {}
+        vendorState.conversationProgress.completedChapters[chapter.id] = true
+      end
+      break
+    end
+
+    conv.currentExchangeIndex = conv.currentExchangeIndex + 1
+  end
+
+  if ended then
+    state.currentConversation = nil
+  end
+
+  saveState()
+
+  local currentXP = getContactXP(vendorId)
+  local currentLevel = getContactLevel(vendorId)
+  local contactData = loadContactFromJson(vendorId)
+
+  return {
+    vendor = {
+      id = vendorId,
+      name = contactData.name or vendorDef.name or vendorId,
+      color = vendorDef.color or "#8B5CF6",
+      specialty = contactData.specialty or vendorDef.specialty or "Unknown",
+      description = contactData.description or vendorDef.description or "",
+    },
+    messages = allMessages,
+    choices = choices or {},
+    ended = ended,
+    trustXP = currentXP,
+    trustLevel = currentLevel,
+    trustPoints = currentXP,
+    trustThreshold = vendorDef.trustThreshold,
+    phase = chapter.title,
+    chapterId = chapter.id,
+    isV2 = true,
+  }
+end
+
+-- Respond to V2 conversation choice
+local function respondToV2Vendor(responseId)
+  log("I", logTag, "respondToV2Vendor called with: " .. tostring(responseId))
+
+  if not state.currentConversation or not state.currentConversation.isV2 then
+    return nil, "No active V2 conversation"
+  end
+
+  local conv = state.currentConversation
+  local vendorId = conv.vendorId
+  local vendorDef = vendorDefinitions[vendorId]
+  local vendorState = state.vendors[vendorId]
+
+  if not vendorDef or not vendorState then
+    return nil, "Invalid conversation state"
+  end
+
+  -- Get current exchange (should be a choice)
+  local currentExchange = conv.exchanges[conv.currentExchangeIndex]
+  if not currentExchange or currentExchange.type ~= "choice" then
+    return nil, "No choice expected at this point"
+  end
+
+  -- Find selected choice
+  local selectedChoice = nil
+  for _, choice in ipairs(currentExchange.choices) do
+    if choice.id == responseId then
+      selectedChoice = choice
+      break
+    end
+  end
+
+  if not selectedChoice then
+    return nil, "Invalid choice: " .. tostring(responseId)
+  end
+
+  -- Award points
+  local points = selectedChoice.points or 0
+  conv.sessionPoints = conv.sessionPoints + points
+  addContactXP(vendorId, points)
+
+  -- Store memory
+  if selectedChoice.setsMemory then
+    for k, v in pairs(selectedChoice.setsMemory) do
+      vendorState.conversationMemory[k] = v
+      conv.pendingMemory[k] = v
+    end
+  end
+
+  -- Build player response message
+  local allMessages = {
+    { sender = "player", text = selectedChoice.text }
+  }
+
+  -- Check if we branch to a different path
+  local choices = nil
+  local ended = false
+
+  if selectedChoice.next and conv.branches[selectedChoice.next] then
+    -- Switch to branch
+    conv.exchanges = conv.branches[selectedChoice.next]
+    conv.currentExchangeIndex = 1
+    conv.currentBranch = selectedChoice.next
+  else
+    -- Continue to next exchange
+    conv.currentExchangeIndex = conv.currentExchangeIndex + 1
+  end
+
+  -- Process exchanges until next choice or end
+  while conv.currentExchangeIndex <= #conv.exchanges do
+    local exchange = conv.exchanges[conv.currentExchangeIndex]
+    local result = processV2Exchange(exchange, vendorState, conv.currentBranch)
+
+    for _, msg in ipairs(result.messages) do
+      table.insert(allMessages, msg)
+    end
+
+    if result.choices then
+      choices = result.choices
+      break
+    elseif result.endConversation then
+      ended = true
+      -- Handle end
+      if result.setsMemory then
+        for k, v in pairs(result.setsMemory) do
+          vendorState.conversationMemory[k] = v
+        end
+      end
+      if result.rewards and result.rewards.xp then
+        addContactXP(vendorId, result.rewards.xp)
+        conv.sessionPoints = conv.sessionPoints + result.rewards.xp
+      end
+
+      -- Mark conversation complete
+      vendorState.conversationProgress.completedConversations = vendorState.conversationProgress.completedConversations or {}
+      vendorState.conversationProgress.completedConversations[conv.conversationId] = true
+      vendorState.conversationProgress.lastResult = result.result
+
+      -- Set cooldown if rejected
+      if result.cooldown then
+        conversationCooldowns[vendorId] = os.time()
+      end
+
+      break
+    end
+
+    conv.currentExchangeIndex = conv.currentExchangeIndex + 1
+  end
+
+  -- Check if we've run out of exchanges without an explicit end
+  if conv.currentExchangeIndex > #conv.exchanges and not ended and not choices then
+    ended = true
+    vendorState.conversationProgress.completedConversations = vendorState.conversationProgress.completedConversations or {}
+    vendorState.conversationProgress.completedConversations[conv.conversationId] = true
+  end
+
+  local sessionPoints = conv.sessionPoints
+
+  if ended then
+    setContactCooldown(vendorId)
+    state.currentConversation = nil
+  end
+
+  saveState()
+
+  local currentXP = getContactXP(vendorId)
+  local currentLevel = getContactLevel(vendorId)
+  local contactData = loadContactFromJson(vendorId)
+
+  return {
+    vendor = {
+      id = vendorId,
+      name = contactData.name or vendorDef.name or vendorId,
+    },
+    messages = allMessages,
+    choices = choices or {},
+    ended = ended,
+    trustXP = currentXP,
+    trustLevel = currentLevel,
+    trustPoints = currentXP,
+    trustThreshold = vendorDef.trustThreshold,
+    sessionPoints = sessionPoints,
+    isV2 = true,
+  }
+end
+
 local function startConversation(vendorId)
   log("I", logTag, "startConversation called for vendor: " .. tostring(vendorId))
 
@@ -1759,6 +2265,18 @@ local function startConversation(vendorId)
 
   if vendorState.blacklisted then
     return nil, "You've been blocked by this vendor"
+  end
+
+  -- Check if this contact uses V2 conversation system
+  if isV2Contact(vendorId) then
+    local result, err = startV2Conversation(vendorId)
+    if result then
+      return result
+    elseif err ~= "fallback_to_legacy" then
+      return nil, err
+    end
+    -- Fall through to legacy system if V2 returned fallback
+    log("I", logTag, "Falling back to legacy conversation for " .. vendorId)
   end
 
   -- Mark as met
@@ -1850,6 +2368,11 @@ local function respondToVendor(responseId)
   if not state.currentConversation then
     log("E", logTag, "No active conversation")
     return nil, "No active conversation"
+  end
+
+  -- Check if this is a V2 conversation
+  if state.currentConversation.isV2 then
+    return respondToV2Vendor(responseId)
   end
 
   local conv = state.currentConversation

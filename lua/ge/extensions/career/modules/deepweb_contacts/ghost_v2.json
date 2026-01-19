@@ -1,0 +1,973 @@
+{
+  "id": "ghost",
+  "name": "Ghost",
+  "personality": "paranoid",
+  "specialty": "Untraceable parts",
+  "description": "A paranoid parts dealer who values discretion above all",
+  "traits": {
+    "values": ["cautious", "discrete", "loyal", "patient", "secretive"],
+    "dislikes": ["reckless", "talkative", "impatient", "flashy", "trusting"],
+    "scoring": {
+      "cautious": 3, "discrete": 3, "loyal": 2, "patient": 1, "secretive": 2,
+      "reckless": -3, "talkative": -3, "impatient": -2, "flashy": -2, "trusting": -1
+    }
+  },
+  "rivals": ["shadow"],
+  "allies": [],
+  "neutral": ["techie", "muscle", "import"],
+
+  "storyArcs": {
+    "main": {
+      "title": "The Ghost Protocol",
+      "description": "Earn the trust of the most paranoid dealer in the network",
+      "chapters": [
+        {
+          "id": "ch1_first_contact",
+          "title": "First Contact",
+          "requiredLevel": 1,
+          "summary": "Making initial contact with Ghost requires proving you're not a threat",
+          "conversations": [
+            {
+              "id": "intro_1",
+              "type": "sequential",
+              "exchanges": [
+                {
+                  "speaker": "ghost",
+                  "text": "...",
+                  "pause": 2000
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "You shouldn't have this number."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "Someone gave it to me. Said you could help.",
+                      "traits": ["discrete"],
+                      "points": 10,
+                      "setsMemory": { "wasReferred": true },
+                      "next": "referred_response"
+                    },
+                    {
+                      "id": "b",
+                      "text": "Found it online. Took some digging.",
+                      "traits": ["cautious"],
+                      "points": 5,
+                      "setsMemory": { "foundOnline": true },
+                      "next": "online_response"
+                    },
+                    {
+                      "id": "c",
+                      "text": "Does it matter? I need parts.",
+                      "traits": ["impatient"],
+                      "points": -10,
+                      "next": "impatient_response"
+                    }
+                  ]
+                }
+              ],
+              "branches": {
+                "referred_response": [
+                  {
+                    "speaker": "ghost",
+                    "text": "Someone. That's specific."
+                  },
+                  {
+                    "speaker": "ghost",
+                    "text": "If they vouched for you, they're risking a lot. You understand that?"
+                  },
+                  {
+                    "type": "choice",
+                    "choices": [
+                      {
+                        "id": "a",
+                        "text": "I understand. I won't let them down.",
+                        "traits": ["loyal"],
+                        "points": 15,
+                        "setsMemory": { "promisedLoyalty": true }
+                      },
+                      {
+                        "id": "b",
+                        "text": "That's between you and them.",
+                        "traits": ["discrete"],
+                        "points": 10
+                      },
+                      {
+                        "id": "c",
+                        "text": "Sounds like their problem.",
+                        "traits": ["reckless"],
+                        "points": -15,
+                        "next": "end_negative"
+                      }
+                    ]
+                  }
+                ],
+                "online_response": [
+                  {
+                    "speaker": "ghost",
+                    "text": "Online. Great."
+                  },
+                  {
+                    "speaker": "ghost",
+                    "text": "That means anyone could find it. That means this number is burned."
+                  },
+                  {
+                    "speaker": "ghost",
+                    "text": "Thanks for that."
+                  },
+                  {
+                    "type": "choice",
+                    "choices": [
+                      {
+                        "id": "a",
+                        "text": "It wasn't easy to find. Took me weeks. Most people would give up.",
+                        "traits": ["patient", "cautious"],
+                        "points": 10
+                      },
+                      {
+                        "id": "b",
+                        "text": "I can help you clean your traces if you want.",
+                        "traits": ["secretive"],
+                        "points": 15,
+                        "setsMemory": { "offeredHelp": true }
+                      },
+                      {
+                        "id": "c",
+                        "text": "Sorry, I guess.",
+                        "points": 0
+                      }
+                    ]
+                  }
+                ],
+                "impatient_response": [
+                  {
+                    "speaker": "ghost",
+                    "text": "It matters."
+                  },
+                  {
+                    "speaker": "ghost",
+                    "text": "Everything matters. The way you found me. The way you talk. The car you drove here."
+                  },
+                  {
+                    "speaker": "ghost",
+                    "text": "If you can't understand that, we're done."
+                  },
+                  {
+                    "type": "choice",
+                    "choices": [
+                      {
+                        "id": "a",
+                        "text": "Wait. I'm sorry. I'm just... frustrated. Been looking for quality parts for months.",
+                        "traits": ["patient"],
+                        "points": 5,
+                        "setsMemory": { "apologized": true }
+                      },
+                      {
+                        "id": "b",
+                        "text": "Fine. Your loss.",
+                        "traits": ["impatient"],
+                        "points": -20,
+                        "next": "end_negative"
+                      }
+                    ]
+                  }
+                ],
+                "end_negative": [
+                  {
+                    "speaker": "ghost",
+                    "text": "Don't contact me again."
+                  },
+                  {
+                    "type": "end",
+                    "result": "rejected",
+                    "cooldown": 86400
+                  }
+                ]
+              }
+            },
+            {
+              "id": "intro_2",
+              "type": "sequential",
+              "condition": { "completedConversation": "intro_1", "not": { "result": "rejected" } },
+              "exchanges": [
+                {
+                  "speaker": "ghost",
+                  "text": "Let's say I'm willing to talk. That doesn't mean I trust you."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "Trust is earned. In this business, it's also rare."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "Why are you here? What do you want?"
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "I'm building a project car. ETK-I. I need performance parts that won't raise questions.",
+                      "traits": ["discrete"],
+                      "points": 15,
+                      "setsMemory": { "mentionedETKI": true, "mentionedProject": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "I heard you have access to rare parts. Things that are hard to find.",
+                      "traits": ["cautious"],
+                      "points": 10,
+                      "setsMemory": { "seekingRareParts": true }
+                    },
+                    {
+                      "id": "c",
+                      "text": "I want to race. Need an edge over the competition.",
+                      "points": 5,
+                      "setsMemory": { "wantsToRace": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "intro_3_etki",
+              "type": "sequential",
+              "condition": { "memory": "mentionedETKI" },
+              "exchanges": [
+                {
+                  "speaker": "ghost",
+                  "text": "ETK-I. 2400ti?"
+                },
+                {
+                  "speaker": "player",
+                  "text": "That's the one."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "Good choice. Classic platform. Lots of potential... if you know what you're doing."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "Most people buy one, realize how much work it needs, and let it rot."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "I'm not most people. I've already started on the chassis.",
+                      "traits": ["patient"],
+                      "points": 15,
+                      "setsMemory": { "startedWork": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "I know what I'm getting into. Done my research.",
+                      "traits": ["cautious"],
+                      "points": 10,
+                      "setsMemory": { "didResearch": true }
+                    },
+                    {
+                      "id": "c",
+                      "text": "How hard can it be?",
+                      "traits": ["reckless"],
+                      "points": -10
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "intro_test",
+              "type": "sequential",
+              "condition": { "completedConversation": "intro_2" },
+              "exchanges": [
+                {
+                  "speaker": "ghost",
+                  "text": "One more thing before we go any further."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "Look me in the eyes and tell me you're not a cop."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "*maintains eye contact* I'm not a cop. I'm a mechanic who wants to build something special.",
+                      "traits": ["discrete", "loyal"],
+                      "points": 20,
+                      "setsMemory": { "passedCopTest": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "If I was a cop, would I tell you?",
+                      "traits": ["cautious"],
+                      "points": 5
+                    },
+                    {
+                      "id": "c",
+                      "text": "*looks away* That's ridiculous.",
+                      "traits": ["reckless"],
+                      "points": -15
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "ch1_conclusion",
+              "type": "sequential",
+              "condition": { "completedConversation": "intro_test" },
+              "exchanges": [
+                {
+                  "speaker": "ghost",
+                  "text": "..."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "Alright. I'll give you a chance."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "But understand this: I don't do second chances. You mess up, you disappear from my world. Permanently."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "We clear?"
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "Crystal clear.",
+                      "traits": ["discrete"],
+                      "points": 10,
+                      "setsMemory": { "acceptedTerms": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "I wouldn't expect anything less.",
+                      "traits": ["patient"],
+                      "points": 15,
+                      "setsMemory": { "acceptedTerms": true, "showedRespect": true }
+                    }
+                  ]
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "Good. I'll be in touch when I have something for you."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "And next time... change your route getting here. I noticed you took the same street twice."
+                },
+                {
+                  "type": "end",
+                  "result": "success",
+                  "rewards": {
+                    "xp": 50,
+                    "unlocks": ["ghost_basic_inventory"]
+                  },
+                  "setsMemory": { "completedFirstContact": true }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch2_earning_trust",
+          "title": "Earning Trust",
+          "requiredLevel": 2,
+          "requiredMemory": ["completedFirstContact"],
+          "summary": "Ghost tests your discretion and reliability",
+          "conversations": [
+            {
+              "id": "trust_1",
+              "type": "sequential",
+              "exchanges": [
+                {
+                  "speaker": "ghost",
+                  "text": "You came back."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "Most people don't. Too paranoid, they say. Too many questions."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "I understand why you're careful. It's smart.",
+                      "traits": ["cautious", "patient"],
+                      "points": 15,
+                      "setsMemory": { "understandsParanoia": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "I need what you have. Worth the hassle.",
+                      "points": 5
+                    },
+                    {
+                      "id": "c",
+                      "text": "You ARE paranoid, but you're also the best.",
+                      "traits": ["discrete"],
+                      "points": 10
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "trust_2_memory_check",
+              "type": "sequential",
+              "condition": { "memory": "understandsParanoia" },
+              "exchanges": [
+                {
+                  "speaker": "ghost",
+                  "text": "You said you understand. Let me tell you why."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "Three years ago, I had a partner. Good guy. We worked well together."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "Then he got comfortable. Started trusting the wrong people."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "He's doing eight years now."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "I'm sorry. That explains a lot.",
+                      "traits": ["patient"],
+                      "points": 10,
+                      "setsMemory": { "knowsAboutPartner": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "And you've been alone since then?",
+                      "points": 5,
+                      "setsMemory": { "askedAboutLoneliness": true }
+                    },
+                    {
+                      "id": "c",
+                      "text": "What did he do wrong exactly?",
+                      "traits": ["cautious"],
+                      "points": 15,
+                      "setsMemory": { "wantsToLearn": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "trust_2_lesson",
+              "type": "sequential",
+              "condition": { "memory": "wantsToLearn" },
+              "exchanges": [
+                {
+                  "speaker": "ghost",
+                  "text": "Smart question."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "He started dealing with someone new. Didn't vet them properly."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "Turned out to be an undercover. Had him on tape, selling parts from a stolen Covet."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "One conversation. One moment of trust. Eight years."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "Is that why you tested me so hard?",
+                      "traits": ["cautious"],
+                      "points": 10
+                    },
+                    {
+                      "id": "b",
+                      "text": "How do you know I'm not the same?",
+                      "traits": ["discrete"],
+                      "points": 15,
+                      "setsMemory": { "challengedGhost": true }
+                    },
+                    {
+                      "id": "c",
+                      "text": "That won't happen to me. I'm careful.",
+                      "traits": ["reckless"],
+                      "points": -5
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "trust_2_challenge_response",
+              "type": "sequential",
+              "condition": { "memory": "challengedGhost" },
+              "exchanges": [
+                {
+                  "speaker": "ghost",
+                  "text": "Ha."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "First person to ask me that."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "Truth is, I don't know for sure. Never do. That's the game."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "But you asking that question... that's a good sign. Means you think like I do."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "I try to see all the angles.",
+                      "traits": ["cautious"],
+                      "points": 15,
+                      "setsMemory": { "thinksSimilarly": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "Paranoia is just pattern recognition with better data.",
+                      "traits": ["secretive"],
+                      "points": 20,
+                      "setsMemory": { "impressedGhost": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "trust_test",
+              "type": "sequential",
+              "exchanges": [
+                {
+                  "speaker": "ghost",
+                  "text": "I have a test for you. Nothing big."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "There's a guy asking around about rare ETK parts. Says he's building a race car."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "He found your name somehow. Might reach out."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "If he does, what do you tell him about me?"
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "Nothing. I don't know any Ghost.",
+                      "traits": ["discrete", "secretive"],
+                      "points": 25,
+                      "setsMemory": { "passedSecrecyTest": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "I'll feel him out first. See if he's legit.",
+                      "traits": ["cautious"],
+                      "points": 10,
+                      "setsMemory": { "wouldVet": true }
+                    },
+                    {
+                      "id": "c",
+                      "text": "Maybe we could help each other. Bring him in.",
+                      "traits": ["reckless", "trusting"],
+                      "points": -20,
+                      "next": "failed_test"
+                    }
+                  ]
+                }
+              ],
+              "branches": {
+                "failed_test": [
+                  {
+                    "speaker": "ghost",
+                    "text": "..."
+                  },
+                  {
+                    "speaker": "ghost",
+                    "text": "That's exactly what my partner said."
+                  },
+                  {
+                    "speaker": "ghost",
+                    "text": "We're done for today."
+                  },
+                  {
+                    "type": "end",
+                    "result": "partial",
+                    "cooldown": 172800,
+                    "setsMemory": { "failedSecrecyTest": true }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "ch2_conclusion",
+              "type": "sequential",
+              "condition": { "memory": "passedSecrecyTest" },
+              "exchanges": [
+                {
+                  "speaker": "ghost",
+                  "text": "Good answer."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "The guy asking about you? Doesn't exist. I made him up."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "But now I know what you'd do if he was real."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "Clever. I respect that.",
+                      "traits": ["patient"],
+                      "points": 10
+                    },
+                    {
+                      "id": "b",
+                      "text": "I would have done the same.",
+                      "traits": ["cautious"],
+                      "points": 15,
+                      "setsMemory": { "thinksSimilarly": true }
+                    }
+                  ]
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "I have some better inventory coming in. High-performance stuff."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "When it arrives, you'll be first to know."
+                },
+                {
+                  "type": "end",
+                  "result": "success",
+                  "rewards": {
+                    "xp": 75,
+                    "unlocks": ["ghost_performance_inventory"]
+                  },
+                  "setsMemory": { "earnedTrust": true }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch3_inner_circle",
+          "title": "The Inner Circle",
+          "requiredLevel": 4,
+          "requiredMemory": ["earnedTrust"],
+          "summary": "Ghost begins to share secrets about the network",
+          "conversations": [
+            {
+              "id": "inner_1",
+              "type": "sequential",
+              "exchanges": [
+                {
+                  "speaker": "ghost",
+                  "text": "I need to tell you something."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "You've been... different. From the others."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "Most people in this world are in it for quick money. You're in it for the build."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "The money's nice, but it's not why I do this.",
+                      "traits": ["loyal"],
+                      "points": 15
+                    },
+                    {
+                      "id": "b",
+                      "text": "I love cars. Always have. This is just... the path I took.",
+                      "points": 20,
+                      "setsMemory": { "sharedPassion": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "inner_2_revelation",
+              "type": "sequential",
+              "condition": { "memory": "sharedPassion" },
+              "exchanges": [
+                {
+                  "speaker": "ghost",
+                  "text": "Yeah. I can tell."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "Listen... I'm going to tell you something I've never told anyone."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "My real name is Marcus. Marcus Chen."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "Thank you for trusting me with that. It stays between us.",
+                      "traits": ["loyal", "discrete"],
+                      "points": 25,
+                      "setsMemory": { "knowsRealName": true, "promisedSecrecy": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "Why are you telling me this?",
+                      "points": 10,
+                      "setsMemory": { "knowsRealName": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "inner_3_network",
+              "type": "sequential",
+              "condition": { "memory": "promisedSecrecy" },
+              "exchanges": [
+                {
+                  "speaker": "ghost",
+                  "text": "There's something else."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "I'm not just a dealer. I'm part of something bigger. A network."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "We move parts across the entire region. High-end, rare, sometimes... gray market."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "I've been watching you. Thinking about whether you'd fit."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "I'm listening. What would that mean for me?",
+                      "traits": ["cautious"],
+                      "points": 15,
+                      "setsMemory": { "interestedInNetwork": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "I'm honored you'd consider me. What do you need?",
+                      "traits": ["loyal"],
+                      "points": 20,
+                      "setsMemory": { "interestedInNetwork": true, "showedLoyalty": true }
+                    },
+                    {
+                      "id": "c",
+                      "text": "I don't know... sounds risky.",
+                      "points": 0,
+                      "setsMemory": { "hesitantAboutNetwork": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "inner_4_final",
+              "type": "sequential",
+              "condition": { "memory": "showedLoyalty" },
+              "exchanges": [
+                {
+                  "speaker": "ghost",
+                  "text": "For now? Just keep doing what you're doing."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "Build your car. Keep your head down. Stay clean."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "When the time is right, I'll bring you in properly."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "Until then... you have my full inventory. The real stuff."
+                },
+                {
+                  "type": "end",
+                  "result": "success",
+                  "rewards": {
+                    "xp": 150,
+                    "unlocks": ["ghost_premium_inventory", "ghost_network_missions"]
+                  },
+                  "setsMemory": { "joinedInnerCircle": true }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "side": {
+      "title": "Ghost's Secrets",
+      "description": "Optional conversations that reveal more about Ghost's past",
+      "chapters": [
+        {
+          "id": "side_car_talk",
+          "title": "Car Talk",
+          "requiredLevel": 2,
+          "conversations": [
+            {
+              "id": "car_1",
+              "type": "random",
+              "chance": 0.3,
+              "exchanges": [
+                {
+                  "speaker": "ghost",
+                  "text": "You know what I miss? Working on my own car."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "Had a Covet once. Nothing special. But I built it from nothing."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "What happened to it?",
+                      "points": 5,
+                      "setsMemory": { "askedAboutCovet": true }
+                    },
+                    {
+                      "id": "b",
+                      "text": "I know that feeling. There's something special about building your own.",
+                      "traits": ["patient"],
+                      "points": 15,
+                      "setsMemory": { "relatedToGhost": true }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "car_2",
+              "type": "sequential",
+              "condition": { "memory": "askedAboutCovet" },
+              "exchanges": [
+                {
+                  "speaker": "ghost",
+                  "text": "Had to sell it. When things got hot."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "Couldn't risk having anything traceable."
+                },
+                {
+                  "speaker": "ghost",
+                  "text": "Sometimes I think about trying to find it. See what the new owner did with it."
+                },
+                {
+                  "type": "choice",
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": "Maybe one day, when things calm down.",
+                      "traits": ["patient"],
+                      "points": 10
+                    },
+                    {
+                      "id": "b",
+                      "text": "I could help you look. Quietly.",
+                      "traits": ["loyal"],
+                      "points": 20,
+                      "setsMemory": { "offeredToFindCovet": true }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+
+  "confrontations": [
+    {
+      "trigger": "random",
+      "chance": 0.15,
+      "minTrust": 2,
+      "text": "Someone's been asking about you. What should I tell them?",
+      "responses": [
+        { "id": "a", "text": "Tell them nothing. I don't exist.", "traits": ["discrete", "secretive"], "points": 20 },
+        { "id": "b", "text": "Who's asking?", "traits": ["cautious"], "points": 10 },
+        { "id": "c", "text": "Tell them I'm reliable.", "traits": ["talkative"], "points": -15 }
+      ]
+    },
+    {
+      "trigger": "memory",
+      "condition": "knowsRealName",
+      "chance": 0.2,
+      "minTrust": 4,
+      "text": "You haven't told anyone my name, have you?",
+      "responses": [
+        { "id": "a", "text": "Marcus? Never heard of him.", "traits": ["loyal", "secretive"], "points": 25 },
+        { "id": "b", "text": "Of course not. Your secret is safe.", "traits": ["discrete"], "points": 15 },
+        { "id": "c", "text": "Why? Is something wrong?", "points": 5 }
+      ]
+    }
+  ],
+
+  "fallbackQuestions": {
+    "unknown": [
+      { "text": "Why are you here?", "responses": [
+        { "id": "a", "text": "Looking for quality parts.", "points": 10 },
+        { "id": "b", "text": "Someone said you could help.", "points": 5 },
+        { "id": "c", "text": "None of your business.", "points": -10 }
+      ]}
+    ]
+  }
+}
