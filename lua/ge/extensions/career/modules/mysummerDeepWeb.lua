@@ -380,17 +380,19 @@ local vendorDefinitions = {
     -- questionPools loaded dynamically from JSON
   },
 
-  -- AI Pilot Contact - always unlocked for testing AI conversations
+  -- AI Pilot Contact - DISABLED (BeamNG CEF blocks external HTTP requests)
+  -- To re-enable: uncomment and run ai-proxy server locally
+  --[[
   oracle = {
     id = "oracle",
     name = "Oracle",
     personality = "enigmatic",
     description = "A mysterious digital entity that tests your thinking and adapts to your responses.",
-    trustThreshold = 0,  -- No threshold needed - always available
+    trustThreshold = 0,
     isAIPilot = true,
-    partsInventory = {},  -- Oracle doesn't sell parts - it's for AI conversation testing
-    -- questionPools loaded dynamically from JSON
+    partsInventory = {},
   },
+  --]]
 }
 
 -- ============================================================================
