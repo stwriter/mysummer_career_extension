@@ -186,32 +186,32 @@ local function getCurrentChapter(contactId, vendorState)
   local mainArc = data.storyArcs.main
   if mainArc and mainArc.chapters then
     for _, chapter in ipairs(mainArc.chapters) do
+      local skipChapter = false
+
       -- Check level requirement
       if chapter.requiredLevel and level < chapter.requiredLevel then
-        goto continue_chapter
+        skipChapter = true
       end
 
       -- Check memory requirements
-      if chapter.requiredMemory then
-        local hasAllMemory = true
+      if not skipChapter and chapter.requiredMemory then
         for _, memKey in ipairs(chapter.requiredMemory) do
           if not memory[memKey] then
-            hasAllMemory = false
+            skipChapter = true
             break
           end
         end
-        if not hasAllMemory then goto continue_chapter end
       end
 
       -- Check if chapter is already completed
-      if progress.completedChapters and progress.completedChapters[chapter.id] then
-        goto continue_chapter
+      if not skipChapter and progress.completedChapters and progress.completedChapters[chapter.id] then
+        skipChapter = true
       end
 
       -- This chapter is available
-      return chapter, "main"
-
-      ::continue_chapter::
+      if not skipChapter then
+        return chapter, "main"
+      end
     end
   end
 
@@ -219,17 +219,19 @@ local function getCurrentChapter(contactId, vendorState)
   local sideArc = data.storyArcs.side
   if sideArc and sideArc.chapters then
     for _, chapter in ipairs(sideArc.chapters) do
+      local skipChapter = false
+
       if chapter.requiredLevel and level < chapter.requiredLevel then
-        goto continue_side
+        skipChapter = true
       end
 
-      if progress.completedChapters and progress.completedChapters[chapter.id] then
-        goto continue_side
+      if not skipChapter and progress.completedChapters and progress.completedChapters[chapter.id] then
+        skipChapter = true
       end
 
-      return chapter, "side"
-
-      ::continue_side::
+      if not skipChapter then
+        return chapter, "side"
+      end
     end
   end
 
@@ -243,26 +245,28 @@ local function getNextConversation(chapter, vendorState, contactId)
   local progress = vendorState.conversationProgress or {}
 
   for _, conv in ipairs(chapter.conversations) do
+    local skipConv = false
+
     -- Check if already completed
     if progress.completedConversations and progress.completedConversations[conv.id] then
-      goto continue_conv
+      skipConv = true
     end
 
     -- Check condition
-    if not checkConversationCondition(conv.condition, vendorState, contactId) then
-      goto continue_conv
+    if not skipConv and not checkConversationCondition(conv.condition, vendorState, contactId) then
+      skipConv = true
     end
 
     -- Check random chance for random-type conversations
-    if conv.type == "random" and conv.chance then
+    if not skipConv and conv.type == "random" and conv.chance then
       if math.random() > conv.chance then
-        goto continue_conv
+        skipConv = true
       end
     end
 
-    return conv
-
-    ::continue_conv::
+    if not skipConv then
+      return conv
+    end
   end
 
   return nil
