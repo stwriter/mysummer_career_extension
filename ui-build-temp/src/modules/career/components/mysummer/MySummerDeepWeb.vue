@@ -89,11 +89,29 @@
             v-for="(msg, idx) in conversation.messages"
             :key="idx"
             class="message"
-            :class="msg.sender"
+            :class="[msg.sender, { 'system-message': msg.isSystemMessage, 'pause-message': msg.isPause, 'positive': msg.pointsChange > 0, 'negative': msg.pointsChange < 0 }]"
           >
-            <span class="message-prefix">{{ msg.sender === 'vendor' ? '&gt;' : '&lt;' }}</span>
-            <span class="message-content">{{ msg.text }}</span>
+            <template v-if="msg.isPause">
+              <span class="pause-dots">...</span>
+            </template>
+            <template v-else-if="msg.isSystemMessage">
+              <span class="system-text">{{ msg.text }}</span>
+            </template>
+            <template v-else>
+              <span class="message-prefix">{{ msg.sender === 'vendor' ? '&gt;' : '&lt;' }}</span>
+              <span class="message-content">{{ msg.text }}</span>
+            </template>
           </div>
+        </div>
+
+        <!-- Session Stats -->
+        <div class="session-stats" v-if="conversation.sessionPoints !== undefined">
+          <span class="stat-item" :class="{ positive: conversation.sessionPoints > 0, negative: conversation.sessionPoints < 0 }">
+            Session: {{ conversation.sessionPoints > 0 ? '+' : '' }}{{ conversation.sessionPoints }} pts
+          </span>
+          <span class="stat-item" v-if="conversation.strikes > 0">
+            Strikes: {{ conversation.strikes }}/{{ conversation.maxStrikes }}
+          </span>
         </div>
 
         <div class="choices-container" v-if="conversation.choices && conversation.choices.length > 0">
@@ -556,6 +574,64 @@ $win-cyan: #008080;
 
 .message-content {
   flex: 1;
+}
+
+// System messages (feedback, strikes, etc)
+.message.system-message {
+  justify-content: center;
+  margin: 4px 0;
+
+  .system-text {
+    font-size: 10px;
+    padding: 2px 8px;
+    background: $win-gray;
+    border: 1px solid $win-dark-gray;
+  }
+
+  &.positive .system-text {
+    color: #008000;
+    background: #e0ffe0;
+    border-color: #008000;
+  }
+
+  &.negative .system-text {
+    color: #800000;
+    background: #ffe0e0;
+    border-color: #800000;
+  }
+}
+
+// Pause messages (...)
+.message.pause-message {
+  justify-content: center;
+  margin: 12px 0;
+
+  .pause-dots {
+    color: $win-dark-gray;
+    font-size: 16px;
+    letter-spacing: 4px;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+// Session stats bar
+.session-stats {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 8px;
+  background: $win-gray;
+  border-top: 1px solid $win-dark-gray;
+  font-size: 10px;
+
+  .stat-item {
+    &.positive { color: #008000; }
+    &.negative { color: #800000; }
+  }
 }
 
 // Choices

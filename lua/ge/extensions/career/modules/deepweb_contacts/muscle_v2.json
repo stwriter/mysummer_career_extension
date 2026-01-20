@@ -86,7 +86,7 @@
                   {
                     "type": "end",
                     "result": "partial",
-                    "cooldown": 21600
+                    "cooldown": 180
                   }
                 ]
               }
@@ -245,7 +245,7 @@
                   {
                     "type": "end",
                     "result": "rejected",
-                    "cooldown": 86400
+                    "cooldown": 300
                   }
                 ]
               }

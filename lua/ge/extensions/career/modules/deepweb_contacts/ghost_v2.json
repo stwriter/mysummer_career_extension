@@ -183,7 +183,7 @@
                   {
                     "type": "end",
                     "result": "rejected",
-                    "cooldown": 86400
+                    "cooldown": 300
                   }
                 ]
               }
@@ -625,7 +625,7 @@
                   {
                     "type": "end",
                     "result": "partial",
-                    "cooldown": 172800,
+                    "cooldown": 600,
                     "setsMemory": { "failedSecrecyTest": true }
                   }
                 ]

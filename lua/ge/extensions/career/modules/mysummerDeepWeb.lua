@@ -2208,10 +2208,38 @@ local function respondToV2Vendor(responseId)
     end
   end
 
-  -- Build player response message
+  -- Build player response message with points feedback
   local allMessages = {
     { sender = "player", text = selectedChoice.text }
   }
+
+  -- Add points feedback message
+  if points ~= 0 then
+    local feedbackText = ""
+    if points > 0 then
+      if points >= 20 then
+        feedbackText = string.format("[+%d] Excellent response!", points)
+      elseif points >= 10 then
+        feedbackText = string.format("[+%d] Good answer.", points)
+      else
+        feedbackText = string.format("[+%d] Acceptable.", points)
+      end
+    else
+      if points <= -15 then
+        feedbackText = string.format("[%d] That was a mistake.", points)
+      elseif points <= -5 then
+        feedbackText = string.format("[%d] Not the best choice.", points)
+      else
+        feedbackText = string.format("[%d] Could be better.", points)
+      end
+    end
+    table.insert(allMessages, {
+      sender = "system",
+      text = feedbackText,
+      isSystemMessage = true,
+      pointsChange = points
+    })
+  end
 
   -- Check if we branch to a different path
   local choices = nil
@@ -2283,15 +2311,64 @@ local function respondToV2Vendor(responseId)
         end
       end
 
-      -- Set cooldown if specified
+      -- Set cooldown if specified (explicit cooldown ends the session)
       if result.cooldown then
         conversationCooldowns[vendorId] = os.time()
+        break
       end
 
-      break
-    end
+      -- Check if there's another conversation available in this chapter
+      -- If so, continue automatically (makes conversations flow naturally)
+      local shouldContinue = false
+      if result.result == "success" or result.result == "partial" then
+        local chapter = nil
+        local contactData = loadContactFromJson(vendorId)
+        if contactData and contactData.storyArcs then
+          -- Find current chapter
+          local mainArc = contactData.storyArcs.main
+          if mainArc and mainArc.chapters then
+            for _, ch in ipairs(mainArc.chapters) do
+              if ch.id == conv.chapterId then
+                chapter = ch
+                break
+              end
+            end
+          end
+        end
 
-    conv.currentExchangeIndex = conv.currentExchangeIndex + 1
+        if chapter then
+          local nextConv = getNextConversation(chapter, vendorState, vendorId)
+          if nextConv then
+            -- Continue with next conversation in the same session
+            log("I", logTag, "Continuing to next conversation: " .. nextConv.id)
+
+            -- Add a pause/transition message
+            table.insert(allMessages, {
+              sender = "system",
+              text = "...",
+              isPause = true
+            })
+
+            -- Load next conversation
+            conv.conversationId = nextConv.id
+            conv.exchanges = nextConv.exchanges
+            conv.branches = nextConv.branches or {}
+            conv.currentExchangeIndex = 1
+            conv.currentBranch = nil
+            ended = false  -- Not ended yet, continuing
+            shouldContinue = true
+          end
+        end
+      end
+
+      if not shouldContinue then
+        break
+      end
+      -- When continuing to next conversation, don't increment - we already reset to 1
+    else
+      -- Only increment when not ending a conversation
+      conv.currentExchangeIndex = conv.currentExchangeIndex + 1
+    end
   end
 
   -- Check if we've run out of exchanges without an explicit end
