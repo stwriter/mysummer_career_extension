@@ -1424,9 +1424,74 @@ end
 -- ============================================================================
 
 local state = {
-  vendors = {},  -- { [vendorId] = { met, trustPoints (legacy), unlocked, blacklisted, purchaseHistory = [], usedQuestions = {}, conversationMemory = {} } }
+  vendors = {},  -- { [vendorId] = { met, trustPoints (legacy), unlocked, blacklisted, strikes, redemptionType, purchaseHistory = [], usedQuestions = {}, conversationMemory = {}, conversationProgress = {} } }
   currentConversation = nil,  -- { vendorId, questions = [{question, responses}], currentIndex, sessionPoints, phase }
 }
+
+-- Strike system constants
+local MAX_STRIKES = 3  -- Number of strikes before blacklist
+
+-- Redemption types (for future implementation)
+local REDEMPTION_TYPES = {
+  RACE = "race",           -- Win a race against the contact
+  FAVOR = "favor",         -- Do a favor (pickup/delivery mission)
+  POLICE_ESCAPE = "escape" -- Escape police while carrying their goods
+}
+
+-- Add a strike to a contact (returns true if now blacklisted)
+local function addStrike(contactId)
+  local vendorState = state.vendors[contactId]
+  if not vendorState then return false end
+
+  vendorState.strikes = (vendorState.strikes or 0) + 1
+  log("W", logTag, string.format("Contact %s received strike %d/%d", contactId, vendorState.strikes, MAX_STRIKES))
+
+  if vendorState.strikes >= MAX_STRIKES then
+    vendorState.blacklisted = true
+    vendorState.redemptionType = REDEMPTION_TYPES.RACE  -- Default: win a race to redeem
+    log("W", logTag, string.format("Contact %s is now BLACKLISTED (requires %s to redeem)", contactId, vendorState.redemptionType))
+    return true
+  end
+
+  return false
+end
+
+-- Get current strikes for a contact
+local function getStrikes(contactId)
+  local vendorState = state.vendors[contactId]
+  if not vendorState then return 0 end
+  return vendorState.strikes or 0
+end
+
+-- Check if contact can be redeemed and how
+local function getRedemptionInfo(contactId)
+  local vendorState = state.vendors[contactId]
+  if not vendorState or not vendorState.blacklisted then return nil end
+
+  return {
+    type = vendorState.redemptionType or REDEMPTION_TYPES.RACE,
+    strikes = vendorState.strikes or MAX_STRIKES
+  }
+end
+
+-- Redeem a blacklisted contact (called when player completes redemption task)
+local function redeemContact(contactId)
+  local vendorState = state.vendors[contactId]
+  if not vendorState or not vendorState.blacklisted then return false end
+
+  vendorState.blacklisted = false
+  vendorState.strikes = 1  -- Reset to 1 strike (they're on thin ice)
+  vendorState.redemptionType = nil
+
+  -- Reset conversation progress to give them another chance
+  vendorState.conversationProgress = vendorState.conversationProgress or {}
+  vendorState.conversationProgress.lastResult = nil
+
+  log("I", logTag, string.format("Contact %s has been REDEEMED", contactId))
+  saveState()
+
+  return true
+end
 
 -- ============================================================================
 -- CONVERSATION MEMORY SYSTEM
@@ -2192,7 +2257,33 @@ local function respondToV2Vendor(responseId)
       vendorState.conversationProgress.completedConversations[conv.conversationId] = true
       vendorState.conversationProgress.lastResult = result.result
 
-      -- Set cooldown if rejected
+      -- Handle rejection with strike system
+      if result.result == "rejected" then
+        local nowBlacklisted = addStrike(vendorId)
+        if nowBlacklisted then
+          -- Add blacklist message
+          table.insert(allMessages, {
+            sender = "vendor",
+            text = "We're done. Don't contact me again.",
+            isSystemMessage = true
+          })
+          table.insert(allMessages, {
+            sender = "system",
+            text = "This contact has blacklisted you. Win a race against them or do them a favor to earn back their trust.",
+            isSystemMessage = true
+          })
+        else
+          -- Add strike warning
+          local strikesLeft = MAX_STRIKES - getStrikes(vendorId)
+          table.insert(allMessages, {
+            sender = "system",
+            text = string.format("Strike received. %d more mistake%s and you'll be blacklisted.", strikesLeft, strikesLeft == 1 and "" or "s"),
+            isSystemMessage = true
+          })
+        end
+      end
+
+      -- Set cooldown if specified
       if result.cooldown then
         conversationCooldowns[vendorId] = os.time()
       end
@@ -2211,6 +2302,7 @@ local function respondToV2Vendor(responseId)
   end
 
   local sessionPoints = conv.sessionPoints
+  local currentStrikes = getStrikes(vendorId)
 
   if ended then
     setContactCooldown(vendorId)
@@ -2236,6 +2328,10 @@ local function respondToV2Vendor(responseId)
     trustPoints = currentXP,
     trustThreshold = vendorDef.trustThreshold,
     sessionPoints = sessionPoints,
+    strikes = currentStrikes,
+    maxStrikes = MAX_STRIKES,
+    blacklisted = vendorState.blacklisted,
+    redemptionType = vendorState.redemptionType,
     isV2 = true,
   }
 end
@@ -2641,6 +2737,9 @@ local function getVendorData()
       -- State
       met = vendorState.met,
       blacklisted = vendorState.blacklisted,
+      strikes = vendorState.strikes or 0,
+      maxStrikes = MAX_STRIKES,
+      redemptionType = vendorState.redemptionType,
       partsUnlocked = vendorState.unlocked or false,
       -- Race challenge
       canRace = canRace,
@@ -2951,6 +3050,14 @@ M.canClearHeatWithShadow = canClearHeatWithShadow
 M.isContactOnCooldown = isContactOnCooldown
 M.getCooldownDuration = getCooldownDuration
 M.clearContactCooldown = clearContactCooldown  -- Debug function
+
+-- Strike/Blacklist system API
+M.getStrikes = getStrikes
+M.addStrike = addStrike  -- For external systems to add strikes
+M.getRedemptionInfo = getRedemptionInfo
+M.redeemContact = redeemContact  -- Call when player completes redemption task (race win, favor, etc.)
+M.MAX_STRIKES = MAX_STRIKES
+M.REDEMPTION_TYPES = REDEMPTION_TYPES
 
 -- Traits and confrontation API
 M.getContactTraits = getContactTraits
