@@ -112,6 +112,15 @@ local function loadContactFromJson(contactId)
 end
 
 -- ============================================================================
+-- FORWARD DECLARATIONS (needed by V2 conversation system)
+-- ============================================================================
+
+-- These functions are defined later but needed by getCurrentChapter
+local getContactXP
+local getContactLevel
+local isContactAvailable
+
+-- ============================================================================
 -- V2 CONVERSATION SYSTEM - Sequential narratives with chapters
 -- ============================================================================
 
@@ -742,10 +751,7 @@ local INTRODUCTION_XP_THRESHOLD = 150
 -- CONTACT RACE SYSTEM
 -- ============================================================================
 
--- Forward declarations for functions used by race system and heat system
-local getContactXP
-local getContactLevel
-local isContactAvailable
+-- Forward declaration for heat system (others already declared above)
 local canClearHeatWithShadow
 
 -- Vehicles used by each contact for races
