@@ -245,7 +245,7 @@
                   {
                     "type": "end",
                     "result": "rejected",
-                    "cooldown": 300
+                    "cooldown": 180
                   }
                 ]
               }

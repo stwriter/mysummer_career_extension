@@ -1,0 +1,402 @@
+{
+  "id": "import",
+  "version": 3,
+  "isV3Format": true,
+  "personality": {
+    "tone": "passionate",
+    "style": "enthusiastic",
+    "traits": ["jdm_purist", "knowledgeable", "collector"],
+    "quirks": ["uses_japanese_terms", "compares_everything_to_japan", "nostalgic"]
+  },
+  "trustLevels": {
+    "level1": { "min": 0, "max": 29, "name": "Gaijin", "unlocks": ["basic_jdm_parts"] },
+    "level2": { "min": 30, "max": 59, "name": "Enthusiast", "unlocks": ["rare_imports", "tuning_advice"] },
+    "level3": { "min": 60, "max": 89, "name": "True Believer", "unlocks": ["collector_items", "connections"] },
+    "level4": { "min": 90, "max": 100, "name": "Family", "unlocks": ["legendary_parts", "full_network"] }
+  },
+  "conversationStructure": {
+    "level1": {
+      "intro": {
+        "variants": [
+          {
+            "id": "intro_test",
+            "condition": "firstContact",
+            "exchanges": [
+              { "speaker": "import", "text": "New face in the scene." },
+              { "speaker": "import", "text": "Let me guess. You want JDM parts because they look cool in videos." },
+              { "speaker": "import", "text": "Everyone wants the aesthetic. Few understand the soul." },
+              { "speaker": "import", "text": "Tell me something. What does 'tuning' mean to you?" }
+            ],
+            "requiresResponse": true,
+            "responseOptions": [
+              { "id": "a", "text": "Making a car faster. More power, better handling.", "traits": ["practical"], "points": 5 },
+              { "id": "b", "text": "Balance. Finding harmony between all the components.", "traits": ["philosophical"], "points": 15 },
+              { "id": "c", "text": "Looking good. Stance, wheels, the right badges.", "traits": ["superficial"], "points": -5 },
+              { "id": "d", "text": "I'm still learning. That's why I'm here.", "traits": ["humble"], "points": 10 }
+            ]
+          },
+          {
+            "id": "intro_return",
+            "condition": "returning",
+            "exchanges": [
+              { "speaker": "import", "text": "Back again." },
+              { "speaker": "import", "text": "Still chasing the spirit of JDM?" },
+              { "speaker": "import", "text": "Good. Persistence matters in this world." }
+            ]
+          }
+        ]
+      },
+      "nudo": {
+        "branches": {
+          "nudo_philosophy": [
+            { "speaker": "import", "text": "People think JDM is about brand names." },
+            { "speaker": "import", "text": "Skyline. Supra. Silvia. Names everyone knows." },
+            { "speaker": "import", "text": "But the magic was never the cars themselves." },
+            { "speaker": "import", "text": "It was the workshops. The midnight mechanics. The street knowledge." },
+            { "speaker": "import", "text": "That culture of perfection through iteration." }
+          ],
+          "nudo_business": [
+            { "speaker": "import", "text": "I import parts. Authentic only." },
+            { "speaker": "import", "text": "No replicas. No knockoffs. The real thing or nothing." },
+            { "speaker": "import", "text": "It costs more. It takes longer." },
+            { "speaker": "import", "text": "But when you install a genuine piece..." },
+            { "speaker": "import", "text": "You're connecting to something. History. Craftsmanship." }
+          ]
+        },
+        "randomEvents": {
+          "chance": 0.2,
+          "events": [
+            {
+              "id": "fake_parts",
+              "text": "Someone tried to sell me counterfeit coilovers last week. Thought I wouldn't notice.",
+              "responses": [
+                { "id": "a", "text": "How could you tell they were fake?", "traits": ["curious"], "points": 5 },
+                { "id": "b", "text": "The market is full of fakes now. Hard to trust anyone.", "traits": ["aware"], "points": 10 },
+                { "id": "c", "text": "Does it matter if they work the same?", "traits": ["pragmatic"], "points": -10 }
+              ]
+            }
+          ]
+        }
+      },
+      "desenlace": {
+        "variants": [
+          {
+            "id": "end_neutral",
+            "condition": "default",
+            "exchanges": [
+              { "speaker": "import", "text": "We'll see if you have patience for this path." },
+              { "speaker": "import", "text": "JDM isn't a shortcut. It's a commitment." },
+              { "speaker": "import", "text": "Come back when you're ready to learn more." }
+            ]
+          },
+          {
+            "id": "end_positive",
+            "condition": "goodInteraction",
+            "exchanges": [
+              { "speaker": "import", "text": "You listen. That's rare." },
+              { "speaker": "import", "text": "Maybe you'll understand someday." },
+              { "speaker": "import", "text": "I'll have some starter parts for you next time." }
+            ]
+          }
+        ]
+      }
+    },
+    "level2": {
+      "intro": {
+        "variants": [
+          {
+            "id": "intro_growing",
+            "condition": "default",
+            "exchanges": [
+              { "speaker": "import", "text": "You came back. Good." },
+              { "speaker": "import", "text": "Most people lose interest when they realize this isn't instant." },
+              { "speaker": "import", "text": "Let's talk properly this time." }
+            ]
+          }
+        ]
+      },
+      "nudo": {
+        "branches": {
+          "nudo_origins": [
+            { "speaker": "import", "text": "I started in the late 90s. Peak era." },
+            { "speaker": "import", "text": "Worked at a shop in Osaka for two years. Best education of my life." },
+            { "speaker": "import", "text": "The masters there... they could diagnose an engine by sound alone." },
+            { "speaker": "import", "text": "That knowledge is disappearing. New generation doesn't have patience." },
+            { "speaker": "import", "text": "Someone has to preserve it." }
+          ],
+          "nudo_network": [
+            { "speaker": "import", "text": "I know people. Here and overseas." },
+            { "speaker": "import", "text": "Some specialize in engines. Some in suspension. Some in electronics." },
+            { "speaker": "import", "text": "There's a woman here... handles muscle cars mostly. American iron." },
+            { "speaker": "import", "text": "Different world from JDM, but... she understands the craft." },
+            { "speaker": "import", "text": "Doesn't chase trends. Knows what matters." }
+          ],
+          "nudo_respect": [
+            { "speaker": "import", "text": "You know what I respect? Dedication." },
+            { "speaker": "import", "text": "Doesn't matter if it's Japanese, American, European." },
+            { "speaker": "import", "text": "If someone truly knows their craft... that transcends borders." },
+            { "speaker": "import", "text": "I've met builders who never left their hometown." },
+            { "speaker": "import", "text": "But their understanding? World class." }
+          ]
+        },
+        "randomEvents": {
+          "chance": 0.25,
+          "events": [
+            {
+              "id": "rare_find",
+              "text": "Just secured a set of original TE37s. 1996 production run.",
+              "responses": [
+                { "id": "a", "text": "Those are legendary. How did you find them?", "traits": ["knowledgeable"], "points": 15 },
+                { "id": "b", "text": "Nice. How much are you asking?", "traits": ["transactional"], "points": 0 },
+                { "id": "c", "text": "What makes them special versus new ones?", "traits": ["learning"], "points": 10 }
+              ]
+            },
+            {
+              "id": "cultural_test",
+              "text": "Quick question. What's the difference between 'touge' and 'wangan' style builds?",
+              "responses": [
+                { "id": "a", "text": "Touge is mountain passes. Light, agile. Wangan is highway. Top speed focus.", "traits": ["educated"], "points": 20 },
+                { "id": "b", "text": "Both are about going fast, just different roads.", "traits": ["basic"], "points": 5 },
+                { "id": "c", "text": "I don't know those terms yet.", "traits": ["honest"], "points": 8 }
+              ]
+            }
+          ]
+        }
+      },
+      "desenlace": {
+        "variants": [
+          {
+            "id": "end_growing",
+            "condition": "default",
+            "exchanges": [
+              { "speaker": "import", "text": "Your knowledge is growing. I can tell." },
+              { "speaker": "import", "text": "Keep this pace. You'll earn access to better stock." },
+              { "speaker": "import", "text": "Patience and respect. That's all I ask." }
+            ]
+          },
+          {
+            "id": "end_impressed",
+            "condition": "highPoints",
+            "exchanges": [
+              { "speaker": "import", "text": "Not bad. You actually understand some of this." },
+              { "speaker": "import", "text": "Rare to find someone who cares about the why, not just the what." },
+              { "speaker": "import", "text": "I'll start keeping the good stuff for you." }
+            ]
+          }
+        ]
+      }
+    },
+    "level3": {
+      "intro": {
+        "variants": [
+          {
+            "id": "intro_trusted",
+            "condition": "default",
+            "exchanges": [
+              { "speaker": "import", "text": "You've earned some trust." },
+              { "speaker": "import", "text": "Time to show you what real collecting looks like." }
+            ]
+          }
+        ]
+      },
+      "nudo": {
+        "branches": {
+          "nudo_collection": [
+            { "speaker": "import", "text": "I have pieces in my personal collection that will never sell." },
+            { "speaker": "import", "text": "Not because of value. Because of what they represent." },
+            { "speaker": "import", "text": "A throttle body from a Group A Skyline. Touched by legends." },
+            { "speaker": "import", "text": "You can't put a price on connection to history." }
+          ],
+          "nudo_connections": [
+            { "speaker": "import", "text": "The network runs deeper than you think." },
+            { "speaker": "import", "text": "I know someone who moves information. Digital ghost type." },
+            { "speaker": "import", "text": "Helped me trace the provenance of a rare manifold once." },
+            { "speaker": "import", "text": "If you ever need to know something's history... they can find it." },
+            { "speaker": "import", "text": "Works mostly at night. Never met them in person." }
+          ],
+          "nudo_philosophy_deep": [
+            { "speaker": "import", "text": "You know what I've learned after all these years?" },
+            { "speaker": "import", "text": "The car is a mirror. It reflects who you are." },
+            { "speaker": "import", "text": "Patient people build clean. Reckless people cut corners." },
+            { "speaker": "import", "text": "Every part choice tells a story about the builder." },
+            { "speaker": "import", "text": "When I look at a build... I see the person behind it." }
+          ]
+        },
+        "randomEvents": {
+          "chance": 0.2,
+          "events": [
+            {
+              "id": "legendary_find",
+              "text": "I have a lead on a complete RB26 from a BNR32 Nismo. Documented history.",
+              "responses": [
+                { "id": "a", "text": "That's museum-grade. Are you keeping it?", "traits": ["respectful"], "points": 15 },
+                { "id": "b", "text": "How much and when can I get it?", "traits": ["eager"], "points": 5 },
+                { "id": "c", "text": "Would you trust me to do it justice?", "traits": ["humble"], "points": 20 }
+              ]
+            }
+          ]
+        }
+      },
+      "desenlace": {
+        "variants": [
+          {
+            "id": "end_trusted",
+            "condition": "default",
+            "exchanges": [
+              { "speaker": "import", "text": "You're part of something now." },
+              { "speaker": "import", "text": "This network... it protects the culture." },
+              { "speaker": "import", "text": "We keep the flame alive for those who truly care." }
+            ]
+          },
+          {
+            "id": "end_family",
+            "condition": "maxTrust",
+            "exchanges": [
+              { "speaker": "import", "text": "I don't say this often." },
+              { "speaker": "import", "text": "You understand. Really understand." },
+              { "speaker": "import", "text": "Whatever you need. If I can find it... it's yours." },
+              { "speaker": "import", "text": "That's what family means in this world." }
+            ]
+          }
+        ]
+      }
+    },
+    "level4": {
+      "intro": {
+        "variants": [
+          {
+            "id": "intro_family",
+            "condition": "default",
+            "exchanges": [
+              { "speaker": "import", "text": "Brother." },
+              { "speaker": "import", "text": "Welcome back." }
+            ]
+          }
+        ]
+      },
+      "nudo": {
+        "branches": {
+          "nudo_legacy": [
+            { "speaker": "import", "text": "I think about legacy sometimes." },
+            { "speaker": "import", "text": "All these parts. All this knowledge." },
+            { "speaker": "import", "text": "What happens when our generation is gone?" },
+            { "speaker": "import", "text": "That's why I teach. Why I share with people like you." },
+            { "speaker": "import", "text": "The parts are just things. The understanding... that's what matters." }
+          ],
+          "nudo_secrets": [
+            { "speaker": "import", "text": "There are things I've never told anyone." },
+            { "speaker": "import", "text": "Sources in Japan. Connections to old racing teams." },
+            { "speaker": "import", "text": "Parts that officially don't exist." },
+            { "speaker": "import", "text": "You've earned the right to know about them." },
+            { "speaker": "import", "text": "Use this access wisely." }
+          ]
+        }
+      },
+      "desenlace": {
+        "variants": [
+          {
+            "id": "end_complete",
+            "condition": "default",
+            "exchanges": [
+              { "speaker": "import", "text": "We've come a long way." },
+              { "speaker": "import", "text": "You started as a stranger. Now you're family." },
+              { "speaker": "import", "text": "Whatever road you take from here... the spirit of JDM goes with you." },
+              { "speaker": "import", "text": "Make me proud." }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "nexos": {
+    "transitionPhrases": {
+      "toNudo": [
+        "But let me tell you something...",
+        "You know what though...",
+        "Here's the thing...",
+        "Speaking of which..."
+      ],
+      "toDesenlace": [
+        "Anyway. Enough philosophy for today.",
+        "But I've talked enough.",
+        "We should wrap this up.",
+        "Time to focus."
+      ],
+      "topicChange": [
+        "On another note...",
+        "Actually, something else...",
+        "This reminds me...",
+        "Different topic..."
+      ]
+    },
+    "flowControl": {
+      "minExchangesBeforeTransition": 3,
+      "maxExchangesPerPhase": 8,
+      "allowBranchMixing": false
+    }
+  },
+  "contextReactions": {
+    "recentPurchase": {
+      "chance": 0.3,
+      "responses": [
+        "How's that part working out?",
+        "Installed it yet? Curious about your impressions.",
+        "Quality speaks for itself, doesn't it?"
+      ]
+    },
+    "longAbsence": {
+      "chance": 0.8,
+      "responses": [
+        "Been a while. Thought you'd forgotten about real parts.",
+        "You disappeared. Life get busy?",
+        "Back from wherever you were. Good to see you."
+      ]
+    },
+    "frequentVisitor": {
+      "chance": 0.25,
+      "responses": [
+        "You're becoming a regular. I like that.",
+        "Back again already? Dedicated.",
+        "Consistent. That's the JDM way."
+      ]
+    },
+    "afterGoodDeal": {
+      "chance": 0.4,
+      "responses": [
+        "Happy with the last transaction?",
+        "Word travels. Heard you're putting those parts to good use.",
+        "Trust well placed, I think."
+      ]
+    }
+  },
+  "memory": {
+    "trackedEvents": [
+      "purchases",
+      "knowledgeDisplayed",
+      "respectShown",
+      "questionsAsked",
+      "culturalUnderstanding"
+    ],
+    "referenceProbability": 0.2,
+    "referenceTemplates": {
+      "purchase": "Remember when you got that {item}? Quality choice.",
+      "knowledge": "You knew about {topic}. That stuck with me.",
+      "growth": "You've learned a lot since we first talked."
+    }
+  },
+  "strikeSystem": {
+    "maxStrikes": 3,
+    "strikeActions": [
+      "disrespecting_authenticity",
+      "preferring_replicas",
+      "impatient_behavior",
+      "treating_culture_as_trend"
+    ],
+    "strikeResponses": [
+      "That's not how this works.",
+      "Maybe you don't understand what I'm about.",
+      "We might not be a good fit after all."
+    ],
+    "banMessage": "I only work with people who respect the craft. Find someone else."
+  }
+}

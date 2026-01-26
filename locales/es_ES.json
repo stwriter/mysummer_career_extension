@@ -1,0 +1,53 @@
+{
+  "mysummer.chat.contacts.ghost.displayName": "Ghost",
+  "mysummer.chat.contacts.ghost.unknownName": "???",
+  "mysummer.chat.contacts.ghost.specialty": "Piezas imposibles de rastrear",
+
+  "mysummer.chat.contacts.techie.displayName": "Techie",
+  "mysummer.chat.contacts.techie.unknownName": "???",
+  "mysummer.chat.contacts.techie.specialty": "ECU y electrónica",
+
+  "mysummer.chat.contacts.muscle.displayName": "Muscle",
+  "mysummer.chat.contacts.muscle.unknownName": "???",
+  "mysummer.chat.contacts.muscle.specialty": "Rendimiento del motor",
+
+  "mysummer.chat.contacts.import.displayName": "Import",
+  "mysummer.chat.contacts.import.unknownName": "???",
+  "mysummer.chat.contacts.import.specialty": "Piezas JDM",
+
+  "mysummer.chat.contacts.shadow.displayName": "Shadow",
+  "mysummer.chat.contacts.shadow.unknownName": "???",
+  "mysummer.chat.contacts.shadow.specialty": "Conexiones del mercado negro",
+
+  "mysummer.chat.contacts.system.displayName": "Sistema",
+  "mysummer.chat.contacts.system.unknownName": "Sistema",
+  "mysummer.chat.contacts.system.specialty": "Notificaciones",
+
+  "mysummer.chat.ui.typing": "escribiendo...",
+  "mysummer.chat.ui.loading": "Cargando...",
+  "mysummer.chat.ui.noMessages": "Sin mensajes aún",
+  "mysummer.chat.ui.startConversation": "Iniciar conversación",
+  "mysummer.chat.ui.selectResponse": "Selecciona una respuesta arriba",
+  "mysummer.chat.ui.messages": "Mensajes",
+  "mysummer.chat.ui.newMessage": "Nuevo mensaje",
+  "mysummer.chat.ui.yourResponse": "Tu respuesta:",
+  "mysummer.chat.ui.noResponseOptions": "No hay opciones de respuesta disponibles",
+  "mysummer.chat.ui.selectConversation": "Selecciona una conversación para chatear",
+  "mysummer.chat.ui.you": "Tú",
+
+  "mysummer.chat.actions.acceptJob": "ACEPTAR TRABAJO",
+  "mysummer.chat.actions.starting": "Iniciando...",
+  "mysummer.chat.actions.whereDidTheyGo": "¿A dónde fueron?",
+
+  "mysummer.messages.welcome.subject": "Bienvenido a West Coast",
+  "mysummer.messages.welcome.body1": "¡Bienvenido a West Coast USA! Tu proyecto ETK I-Series te espera en el garaje.",
+  "mysummer.messages.welcome.body2": "Busca piezas nuevas en SpeedParts.com, usadas en PartsBay, y revisa tu ordenador para actualizaciones. ¡Buena suerte!",
+
+  "mysummer.messages.ghostIntro.line1": "No me conoces. Pero yo a ti sí.",
+  "mysummer.messages.ghostIntro.line2": "Te vi recogiendo piezas para ese proyecto ETK. Las noticias vuelan en ciertos círculos.",
+  "mysummer.messages.ghostIntro.line3": "Si quieres las piezas DE VERDAD - las que marcan la diferencia - estás comprando en los sitios equivocados.",
+  "mysummer.messages.ghostIntro.line4": "Hay un lugar en la deep web. Silk Road. Ahí es donde van los constructores serios. Busca a alguien llamado 'Ghost'.",
+
+  "mysummer.notifications.newMessage": "Nuevo mensaje",
+  "mysummer.notifications.from": "De"
+}

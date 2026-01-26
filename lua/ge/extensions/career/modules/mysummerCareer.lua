@@ -32,21 +32,27 @@ end
 
 local phaseDefinitions = {
   [1] = {
-    name = "Street Rookie",
-    description = "Prove yourself in basic street races",
+    name = { en = "Street Rookie", es = "Novato Callejero" },
+    description = { en = "Prove yourself in basic street races", es = "Demuestra tu valor en carreras callejeras basicas" },
     requiredRaces = { "street_circuit_01", "industrial_loop_01" },
     requiredWins = 2,
     reputationReward = 500,
-    partRewards = {}, -- TODO: Define specific parts
+    partRewards = {},
     cashReward = 2000,
     storyText = {
-      intro = "You've inherited your grandfather's old Miramar and a half-built ETK-I project car. Time to prove you're worthy of his legacy.",
-      completion = "Not bad for a first timer. The street is taking notice.",
+      intro = {
+        en = "The Miramar is yours now. Time to see what you're made of.",
+        es = "El Miramar es tuyo ahora. Es hora de ver de que pasta estas hecho.",
+      },
+      completion = {
+        en = "Not bad for a beginner. People are starting to notice you.",
+        es = "Nada mal para ser un novato. La gente empieza a fijarse en ti.",
+      },
     },
   },
   [2] = {
-    name = "Rally Initiate",
-    description = "Take on dirt and gravel courses",
+    name = { en = "Rally Initiate", es = "Iniciado en Rally" },
+    description = { en = "Take on dirt and gravel courses", es = "Enfrentate a circuitos de tierra y grava" },
     prerequisites = { phase = 1, reputationLevel = 5 },
     requiredRaces = { "rally_forest_01", "rally_mountain_01", "rally_stage_01" },
     requiredWins = 2,
@@ -54,13 +60,19 @@ local phaseDefinitions = {
     partRewards = {},
     cashReward = 3500,
     storyText = {
-      intro = "The tarmac crowd respects you. Now let's see how you handle loose surfaces.",
-      completion = "Impressive. You're not just a street racer anymore.",
+      intro = {
+        en = "Asphalt is easy. Let's see how you handle when the ground fights back.",
+        es = "El asfalto es facil. Veamos que tal se te da cuando el suelo te devuelve los golpes.",
+      },
+      completion = {
+        en = "You're not just a street racer anymore. The dirt suits you.",
+        es = "Ya no eres solo un corredor callejero. La tierra te sienta bien.",
+      },
     },
   },
   [3] = {
-    name = "Circuit Contender",
-    description = "Master technical circuit racing",
+    name = { en = "Circuit Contender", es = "Aspirante a Circuito" },
+    description = { en = "Master technical circuit racing", es = "Domina las carreras tecnicas en circuito" },
     prerequisites = { phase = 2, reputationLevel = 15 },
     requiredRaces = { "circuit_technical_01", "circuit_fast_01" },
     requiredWins = 3,
@@ -68,13 +80,19 @@ local phaseDefinitions = {
     partRewards = {},
     cashReward = 5000,
     storyText = {
-      intro = "Time to take it to the track. Real racing, real competition.",
-      completion = "You're getting faster. But there's still a long way to go.",
+      intro = {
+        en = "Time for the real tracks. No more backroads - this is where skill matters.",
+        es = "Es hora de los circuitos de verdad. Se acabaron los caminos secundarios - aqui es donde importa la habilidad.",
+      },
+      completion = {
+        en = "You're getting faster. But there's still a long road ahead.",
+        es = "Cada vez eres mas rapido. Pero aun queda mucho camino por delante.",
+      },
     },
   },
   [4] = {
-    name = "Performance Specialist",
-    description = "Win races with specific performance requirements",
+    name = { en = "Performance Specialist", es = "Especialista en Rendimiento" },
+    description = { en = "Win races with specific performance requirements", es = "Gana carreras con requisitos de rendimiento especificos" },
     prerequisites = { phase = 3, reputationLevel = 25 },
     requiredRaces = { "performance_challenge_01", "performance_challenge_02" },
     requiredWins = 4,
@@ -82,13 +100,19 @@ local phaseDefinitions = {
     partRewards = {},
     cashReward = 7500,
     storyText = {
-      intro = "Your skills are solid. Now let's see if you can tune a car to match.",
-      completion = "You understand what makes a car fast. That's rare.",
+      intro = {
+        en = "Your driving is solid. Now let's see if you can build a car to match.",
+        es = "Tu conduccion es solida. Veamos si puedes preparar un coche a la altura.",
+      },
+      completion = {
+        en = "You understand what makes a car fast. That's a rare gift.",
+        es = "Entiendes lo que hace rapido a un coche. Eso es un don.",
+      },
     },
   },
   [5] = {
-    name = "Underground Legend",
-    description = "Dominate the underground racing scene",
+    name = { en = "Underground Legend", es = "Leyenda del Underground" },
+    description = { en = "Dominate the underground racing scene", es = "Domina la escena de carreras clandestinas" },
     prerequisites = { phase = 4, reputationLevel = 40 },
     requiredRaces = { "underground_01", "underground_02", "underground_03" },
     requiredWins = 5,
@@ -96,13 +120,19 @@ local phaseDefinitions = {
     partRewards = {},
     cashReward = 10000,
     storyText = {
-      intro = "The underground calls. This is where legends are made.",
-      completion = "They're talking about you in every garage and back alley. You're a legend.",
+      intro = {
+        en = "The underground calls. No rules, no safety nets. This is where legends are born.",
+        es = "El underground te llama. Sin reglas, sin red de seguridad. Aquí es donde nacen las leyendas.",
+      },
+      completion = {
+        en = "They whisper your name in every garage and back alley. You've made it.",
+        es = "Susurran tu nombre en cada garaje y callejón. Lo has conseguido.",
+      },
     },
   },
   [6] = {
-    name = "Endurance Racer",
-    description = "Prove your consistency over long races",
+    name = { en = "Endurance Racer", es = "Corredor de Resistencia" },
+    description = { en = "Prove your consistency over long races", es = "Demuestra tu consistencia en carreras largas" },
     prerequisites = { phase = 5, reputationLevel = 50 },
     requiredRaces = { "endurance_01", "endurance_02" },
     requiredWins = 2,
@@ -110,13 +140,19 @@ local phaseDefinitions = {
     partRewards = {},
     cashReward = 15000,
     storyText = {
-      intro = "Speed is one thing. But can you maintain it for hours?",
-      completion = "Your consistency is unmatched. The car is an extension of you.",
+      intro = {
+        en = "Speed is one thing. Maintaining it for hours is another.",
+        es = "La velocidad es una cosa. Mantenerla durante horas es otra muy distinta.",
+      },
+      completion = {
+        en = "Your consistency is unmatched. The car is an extension of yourself now.",
+        es = "Tu consistencia es inigualable. El coche ya es una extension de ti mismo.",
+      },
     },
   },
   [7] = {
-    name = "International Challenge",
-    description = "Compete against international drivers",
+    name = { en = "International Challenge", es = "Desafio Internacional" },
+    description = { en = "Compete against international drivers", es = "Compite contra pilotos internacionales" },
     prerequisites = { phase = 6, reputationLevel = 60 },
     requiredRaces = { "international_01", "international_02", "international_03" },
     requiredWins = 5,
@@ -124,13 +160,19 @@ local phaseDefinitions = {
     partRewards = {},
     cashReward = 20000,
     storyText = {
-      intro = "Your reputation has spread beyond borders. They're flying in to race you.",
-      completion = "You've beaten the best from around the world. Impressive doesn't cover it.",
+      intro = {
+        en = "Word has spread beyond borders. They're flying in just to race you.",
+        es = "Tu fama ha cruzado fronteras. Vienen en avion solo para correr contra ti.",
+      },
+      completion = {
+        en = "You've beaten the best from around the world. 'Impressive' doesn't cover it.",
+        es = "Has vencido a los mejores del mundo. 'Impresionante' se queda corto.",
+      },
     },
   },
   [8] = {
-    name = "Championship Qualifier",
-    description = "Qualify for the final championship",
+    name = { en = "Championship Qualifier", es = "Clasificatorio del Campeonato" },
+    description = { en = "Qualify for the final championship", es = "Clasificate para el campeonato final" },
     prerequisites = { phase = 7, reputationLevel = 70 },
     requiredRaces = { "qualifier_01", "qualifier_02", "qualifier_03" },
     requiredWins = 6,
@@ -138,13 +180,19 @@ local phaseDefinitions = {
     partRewards = {},
     cashReward = 30000,
     storyText = {
-      intro = "This is it. Win these qualifiers and you're in the championship.",
-      completion = "You're in. The championship awaits.",
+      intro = {
+        en = "This is it. Win these qualifiers and you're in the championship.",
+        es = "Este es el momento. Gana estos clasificatorios y entraras en el campeonato.",
+      },
+      completion = {
+        en = "You're in. The championship awaits.",
+        es = "Estas dentro. El campeonato te espera.",
+      },
     },
   },
   [9] = {
-    name = "Semi-Finals",
-    description = "The penultimate challenge",
+    name = { en = "Semi-Finals", es = "Semifinales" },
+    description = { en = "The penultimate challenge", es = "El penultimo desafio" },
     prerequisites = { phase = 8, reputationLevel = 80 },
     requiredRaces = { "semifinal_01", "semifinal_02" },
     requiredWins = 2,
@@ -152,30 +200,67 @@ local phaseDefinitions = {
     partRewards = {},
     cashReward = 50000,
     storyText = {
-      intro = "Two races stand between you and the final. Everything you've built leads to this.",
-      completion = "One race left. One chance at greatness.",
+      intro = {
+        en = "Two races stand between you and the final. Everything you've built leads to this.",
+        es = "Dos carreras te separan de la final. Todo lo que has construido te ha traido hasta aqui.",
+      },
+      completion = {
+        en = "One race left. One chance at greatness.",
+        es = "Una carrera mas. Una oportunidad para la gloria.",
+      },
     },
   },
   [10] = {
-    name = "Championship Final",
-    description = "The ultimate test",
+    name = { en = "The Big One", es = "The Big One" },
+    description = { en = "The legendary race your grandfather never got to run", es = "La carrera legendaria que tu abuelo nunca pudo correr" },
     prerequisites = {
       phase = 9,
       reputationLevel = 90,
-      checklistCompletion = 90,  -- Must have 90% of build complete
+      checklistCompletion = 90,
     },
     requiredRaces = { "championship_final" },
     requiredWins = 1,
     reputationReward = 10000,
     partRewards = {},
     cashReward = 100000,
-    unlocksFreePlay = true,  -- Remove all restrictions after
+    unlocksFreePlay = true,
     storyText = {
-      intro = "Your grandfather would be proud. The final race. Win this, and the legend is complete.",
-      completion = "CHAMPION. You did it. The car, the build, the journey - all worth it. You're free to race however you want now.",
+      intro = {
+        en = "This is it. The Big One. The race your grandfather dreamed of. Win this, and the legend is complete.",
+        es = "Es el momento. The Big One. La carrera con la que tu abuelo siempre soñó. Gánala, y la leyenda estará completa.",
+      },
+      completion = {
+        en = "CHAMPION. You did it - for yourself, and for him. The car, the build, the journey... it was all worth it. He would be proud.",
+        es = "CAMPEON. Lo has conseguido - por ti, y por el. El coche, la preparacion, el viaje... todo ha merecido la pena. Estaria orgulloso.",
+      },
     },
   },
 }
+
+-- ============================================================================
+-- LOCALIZATION HELPERS
+-- ============================================================================
+
+-- Get current language (returns "es" for Spanish, "en" for everything else)
+local function getCurrentLang()
+  local lang = settings.getValue("uiLanguage") or "en-US"
+  if lang:find("^es") or lang:find("^spanish") then
+    return "es"
+  end
+  return "en"
+end
+
+-- Get localized text from a { en = "...", es = "..." } table
+local function getLocalizedText(textTable)
+  if type(textTable) == "string" then
+    return textTable  -- Already a plain string
+  end
+  if type(textTable) ~= "table" then
+    return ""
+  end
+  local lang = getCurrentLang()
+  return textTable[lang] or textTable.en or ""
+end
 
 -- ============================================================================
 -- RACE LOCATIONS
@@ -273,6 +358,11 @@ local rlsRaceMapping = {
 -- ============================================================================
 
 local state = {
+  -- Story/Narrative flags
+  hasSeenIntro = false,  -- First time intro (grandfather's letter)
+  currentChapter = 1,    -- Current story chapter (1-6)
+  seenChapterIntros = {}, -- { [chapterId] = true }
+
   -- Reputation system (separate from RLS)
   reputation = {
     level = 0,        -- 0-100 scale
@@ -298,6 +388,18 @@ local state = {
 
   -- Pending AI configurations (processed in onUpdate)
   pendingAIConfigs = {},  -- { { vehId, config, delay } }
+
+  -- Pending phase transition (shown after native UI closes)
+  pendingPhaseTransition = nil,  -- { data, delayRemaining }
+
+  -- Pending intro (grandfather's letter, shown after delay)
+  pendingIntro = nil,  -- { data, delayRemaining }
+
+  -- Chapter progression (2 races won = 1 chapter completed)
+  chapterProgress = {
+    racesWonTotal = 0,
+    currentChapter = 1,  -- 1-5 (derived from racesWonTotal)
+  },
 }
 
 -- Custom race definitions (MySummer original races with AI)
@@ -370,7 +472,18 @@ local function loadState()
   state.projectInventoryId = data.projectInventoryId
   state.starterInventoryId = data.starterInventoryId
 
-  log("I", logTag, "State loaded - Phase: " .. state.currentPhase .. ", Level: " .. state.reputation.level)
+  -- Restore chapter progress
+  if data.chapterProgress then
+    state.chapterProgress.racesWonTotal = data.chapterProgress.racesWonTotal or 0
+    state.chapterProgress.currentChapter = data.chapterProgress.currentChapter or 1
+  end
+
+  -- Restore story/intro flags
+  state.hasSeenIntro = data.hasSeenIntro or false
+  state.currentChapter = data.currentChapter or 1
+  state.seenChapterIntros = data.seenChapterIntros or {}
+
+  log("I", logTag, "State loaded - Phase: " .. state.currentPhase .. ", Chapter: " .. state.chapterProgress.currentChapter .. ", Level: " .. state.reputation.level .. ", IntroSeen: " .. tostring(state.hasSeenIntro))
 end
 
 -- ============================================================================
@@ -448,6 +561,91 @@ end
 -- Get current reputation data
 local function getReputation()
   return state.reputation
+end
+
+-- ============================================================================
+-- CHAPTER PROGRESSION SYSTEM (Parts unlock gating)
+-- ============================================================================
+
+-- Chapter requirements: 2 race wins per chapter
+local RACES_PER_CHAPTER = 2
+local MAX_CHAPTER = 5
+
+-- Chapter definitions with unlock info
+local chapterDefinitions = {
+  [1] = { name = { en = "Street Rookie", es = "Novato Callejero" }, racesRequired = 0 },
+  [2] = { name = { en = "Rising Driver", es = "Piloto en Ascenso" }, racesRequired = 2 },
+  [3] = { name = { en = "Local Racer", es = "Corredor Local" }, racesRequired = 4 },
+  [4] = { name = { en = "Street Legend", es = "Leyenda Callejera" }, racesRequired = 6 },
+  [5] = { name = { en = "The Big One", es = "The Big One" }, racesRequired = 8 },
+}
+
+-- Calculate chapter from total races won
+local function calculateChapter(racesWon)
+  for chapter = MAX_CHAPTER, 1, -1 do
+    local def = chapterDefinitions[chapter]
+    if def and racesWon >= def.racesRequired then
+      return chapter
+    end
+  end
+  return 1
+end
+
+-- Record a race win and update chapter
+local function recordRaceWin(raceId)
+  state.chapterProgress.racesWonTotal = state.chapterProgress.racesWonTotal + 1
+  local oldChapter = state.chapterProgress.currentChapter
+  state.chapterProgress.currentChapter = calculateChapter(state.chapterProgress.racesWonTotal)
+
+  log("I", logTag, string.format("Race win recorded. Total wins: %d, Chapter: %d",
+    state.chapterProgress.racesWonTotal, state.chapterProgress.currentChapter))
+
+  -- Check for chapter advancement
+  if state.chapterProgress.currentChapter > oldChapter then
+    log("I", logTag, "CHAPTER UP! Now chapter " .. state.chapterProgress.currentChapter)
+    local chapterDef = chapterDefinitions[state.chapterProgress.currentChapter]
+    if guihooks and chapterDef then
+      guihooks.trigger("mysummerChapterCompleted", {
+        oldChapter = oldChapter,
+        newChapter = state.chapterProgress.currentChapter,
+        chapterName = chapterDef.name,
+      })
+      guihooks.trigger("toastrMsg", {
+        type = "success",
+        title = "Chapter Unlocked!",
+        msg = "New parts are now available in shops."
+      })
+    end
+  end
+
+  saveState()
+  sendCareerUpdate()
+end
+
+-- Get current chapter number
+local function getCurrentChapter()
+  return state.chapterProgress.currentChapter or 1
+end
+
+-- Get total races won
+local function getTotalRacesWon()
+  return state.chapterProgress.racesWonTotal or 0
+end
+
+-- Get chapter progress data for UI
+local function getChapterProgress()
+  local current = state.chapterProgress.currentChapter or 1
+  local racesWon = state.chapterProgress.racesWonTotal or 0
+  local nextChapter = chapterDefinitions[current + 1]
+  local racesToNextChapter = nextChapter and (nextChapter.racesRequired - racesWon) or 0
+
+  return {
+    currentChapter = current,
+    racesWonTotal = racesWon,
+    racesToNextChapter = math.max(0, racesToNextChapter),
+    chapterName = chapterDefinitions[current] and chapterDefinitions[current].name or "Unknown",
+    maxChapter = MAX_CHAPTER,
+  }
 end
 
 -- ============================================================================
@@ -575,18 +773,35 @@ local function completePhase(phaseId)
   -- TODO: Award part rewards
 
   -- Check if this unlocks free play
-  if phaseDef.unlocksFreePlay then
+  local isFinalPhase = phaseDef.unlocksFreePlay
+  if isFinalPhase then
     log("I", logTag, "FREE PLAY UNLOCKED! All restrictions removed.")
     -- TODO: Remove part tier restrictions
   end
 
-  log("I", logTag, "PHASE COMPLETED: " .. phaseDef.name)
+  log("I", logTag, "PHASE COMPLETED: " .. getLocalizedText(phaseDef.name))
 
   saveState()
   sendCareerUpdate()
 
+  -- Trigger phase transition UI
+  local nextPhaseDef = phaseDefinitions[phaseId + 1]
+  guihooks.trigger("mysummerPhaseTransition", {
+    completedPhase = phaseId,
+    completedPhaseName = getLocalizedText(phaseDef.name),
+    completionText = getLocalizedText(phaseDef.storyText.completion),
+    cashReward = phaseDef.cashReward or 0,
+    reputationReward = phaseDef.reputationReward or 0,
+    isFinalPhase = isFinalPhase,
+    -- Next phase info (if available)
+    nextPhase = nextPhaseDef and (phaseId + 1) or nil,
+    nextPhaseName = nextPhaseDef and getLocalizedText(nextPhaseDef.name) or nil,
+    nextPhaseDescription = nextPhaseDef and getLocalizedText(nextPhaseDef.description) or nil,
+    nextPhaseIntro = nextPhaseDef and getLocalizedText(nextPhaseDef.storyText.intro) or nil,
+  })
+
   -- Auto-start next phase if available
-  if phaseDefinitions[phaseId + 1] then
+  if nextPhaseDef then
     startPhase(phaseId + 1)
   end
 end
@@ -1552,7 +1767,82 @@ local function onCareerActive(enabled)
 
   loadState()
 
+  -- Show intro letter on first time
+  if not state.hasSeenIntro then
+    log("I", logTag, "First time player - showing grandfather's letter intro")
+
+    -- Get current language setting
+    local lang = settings.getValue("uiLanguage") or "en-US"
+    local isSpanish = lang:find("^es") or lang:find("^spanish")
+
+    local introText, signText, signName, postscript
+
+    if isSpanish then
+      -- Spanish version
+      introText = "Si estás leyendo esto, es porque hay cosas que ya no puedo decirte mirándote a los ojos.\n\n"
+      introText = introText .. "No te pongas triste, chaval. Me voy tranquilo. He vivido una buena vida, llena de errores, grasa bajo las uñas y algún que otro acierto. Y tú has sido la mejor parte de todo eso.\n\n"
+      introText = introText .. "¿Te acuerdas del garaje? Tú sentado en aquel taburete de madera que siempre cojeaba, mirándome mientras trasteaba con los coches. Te contaba historias de cuando era joven. Algunas eran verdad. Otras me las inventaba un poco para hacerte reír.\n\n"
+      introText = introText .. "El Miramar que hay ahí fuera es tuyo ahora. Tiene muchos kilómetros, sí, pero siempre estuvo bien cuidado. Nunca me dejó tirado. No es rápido ni bonito, pero es un coche honesto. Si lo cuidas, te llevará más lejos de lo que imaginas.\n\n"
+      introText = introText .. "En el fondo del garaje, bajo una lona vieja, está el ETK-I. Lo empecé con ilusión, pero nunca tuve tiempo de terminarlo. Siempre había algo más importante. Me gustaría pensar que tú sí lo acabarás. Ese coche está esperando a alguien que crea en él.\n\n"
+      introText = introText .. "Hay algo que nunca te conté. Hace muchos años, hojeando el periódico del taller, leí sobre una carrera. La llamaban 'The Big One'. Apenas hablaban de ella, sólo una columna pequeña y un par de nombres. No era segura, ni inteligente... ni siquiera sé si era del todo legal.\n\n"
+      introText = introText .. "Iba a correrla. Tenía el coche, tenía las ganas... pero la vida se metió por medio. El trabajo, tu abuela, las responsabilidades. Siempre pensé que habría otra oportunidad. No la hubo.\n\n"
+      introText = introText .. "No cometas mi error. No dejes que la vida decida por ti. Si vas a correr, corre de verdad. Si vas a construir algo, hazlo pieza a pieza, aunque tardes.\n\n"
+      introText = introText .. "Hazlo por ti.\nY si alguna vez dudas, hazlo también por mí."
+      signText = "Te quiere,"
+      signName = "El abuelo"
+      postscript = "P.D. El dinero que hay en el banco es para ti. No es mucho, pero te servirá para empezar. Gástalo con cabeza... aunque sé que no siempre lo harás."
+    else
+      -- English version (default)
+      introText = "If you're reading this, it's because there are things I can no longer tell you face to face.\n\n"
+      introText = introText .. "Don't be sad, kid. I'm leaving in peace. I've lived a good life, full of mistakes, grease under my fingernails, and a few things done right. And you were the best part of all of it.\n\n"
+      introText = introText .. "Do you remember the garage? You sitting on that old wooden stool that always wobbled, watching me work on the cars. I used to tell you stories from when I was young. Some were true. Others... I may have exaggerated a bit just to make you laugh.\n\n"
+      introText = introText .. "The Miramar outside is yours now. It's got a lot of miles on it, sure, but it was always taken care of. It never let me down. It's not fast or pretty, but it's an honest car. Treat it right, and it'll take you farther than you'd expect.\n\n"
+      introText = introText .. "In the back of the garage, under an old tarp, there's an ETK-I. I started it with big plans, but never had the time to finish it. There was always something more important. I'd like to think you will finish it. That car is waiting for someone who believes in it.\n\n"
+      introText = introText .. "There's something I never told you. Many years ago, while flipping through an old newspaper at the shop, I read about a race. They called it 'The Big One.' It was barely mentioned, just a small column and a few names. It wasn't safe, it wasn't smart... and I'm not even sure it was completely legal.\n\n"
+      introText = introText .. "I was going to race it. I had the car, I had the drive... but life got in the way. Work, your grandmother, responsibilities. I always thought there would be another chance. There wasn't.\n\n"
+      introText = introText .. "Don't make the same mistake I did. Don't let life decide for you. If you're going to race, race for real. If you're going to build something, do it piece by piece, even if it takes years.\n\n"
+      introText = introText .. "Do it for yourself.\nAnd if you ever hesitate... do it for me too."
+      signText = "With all my love,"
+      signName = "Grandpa"
+      postscript = "P.S. The money in the bank is yours. It's not much, but it'll get you started. Spend it wisely... though I know you won't always."
+    end
+
+    -- Get Chapter 1 data from the skill
+    local chapter1Data = nil
+    local branch = career_branches and career_branches.getBranchById("mysummer-streetracing")
+    if branch and branch.levels and branch.levels[1] and branch.levels[1].storyText then
+      local lang = getCurrentLang()
+      local langData = branch.levels[1].storyText[lang] or branch.levels[1].storyText.en
+      if langData then
+        chapter1Data = {
+          name = langData.name,
+          intro = langData.intro,
+        }
+      end
+    end
+
+    -- Queue the intro to show after a delay (let player see the world first)
+    state.pendingIntro = {
+      data = {
+        storyText = introText,
+        signText = signText,
+        signName = signName,
+        postscript = postscript,
+        chapter1Data = chapter1Data,  -- Include Chapter I data
+      },
+      delayRemaining = 5.0,  -- Wait 5 seconds before showing the letter
+    }
+    log("I", logTag, "Queued grandfather's letter intro (showing in 5s)")
+  end
+
   log("I", logTag, "MySummer Career initialized - Phase: " .. state.currentPhase .. ", Level: " .. state.reputation.level)
+end
+
+-- Called from Vue when intro is dismissed
+local function markIntroSeen()
+  state.hasSeenIntro = true
+  saveState()
+  log("I", logTag, "Intro marked as seen")
 end
 
 -- ============================================================================
@@ -1610,6 +1900,26 @@ local function onUpdate(dtReal, dtSim, dtRaw)
       end
     end
     state.pendingAIConfigs = stillPending
+  end
+
+  -- Process pending phase transition (show after native UI closes)
+  if state.pendingPhaseTransition then
+    state.pendingPhaseTransition.delayRemaining = state.pendingPhaseTransition.delayRemaining - dtReal
+    if state.pendingPhaseTransition.delayRemaining <= 0 then
+      log("I", logTag, "Showing delayed phase transition popup")
+      guihooks.trigger("mysummerPhaseTransition", state.pendingPhaseTransition.data)
+      state.pendingPhaseTransition = nil
+    end
+  end
+
+  -- Process pending intro (grandfather's letter)
+  if state.pendingIntro then
+    state.pendingIntro.delayRemaining = state.pendingIntro.delayRemaining - dtReal
+    if state.pendingIntro.delayRemaining <= 0 then
+      log("I", logTag, "Showing grandfather's letter intro")
+      guihooks.trigger("mysummerShowIntro", state.pendingIntro.data)
+      state.pendingIntro = nil
+    end
   end
 end
 
@@ -1734,6 +2044,84 @@ local function onPlayerAttributesChanged(change, reason)
 end
 
 -- ============================================================================
+-- SKILL LEVEL UP HANDLER (Narrative Transitions)
+-- ============================================================================
+
+-- Called when player reaches a new tier/level in any branch/skill
+local function onBranchTierReached(branchId, newTier)
+  -- Only handle mysummer-streetracing skill
+  if branchId ~= "mysummer-streetracing" then
+    return
+  end
+
+  log("I", logTag, "Player reached tier " .. newTier .. " in mysummer-streetracing!")
+
+  -- Get the skill data to access storyText
+  local branch = career_branches.getBranchById(branchId)
+  if not branch or not branch.levels then
+    log("W", logTag, "Could not get branch data for " .. branchId)
+    return
+  end
+
+  -- Tiers are 1-indexed, levels array is 1-indexed too
+  local levelData = branch.levels[newTier]
+  if not levelData then
+    log("W", logTag, "No level data for tier " .. newTier)
+    return
+  end
+
+  -- Check if this level has storyText (our custom narrative data)
+  local storyText = levelData.storyText
+  if not storyText then
+    log("I", logTag, "No storyText for tier " .. newTier .. ", skipping transition")
+    return
+  end
+
+  -- Get localized text
+  local lang = getCurrentLang()
+  local langData = storyText[lang] or storyText.en
+
+  if not langData then
+    log("W", logTag, "No language data for " .. lang)
+    return
+  end
+
+  -- Get previous level data for completion text
+  local prevLevelData = newTier > 1 and branch.levels[newTier - 1] or nil
+  local completionText = nil
+  if prevLevelData and prevLevelData.storyText then
+    local prevLangData = prevLevelData.storyText[lang] or prevLevelData.storyText.en
+    completionText = prevLangData and prevLangData.completion or nil
+  end
+
+  -- Check if this is the final tier (The Big One)
+  local isFinalTier = newTier >= #branch.levels
+
+  -- Build transition data
+  local transitionData = {
+    -- Completed level info
+    completedLevel = newTier - 1,
+    completionText = completionText,
+    -- New level info
+    newLevel = newTier,
+    newLevelName = langData.name,
+    newLevelIntro = langData.intro,
+    -- Flags
+    isFinalLevel = isFinalTier,
+    -- Rewards were already given by the branch system
+  }
+
+  -- Queue the phase transition to show AFTER BeamNG's native progress UI closes
+  -- The native UI typically shows for ~3-5 seconds
+  state.pendingPhaseTransition = {
+    data = transitionData,
+    delayRemaining = 4.0,  -- Wait 4 seconds for native UI to close
+  }
+
+  log("I", logTag, "Queued phase transition for tier " .. newTier .. ": " .. (langData.name or "?") .. " (showing in 4s)")
+end
+
+-- ============================================================================
 -- EXPORTS
 -- ============================================================================
 
@@ -1745,6 +2133,10 @@ M.onFreeroamEventCompleted = onFreeroamEventCompleted
 M.onComputerAddFunctions = onComputerAddFunctions
 M.onBeamNGTrigger = onBeamNGTrigger  -- Listen for custom MySummer race triggers
 M.onPlayerAttributesChanged = onPlayerAttributesChanged  -- Listen for RLS race XP rewards
+M.onBranchTierReached = onBranchTierReached  -- Listen for skill level ups
+
+-- Story/Narrative API
+M.markIntroSeen = markIntroSeen
 M.onUpdate = onUpdate  -- Process pending AI configs and timers
 
 -- Career data API
@@ -1760,5 +2152,11 @@ M.getAvailableRaces = getAvailableRaces
 M.startCustomRace = startCustomRace
 M.cancelCustomRace = cancelCustomRace
 M.endCustomRace = endCustomRace
+
+-- Chapter progression API (for parts unlock gating)
+M.recordRaceWin = recordRaceWin
+M.getCurrentChapter = getCurrentChapter
+M.getTotalRacesWon = getTotalRacesWon
+M.getChapterProgress = getChapterProgress
 
 return M

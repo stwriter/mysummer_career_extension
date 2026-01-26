@@ -101,7 +101,7 @@
                   {
                     "type": "end",
                     "result": "rejected",
-                    "cooldown": 600
+                    "cooldown": 180
                   }
                 ]
               }
@@ -216,7 +216,7 @@
                   {
                     "type": "end",
                     "result": "rejected",
-                    "cooldown": 900,
+                    "cooldown": 180,
                     "setsMemory": { "blacklisted": true }
                   }
                 ]

@@ -1,0 +1,388 @@
+{
+  "id": "shadow",
+  "version": 3,
+  "isV3Format": true,
+  "personality": {
+    "tone": "cryptic",
+    "style": "minimal",
+    "traits": ["paranoid", "precise", "mysterious"],
+    "quirks": ["short_sentences", "avoids_details", "speaks_in_riddles"]
+  },
+  "trustLevels": {
+    "level1": { "min": 0, "max": 29, "name": "Unknown", "unlocks": ["basic_info"] },
+    "level2": { "min": 30, "max": 59, "name": "Verified", "unlocks": ["vehicle_histories", "part_verification"] },
+    "level3": { "min": 60, "max": 89, "name": "Trusted", "unlocks": ["deep_searches", "network_intel"] },
+    "level4": { "min": 90, "max": 100, "name": "Ghost Protocol", "unlocks": ["everything", "no_questions"] }
+  },
+  "conversationStructure": {
+    "level1": {
+      "intro": {
+        "variants": [
+          {
+            "id": "intro_test",
+            "condition": "firstContact",
+            "exchanges": [
+              { "speaker": "shadow", "text": "New connection." },
+              { "speaker": "shadow", "text": "How did you find this channel?" },
+              { "speaker": "shadow", "text": "Someone talked. Someone always talks." },
+              { "speaker": "shadow", "text": "Question is. Can you be trusted?" }
+            ],
+            "requiresResponse": true,
+            "responseOptions": [
+              { "id": "a", "text": "I don't reveal my sources.", "traits": ["discreet"], "points": 15 },
+              { "id": "b", "text": "A friend in the parts scene pointed me here.", "traits": ["honest"], "points": 10 },
+              { "id": "c", "text": "Does it matter? I'm here now.", "traits": ["direct"], "points": 5 },
+              { "id": "d", "text": "I could ask you the same thing.", "traits": ["bold"], "points": 8 }
+            ]
+          },
+          {
+            "id": "intro_return",
+            "condition": "returning",
+            "exchanges": [
+              { "speaker": "shadow", "text": "You again." },
+              { "speaker": "shadow", "text": "Persistent." },
+              { "speaker": "shadow", "text": "Good trait. Or dangerous one." }
+            ]
+          }
+        ]
+      },
+      "nudo": {
+        "branches": {
+          "nudo_service": [
+            { "speaker": "shadow", "text": "I deal in information." },
+            { "speaker": "shadow", "text": "Part histories. Vehicle backgrounds. Paper trails." },
+            { "speaker": "shadow", "text": "Things people want hidden." },
+            { "speaker": "shadow", "text": "I find them." }
+          ],
+          "nudo_rules": [
+            { "speaker": "shadow", "text": "Rules." },
+            { "speaker": "shadow", "text": "Don't ask who I am." },
+            { "speaker": "shadow", "text": "Don't ask where I get information." },
+            { "speaker": "shadow", "text": "Don't mention this channel to anyone." },
+            { "speaker": "shadow", "text": "Break any rule. We're done." }
+          ]
+        },
+        "randomEvents": {
+          "chance": 0.15,
+          "events": [
+            {
+              "id": "test_loyalty",
+              "text": "Someone asked about you recently. Wanted to know if you were real.",
+              "responses": [
+                { "id": "a", "text": "What did you tell them?", "traits": ["concerned"], "points": 5 },
+                { "id": "b", "text": "I don't exist. Neither do you.", "traits": ["gets_it"], "points": 15 },
+                { "id": "c", "text": "Who was asking?", "traits": ["curious"], "points": 0 }
+              ]
+            }
+          ]
+        }
+      },
+      "desenlace": {
+        "variants": [
+          {
+            "id": "end_cautious",
+            "condition": "default",
+            "exchanges": [
+              { "speaker": "shadow", "text": "That's enough for now." },
+              { "speaker": "shadow", "text": "I'll be watching." },
+              { "speaker": "shadow", "text": "Don't disappoint me." }
+            ]
+          },
+          {
+            "id": "end_interested",
+            "condition": "goodInteraction",
+            "exchanges": [
+              { "speaker": "shadow", "text": "You understand discretion." },
+              { "speaker": "shadow", "text": "Rare quality." },
+              { "speaker": "shadow", "text": "We'll talk again." }
+            ]
+          }
+        ]
+      }
+    },
+    "level2": {
+      "intro": {
+        "variants": [
+          {
+            "id": "intro_verified",
+            "condition": "default",
+            "exchanges": [
+              { "speaker": "shadow", "text": "Verified." },
+              { "speaker": "shadow", "text": "You kept quiet. Good." },
+              { "speaker": "shadow", "text": "Time to discuss what I can actually do." }
+            ]
+          }
+        ]
+      },
+      "nudo": {
+        "branches": {
+          "nudo_capabilities": [
+            { "speaker": "shadow", "text": "I can trace any part." },
+            { "speaker": "shadow", "text": "Serial numbers. Previous owners. Modifications." },
+            { "speaker": "shadow", "text": "Insurance records. Police reports. Auction histories." },
+            { "speaker": "shadow", "text": "Everything leaves a trail." },
+            { "speaker": "shadow", "text": "Most people can't see it. I can." }
+          ],
+          "nudo_origin": [
+            { "speaker": "shadow", "text": "Started young. Computers." },
+            { "speaker": "shadow", "text": "Used to help a friend with tech projects." },
+            { "speaker": "shadow", "text": "Smart guy. Hardware mostly. ECUs and tuning boxes." },
+            { "speaker": "shadow", "text": "I handled the software side. Research." },
+            { "speaker": "shadow", "text": "We grew apart. Different methods. Same goals." },
+            { "speaker": "shadow", "text": "He still builds. I still search. Sometimes our paths cross." }
+          ],
+          "nudo_warning": [
+            { "speaker": "shadow", "text": "A warning." },
+            { "speaker": "shadow", "text": "What I do isn't legal. Not technically." },
+            { "speaker": "shadow", "text": "You use my services. You accept the risk." },
+            { "speaker": "shadow", "text": "I protect my sources. Always." },
+            { "speaker": "shadow", "text": "Can't say the same for clients." }
+          ]
+        },
+        "randomEvents": {
+          "chance": 0.2,
+          "events": [
+            {
+              "id": "hot_info",
+              "text": "Interesting data crossed my screen. A batch of parts. Questionable origin.",
+              "responses": [
+                { "id": "a", "text": "Stolen?", "traits": ["direct"], "points": 5 },
+                { "id": "b", "text": "I'm interested. What can you tell me?", "traits": ["business"], "points": 10 },
+                { "id": "c", "text": "Not my concern unless it affects me.", "traits": ["careful"], "points": 15 }
+              ]
+            },
+            {
+              "id": "competitor",
+              "text": "Someone else is doing similar work. Sloppy. Leaving traces.",
+              "responses": [
+                { "id": "a", "text": "Competition?", "traits": ["curious"], "points": 5 },
+                { "id": "b", "text": "Their problem. Not ours.", "traits": ["detached"], "points": 15 },
+                { "id": "c", "text": "Could be useful to know who.", "traits": ["strategic"], "points": 10 }
+              ]
+            }
+          ]
+        }
+      },
+      "desenlace": {
+        "variants": [
+          {
+            "id": "end_business",
+            "condition": "default",
+            "exchanges": [
+              { "speaker": "shadow", "text": "Enough talk." },
+              { "speaker": "shadow", "text": "You know what I offer." },
+              { "speaker": "shadow", "text": "Reach out when you need something found." }
+            ]
+          }
+        ]
+      }
+    },
+    "level3": {
+      "intro": {
+        "variants": [
+          {
+            "id": "intro_trusted",
+            "condition": "default",
+            "exchanges": [
+              { "speaker": "shadow", "text": "Trusted status." },
+              { "speaker": "shadow", "text": "You've proven yourself." },
+              { "speaker": "shadow", "text": "Time for deeper access." }
+            ]
+          }
+        ]
+      },
+      "nudo": {
+        "branches": {
+          "nudo_network": [
+            { "speaker": "shadow", "text": "The network is larger than you think." },
+            { "speaker": "shadow", "text": "Mechanics. Importers. Collectors. Racers." },
+            { "speaker": "shadow", "text": "All connected. Information flows between them." },
+            { "speaker": "shadow", "text": "I sit in the middle. See everything." },
+            { "speaker": "shadow", "text": "Knowledge is power. Literally." }
+          ],
+          "nudo_past": [
+            { "speaker": "shadow", "text": "You want to know about me." },
+            { "speaker": "shadow", "text": "Everyone does eventually." },
+            { "speaker": "shadow", "text": "I was someone else once. Different name. Different life." },
+            { "speaker": "shadow", "text": "Made mistakes. Trusted wrong people." },
+            { "speaker": "shadow", "text": "Now I trust data. Numbers don't lie." },
+            { "speaker": "shadow", "text": "People always do." }
+          ],
+          "nudo_connections": [
+            { "speaker": "shadow", "text": "There's an importer I work with sometimes." },
+            { "speaker": "shadow", "text": "JDM specialist. Obsessed with authenticity." },
+            { "speaker": "shadow", "text": "I verify provenance for his rare pieces." },
+            { "speaker": "shadow", "text": "He knows his parts. I know their histories." },
+            { "speaker": "shadow", "text": "Good partnership. No questions. Just results." }
+          ]
+        },
+        "randomEvents": {
+          "chance": 0.2,
+          "events": [
+            {
+              "id": "legend",
+              "text": "Heard something interesting. Old racer. Woman. From the early days.",
+              "responses": [
+                { "id": "a", "text": "Still active?", "traits": ["curious"], "points": 5 },
+                { "id": "b", "text": "Those who lasted that long know what they're doing.", "traits": ["respectful"], "points": 15 },
+                { "id": "c", "text": "What's her story?", "traits": ["interested"], "points": 10 }
+              ]
+            }
+          ]
+        }
+      },
+      "desenlace": {
+        "variants": [
+          {
+            "id": "end_deep",
+            "condition": "default",
+            "exchanges": [
+              { "speaker": "shadow", "text": "You're in deep now." },
+              { "speaker": "shadow", "text": "No going back." },
+              { "speaker": "shadow", "text": "Remember the rules. Always." }
+            ]
+          }
+        ]
+      }
+    },
+    "level4": {
+      "intro": {
+        "variants": [
+          {
+            "id": "intro_ghost",
+            "condition": "default",
+            "exchanges": [
+              { "speaker": "shadow", "text": "Ghost protocol." },
+              { "speaker": "shadow", "text": "Full access." },
+              { "speaker": "shadow", "text": "No limits." }
+            ]
+          }
+        ]
+      },
+      "nudo": {
+        "branches": {
+          "nudo_truth": [
+            { "speaker": "shadow", "text": "You want the truth." },
+            { "speaker": "shadow", "text": "I've been doing this for fifteen years." },
+            { "speaker": "shadow", "text": "Started as a hobby. Became a profession." },
+            { "speaker": "shadow", "text": "Now it's all I know." },
+            { "speaker": "shadow", "text": "The shadows became home." }
+          ],
+          "nudo_final": [
+            { "speaker": "shadow", "text": "At this level..." },
+            { "speaker": "shadow", "text": "I can find anything. Anyone." },
+            { "speaker": "shadow", "text": "Records that don't exist. People who disappeared." },
+            { "speaker": "shadow", "text": "Use this carefully." },
+            { "speaker": "shadow", "text": "Some doors shouldn't be opened." }
+          ]
+        }
+      },
+      "desenlace": {
+        "variants": [
+          {
+            "id": "end_final",
+            "condition": "default",
+            "exchanges": [
+              { "speaker": "shadow", "text": "We've reached the end." },
+              { "speaker": "shadow", "text": "Or the beginning. Depends how you see it." },
+              { "speaker": "shadow", "text": "You have access to everything now." },
+              { "speaker": "shadow", "text": "What you do with it..." },
+              { "speaker": "shadow", "text": "That's your choice." }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "nexos": {
+    "transitionPhrases": {
+      "toNudo": [
+        "But.",
+        "There's more.",
+        "Listen.",
+        "Point is."
+      ],
+      "toDesenlace": [
+        "Enough.",
+        "That's all.",
+        "Time's up.",
+        "Connection ending."
+      ],
+      "topicChange": [
+        "Different subject.",
+        "Also.",
+        "Something else.",
+        "Change of topic."
+      ]
+    },
+    "flowControl": {
+      "minExchangesBeforeTransition": 2,
+      "maxExchangesPerPhase": 6,
+      "allowBranchMixing": false
+    }
+  },
+  "contextReactions": {
+    "recentPurchase": {
+      "chance": 0.2,
+      "responses": [
+        "Saw your recent transaction. Clean.",
+        "You acquired something. I know.",
+        "That part you got. Interesting history."
+      ]
+    },
+    "longAbsence": {
+      "chance": 0.6,
+      "responses": [
+        "You went dark.",
+        "Thought you'd disappeared.",
+        "Back from the void."
+      ]
+    },
+    "frequentVisitor": {
+      "chance": 0.2,
+      "responses": [
+        "Frequent contact. Be careful.",
+        "Too many connections. Patterns form.",
+        "You're here often. Noted."
+      ]
+    },
+    "afterGoodDeal": {
+      "chance": 0.3,
+      "responses": [
+        "Intel proved useful.",
+        "Good outcome. As expected.",
+        "Satisfied. I can tell."
+      ]
+    }
+  },
+  "memory": {
+    "trackedEvents": [
+      "informationRequests",
+      "discretionShown",
+      "rulesFollowed",
+      "connectionsRevealed",
+      "trustDemonstrated"
+    ],
+    "referenceProbability": 0.15,
+    "referenceTemplates": {
+      "search": "That search you requested. About {target}. Interesting.",
+      "discretion": "You kept quiet about {topic}. Appreciated.",
+      "growth": "You've learned to operate in shadows."
+    }
+  },
+  "strikeSystem": {
+    "maxStrikes": 2,
+    "strikeActions": [
+      "asking_personal_questions",
+      "revealing_information",
+      "mentioning_channel",
+      "demanding_sources"
+    ],
+    "strikeResponses": [
+      "Rule broken.",
+      "Warned you.",
+      "Strike recorded."
+    ],
+    "banMessage": "Connection terminated. Permanently."
+  }
+}

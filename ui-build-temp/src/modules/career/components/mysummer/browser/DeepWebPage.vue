@@ -80,13 +80,12 @@
                   &gt; {{ vendor.name }}
                   <span v-if="vendor.isAIPilot" class="ai-badge">ORACLE</span>
                 </div>
-                <div class="vendor-specialty">{{ vendor.specialty }}</div>
+                <div v-if="vendor.specialty && vendor.specialty.toLowerCase() !== 'unknown'" class="vendor-specialty">{{ vendor.specialty }}</div>
                 <div v-if="vendor.locked && vendor.unlockedBy" class="vendor-locked-hint">
                   Build trust with {{ vendor.unlockedBy }} to unlock
                 </div>
                 <div v-else-if="vendor.onCooldown" class="vendor-cooldown-hint">
-                  <span class="cooldown-icon">[~]</span>
-                  Available in {{ formatCooldown(vendor.cooldownRemaining) }}
+                  Available in <span class="cooldown-time">{{ formatCooldown(vendor.cooldownRemaining) }}</span>
                 </div>
                 <!-- Show traits hint for contacts with traits defined -->
                 <div v-if="!vendor.locked && vendor.traits && vendor.traits.values" class="vendor-traits-hint">
@@ -114,15 +113,15 @@
           <span class="chat-name">[{{ getVendorInitial(conversation.vendor) }}] {{ conversation.vendor?.name }}</span>
         </div>
 
-        <div class="chat-messages">
+        <div class="chat-messages" ref="chatMessagesRef">
           <div
-            v-for="(msg, idx) in conversation.messages"
+            v-for="(msg, idx) in displayedMessages"
             :key="idx"
             class="chat-message"
-            :class="msg.sender === 'vendor' ? 'received' : 'sent'"
+            :class="[msg.sender === 'vendor' ? 'received' : 'sent', { typing: msg.isTyping }]"
           >
             <span class="msg-prefix">{{ msg.sender === 'vendor' ? '>' : '<' }}</span>
-            <span class="msg-text">{{ msg.text }}</span>
+            <span class="msg-text">{{ msg.displayText || msg.text }}<span v-if="msg.isTyping" class="typing-cursor">_</span></span>
           </div>
         </div>
 
@@ -160,20 +159,20 @@
         </div>
 
         <!-- Response Choices (for scripted conversations) -->
-        <div v-else-if="conversation.choices && conversation.choices.length > 0" class="chat-choices">
+        <div v-else-if="conversation.choices && conversation.choices.length > 0 && !isTyping" class="chat-choices">
           <div class="choices-label">// SELECT RESPONSE:</div>
           <button
             v-for="choice in conversation.choices"
             :key="choice.id"
             class="choice-btn"
             @click="selectChatChoice(choice.id)"
-            :disabled="chatLoading"
+            :disabled="chatLoading || isTyping"
           >
             {{ choice.text }}
           </button>
         </div>
 
-        <div v-else-if="conversation.ended" class="chat-ended">
+        <div v-else-if="conversation.ended && !isTyping" class="chat-ended">
           <span>&gt; CONNECTION TERMINATED._</span>
           <button class="back-btn full" @click="closeChat">RETURN TO CONTACTS</button>
         </div>
@@ -326,7 +325,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue"
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from "vue"
 import { useMySummerPartsStore } from "../../../stores/mysummerPartsStore"
 import { useMySummerDeepWebStore } from "../../../stores/mysummerDeepWebStore"
 
@@ -337,10 +336,17 @@ const deepWebStore = useMySummerDeepWebStore()
 const currentSection = ref(null) // null = menu, 'chats', 'silkroad'
 const activeTab = ref("listings")
 
+// Typing effect state
+const displayedMessages = ref([])
+const isTyping = ref(false)
+let typingTimeout = null
+let messageQueue = []
+const chatMessagesRef = ref(null)
+
 // Vendor/Chat data from store
 const vendors = computed(() => deepWebStore.vendors || [])
 const conversation = computed(() => deepWebStore.conversation)
-const chatLoading = computed(() => deepWebStore.loading)
+const chatLoading = computed(() => deepWebStore.loading || isTyping.value)
 
 // Parts/leads data
 const leads = computed(() => partsStore.marketData.leads || [])
@@ -457,8 +463,90 @@ const selectChatChoice = async (choiceId) => {
 }
 
 const closeChat = () => {
+  isTyping.value = false
+  if (typingTimeout) clearTimeout(typingTimeout)
+  messageQueue = []
+  displayedMessages.value = []
   deepWebStore.closeConversation()
 }
+
+// Typing effect - type out vendor messages character by character
+const scrollToBottom = () => {
+  nextTick(() => {
+    if (chatMessagesRef.value) {
+      chatMessagesRef.value.scrollTop = chatMessagesRef.value.scrollHeight
+    }
+  })
+}
+
+const typeMessage = (message, index) => {
+  return new Promise((resolve) => {
+    if (message.sender !== 'vendor') {
+      displayedMessages.value[index] = { ...message, displayText: message.text }
+      scrollToBottom()
+      resolve()
+      return
+    }
+
+    const text = message.text || ""
+    let charIndex = 0
+    displayedMessages.value[index] = { ...message, displayText: "", isTyping: true }
+
+    // Small pause before vendor starts typing
+    typingTimeout = setTimeout(() => {
+      const typeChar = () => {
+      if (charIndex < text.length) {
+        displayedMessages.value[index].displayText = text.substring(0, charIndex + 1)
+        charIndex++
+        scrollToBottom()
+        const delay = 20 + Math.random() * 30
+        typingTimeout = setTimeout(typeChar, delay)
+      } else {
+        displayedMessages.value[index].isTyping = false
+        resolve()
+      }
+    }
+
+      typeChar()
+    }, 600 + Math.random() * 400) // 600-1000ms pause before typing
+  })
+}
+
+const processMessageQueue = async () => {
+  isTyping.value = true
+
+  while (messageQueue.length > 0) {
+    const message = messageQueue.shift()
+    const index = displayedMessages.value.length
+    displayedMessages.value.push({ ...message, displayText: "" })
+
+    await typeMessage(message, index)
+
+    if (messageQueue.length > 0 && message.sender === 'vendor') {
+      await new Promise(r => setTimeout(r, 300))
+    }
+  }
+
+  isTyping.value = false
+}
+
+// Watch for new messages from conversation
+watch(() => conversation.value?.messages, (newMessages) => {
+  if (!newMessages) {
+    displayedMessages.value = []
+    return
+  }
+
+  const currentCount = displayedMessages.value.length
+  const newMsgs = newMessages.slice(currentCount)
+
+  if (newMsgs.length > 0) {
+    messageQueue.push(...newMsgs)
+    if (!isTyping.value) {
+      processMessageQueue()
+    }
+  }
+}, { deep: true, immediate: true })
 
 // AI Conversation
 const aiMessageInput = ref("")
@@ -501,6 +589,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   stopCooldownTimer()
+  if (typingTimeout) clearTimeout(typingTimeout)
   deepWebStore.dispose()
 })
 
@@ -563,7 +652,7 @@ $bg-panel: #111;
   background: $bg-dark;
   color: $terminal-green;
   font-family: "Courier New", Courier, monospace;
-  font-size: 12px;
+  font-size: 14px;
   display: flex;
   flex-direction: column;
 
@@ -800,7 +889,7 @@ $bg-panel: #111;
 
 .vendor-avatar {
   font-weight: bold;
-  font-size: 14px;
+  font-size: 18px;
 
   &.online { color: $terminal-green; }
   &.away { color: $terminal-amber; }
@@ -813,39 +902,39 @@ $bg-panel: #111;
 }
 
 .vendor-name {
-  font-size: 12px;
+  font-size: 16px;
   color: #ddd;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .vendor-specialty {
-  font-size: 10px;
-  color: #666;
+  font-size: 14px;
+  color: #888;
 }
 
 .vendor-locked-hint {
-  font-size: 9px;
+  font-size: 12px;
   color: $terminal-amber;
   font-style: italic;
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 .vendor-cooldown-hint {
-  font-size: 9px;
-  color: #888;
-  margin-top: 2px;
+  font-size: 14px;
+  color: $terminal-amber;
+  margin-top: 4px;
   display: flex;
   align-items: center;
   gap: 4px;
 
-  .cooldown-icon {
-    color: $terminal-amber;
-    animation: blink 2s infinite;
+  .cooldown-time {
+    color: #fff;
+    font-weight: bold;
   }
 }
 
 .vendor-traits-hint {
-  font-size: 8px;
+  font-size: 11px;
   color: #555;
   margin-top: 3px;
   font-style: italic;
@@ -871,7 +960,7 @@ $bg-panel: #111;
 }
 
 .vendor-meta {
-  font-size: 9px;
+  font-size: 12px;
   text-align: right;
 }
 
@@ -888,7 +977,7 @@ $bg-panel: #111;
 }
 
 .xp-display {
-  font-size: 8px;
+  font-size: 10px;
   color: #666;
 }
 
@@ -925,8 +1014,9 @@ $bg-panel: #111;
 
 .chat-message {
   display: flex;
-  gap: 6px;
-  font-size: 11px;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.4;
 
   &.received {
     color: $terminal-cyan;
@@ -943,6 +1033,20 @@ $bg-panel: #111;
   font-weight: bold;
 }
 
+.msg-text {
+  flex: 1;
+}
+
+.typing-cursor {
+  color: $terminal-cyan;
+  animation: cursor-blink 0.5s infinite;
+}
+
+@keyframes cursor-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
 .chat-choices {
   margin-top: 10px;
   padding-top: 10px;
@@ -950,21 +1054,21 @@ $bg-panel: #111;
 }
 
 .choices-label {
-  font-size: 10px;
-  color: #666;
-  margin-bottom: 8px;
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 10px;
 }
 
 .choice-btn {
   display: block;
   width: 100%;
-  padding: 8px 12px;
-  margin-bottom: 6px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
   background: rgba(0, 0, 0, 0.5);
   border: 1px solid #444;
   color: $terminal-green;
   font-family: inherit;
-  font-size: 11px;
+  font-size: 13px;
   text-align: left;
   cursor: pointer;
 

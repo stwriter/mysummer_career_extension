@@ -246,69 +246,76 @@ En versiones futuras, el jugador podrá elegir su vehículo proyecto al inicio:
 
 ---
 
-## Características Actuales (v0.1)
+## Características Actuales (v0.2)
 
 ### Implementado
 
 - [x] **Sistema de Progresión Nativo**
-  - Domain `mysummer` registrado en BeamNG
-  - Skill `streetracing` con 5 niveles
+  - Domain `mysummer` con 6 skills (streetracing + 5 contactos deepweb)
   - Integración con sistema de estrellas de misiones
+  - Desbloqueos progresivos con `unlockFlags`
   - Progreso visible en UI nativa de BeamNG
 
 - [x] **Carreras Street Racing**
-  - 10 carreras callejeras disponibles
+  - 10 carreras callejeras en 10 fases progresivas
+  - 33 carreras mapeadas total a eventos RLS
   - Recompensas en dinero, beamXP y mysummer-streetracing XP
-  - Tracking de posición y tiempo
+  - Waypoints a ubicación de inicio
+  - Detección de llegada
 
 - [x] **Mercado de Piezas**
-  - Listados legales en ubicaciones de recogida
-  - Piezas ilegales con sistema de "leads"
-  - Integración con policía para piezas calientes
+  - Interfaz estilo Wallapop con listados dinámicos
+  - Rotación temporal (legales 30min-2h, ilegales 15min-1h)
+  - Precios basados en km (factor 0.6-1.0)
+  - Sistema de pickup con waypoints
+  - Heat system completo (0-100)
+  - Integración policía para piezas calientes
 
 - [x] **Vehículos Iniciales**
-  - Ibishu Miramar (coche del abuelo, de serie)
-  - ETK-I chasis (proyecto)
+  - Ibishu Miramar (800k-1M km, placa "DADDY")
+  - ETK-I chasis proyecto (500k-800k km, placa "1234-ABC")
+  - Spawn automático en garaje
 
-- [x] **UI**
-  - Selector de carreras en teléfono
-  - Pantalla de resultados post-carrera
-  - Mercado de piezas en ordenador del garaje
-  - Panel de career progress (MySummerCareer.vue) - muestra datos del sistema nativo
+- [x] **UI Completa**
+  - Selector de carreras en teléfono (PhoneRaces.vue)
+  - Pantalla de resultados post-carrera (MySummerRaceResults.vue)
+  - Panel de career progress (MySummerCareer.vue)
+  - Mercado de piezas (MySummerPartsMarket.vue)
+  - Navegador Deepweb estilo Windows 95 (MySummerDeepWeb.vue)
+
+- [x] **Sistema Deepweb/Contactos**
+  - 5 contactos con conversaciones (ghost, techie, muscle, shadow, import)
+  - Formato V3 con fases (intro/nudo/desenlace)
+  - Context reactions dinámicas
+  - Sistema de cooldown por contacto
+  - Integración con domains de BeamNG
+
+- [x] **Desbloqueos por Nivel**
+  - Carreras gated por fase + nivel de reputación
+  - Contactos se desbloquean progresivamente
 
 ### Pendiente
 
 - [ ] **Historia Narrativa**
-  - Diálogos y eventos de historia
-  - NPCs con personalidad
-  - Misiones narrativas entre carreras
-
-- [ ] **Desbloqueos por Nivel**
-  - Carreras gated por nivel de reputación
-  - Piezas especiales desbloqueables
-  - Acceso a eventos exclusivos
+  - Carta del abuelo (intro primera sesión)
+  - Transiciones de capítulo
+  - Eventos narrativos entre carreras
 
 - [ ] **The Big One**
-  - Carrera final del juego
-  - Requisitos de acceso (nivel 5, ETK-I preparado)
+  - Carrera final multi-etapa
   - Premio de ₿1,000,000
+  - Requisitos de acceso (nivel 5, ETK-I preparado)
 
-- [ ] **Variedad de Carreras por Acto**
-  - Acto 1: Carreras rurales informales
-  - Acto 2: Rallys de tierra/asfalto
-  - Acto 3: Street racing nocturno, drag
-  - Acto 4: Circuitos cerrados
-  - Acto 5: The Big One (multi-etapa)
+- [ ] **Sistema de Rivales con Personalidad**
+  - NPCs recurrentes con nombres y backstories
+  - Rivalidades que evolucionan
 
-- [ ] **Sistema de Rivales**
-  - NPCs recurrentes con nombres y personalidades
-  - Rivalidades que evolucionan con la historia
-  - Historias secundarias
+- [ ] **Eventos Dinámicos**
+  - Persecuciones policiales durante carreras
+  - Bandas/enemigos
 
-- [ ] **Requisitos de Vehículo**
-  - Ciertas carreras requieren el ETK-I
-  - Sistema de verificación de vehículo
-  - Restricciones por tipo de evento
+- [ ] **Sistema de Desgaste**
+  - Fallos de piezas por kilometraje
 
 ---
 
@@ -317,24 +324,24 @@ En versiones futuras, el jugador podrá elegir su vehículo proyecto al inicio:
 ### Fase 1: Core Systems (Prioridad Alta)
 
 #### 1.1 Mercado de Piezas - Segunda Mano (Wallapop Style)
-- [ ] Interfaz estilo Wallapop/marketplace con listados dinámicos
-- [ ] Piezas aparecen y desaparecen cada cierto tiempo (rotación)
-- [ ] Precios basados en km: más km = menor precio
-- [ ] Selección múltiple de piezas para recoger en un solo viaje
+- [x] Interfaz estilo Wallapop/marketplace con listados dinámicos
+- [x] Piezas aparecen y desaparecen cada cierto tiempo (rotación)
+- [x] Precios basados en km: más km = menor precio
+- [x] Selección múltiple de piezas para recoger en un solo viaje
 - [ ] **Exclusiones:** No incluir llantas, neumáticos ni pinturas en mercados de segunda mano/ilegal
 - [ ] Tiendas con piezas reacondicionadas (precio intermedio)
 
 #### 1.2 Sistema de Recogida de Piezas
-- [ ] Al comprar, ir a ubicación concreta a recoger
+- [x] Al comprar, ir a ubicación concreta a recoger
 - [ ] Escena con coche parado y maletero abierto (realismo)
-- [ ] **Sistema de cargo nativo de BeamNG:**
+- [x] **Sistema de cargo nativo de BeamNG:** (mysummerCargo.lua)
   - Piezas tienen peso realista
   - Requiere espacio en maletero/remolque
   - Si no hay espacio, no se puede recoger la pieza
 
 #### 1.3 Tienda Oficial de Piezas (Internet/Computer)
 - [x] Mercado personalizado en sección "Internet" del ordenador del garaje
-- [ ] Piezas se tachan al comprarlas (stock único)
+- [x] Piezas se tachan al comprarlas (stock único)
 - [ ] No se pueden volver a comprar las mismas piezas
 - [ ] Catálogo tipo revista vintage con fotos del ETK-I (opcional)
   - Ofertas destacadas
@@ -351,10 +358,10 @@ En versiones futuras, el jugador podrá elegir su vehículo proyecto al inicio:
 #### 2.1 Carreras Street
 - [x] Usar carreras existentes (antiguas street races)
 - [ ] Añadir nuevas carreras según sea necesario
-- [ ] Al seleccionar carrera → waypoint a ubicación de inicio
-- [ ] Listener que detecta llegada y activa la carrera nativa
-- [ ] **Importante:** La carrera NO debe iniciarse al pasar casualmente por la zona
-- [ ] Carreras se desbloquean según avance en modo carrera
+- [x] Al seleccionar carrera → waypoint a ubicación de inicio
+- [x] Listener que detecta llegada y activa la carrera nativa
+- [x] **Importante:** La carrera NO debe iniciarse al pasar casualmente por la zona
+- [x] Carreras se desbloquean según avance en modo carrera
 
 #### 2.2 Rallys
 - [ ] Reutilizar rallys de RLS temporalmente
@@ -362,7 +369,7 @@ En versiones futuras, el jugador podrá elegir su vehículo proyecto al inicio:
 
 #### 2.3 Actualización de Carreras Street
 - [ ] Actualizar carreras street existentes
-- [ ] Asignar carreras a diferentes niveles del modo carrera
+- [x] Asignar carreras a diferentes niveles del modo carrera (10 fases)
 - [ ] Balancear dificultad progresiva
 
 #### 2.4 Sistema de Rivales
@@ -393,24 +400,32 @@ En versiones futuras, el jugador podrá elegir su vehículo proyecto al inicio:
 ### Fase 5: Deepweb / Contactos Ilegales
 
 #### 5.1 Sistema de Contactos con Domains Nativos
-- [ ] Usar sistema nativo de domains de BeamNG para deepweb
-- [ ] Cada contacto desbloquea niveles según conversaciones
-- [ ] Progreso en contactos actualiza los "soplos" disponibles
-- [ ] Los soplos de piezas ilegales beben de este sistema
+- [x] Usar sistema nativo de domains de BeamNG para deepweb
+- [x] Cada contacto desbloquea niveles según conversaciones
+- [x] Progreso en contactos actualiza los "soplos" disponibles
+- [x] Los soplos de piezas ilegales beben de este sistema
+- [x] 5 contactos implementados (ghost, techie, muscle, shadow, import)
 
 ### Fase 6: Vehículos
 
 #### 6.1 Kilometraje Inicial de Vehículos
-- [ ] Miramar inicial: 800.000 - 1.000.000 km (pendiente implementar)
-- [ ] ETK-I inicial: 500.000 - 800.000 km (pendiente implementar)
+- [x] Miramar inicial: 800.000 - 1.000.000 km
+- [x] ETK-I inicial: 500.000 - 800.000 km
 
 #### 6.2 Configuración ETK-I Básico
-- [ ] Usar configuración `rolling.pc` como base
-- [ ] Solo chasis con ruedas de acero y neumáticos básicos
+- [x] Usar configuración `mysummer_2400ti_ttsport_chassis.pc` como base
+- [x] Chasis con ruedas de acero y neumáticos básicos
 - [ ] **TODO:** Quitar componentes que actualmente se generan (interior completo, etc.)
 - [ ] Dejar solo: carrocería, suspensión básica, ruedas de acero, neumáticos
 - [ ] Vaciar: motor, transmisión, escape, interior (asientos, volante), puertas, capó, etc.
 - [ ] Archivo de referencia: `etk_basico.json`
+
+### Fase 7: Historia Narrativa (EN PROGRESO)
+
+#### 7.1 Intro y Transiciones
+- [ ] Carta del abuelo (primera sesión)
+- [ ] Transiciones de capítulo/fase
+- [ ] Eventos narrativos entre carreras
 
 ---
 

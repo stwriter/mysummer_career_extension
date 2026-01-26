@@ -33,6 +33,7 @@ import { lua } from "@/bridge"
 const router = useRouter()
 
 const apps = ref([
+  { name: 'Messages', icon: icons.documentText, route: '/career/phone-chat', color: '#25D366', iconColor: '#ffffff' },
   { name: 'Loans', icon: icons.beamCurrency, route: '/career/phone-loans', color: '#5a8dee', iconColor: '#ffffff' },
   { name: 'Bank', icon: icons.beamCurrency, route: '/career/phone-bank', color: '#10b981', iconColor: '#ffffff' },
   { name: 'Marketplace', icon: icons.shoppingCart, route: '/career/phone-marketplace', color: '#228B22', iconColor: '#ffffff' },

@@ -212,6 +212,7 @@ const cart = ref({ items: [], subtotal: 0, taxes: 0, total: 0 })
 const playerMoney = ref(0)
 const expanded = ref({})
 const search = ref("")
+const collapsedCategories = ref(new Set(['wheels']))  // Wheels collapsed by default
 
 // Helpers
 const toArray = (v) => Array.isArray(v) ? v : []

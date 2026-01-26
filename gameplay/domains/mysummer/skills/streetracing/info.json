@@ -1,6 +1,6 @@
 {
   "name": "Street Racing",
-  "description": "Illegal street racing reputation in the underground scene",
+  "description": "Your reputation in the underground racing scene",
   "order": 2100,
   "isSkill": true,
   "icon": "racingFlag",
@@ -12,85 +12,145 @@
       "description": {
         "type": "unlockCard",
         "icon": "info",
-        "heading": "Rookie Racer",
-        "description": "You're new to the street racing scene. Win some races to build your reputation."
+        "heading": "Entre Amigos / Among Friends",
+        "description": "Racing just for the joy of it."
       },
       "unlocks": [
         {
           "type": "unlockCard",
           "icon": "racingFlag",
-          "heading": "Street Races",
-          "description": "Access to basic street races."
+          "heading": "Basic Street Races",
+          "description": "Access to beginner street races and circuits."
         }
-      ]
+      ],
+      "storyText": {
+        "en": {
+          "name": "Among Friends",
+          "intro": "It starts without spotlights or applause.\nJust old cars, familiar roads, and people racing for the simple joy of it.\nNo one talks about reputation yet.",
+          "completion": "You're not racing to win. You're racing to learn how not to lose."
+        },
+        "es": {
+          "name": "Entre Amigos",
+          "intro": "Todo empieza sin focos ni aplausos.\nSolo coches viejos, carreteras conocidas y gente que corre por el simple placer de hacerlo.\nAquí nadie habla de reputación. Todavía.",
+          "completion": "No corres para ganar. Corres para aprender a no perder."
+        }
+      }
     },
     {
-      "requiredValue": 250,
+      "requiredValue": 500,
       "description": {
         "type": "unlockCard",
         "icon": "info",
-        "heading": "Known Driver",
-        "description": "People are starting to recognize you at the starting line."
+        "heading": "Polvo y Asfalto / Dust and Asphalt",
+        "description": "Winning starts to matter."
       },
       "unlocks": [
         {
           "type": "unlockCard",
           "icon": "star",
-          "heading": "Growing Reputation",
-          "description": "Other racers know your name."
+          "heading": "Rally & Dirt Races",
+          "description": "Access to rally stages and dirt circuits."
         }
-      ]
-    },
-    {
-      "requiredValue": 750,
-      "description": {
-        "type": "unlockCard",
-        "icon": "info",
-        "heading": "Street Regular",
-        "description": "You've become a regular in the street racing circuit."
-      },
-      "unlocks": [
-        {
-          "type": "unlockCard",
-          "icon": "trophy",
-          "heading": "Respected Racer",
-          "description": "Challengers seek you out for races."
+      ],
+      "storyText": {
+        "en": {
+          "name": "Dust and Asphalt",
+          "intro": "Races are no longer improvised.\nThere are rules, there are routes… and people watching.\nWinning starts to matter.",
+          "completion": "Luck runs out. Skill is what remains."
+        },
+        "es": {
+          "name": "Polvo y Asfalto",
+          "intro": "Las carreras ya no son improvisadas.\nHay reglas, hay recorridos… y hay gente mirando.\nGanar empieza a importar.",
+          "completion": "La suerte se acaba. Lo que queda es habilidad."
         }
-      ]
+      }
     },
     {
       "requiredValue": 1500,
       "description": {
         "type": "unlockCard",
         "icon": "info",
-        "heading": "Underground Star",
-        "description": "Your reputation precedes you in every underground meet."
+        "heading": "Límites Difusos / Blurred Lines",
+        "description": "Not everyone plays fair anymore."
+      },
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "trophy",
+          "heading": "Track Racing & Drag",
+          "description": "Access to professional tracks and drag strips."
+        }
+      ],
+      "storyText": {
+        "en": {
+          "name": "Blurred Lines",
+          "intro": "As the money grows, the rules start to fade.\nNights get longer, cars get faster, and mistakes become expensive.\nNot everyone plays fair anymore.",
+          "completion": "Not everyone racing wants to finish first."
+        },
+        "es": {
+          "name": "Límites Difusos",
+          "intro": "Cuando el dinero aumenta, las normas se vuelven borrosas.\nLas noches son más largas, los coches más rápidos, y los errores más caros.\nAquí ya no todos juegan limpio.",
+          "completion": "No todo el que corre quiere llegar primero."
+        }
+      }
+    },
+    {
+      "requiredValue": 3500,
+      "description": {
+        "type": "unlockCard",
+        "icon": "info",
+        "heading": "Underground",
+        "description": "Where legends are born… or broken."
       },
       "unlocks": [
         {
           "type": "unlockCard",
           "icon": "crown",
-          "heading": "Racing Elite",
-          "description": "Only the best dare to challenge you."
+          "heading": "Underground Scene",
+          "description": "Access to drift, touge, and underground events."
         }
-      ]
+      ],
+      "storyText": {
+        "en": {
+          "name": "Into the Underground",
+          "intro": "There's a world beneath the surface.\nNo clear rules. No trophies.\nJust headlights in the dark and the rush of risking everything.\nThis is where legends are born… or broken.",
+          "completion": "You earned their respect. But respect doesn't win races. Speed does."
+        },
+        "es": {
+          "name": "Hacia el Underground",
+          "intro": "Hay un mundo bajo el mundo.\nSin reglas claras. Sin trofeos.\nSolo faros en la oscuridad y la adrenalina de arriesgarlo todo.\nAquí es donde nacen las leyendas… o se rompen.",
+          "completion": "Te has ganado su respeto. Pero el respeto no gana carreras. La velocidad sí."
+        }
+      }
     },
     {
-      "requiredValue": 3000,
+      "requiredValue": 7000,
       "description": {
         "type": "unlockCard",
         "icon": "info",
-        "heading": "Street Legend",
-        "description": "Your name is feared on the streets. You are the one to beat."
+        "heading": "The Big One",
+        "description": "There are no second chances."
       },
       "unlocks": [
         {
           "type": "unlockCard",
           "icon": "medal",
-          "heading": "Living Legend",
-          "description": "Stories of your victories spread across the city."
+          "heading": "The Big One",
+          "description": "The legendary race your grandfather dreamed of."
         }
-      ]
+      ],
+      "storyText": {
+        "en": {
+          "name": "The Big One",
+          "intro": "Everything leads here.\nEvery night, every part, every risk taken.\nThere are no second chances.",
+          "completion": "Do it right. Don't look back."
+        },
+        "es": {
+          "name": "The Big One",
+          "intro": "Todo conduce hasta aquí.\nCada noche, cada pieza, cada riesgo asumido.\nNo hay segundas oportunidades.",
+          "completion": "Hazlo bien. No mires atrás."
+        }
+      }
     }
   ]
 }

@@ -1,0 +1,180 @@
+{
+  "additionalAttributes": {
+    "difficulty": "medium"
+  },
+  "author": "MySummer",
+  "careerSetup": {
+    "defaultStarKeys": [
+      "justFinish",
+      "finishSilver",
+      "finishGold"
+    ],
+    "showInCareer": false,
+    "showInFreeroam": true,
+    "skill": "(none)",
+    "starOutroTexts": {
+      "cleanGoldRace": "Way to go!",
+      "noStarUnlocked": "Tough luck. Want to try again?"
+    },
+    "starRewards": {
+      "beatGoalTime": [
+        {
+          "attributeKey": "bonusStars",
+          "rewardAmount": 1
+        }
+      ],
+      "cleanGoldRace": [
+        {
+          "attributeKey": "bonusStars",
+          "rewardAmount": 1
+        }
+      ],
+      "finishGold": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 3000
+        },
+        {
+          "attributeKey": "beamXP",
+          "rewardAmount": 15
+        },
+        {
+          "attributeKey": "mysummer-streetracing",
+          "rewardAmount": 200
+        }
+      ],
+      "finishSilver": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 1500
+        },
+        {
+          "attributeKey": "beamXP",
+          "rewardAmount": 10
+        },
+        {
+          "attributeKey": "mysummer-streetracing",
+          "rewardAmount": 100
+        }
+      ],
+      "justFinish": [
+        {
+          "attributeKey": "beamXP",
+          "rewardAmount": 5
+        },
+        {
+          "attributeKey": "mysummer-streetracing",
+          "rewardAmount": 50
+        }
+      ]
+    },
+    "starsActive": {
+      "beatGoalTime": true,
+      "cleanGoldRace": true,
+      "finishGold": true,
+      "finishSilver": true,
+      "justFinish": true
+    }
+  },
+  "customAdditionalAttributes": {},
+  "date": 1706187600,
+  "description": "Mountain circuit test drive with custom opponents.",
+  "devMission": false,
+  "grouping": {
+    "id": "STREETRACE",
+    "label": "Street Races"
+  },
+  "isAvailableAsScenario": true,
+  "layers": [
+    {
+      "dir": "/gameplay/missions/west_coast_usa/aiRace/TEST-DRIVE-MOUNTAIN/",
+      "fixed": true,
+      "isMissionFolderDir": true,
+      "isMissionTypeDir": false
+    },
+    {
+      "dir": "/gameplay/missionTypes/aiRace/",
+      "fixed": true,
+      "isMissionFolderDir": false,
+      "isMissionTypeDir": true
+    }
+  ],
+  "missionType": "aiRace",
+  "missionTypeData": {
+    "allowFlip": true,
+    "allowRecover": true,
+    "camPathActive": true,
+    "damageFailActive": false,
+    "damageFailText": "You got wrecked!",
+    "damageLimit": 20000,
+    "flipLimit": -1,
+    "goalCollisionsLimit": 1,
+    "goalCollisionsTarget": 5,
+    "goalLaps": 3,
+    "goalRecoveries": 0,
+    "goalTime": 180,
+    "lapCount": 3,
+    "mapPreviewMode": "navgraph",
+    "maxRacerCount": 9,
+    "minRacerCount": 1,
+    "playerStartIndex": 0,
+    "prefabActive": true,
+    "raceFile": "/gameplay/missions/west_coast_usa/aiRace/TEST-DRIVE-MOUNTAIN/race.race.json",
+    "racerAggression": 1.0,
+    "racerAwareness": true,
+    "racerCount": 5,
+    "racerRandomnessScale": 1,
+    "racerRough": false,
+    "racerRubberbandMode": false,
+    "racerSkill": 0.9,
+    "recoverLimit": -1,
+    "shuffleGroup": true,
+    "smartStartPlace": false,
+    "startText": "Mountain circuit with custom opponents. Good luck!",
+    "stoppedLimit": 4,
+    "useGroundmarkers": false,
+    "vehicleGroupActive": true
+  },
+  "name": "Test Drive - Mountain",
+  "retryBehaviour": "infiniteRetries",
+  "setupModules": {
+    "environment": {
+      "enabled": false
+    },
+    "traffic": {
+      "activeAmount": 0,
+      "amount": 0,
+      "enabled": false,
+      "parkedAmount": 0,
+      "useTraffic": false
+    },
+    "vehicles": {
+      "enabled": true,
+      "includePlayerVehicle": true,
+      "prioritizePlayerVehicle": true,
+      "vehicles": []
+    }
+  },
+  "startCondition": {
+    "type": "always"
+  },
+  "startTrigger": {
+    "level": "west_coast_usa",
+    "pos": [
+      975.99,
+      -736.17,
+      166.45
+    ],
+    "radius": 15,
+    "rot": [
+      0,
+      0,
+      0.7,
+      0.7
+    ],
+    "type": "coordinates"
+  },
+  "visibleCondition": {
+    "type": "always"
+  }
+}

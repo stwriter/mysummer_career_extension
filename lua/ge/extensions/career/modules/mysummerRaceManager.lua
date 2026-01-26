@@ -46,22 +46,34 @@ end
 -- ============================================================================
 
 -- Get available aiRace missions from BeamNG's mission system
+-- Now includes ALL aiRace missions (vanilla + STREETRACE) for current map only
 local function getAiRaceMissions()
   local missions = {}
+  local currentLevel = getCurrentLevelIdentifier()
+
+  if not currentLevel then
+    log("W", "mysummerRaceManager", "No level loaded, cannot get missions")
+    return missions
+  end
 
   if gameplay_missions_missions then
     local allMissions = gameplay_missions_missions.getMissionsByMissionType("aiRace")
     if allMissions then
       for _, mission in pairs(allMissions) do
-        -- Filter to street race missions (by grouping)
-        if mission.grouping and mission.grouping.id == "STREETRACE" then
+        -- Filter by current map (level is in startTrigger.level)
+        local missionLevel = mission.startTrigger and mission.startTrigger.level
+
+        if missionLevel == currentLevel then
+          -- Include all aiRace missions, differentiate by source
+          local isStreetRace = mission.grouping and mission.grouping.id == "STREETRACE"
           table.insert(missions, {
             id = mission.id,
             name = mission.name,
             description = mission.description,
             difficulty = mission.additionalAttributes and mission.additionalAttributes.difficulty or "medium",
             missionType = "aiRace",
-            isNative = true
+            isNative = true,
+            source = isStreetRace and "street" or "vanilla"
           })
         end
       end
@@ -93,8 +105,8 @@ local function startNativeMission(missionId)
   state.nativeMissionName = missionName
   state.nativeMissionStartTime = os.clock()
 
-  -- Start the mission
-  gameplay_missions_missionScreen.startMissionById(missionId, {}, {})
+  -- Start the mission (skipUnlockCheck to bypass career unlock requirements)
+  gameplay_missions_missionScreen.startMissionById(missionId, {}, { skipUnlockCheck = true })
   return true
 end
 
@@ -109,7 +121,7 @@ local function getAvailableRaces()
       name = mission.name,
       description = mission.description,
       difficulty = mission.difficulty,
-      source = "bundled",
+      source = mission.source or "vanilla",  -- street or vanilla
       isNative = true
     }
   end
@@ -158,16 +170,19 @@ local function onAnyMissionChanged(missionState, mission)
   if not career_career or not career_career.isActive() then return end
   if not mission then return end
 
-  -- Check if this is a street race mission
-  local isStreetRaceMission = mission.grouping and mission.grouping.id == "STREETRACE"
-  if not isStreetRaceMission then return end
+  -- Check if this is an aiRace mission (street race or vanilla)
+  local isAiRaceMission = mission.missionType == "aiRace"
+  if not isAiRaceMission then return end
+
+  local isStreetRace = mission.grouping and mission.grouping.id == "STREETRACE"
+  local raceType = isStreetRace and "street" or "vanilla"
 
   if missionState == "started" then
     state.nativeMissionActive = true
     state.nativeMissionId = mission.id
     state.nativeMissionName = mission.name
     state.nativeMissionStartTime = os.clock()
-    log("I", "mysummerRaceManager", "Street race started: " .. (mission.name or mission.id))
+    log("I", "mysummerRaceManager", "Race started (" .. raceType .. "): " .. (mission.name or mission.id))
 
   elseif missionState == "stopped" then
     if not state.nativeMissionActive then return end
@@ -175,14 +190,23 @@ local function onAnyMissionChanged(missionState, mission)
     local elapsedTime = os.clock() - state.nativeMissionStartTime
     local position = getPlayerRacePosition(mission)
 
-    log("I", "mysummerRaceManager", "Street race finished - Position: " .. tostring(position))
+    log("I", "mysummerRaceManager", "Race finished (" .. raceType .. ") - Position: " .. tostring(position))
 
     -- Send results to UI for display (rewards are handled by BeamNG's native star system)
     guihooks.trigger("mysummerStreetRaceResults", {
       raceName = mission.name or state.nativeMissionName,
       position = position,
       formattedTime = formatTime(elapsedTime),
+      raceType = raceType,
     })
+
+    -- Record race win for chapter progression (first place = win)
+    if position == 1 then
+      if career_modules_mysummerCareer and career_modules_mysummerCareer.recordRaceWin then
+        career_modules_mysummerCareer.recordRaceWin(mission.id)
+        log("I", "mysummerRaceManager", "Race win recorded for chapter progression")
+      end
+    end
 
     -- Clear tracking state
     state.nativeMissionActive = false

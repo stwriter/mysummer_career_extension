@@ -1,0 +1,53 @@
+{
+  "mysummer.chat.contacts.ghost.displayName": "Ghost",
+  "mysummer.chat.contacts.ghost.unknownName": "???",
+  "mysummer.chat.contacts.ghost.specialty": "Untraceable parts",
+
+  "mysummer.chat.contacts.techie.displayName": "Techie",
+  "mysummer.chat.contacts.techie.unknownName": "???",
+  "mysummer.chat.contacts.techie.specialty": "ECU and electronics",
+
+  "mysummer.chat.contacts.muscle.displayName": "Muscle",
+  "mysummer.chat.contacts.muscle.unknownName": "???",
+  "mysummer.chat.contacts.muscle.specialty": "Engine performance",
+
+  "mysummer.chat.contacts.import.displayName": "Import",
+  "mysummer.chat.contacts.import.unknownName": "???",
+  "mysummer.chat.contacts.import.specialty": "JDM parts",
+
+  "mysummer.chat.contacts.shadow.displayName": "Shadow",
+  "mysummer.chat.contacts.shadow.unknownName": "???",
+  "mysummer.chat.contacts.shadow.specialty": "Black market connections",
+
+  "mysummer.chat.contacts.system.displayName": "System",
+  "mysummer.chat.contacts.system.unknownName": "System",
+  "mysummer.chat.contacts.system.specialty": "Notifications",
+
+  "mysummer.chat.ui.typing": "typing...",
+  "mysummer.chat.ui.loading": "Loading...",
+  "mysummer.chat.ui.noMessages": "No messages yet",
+  "mysummer.chat.ui.startConversation": "Start Conversation",
+  "mysummer.chat.ui.selectResponse": "Select a response above",
+  "mysummer.chat.ui.messages": "Messages",
+  "mysummer.chat.ui.newMessage": "New Message",
+  "mysummer.chat.ui.yourResponse": "Your response:",
+  "mysummer.chat.ui.noResponseOptions": "No response options available",
+  "mysummer.chat.ui.selectConversation": "Select a conversation to start chatting",
+  "mysummer.chat.ui.you": "You",
+
+  "mysummer.chat.actions.acceptJob": "ACCEPT JOB",
+  "mysummer.chat.actions.starting": "Starting...",
+  "mysummer.chat.actions.whereDidTheyGo": "Where did they go?",
+
+  "mysummer.messages.welcome.subject": "Welcome to West Coast",
+  "mysummer.messages.welcome.body1": "Welcome to West Coast USA! Your ETK I-Series project car is waiting at your garage.",
+  "mysummer.messages.welcome.body2": "Check SpeedParts.com for new parts, PartsBay for used parts, and your computer for updates. Good luck!",
+
+  "mysummer.messages.ghostIntro.line1": "You don't know me. But I know you.",
+  "mysummer.messages.ghostIntro.line2": "Saw you picking up parts for that ETK project. Word travels fast in certain circles.",
+  "mysummer.messages.ghostIntro.line3": "If you want the REAL parts - the ones that actually make a difference - you're shopping at the wrong places.",
+  "mysummer.messages.ghostIntro.line4": "There's a place on the deep web. Silk Road. That's where the serious builders go. Look for someone called 'Ghost'.",
+
+  "mysummer.notifications.newMessage": "New Message",
+  "mysummer.notifications.from": "From"
+}

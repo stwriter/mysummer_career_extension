@@ -103,6 +103,8 @@ state = {
   -- Heat system: 0-100, affects police pursuit probability
   playerHeat = 0,
   lastHeatDecayTime = 0,  -- Track when heat last decayed
+  -- First purchase tracking for contact unlock
+  firstPurchaseMade = false,
 }
 
 -- Heat configuration
@@ -302,6 +304,7 @@ local function loadState()
   state.pendingIllegalCargoId = data.pendingIllegalCargoId or nil
   state.playerHeat = tonumber(data.playerHeat) or 0
   state.lastHeatDecayTime = tonumber(data.lastHeatDecayTime) or os.time()
+  state.firstPurchaseMade = data.firstPurchaseMade or false
 end
 
 local function saveState(currentSavePath)
@@ -323,6 +326,7 @@ local function saveState(currentSavePath)
     pendingIllegalCargoId = state.pendingIllegalCargoId,
     playerHeat = state.playerHeat,
     lastHeatDecayTime = state.lastHeatDecayTime,
+    firstPurchaseMade = state.firstPurchaseMade,
   }
   career_saveSystem.jsonWriteFileSafe(filePath, data, true)
 end
@@ -1521,6 +1525,20 @@ local function completePickup()
       state.activePickup = nil
       clearRoute()
 
+      -- Set V3 context for recent purchase (for DeepWeb conversations)
+      if career_modules_mysummerDeepWeb and career_modules_mysummerDeepWeb.setPlayerContext then
+        career_modules_mysummerDeepWeb.setPlayerContext("recentPurchase", true)
+      end
+
+      -- Detect first purchase -> unlock Ghost contact
+      if not state.firstPurchaseMade then
+        state.firstPurchaseMade = true
+        log("I", "mysummer", "First purchase made! Unlocking Ghost contact.")
+        if career_modules_mysummerDeepWeb and career_modules_mysummerDeepWeb.onFirstPurchase then
+          career_modules_mysummerDeepWeb.onFirstPurchase()
+        end
+      end
+
       -- Check if there are more pickups in the queue (multiple selection)
       if state.pendingPickups and #state.pendingPickups > 0 then
         state.activePickup = table.remove(state.pendingPickups, 1)
@@ -1789,6 +1807,9 @@ local function spawnInitialVehicles()
       if career_modules_mysummerChecklist and career_modules_mysummerChecklist.setProjectVehicle then
         career_modules_mysummerChecklist.setProjectVehicle(invId)
       end
+    else
+      -- Miramar: ensure configBaseValue to prevent insurance errors
+      ensureConfigBaseValue(invId, "miramar", "ute_export_M_early")
     end
 
     if career_modules_insurance_insurance and career_modules_insurance_insurance.getInvVehs then
@@ -1874,7 +1895,7 @@ local function spawnInitialVehicles()
   end
 
   local starterModel = "miramar"
-  local starterConfigKey = "ute_export_M_early"
+  local starterConfigKey = "vehicles/miramar/mysummer_starter.pc"
   local starterModelOk = true
   if core_vehicles and core_vehicles.getModel then
     local modelData = core_vehicles.getModel(starterModel)
@@ -1898,24 +1919,9 @@ local function spawnInitialVehicles()
 
   local starterCar = starterModelOk and spawnAtSpot(starterModel, starterOptions, spotA) or nil
   if starterCar then
-    local vehId = starterCar:getID()
-
-    -- Set brown color for Miramar (old rusty look)
-    local paintCmd = [[
-      local brownPaint = {
-        baseColor = {0.35, 0.2, 0.1, 1.2},
-        clearcoat = 0.3,
-        clearcoatRoughness = 0.1,
-        metallic = 0.2,
-        roughness = 0.5
-      }
-      core_vehicle_partmgmt.setPaints({[1] = brownPaint, [2] = brownPaint, [3] = brownPaint})
-    ]]
-    starterCar:queueLuaCommand(paintCmd)
-
-    -- Set "DADDY" license plate
+    -- Set "DADDY" license plate for starter car
     if core_vehicles and core_vehicles.setPlateText then
-      core_vehicles.setPlateText("DADDY", vehId)
+      core_vehicles.setPlateText("DADDY", starterCar:getID())
     end
     addStarterVehicle(starterCar, garageId, false)
   end
@@ -2275,7 +2281,7 @@ local function onUpdate(dt)
 
   local playerPos = getPlayerPos()
   local pickupPos = toVec3(state.activePickup.location and state.activePickup.location.pos)
-  if playerPos and pickupPos and playerPos:distance(pickupPos) < 8 then
+  if playerPos and pickupPos and playerPos:distance(pickupPos) < 2 then
     completePickup()
   end
 end
@@ -2725,6 +2731,25 @@ M.isPlayerNearGarage = isPlayerNearGarage
 M.getPlayerHeat = getPlayerHeat
 M.addPlayerHeat = addPlayerHeat
 M.clearPlayerHeat = clearPlayerHeat
+
+-- First purchase tracking (for Ghost contact unlock)
+M.hasFirstPurchase = function()
+  return state.firstPurchaseMade == true
+end
+
+M.triggerFirstPurchase = function()
+  if state.firstPurchaseMade then return end  -- Already triggered
+
+  state.firstPurchaseMade = true
+  log("I", "mysummer", "First purchase triggered! Unlocking Ghost contact.")
+
+  -- Notify Deep Web module
+  if career_modules_mysummerDeepWeb and career_modules_mysummerDeepWeb.onFirstPurchase then
+    career_modules_mysummerDeepWeb.onFirstPurchase()
+  end
+
+  saveState()
+end
 
 M.onComputerAddFunctions = onComputerAddFunctions
 M.onReachedTargetPos = onReachedTargetPos

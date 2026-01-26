@@ -1,0 +1,677 @@
+{
+  "id": "muscle",
+  "name": "Muscle",
+  "personality": "old-school",
+  "specialty": "Classic performance parts",
+  "description": "Old-school gearhead who values hands-on experience and respect for tradition",
+  "isV3Format": true,
+
+  "contextReactions": {
+    "recentPoliceEscape": [
+      "Heard you had the cops on your tail. Shook 'em off? Good driving.",
+      "Word is you had a close call with the law. Handled it like a pro.",
+      "Police chase, huh? And you're still here. Respect."
+    ],
+    "recentPoliceCaught": [
+      "Getting caught... that's sloppy. Expected better from you, kid.",
+      "The cops got you? Makes me nervous about who I deal with.",
+      "That arrest... be more careful. I don't need that heat."
+    ],
+    "recentPurchase": [
+      "Those parts working out? Installed them yourself, I hope.",
+      "The stuff I sent you - holding up alright?",
+      "You got your hands dirty with those parts yet?"
+    ],
+    "recentRaceWin": [
+      "Heard you've been winning. That's how it's done.",
+      "Nice work on the track. Real driving, not video game nonsense.",
+      "Word is you're making a name. Keep it up."
+    ],
+    "longAbsence": [
+      "Been a while. Thought you found someone else to buy from.",
+      "Where you been? Starting to think you forgot about me.",
+      "Long time no see. Everything okay, kid?"
+    ]
+  },
+
+  "conversations": {
+    "level1": {
+      "title": "Proving Ground",
+      "phases": {
+        "intro": {
+          "exchanges": [
+            { "speaker": "muscle", "text": "Another new face." },
+            { "speaker": "muscle", "text": "Let me guess - heard about my parts and thought you'd just waltz in." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "respect",
+                  "text": "Heard you're the best for classic performance. I came to learn.",
+                  "traits": ["respectful", "humble"],
+                  "points": 15,
+                  "setsMemory": { "showedRespect": true },
+                  "leadsTo": "intro_respect"
+                },
+                {
+                  "id": "reputation",
+                  "text": "Your reputation precedes you. They say Muscle knows engines.",
+                  "traits": ["respectful"],
+                  "points": 10,
+                  "leadsTo": "intro_reputation"
+                },
+                {
+                  "id": "just_parts",
+                  "text": "Just need parts. Can we skip the introduction?",
+                  "traits": ["impatient"],
+                  "points": -15,
+                  "leadsTo": "intro_impatient"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "intro_respect": [
+              { "speaker": "muscle", "text": "Learn, huh?" },
+              { "speaker": "muscle", "text": "That's not something I hear often. Most people just throw money at problems." },
+              { "speaker": "muscle", "text": "Let me ask you something." },
+              { "speaker": "muscle", "text": "You ever actually turned a wrench? Or you just watch videos and pretend?" },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "built_engine",
+                    "text": "Built my first engine when I was 16. Got grease in my blood.",
+                    "traits": ["hardworking", "honest"],
+                    "points": 20,
+                    "setsMemory": { "provenMechanic": true },
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "learning",
+                    "text": "I'm learning. Started basic maintenance, working my way up.",
+                    "traits": ["humble", "honest"],
+                    "points": 10,
+                    "setsMemory": { "willingToLearn": true },
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ],
+            "intro_reputation": [
+              { "speaker": "muscle", "text": "Reputation." },
+              { "speaker": "muscle", "text": "Forty years I've been doing this. Started when I was twelve, helping my old man." },
+              { "speaker": "muscle", "text": "Engines, transmissions, suspensions - done it all." },
+              { "speaker": "muscle", "text": "So yeah. I know a thing or two." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "respect_earned",
+                    "text": "Forty years of experience. That's what I'm looking for.",
+                    "traits": ["respectful"],
+                    "points": 15,
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "teach_me",
+                    "text": "I want to learn from someone who's seen it all.",
+                    "traits": ["humble"],
+                    "points": 10,
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ],
+            "intro_impatient": [
+              { "speaker": "muscle", "text": "Skip the introduction." },
+              { "speaker": "muscle", "text": "Kid, I've been dealing with impatient people my whole life." },
+              { "speaker": "muscle", "text": "People who think they can skip the line 'cause they got money." },
+              { "speaker": "muscle", "text": "You want to be another one of those? Door's right there." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "apologize",
+                    "text": "You're right. That was rude. I'm just frustrated finding quality.",
+                    "traits": ["humble"],
+                    "points": 5,
+                    "setsMemory": { "apologized": true },
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "leave",
+                    "text": "Fine. I'll find someone else.",
+                    "traits": ["impatient", "disrespectful"],
+                    "points": -25,
+                    "endConversation": true,
+                    "result": "rejected",
+                    "cooldown": 300
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "nudo": {
+          "contextTransition": {
+            "default": "Alright. Let's see what you're made of.",
+            "provenMechanic": "Good. Someone who actually knows their way around an engine.",
+            "willingToLearn": "Willing to learn is a start. Most important thing is putting in the work.",
+            "apologized": "At least you can recognize when you're wrong. That's something."
+          },
+          "exchanges": [
+            { "speaker": "muscle", "text": "{{contextTransition}}" },
+            { "speaker": "muscle", "text": "Let me tell you something about this business." },
+            { "speaker": "muscle", "text": "These days, everyone wants instant results. Bolt-on power." },
+            { "speaker": "muscle", "text": "They don't understand that a real build takes time. Patience. Feel." },
+            { "speaker": "muscle", "text": "You can't just buy speed. You gotta earn it." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "agree",
+                  "text": "That's why I'm here. I want to do it right.",
+                  "traits": ["patient", "dedicated"],
+                  "points": 15,
+                  "leadsTo": "nudo_dedicated"
+                },
+                {
+                  "id": "time",
+                  "text": "I've got time. No rush on my build.",
+                  "traits": ["patient"],
+                  "points": 10,
+                  "leadsTo": "nudo_patient"
+                },
+                {
+                  "id": "shortcut",
+                  "text": "But a few shortcuts won't hurt, right?",
+                  "points": -10,
+                  "leadsTo": "nudo_shortcut"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "nudo_dedicated": [
+              { "speaker": "muscle", "text": "Do it right." },
+              { "speaker": "muscle", "text": "You know how many times I've heard that?" },
+              { "speaker": "muscle", "text": "Then three months later they're back, complaining their engine blew because they skipped the break-in." },
+              { "speaker": "muscle", "text": "Or their suspension's shot 'cause they cheaped out on bushings." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "not_me",
+                    "text": "I get it. Foundations matter. I won't cut corners.",
+                    "traits": ["dedicated", "honest"],
+                    "points": 15,
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "learned_lesson",
+                    "text": "Made that mistake once. Learned my lesson the hard way.",
+                    "traits": ["honest"],
+                    "points": 10,
+                    "setsMemory": { "learnedFromMistake": true },
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ],
+            "nudo_patient": [
+              { "speaker": "muscle", "text": "No rush. Good." },
+              { "speaker": "muscle", "text": "My wife used to say I spent more time in the garage than with her." },
+              { "speaker": "muscle", "text": "She wasn't wrong. But she understood." },
+              { "speaker": "muscle", "text": "A build isn't just a project. It's a relationship." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "understand",
+                    "text": "I get that. It's not just about the destination.",
+                    "traits": ["passionate"],
+                    "points": 15,
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "lucky",
+                    "text": "Lucky to have someone who understood.",
+                    "traits": ["honest"],
+                    "points": 10,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ],
+            "nudo_shortcut": [
+              { "speaker": "muscle", "text": "Shortcuts." },
+              { "speaker": "muscle", "text": "Let me tell you about shortcuts." },
+              { "speaker": "muscle", "text": "In '89, I was racing a guy who took shortcuts on his brakes." },
+              { "speaker": "muscle", "text": "Saved maybe two hundred bucks." },
+              { "speaker": "muscle", "text": "His car's still wrapped around a tree somewhere if you want to visit it." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "point_taken",
+                    "text": "Point taken. Safety first.",
+                    "traits": ["honest"],
+                    "points": 10,
+                    "setsMemory": { "learnedLesson": true },
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "sorry",
+                    "text": "I'm sorry. Didn't think of it that way.",
+                    "traits": ["humble"],
+                    "points": 5,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "desenlace": {
+          "exchanges": [
+            { "speaker": "muscle", "text": "Look, I don't tell these stories to scare you." },
+            { "speaker": "muscle", "text": "I tell them because I need you to understand." },
+            { "speaker": "muscle", "text": "The parts I deal in? They're not just metal and rubber." },
+            { "speaker": "muscle", "text": "They're craftsmanship. History. Soul." },
+            { "speaker": "muscle", "text": "You treat them right, they'll serve you well." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "promise",
+                  "text": "I promise. Every part gets the respect it deserves.",
+                  "traits": ["respectful", "passionate"],
+                  "points": 15,
+                  "setsMemory": { "promisedRespect": true }
+                },
+                {
+                  "id": "understand",
+                  "text": "I understand. This isn't just business for you.",
+                  "traits": ["honest"],
+                  "points": 10
+                }
+              ]
+            },
+            { "speaker": "muscle", "text": "Alright. I'm gonna give you access to some basic inventory." },
+            { "speaker": "muscle", "text": "Show me you know what you're doing, and we'll talk about the good stuff." },
+            { "speaker": "muscle", "text": "Now get out. I've got an engine to rebuild." },
+            { "speaker": "muscle", "text": "And kid?" },
+            { "speaker": "muscle", "text": "Don't make me regret this." }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 75,
+              "unlocks": ["muscle_basic_inventory"]
+            },
+            "cooldown": 180,
+            "teaser": "Come back when you've gotten your hands dirty. Then we'll see if you're worth my time."
+          }
+        }
+      },
+
+      "nexos": {
+        "beforeNudo": [
+          "Hmm.",
+          "Alright.",
+          "..."
+        ],
+        "beforeDesenlace": [
+          "Look.",
+          "Listen.",
+          "..."
+        ]
+      }
+    },
+
+    "level2": {
+      "title": "The Old Ways",
+      "requiredMemory": ["promisedRespect"],
+      "unlockMessage": "Muscle seems to be warming up to you. Ready to talk more.",
+
+      "phases": {
+        "intro": {
+          "contextAware": true,
+          "exchanges": [
+            { "speaker": "muscle", "text": "Back again." },
+            { "speaker": "muscle", "text": "{{contextReaction}}" },
+            { "speaker": "muscle", "text": "Most people who say they want to learn... they disappear after the first time." },
+            { "speaker": "muscle", "text": "But here you are." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "meant_it",
+                  "text": "Meant what I said. I want to learn from the best.",
+                  "traits": ["honest", "dedicated"],
+                  "points": 15,
+                  "continueToPhase": "nudo"
+                },
+                {
+                  "id": "good_parts",
+                  "text": "Your parts are worth coming back for. Quality shows.",
+                  "traits": ["honest"],
+                  "points": 10,
+                  "continueToPhase": "nudo"
+                }
+              ]
+            }
+          ]
+        },
+
+        "nudo": {
+          "exchanges": [
+            { "speaker": "muscle", "text": "Let me tell you about my first race." },
+            { "speaker": "muscle", "text": "1987. A small dirt track outside the city." },
+            { "speaker": "muscle", "text": "Showed up with my Gavril Bluebuck. Built it from a junker." },
+            { "speaker": "muscle", "text": "Back then, nobody expected much from me." },
+            { "speaker": "muscle", "text": "Small kid from nowhere with a beat-up muscle car." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "what_happened",
+                  "text": "What happened?",
+                  "points": 10,
+                  "leadsTo": "nudo_race"
+                },
+                {
+                  "id": "showed_them",
+                  "text": "You showed them, didn't you?",
+                  "traits": ["passionate"],
+                  "points": 15,
+                  "leadsTo": "nudo_race"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "nudo_race": [
+              { "speaker": "muscle", "text": "Finished third." },
+              { "speaker": "muscle", "text": "Third place. Against guys who'd been racing for years." },
+              { "speaker": "muscle", "text": "Some rich kid with a brand new car came up after. Laughed." },
+              { "speaker": "muscle", "text": "'Lucky run,' he said." },
+              { "speaker": "muscle", "text": "..." },
+              { "speaker": "muscle", "text": "Lucky run." },
+              { "speaker": "muscle", "text": "Spent six months rebuilding that engine. Learning everything." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "then_what",
+                    "text": "And the next race?",
+                    "points": 10,
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "fuel",
+                    "text": "That doubt became fuel, didn't it?",
+                    "traits": ["passionate"],
+                    "points": 15,
+                    "setsMemory": { "understandsAnger": true },
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "desenlace": {
+          "exchanges": [
+            { "speaker": "muscle", "text": "Next race, I won." },
+            { "speaker": "muscle", "text": "And the race after that. And the one after that." },
+            { "speaker": "muscle", "text": "By the end of the season, nobody was laughing." },
+            { "speaker": "muscle", "text": "..." },
+            { "speaker": "muscle", "text": "Point is... don't let anyone tell you what you can or can't do." },
+            { "speaker": "muscle", "text": "Prove it on the track. In the garage. With your hands." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "thank_you",
+                  "text": "Thanks for sharing that. It means a lot.",
+                  "traits": ["respectful"],
+                  "points": 15,
+                  "setsMemory": { "sharedMoment": true }
+                },
+                {
+                  "id": "same_drive",
+                  "text": "I've got that same drive. I'll prove myself.",
+                  "traits": ["dedicated"],
+                  "points": 10
+                }
+              ]
+            },
+            { "speaker": "muscle", "text": "Alright, enough nostalgia." },
+            { "speaker": "muscle", "text": "Got some performance parts coming in. Real classics." },
+            { "speaker": "muscle", "text": "You keep showing up, you get first pick." },
+            { "speaker": "muscle", "text": "Now get out before I start getting sentimental." }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 100,
+              "unlocks": ["muscle_performance_inventory"]
+            },
+            "cooldown": 180,
+            "teaser": "Next time, might let you help me with a project. If you're up for it."
+          }
+        }
+      }
+    },
+
+    "level3": {
+      "title": "Legacy",
+      "requiredMemory": ["sharedMoment"],
+      "unlockMessage": "Muscle wants to show you something special.",
+
+      "phases": {
+        "intro": {
+          "exchanges": [
+            { "speaker": "muscle", "text": "Come with me. Want to show you something." },
+            { "speaker": "muscle", "text": "Something I don't show just anyone." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "lead_way",
+                  "text": "Lead the way.",
+                  "traits": ["respectful"],
+                  "points": 10,
+                  "continueToPhase": "nudo"
+                },
+                {
+                  "id": "honor",
+                  "text": "I'm honored.",
+                  "traits": ["respectful"],
+                  "points": 10,
+                  "continueToPhase": "nudo"
+                }
+              ]
+            }
+          ]
+        },
+
+        "nudo": {
+          "exchanges": [
+            { "speaker": "muscle", "text": "This..." },
+            { "speaker": "muscle", "text": "This is the Bluebuck. The original one." },
+            { "speaker": "muscle", "text": "The car that started everything." },
+            { "speaker": "muscle", "text": "Been restoring it for twenty years. Off and on." },
+            { "speaker": "muscle", "text": "Every part authentic. Every bolt period-correct." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "beautiful",
+                  "text": "It's beautiful. You can feel the history.",
+                  "traits": ["passionate", "respectful"],
+                  "points": 15,
+                  "leadsTo": "nudo_history"
+                },
+                {
+                  "id": "why_not_finished",
+                  "text": "Twenty years? Why isn't it finished?",
+                  "points": 5,
+                  "leadsTo": "nudo_why"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "nudo_history": [
+              { "speaker": "muscle", "text": "History. Yeah." },
+              { "speaker": "muscle", "text": "Every scratch tells a story." },
+              { "speaker": "muscle", "text": "This dent? First race. Got bumped in turn three." },
+              { "speaker": "muscle", "text": "This patch? Where I cut out rust after it sat in a barn five years." },
+              { "speaker": "muscle", "text": "This car... it's me. Everything I went through." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "understand",
+                    "text": "I get it. Some things are worth more than money.",
+                    "traits": ["passionate"],
+                    "points": 15,
+                    "setsMemory": { "understandsValue": true },
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "finish_together",
+                    "text": "Let me help you finish it.",
+                    "traits": ["hardworking", "loyal"],
+                    "points": 20,
+                    "setsMemory": { "offeredHelp": true },
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ],
+            "nudo_why": [
+              { "speaker": "muscle", "text": "Because finishing it means... admitting it's over." },
+              { "speaker": "muscle", "text": "My racing days. My prime." },
+              { "speaker": "muscle", "text": "As long as this car needs work, I'm still in the game." },
+              { "speaker": "muscle", "text": "Does that make sense?" },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "makes_sense",
+                    "text": "Makes perfect sense. Some projects are about the journey.",
+                    "traits": ["honest"],
+                    "points": 15,
+                    "setsMemory": { "understandsJourney": true },
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "never_over",
+                    "text": "Doesn't have to be over. You can still race.",
+                    "traits": ["passionate"],
+                    "points": 10,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "desenlace": {
+          "exchanges": [
+            { "speaker": "muscle", "text": "You know..." },
+            { "speaker": "muscle", "text": "I learned this from someone. A long time ago." },
+            { "speaker": "muscle", "text": "A racer. One of the best I ever saw." },
+            { "speaker": "muscle", "text": "She taught me everything. The feel for engines. The respect for the craft." },
+            { "speaker": "muscle", "text": "..." },
+            { "speaker": "muscle", "text": "We don't talk much anymore. Different paths." },
+            { "speaker": "muscle", "text": "But everything I am? It started with her." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "who",
+                  "text": "She sounds like she made an impact.",
+                  "traits": ["respectful"],
+                  "points": 15,
+                  "setsMemory": { "askedAboutMentor": true }
+                },
+                {
+                  "id": "legacy",
+                  "text": "Sounds like you're carrying on something important.",
+                  "traits": ["perceptive"],
+                  "points": 20
+                }
+              ]
+            },
+            { "speaker": "muscle", "text": "Yeah." },
+            { "speaker": "muscle", "text": "That's why I push so hard. Why I don't take shortcuts." },
+            { "speaker": "muscle", "text": "Some things are bigger than just you." },
+            { "speaker": "muscle", "text": "Look, I'm giving you access to everything." },
+            { "speaker": "muscle", "text": "The rare stuff. Vintage pieces. Things I've hoarded for years." },
+            { "speaker": "muscle", "text": "Use them well." }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 150,
+              "unlocks": ["muscle_premium_inventory", "muscle_rare_classics"]
+            },
+            "setsMemory": { "earnedFullTrust": true },
+            "cooldown": 180,
+            "teaser": "You've earned my trust. Make me proud, kid."
+          }
+        }
+      }
+    }
+  },
+
+  "confrontations": {
+    "afterPoliceEscape": {
+      "chance": 0.3,
+      "text": "Heard you had heat. How'd you handle it?",
+      "responses": [
+        { "id": "a", "text": "Kept cool. Drove smart, not fast.", "traits": ["cautious"], "points": 15 },
+        { "id": "b", "text": "Did what I had to.", "traits": ["honest"], "points": 10 },
+        { "id": "c", "text": "Just floored it and hoped.", "traits": ["reckless"], "points": -10 }
+      ]
+    },
+    "randomRespectTest": {
+      "chance": 0.15,
+      "minLevel": 2,
+      "text": "Some kid came in earlier. Didn't believe a woman could know this much about engines. Had to set him straight.",
+      "responses": [
+        { "id": "a", "text": "His loss for underestimating you.", "traits": ["respectful"], "points": 15 },
+        { "id": "b", "text": "People assume too much. Skill speaks for itself.", "traits": ["honest"], "points": 20 },
+        { "id": "c", "text": "Wait, you're a woman?", "traits": ["naive"], "points": -5 }
+      ]
+    }
+  },
+
+  "exitLines": {
+    "normal": [
+      "Alright, got work to do.",
+      "That's enough talking for today.",
+      "Get out. Come back when you've put in some work.",
+      "Got an engine waiting for me."
+    ],
+    "positive": [
+      "Good talk, kid. You've got potential.",
+      "You're alright. Keep it up.",
+      "I see something in you. Don't prove me wrong."
+    ],
+    "negative": [
+      "We're done. For now.",
+      "Need to think about this.",
+      "Don't waste my time again."
+    ]
+  }
+}

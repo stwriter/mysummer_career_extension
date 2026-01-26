@@ -19,7 +19,8 @@
             <div class="race-info">
               <div class="race-name-row">
                 <span class="race-name">{{ race.name }}</span>
-                <span class="race-source" v-if="race.source === 'bundled'">STREET</span>
+                <span class="race-source" v-if="race.source === 'street'">STREET</span>
+                <span class="race-source vanilla" v-else-if="race.source === 'vanilla'">VANILLA</span>
                 <span class="race-source custom" v-else-if="race.source === 'custom'">CUSTOM</span>
               </div>
               <div class="race-details">
@@ -215,6 +216,9 @@ onUnmounted(() => {
         letter-spacing: 0.5px;
         &.custom {
           background: #2196f3;
+        }
+        &.vanilla {
+          background: #9c27b0;
         }
       }
       .race-details {

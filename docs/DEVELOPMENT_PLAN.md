@@ -14,6 +14,13 @@
 - [x] Sistema jerarquico de categorias para ruedas/neumaticos (4 niveles)
 - [x] **Sprint 7**: Configuracion ETK-I basico (chasis vacio con partsTree)
 - [x] **Sprint 8.2**: Kilometraje inicial de vehiculos (Miramar 800k-1M km, ETK-I 500k-800k km)
+- [x] **Sprint 18**: Sistema de capitulos basado en carreras (2 wins = 1 capitulo)
+- [x] **Sprint 19**: Desbloqueo de Ghost tras primera compra
+- [x] **Sprint 20**: Restriccion de piezas por capitulo (solo upgrades bloqueados)
+- [x] **Sprint 21**: Sistema de mensajeria/email con UI en navegador
+- [x] **Sprint 22**: App de email en movil (PhoneEmail.vue)
+- [x] **Sprint 15**: Sistema de misiones de contactos (delivery + chase missions)
+- [x] **Sprint 24**: Sistema de Chat Unificado (WhatsApp-style, reemplaza email, integra DeepWeb V3)
 
 ---
 
@@ -400,24 +407,42 @@ Permitir ganar XP con contactos de multiples formas, no solo conversaciones.
 ---
 
 ## SPRINT 15: Sistema de Misiones de Contactos
-**Prioridad: ALTA** | **Estado: Pendiente**
+**Prioridad: ALTA** | **Estado: EN PROGRESO**
 
 ### Objetivo
 Los contactos pueden ofrecer misiones segun nivel de confianza.
 
 ### Tipos de Mision
 - **Delivery**: Llevar item de A a B con limite de tiempo
+- **Chase**: Perseguir y detener vehiculo objetivo (IA en modo flee)
 - **Find Part**: Conseguir pieza especifica para el contacto
-- **Race**: Carreras contra contacto o asociado (parcialmente implementado)
 - **Surveillance**: Seguir vehiculo sin ser detectado
 - **Escort**: Proteger vehiculo del contacto durante transporte
 
-### Tareas
-- [ ] Framework base de misiones
-- [ ] Implementar Delivery missions
+### Tareas Completadas
+- [x] Framework base de misiones (`mysummerMissions.lua`)
+- [x] Sistema de templates por contacto
+- [x] Cooldowns entre misiones (30min base, reduce con nivel)
+- [x] XP/reputacion segun dificultad (25-100 XP)
+- [x] Timer UI con avisos de tiempo
+- [x] Implementar Delivery missions con cargo real
+- [x] Implementar Chase missions con IA flee
+- [x] Spawn de objetivos chase en carreteras (traffic utils)
+- [x] Deteccion de objetivo detenido (distancia + velocidad + tiempo)
+- [x] Vehiculos chase por dificultad (easy/medium/hard)
+- [x] Misiones chase para Ghost y Muscle
+
+### Tareas Pendientes
+- [ ] Implementar Surveillance missions
+- [ ] Implementar Escort missions
 - [ ] Implementar Find Part missions
-- [ ] Cooldown entre misiones (30min - 2h)
-- [ ] XP segun dificultad (25-100 XP)
+- [ ] Misiones chase para Techie, Import, Shadow
+- [ ] UI de progreso de chase (distancia al objetivo)
+- [ ] Integracion policia en misiones high-heat
+
+### Archivos
+- `lua/ge/extensions/career/modules/mysummerMissions.lua` - Sistema completo
+- `lua/ge/extensions/career/modules/mysummerCargo.lua` - Integracion cargo
 
 ---
 
@@ -469,7 +494,7 @@ Conversaciones dinamicas generadas por IA usando APIs gratuitas.
 | ~~8.2~~ | ~~Kilometraje inicial~~ | ~~MEDIA~~ | COMPLETADO |
 | ~~13~~ | ~~Traits y Cooldowns~~ | ~~ALTA~~ | COMPLETADO |
 | 14 | Multiples Fuentes XP | ALTA | Pendiente |
-| 15 | Misiones Contactos | ALTA | Pendiente |
+| 15 | Misiones Contactos | ALTA | EN PROGRESO (Delivery+Chase OK, faltan Surveillance/Escort/FindPart) |
 | 1 | Sistema Cargo | ALTA | Pendiente |
 | 2 | Stock Unico | ALTA | Pendiente |
 | 3 | Carreras Listener | ALTA | Pendiente |

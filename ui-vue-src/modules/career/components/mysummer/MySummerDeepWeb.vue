@@ -9,7 +9,7 @@
           </div>
         </div>
         <div class="hacking-status">
-          <span class="blink">{{ hackingStatus }}</span>
+          <span>{{ hackingStatus }}</span>
         </div>
       </div>
     </div>
@@ -37,7 +37,7 @@
         <div class="browser-addressbar">
           <span class="address-label">Location:</span>
           <div class="address-input">
-            <span class="address-text">darknet://underground.parts/vendors</span>
+            <span class="address-text">darknet://silkroad.parts/vendors</span>
           </div>
         </div>
       </div>
@@ -45,7 +45,7 @@
       <!-- Vendor List View -->
       <template v-if="!conversation">
         <div class="deepweb-header">
-          <h2>:: UNDERGROUND PARTS NETWORK ::</h2>
+          <h2>:: SILKROAD PARTS NETWORK ::</h2>
           <p>[ Secure connection established - Anonymous mode active ]</p>
         </div>
 
@@ -57,8 +57,8 @@
             v-for="vendor in vendors"
             :key="vendor.id"
             class="vendor-card"
-            :class="{ locked: vendor.locked }"
-            @click="!vendor.locked && openVendor(vendor.id)"
+            :class="{ locked: vendor.locked, 'on-cooldown': vendor.onCooldown }"
+            @click="handleVendorClick(vendor)"
           >
             <div class="vendor-icon">[{{ vendorInitial(vendor) }}]</div>
             <div class="vendor-info">
@@ -66,10 +66,11 @@
               <div class="vendor-specialty">{{ vendor.specialty }}</div>
               <div class="vendor-status">
                 <span v-if="vendor.locked" class="status-locked">[LOCKED]</span>
-                <span v-else-if="vendor.trustLevel" class="status-trust">[TRUST: {{ vendor.trustLevel }} pts]</span>
+                <span v-else-if="vendor.onCooldown" class="status-cooldown">[BUSY - {{ formatCooldown(vendor.cooldownRemaining) }}]</span>
+                <span v-else class="status-trust">[LEVEL {{ vendor.trustLevel || 1 }}]</span>
               </div>
             </div>
-            <div class="vendor-arrow" v-if="!vendor.locked">&gt;&gt;</div>
+            <div class="vendor-arrow" v-if="!vendor.locked && !vendor.onCooldown">&gt;&gt;</div>
           </div>
         </div>
       </template>
@@ -80,54 +81,51 @@
           <button class="win95-btn" @click="closeConversation">&lt; Back</button>
           <div class="conversation-vendor">
             <span class="vendor-icon small">[{{ vendorInitial(conversation.vendor) }}]</span>
-            <span>Chat with: {{ conversation.vendor?.name || "Unknown" }}</span>
+            <span>{{ conversation.vendor?.name || "Unknown" }}</span>
+            <span class="vendor-level">[Lv.{{ conversation.trustLevel || 1 }}]</span>
           </div>
         </div>
 
-        <div class="messages-container">
+        <div class="messages-container" ref="messagesContainer">
           <div
-            v-for="(msg, idx) in conversation.messages"
+            v-for="(msg, idx) in displayedMessages"
             :key="idx"
             class="message"
-            :class="[msg.sender, { 'system-message': msg.isSystemMessage, 'pause-message': msg.isPause, 'positive': msg.pointsChange > 0, 'negative': msg.pointsChange < 0 }]"
+            :class="[msg.sender, { 'typing': msg.isTyping }]"
           >
-            <template v-if="msg.isPause">
-              <span class="pause-dots">...</span>
+            <template v-if="msg.sender === 'vendor'">
+              <span class="message-prefix">&gt;</span>
+              <span class="message-content">{{ msg.displayText }}<span v-if="msg.isTyping" class="typing-cursor">_</span></span>
             </template>
-            <template v-else-if="msg.isSystemMessage">
-              <span class="system-text">{{ msg.text }}</span>
-            </template>
-            <template v-else>
-              <span class="message-prefix">{{ msg.sender === 'vendor' ? '&gt;' : '&lt;' }}</span>
+            <template v-else-if="msg.sender === 'player'">
+              <span class="message-prefix">&lt;</span>
               <span class="message-content">{{ msg.text }}</span>
+            </template>
+            <template v-else-if="msg.sender === 'system'">
+              <span class="system-text">{{ msg.text }}</span>
             </template>
           </div>
         </div>
 
-        <!-- Session Stats -->
-        <div class="session-stats" v-if="conversation.sessionPoints !== undefined">
-          <span class="stat-item" :class="{ positive: conversation.sessionPoints > 0, negative: conversation.sessionPoints < 0 }">
-            Session: {{ conversation.sessionPoints > 0 ? '+' : '' }}{{ conversation.sessionPoints }} pts
-          </span>
-          <span class="stat-item" v-if="conversation.strikes > 0">
-            Strikes: {{ conversation.strikes }}/{{ conversation.maxStrikes }}
-          </span>
+        <!-- Strike Warning -->
+        <div class="strike-warning" v-if="conversation.strikes > 0">
+          ! WARNING: {{ conversation.strikes }}/{{ conversation.maxStrikes }} strikes
         </div>
 
-        <div class="choices-container" v-if="conversation.choices && conversation.choices.length > 0">
-          <div class="choices-label">Select response:</div>
+        <div class="choices-container" v-if="canShowChoices">
+          <div class="choices-label">&gt; Select response:</div>
           <button
             v-for="choice in conversation.choices"
             :key="choice.id"
             class="win95-btn choice-btn"
             @click="selectChoice(choice.id)"
-            :disabled="store.loading"
+            :disabled="store.loading || isTyping"
           >
             {{ choice.text }}
           </button>
         </div>
 
-        <div class="conversation-end" v-else-if="conversation.ended">
+        <div class="conversation-end" v-else-if="conversation.ended && !isTyping">
           <p>&gt; Connection terminated._</p>
           <button class="win95-btn full" @click="closeConversation">Return to Vendors</button>
         </div>
@@ -143,7 +141,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue"
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from "vue"
 import { useMySummerDeepWebStore } from "../../stores/mysummerDeepWebStore"
 
 const props = defineProps({
@@ -155,18 +153,33 @@ const props = defineProps({
 
 const store = useMySummerDeepWebStore()
 
+// Refs
+const messagesContainer = ref(null)
+const codeContainer = ref(null)
+
 // Hacking animation state
 const showHackingAnimation = ref(true)
 const hackingLines = ref([])
 const hackingStatus = ref("INITIALIZING SECURE TUNNEL...")
-const codeContainer = ref(null)
 let hackingInterval = null
 let lineId = 0
 
+// Typing effect state
+const displayedMessages = ref([])
+const isTyping = ref(false)
+let typingTimeout = null
+let messageQueue = []
+
 const vendors = computed(() => store.vendors || [])
 const conversation = computed(() => store.conversation)
+
+const canShowChoices = computed(() => {
+  return conversation.value?.choices?.length > 0 && !isTyping.value
+})
+
 const statusText = computed(() => {
   if (store.loading) return "Loading..."
+  if (isTyping.value) return "Receiving data..."
   if (conversation.value) return `Connected to: ${conversation.value.vendor?.name || 'Unknown'}`
   return "Ready"
 })
@@ -176,11 +189,23 @@ const vendorInitial = (vendor) => {
   return vendor.name.charAt(0).toUpperCase()
 }
 
-const openVendor = async (vendorId) => {
-  await store.startConversation(vendorId)
+const formatCooldown = (seconds) => {
+  if (!seconds || seconds <= 0) return "now"
+  const mins = Math.floor(seconds / 60)
+  const secs = seconds % 60
+  if (mins > 0) {
+    return `${mins}m ${secs}s`
+  }
+  return `${secs}s`
+}
+
+const handleVendorClick = async (vendor) => {
+  if (vendor.locked || vendor.onCooldown) return
+  await store.startConversation(vendor.id)
 }
 
 const selectChoice = async (choiceId) => {
+  if (isTyping.value) return
   try {
     await store.respondToVendor(choiceId)
   } catch (err) {
@@ -189,10 +214,89 @@ const selectChoice = async (choiceId) => {
 }
 
 const closeConversation = () => {
+  isTyping.value = false
+  if (typingTimeout) clearTimeout(typingTimeout)
+  messageQueue = []
+  displayedMessages.value = []
   store.closeConversation()
 }
 
-// Generate random hex/code strings
+// Typing effect - type out vendor messages character by character
+const typeMessage = (message, index) => {
+  return new Promise((resolve) => {
+    if (message.sender !== 'vendor') {
+      displayedMessages.value[index] = { ...message, displayText: message.text }
+      scrollToBottom()
+      resolve()
+      return
+    }
+
+    const text = message.text || ""
+    let charIndex = 0
+    displayedMessages.value[index] = { ...message, displayText: "", isTyping: true }
+
+    const typeChar = () => {
+      if (charIndex < text.length) {
+        displayedMessages.value[index].displayText = text.substring(0, charIndex + 1)
+        charIndex++
+        scrollToBottom()
+        const delay = 25 + Math.random() * 35
+        typingTimeout = setTimeout(typeChar, delay)
+      } else {
+        displayedMessages.value[index].isTyping = false
+        resolve()
+      }
+    }
+
+    typeChar()
+  })
+}
+
+const processMessageQueue = async () => {
+  isTyping.value = true
+
+  while (messageQueue.length > 0) {
+    const message = messageQueue.shift()
+    const index = displayedMessages.value.length
+    displayedMessages.value.push({ ...message, displayText: "" })
+
+    await typeMessage(message, index)
+
+    if (messageQueue.length > 0 && message.sender === 'vendor') {
+      await new Promise(r => setTimeout(r, 400))
+    }
+  }
+
+  isTyping.value = false
+}
+
+const scrollToBottom = () => {
+  nextTick(() => {
+    if (messagesContainer.value) {
+      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
+    }
+  })
+}
+
+// Watch for new messages from conversation
+watch(() => conversation.value?.messages, (newMessages) => {
+  if (!newMessages) {
+    displayedMessages.value = []
+    return
+  }
+
+  const currentCount = displayedMessages.value.length
+  const newMsgs = newMessages.slice(currentCount)
+
+  if (newMsgs.length > 0) {
+    messageQueue.push(...newMsgs)
+    if (!isTyping.value) {
+      processMessageQueue()
+    }
+  }
+}, { deep: true, immediate: true })
+
+// Hacking animation
 const generateRandomCode = () => {
   const types = [
     () => `0x${Math.random().toString(16).substr(2, 8).toUpperCase()} RECV ${Math.floor(Math.random() * 9999)}`,
@@ -200,7 +304,6 @@ const generateRandomCode = () => {
     () => `TCP/IP HANDSHAKE ${Math.random() > 0.5 ? 'OK' : 'ACK'} SEQ=${Math.floor(Math.random() * 99999)}`,
     () => `ENCRYPT: AES-256 KEY=${Math.random().toString(36).substr(2, 16).toUpperCase()}`,
     () => `PROXY: NODE_${Math.floor(Math.random() * 99)} -> ${Math.random() > 0.5 ? 'FORWARD' : 'TUNNEL'}`,
-    () => `AUTH: ${Math.random() > 0.7 ? 'VERIFIED' : 'PENDING'} HASH=${Math.random().toString(16).substr(2, 12)}`,
   ]
   return types[Math.floor(Math.random() * types.length)]()
 }
@@ -210,40 +313,34 @@ const startHackingAnimation = () => {
     "INITIALIZING SECURE TUNNEL...",
     "ROUTING THROUGH PROXY NODES...",
     "ESTABLISHING ENCRYPTED CHANNEL...",
-    "BYPASSING SECURITY PROTOCOLS...",
-    "CONNECTING TO DARKNET...",
+    "CONNECTING TO SILKROAD...",
     "CONNECTION ESTABLISHED"
   ]
   let statusIndex = 0
 
-  // Add new code lines rapidly
   hackingInterval = setInterval(() => {
     hackingLines.value.push({
       id: lineId++,
       text: generateRandomCode()
     })
-
-    // Keep only last 30 lines
-    if (hackingLines.value.length > 30) {
+    if (hackingLines.value.length > 25) {
       hackingLines.value.shift()
     }
-  }, 100)
+  }, 80)
 
-  // Update status messages
   const statusInterval = setInterval(() => {
     statusIndex++
     if (statusIndex < statusMessages.length) {
       hackingStatus.value = statusMessages[statusIndex]
     }
-  }, 800)
+  }, 600)
 
-  // End animation after 5 seconds
   setTimeout(() => {
     clearInterval(hackingInterval)
     clearInterval(statusInterval)
     showHackingAnimation.value = false
     store.requestData()
-  }, 5000)
+  }, 3000)
 }
 
 onMounted(() => {
@@ -251,9 +348,8 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  if (hackingInterval) {
-    clearInterval(hackingInterval)
-  }
+  if (hackingInterval) clearInterval(hackingInterval)
+  if (typingTimeout) clearTimeout(typingTimeout)
   store.dispose()
 })
 </script>
@@ -286,7 +382,7 @@ $win-cyan: #008080;
   overflow: hidden;
   background: $win-gray;
   font-family: 'Courier New', 'Lucida Console', monospace;
-  font-size: 12px;
+  font-size: 14px;
   color: $win-black;
 }
 
@@ -326,7 +422,7 @@ $win-cyan: #008080;
 .code-line {
   color: #00ff00;
   font-family: 'Courier New', monospace;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.4;
   opacity: 0.8;
   white-space: nowrap;
@@ -338,16 +434,7 @@ $win-cyan: #008080;
   text-align: center;
   color: #00ff00;
   font-weight: bold;
-  font-size: 14px;
-}
-
-.blink {
-  animation: blink-animation 1s infinite;
-}
-
-@keyframes blink-animation {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
+  font-size: 16px;
 }
 
 // Browser Frame
@@ -359,14 +446,15 @@ $win-cyan: #008080;
 .browser-titlebar {
   background: linear-gradient(to right, $win-blue, $win-cyan);
   color: $win-white;
-  padding: 2px 4px;
+  padding: 3px 6px;
   display: flex;
   align-items: center;
   font-weight: bold;
+  font-size: 14px;
 }
 
 .titlebar-icon {
-  margin-right: 6px;
+  margin-right: 8px;
 }
 
 .titlebar-text {
@@ -381,12 +469,12 @@ $win-cyan: #008080;
     @include win-raised;
     background: $win-gray;
     color: $win-black;
-    width: 16px;
-    height: 14px;
+    width: 18px;
+    height: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px;
+    font-size: 12px;
     cursor: pointer;
 
     &:active {
@@ -397,12 +485,13 @@ $win-cyan: #008080;
 
 .browser-menubar {
   background: $win-gray;
-  padding: 2px 4px;
+  padding: 3px 6px;
   border-bottom: 1px solid $win-dark-gray;
+  font-size: 14px;
 }
 
 .menu-item {
-  padding: 2px 8px;
+  padding: 2px 10px;
   cursor: pointer;
 
   &:hover {
@@ -415,10 +504,11 @@ $win-cyan: #008080;
   @include win-sunken;
   background: $win-white;
   margin: 4px;
-  padding: 2px 4px;
+  padding: 4px 8px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  font-size: 14px;
 }
 
 .address-label {
@@ -435,20 +525,20 @@ $win-cyan: #008080;
 
 // Header
 .deepweb-header {
-  padding: 0.5rem;
+  padding: 12px;
   text-align: center;
   border-bottom: 1px solid $win-dark-gray;
 
   h2 {
     margin: 0;
-    font-size: 14px;
+    font-size: 18px;
     color: $win-blue;
     font-weight: bold;
   }
 
   p {
-    margin: 4px 0 0;
-    font-size: 11px;
+    margin: 6px 0 0;
+    font-size: 13px;
     color: $win-dark-gray;
   }
 }
@@ -457,30 +547,30 @@ $win-cyan: #008080;
 .vendors-list {
   flex: 1;
   overflow: auto;
-  padding: 0.5rem;
+  padding: 8px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .vendor-card {
   @include win-raised;
   background: $win-gray;
-  padding: 8px;
+  padding: 12px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   cursor: pointer;
 
-  &:hover:not(.locked) {
+  &:hover:not(.locked):not(.on-cooldown) {
     background: $win-light-gray;
   }
 
-  &:active:not(.locked) {
+  &:active:not(.locked):not(.on-cooldown) {
     @include win-sunken;
   }
 
-  &.locked {
+  &.locked, &.on-cooldown {
     opacity: 0.6;
     cursor: not-allowed;
   }
@@ -489,10 +579,10 @@ $win-cyan: #008080;
 .vendor-icon {
   font-weight: bold;
   color: $win-blue;
-  font-size: 14px;
+  font-size: 18px;
 
   &.small {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 
@@ -503,65 +593,81 @@ $win-cyan: #008080;
 .vendor-name {
   font-weight: bold;
   color: $win-black;
+  font-size: 16px;
 }
 
 .vendor-specialty {
-  font-size: 11px;
+  font-size: 13px;
   color: $win-dark-gray;
+  margin-top: 2px;
 }
 
 .vendor-status {
-  margin-top: 2px;
+  margin-top: 4px;
+  font-size: 12px;
 }
 
 .status-locked {
   color: #800000;
-  font-size: 10px;
+}
+
+.status-cooldown {
+  color: #806000;
 }
 
 .status-trust {
   color: $win-cyan;
-  font-size: 10px;
 }
 
 .vendor-arrow {
   color: $win-dark-gray;
+  font-size: 16px;
 }
 
 // Conversation
 .conversation-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 4px;
+  gap: 12px;
+  padding: 8px;
   border-bottom: 1px solid $win-dark-gray;
 }
 
 .conversation-vendor {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
   font-weight: bold;
+  font-size: 15px;
+}
+
+.vendor-level {
+  color: $win-cyan;
+  font-size: 13px;
 }
 
 .messages-container {
   flex: 1;
   overflow: auto;
-  padding: 8px;
+  padding: 12px;
   @include win-sunken;
   background: $win-white;
-  margin: 4px;
+  margin: 6px;
+  min-height: 200px;
 }
 
 .message {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   display: flex;
-  gap: 4px;
+  gap: 8px;
+  line-height: 1.5;
+  font-size: 14px;
 }
 
 .message-prefix {
   color: $win-dark-gray;
   font-weight: bold;
+  flex-shrink: 0;
 }
 
 .message.vendor .message-prefix {
@@ -576,74 +682,45 @@ $win-cyan: #008080;
   flex: 1;
 }
 
-// System messages (feedback, strikes, etc)
-.message.system-message {
-  justify-content: center;
-  margin: 4px 0;
-
-  .system-text {
-    font-size: 10px;
-    padding: 2px 8px;
-    background: $win-gray;
-    border: 1px solid $win-dark-gray;
-  }
-
-  &.positive .system-text {
-    color: #008000;
-    background: #e0ffe0;
-    border-color: #008000;
-  }
-
-  &.negative .system-text {
-    color: #800000;
-    background: #ffe0e0;
-    border-color: #800000;
-  }
+.typing-cursor {
+  animation: cursor-blink 0.6s infinite;
+  color: $win-blue;
 }
 
-// Pause messages (...)
-.message.pause-message {
-  justify-content: center;
-  margin: 12px 0;
-
-  .pause-dots {
-    color: $win-dark-gray;
-    font-size: 16px;
-    letter-spacing: 4px;
-    animation: pulse 1.5s ease-in-out infinite;
-  }
+@keyframes cursor-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 1; }
+.system-text {
+  color: $win-dark-gray;
+  font-style: italic;
+  font-size: 13px;
+  width: 100%;
+  text-align: center;
 }
 
-// Session stats bar
-.session-stats {
-  display: flex;
-  justify-content: space-between;
-  padding: 4px 8px;
-  background: $win-gray;
-  border-top: 1px solid $win-dark-gray;
-  font-size: 10px;
-
-  .stat-item {
-    &.positive { color: #008000; }
-    &.negative { color: #800000; }
-  }
+// Strike Warning
+.strike-warning {
+  padding: 6px 12px;
+  background: #ffe0e0;
+  border-top: 2px solid #800000;
+  color: #800000;
+  font-size: 13px;
+  font-weight: bold;
+  text-align: center;
 }
 
 // Choices
 .choices-container {
-  padding: 8px;
+  padding: 12px;
   border-top: 1px solid $win-dark-gray;
 }
 
 .choices-label {
-  margin-bottom: 4px;
+  margin-bottom: 8px;
   color: $win-dark-gray;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 // Windows 95 Button
@@ -651,9 +728,9 @@ $win-cyan: #008080;
   @include win-raised;
   background: $win-gray;
   color: $win-black;
-  padding: 4px 12px;
+  padding: 8px 16px;
   font-family: 'Courier New', monospace;
-  font-size: 12px;
+  font-size: 14px;
   cursor: pointer;
   border-radius: 0;
 
@@ -672,7 +749,7 @@ $win-cyan: #008080;
 
   &.full {
     width: 100%;
-    margin-top: 8px;
+    margin-top: 10px;
   }
 }
 
@@ -680,16 +757,18 @@ $win-cyan: #008080;
   display: block;
   width: 100%;
   text-align: left;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+  padding: 10px 14px;
 }
 
 .conversation-end {
   text-align: center;
-  padding: 1rem;
+  padding: 1.5rem;
 
   p {
-    margin: 0 0 8px;
+    margin: 0 0 12px;
     color: $win-dark-gray;
+    font-size: 14px;
   }
 }
 
@@ -697,16 +776,17 @@ $win-cyan: #008080;
   padding: 2rem;
   text-align: center;
   color: $win-dark-gray;
+  font-size: 14px;
 }
 
 // Status Bar
 .browser-statusbar {
   @include win-sunken;
   background: $win-gray;
-  padding: 2px 8px;
+  padding: 4px 10px;
   display: flex;
   justify-content: space-between;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .status-text {

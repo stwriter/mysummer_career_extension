@@ -62,6 +62,76 @@ local shopDefinitions = {
 }
 
 -- ============================================================================
+-- CHAPTER-BASED PART UNLOCKS
+-- ============================================================================
+-- Only UPGRADES are locked. Base/stock parts are always available (chapter 1).
+-- Parts not in this list = always available (no restriction).
+
+local upgradeChapterRequirements = {
+  -- Chapter 2: Estética + mejoras leves
+  ["etki_bumper_F_kit"] = 2,
+  ["etki_bumper_R_kit"] = 2,
+  ["etki_spoiler_kit"] = 2,
+  ["etki_sideskirt_kit"] = 2,
+  ["etki_hood_vents"] = 2,
+  ["etki_trim_kit"] = 2,
+  ["etki_exhaust_wide"] = 2,
+  ["etki_oilcooler"] = 2,
+
+  -- Chapter 3: Rendimiento medio
+  ["etki_brake_F_race"] = 3,
+  ["etki_brake_R_race"] = 3,
+  ["brakepad_F_semi_race"] = 3,
+  ["brakepad_R_semi_race"] = 3,
+  ["etki_radiator_race"] = 3,
+  ["etki_oilpan_race"] = 3,
+  ["etki_swaybar_F_race"] = 3,
+  ["etki_swaybar_R_race"] = 3,
+  ["etki_strut_bar"] = 3,
+  ["etki_fenderflare_FL_kit"] = 3,
+  ["etki_fenderflare_FR_kit"] = 3,
+  ["etki_fenderflare_R_kit"] = 3,
+  ["etki_chinspoiler_kit"] = 3,
+
+  -- Chapter 4: Racing
+  ["etki_strut_F_race"] = 4,
+  ["etki_coilover_R_race"] = 4,
+  ["etki_steeringbox_race"] = 4,
+  ["etki_transmission_6M_race"] = 4,
+  ["etki_differential_R_race"] = 4,
+  ["etki_engine_internals_heavy"] = 4,
+  ["etki_turbo_stage1"] = 4,
+
+  -- Chapter 5: Elite
+  ["etki_turbo_stage2"] = 5,
+  ["etki_engine_internals_ultra"] = 5,
+  ["etki_engine_ecu_race"] = 5,
+}
+
+-- Get current chapter from mysummerCareer module
+local function getCurrentChapter()
+  if career_modules_mysummerCareer and career_modules_mysummerCareer.getCurrentChapter then
+    local chapter = career_modules_mysummerCareer.getCurrentChapter()
+    -- Defensive: ensure we get a valid number
+    if type(chapter) == "number" and chapter >= 1 then
+      return chapter
+    end
+    log("W", logTag, "getCurrentChapter returned invalid value: " .. tostring(chapter) .. ", defaulting to 1")
+  end
+  return 1  -- Default to chapter 1 if module not available
+end
+
+-- Check if a part is unlocked based on current chapter
+local function getPartChapterRequirement(partName)
+  return upgradeChapterRequirements[partName] or 1
+end
+
+local function isPartUnlocked(partName)
+  local required = getPartChapterRequirement(partName)
+  return getCurrentChapter() >= required
+end
+
+-- ============================================================================
 -- STATE
 -- ============================================================================
 
@@ -468,12 +538,18 @@ local function getShopParts(shopId)
 
     local shopPrice = math.floor(part.baseValue * shop.priceMultiplier)
 
+    -- Check chapter-based unlock
+    local partUnlocked = isPartUnlocked(part.name)
+    local requiredChap = getPartChapterRequirement(part.name)
+
     table.insert(shopParts, {
       name = part.name,
       niceName = part.niceName,
       slotType = part.slotType,
       baseValue = part.baseValue,
       shopPrice = shopPrice,
+      locked = not partUnlocked,
+      requiredChapter = requiredChap,
     })
 
     ::continue::
@@ -572,6 +648,11 @@ local function purchasePart(shopId, partName)
     return { success = false, message = "Part not available" }
   end
 
+  -- Check if part is locked by chapter
+  if partToBuy.locked then
+    return { success = false, message = "Part locked. Requires Chapter " .. tostring(partToBuy.requiredChapter) }
+  end
+
   -- Check if player can afford it
   local playerFunds = 0
   if career_modules_playerAttributes and career_modules_playerAttributes.getAttributeValue then
@@ -666,6 +747,10 @@ local function getOnlineShopParts()
       end
     end
 
+    -- Check chapter-based unlock
+    local partUnlocked = isPartUnlocked(part.name)
+    local requiredChap = getPartChapterRequirement(part.name)
+
     table.insert(shopParts, {
       name = part.name,
       niceName = part.niceName,
@@ -676,6 +761,8 @@ local function getOnlineShopParts()
       owned = isOwned,
       pending = isPending,
       carrying = isCarrying,
+      locked = not partUnlocked,
+      requiredChapter = requiredChap,
     })
   end
 
@@ -684,10 +771,30 @@ end
 
 -- Place an online order (from cart)
 local function placeOnlineOrder(orderDataJson)
+  log("I", logTag, "placeOnlineOrder called with: " .. tostring(orderDataJson))
+
   -- Parse order data
   local orderItems = jsonDecode(orderDataJson)
   if not orderItems or #orderItems == 0 then
+    log("W", logTag, "placeOnlineOrder: Invalid order data")
     return { success = false, message = "Invalid order data" }
+  end
+
+  log("I", logTag, "placeOnlineOrder: Processing " .. #orderItems .. " items, current chapter: " .. tostring(getCurrentChapter()))
+
+  -- Check for locked parts (chapter-gated)
+  for _, item in ipairs(orderItems) do
+    local partName = item.name or "unknown"
+    local unlocked = isPartUnlocked(partName)
+    log("D", logTag, "Checking part: " .. partName .. ", unlocked: " .. tostring(unlocked))
+
+    if not unlocked then
+      local requiredChap = getPartChapterRequirement(partName)
+      local partDisplayName = item.niceName or item.name or "Unknown"
+      local msg = "Part locked: " .. tostring(partDisplayName) .. " requires Chapter " .. tostring(requiredChap)
+      log("W", logTag, msg)
+      return { success = false, message = msg }
+    end
   end
 
   -- Add required child parts for each item in order
@@ -1098,6 +1205,19 @@ local function deliverPartsAtGarage()
   end
 
   log("I", logTag, "Delivered " .. deliveredCount .. " parts to inventory")
+
+  -- Detect first purchase -> unlock Ghost contact
+  if deliveredCount > 0 then
+    if career_modules_mysummerParts and career_modules_mysummerParts.hasFirstPurchase then
+      if not career_modules_mysummerParts.hasFirstPurchase() then
+        -- Trigger first purchase in mysummerParts module
+        if career_modules_mysummerParts.triggerFirstPurchase then
+          career_modules_mysummerParts.triggerFirstPurchase()
+          log("I", logTag, "First online shop purchase! Triggered Ghost unlock.")
+        end
+      end
+    end
+  end
 
   -- Clear carrying and delivery location
   state.carryingParts = {}

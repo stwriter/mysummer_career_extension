@@ -46,6 +46,9 @@ import PhoneBankRename from "./views/PhoneBankRename.vue"
 import PhoneTuningShop from "./views/PhoneTuningShop.vue"
 import PhoneQuarry from "./views/PhoneQuarry.vue"
 import PhoneDeepWeb from "./views/PhoneDeepWeb.vue"
+import PhoneEmail from "./views/PhoneEmail.vue"
+import PhoneChat from "./views/PhoneChat.vue"
+import PhoneChatConversation from "./views/PhoneChatConversation.vue"
 import PhoneMySummerMarket from "./views/PhoneMySummerMarket.vue"
 import MySummerMarketMain from "./views/MySummerMarketMain.vue"
 import MySummerChecklistMain from "./views/MySummerChecklistMain.vue"
@@ -468,6 +471,25 @@ export default [
         path: "phone-deepweb",
         name: "phone-deepweb",
         component: PhoneDeepWeb
+      },
+
+      {
+        path: "phone-email",
+        name: "phone-email",
+        component: PhoneEmail
+      },
+
+      {
+        path: "phone-chat",
+        name: "phone-chat",
+        component: PhoneChat
+      },
+
+      {
+        path: "phone-chat/:contactId",
+        name: "phone-chat-conversation",
+        component: PhoneChatConversation,
+        props: true
       },
 
       {

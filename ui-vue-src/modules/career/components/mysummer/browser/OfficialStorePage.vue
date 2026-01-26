@@ -208,20 +208,25 @@
             v-for="part in displayedParts"
             :key="part.name"
             class="product-card"
-            :class="{ 'out-of-stock': !part.inStock }"
+            :class="{ 'out-of-stock': !part.inStock && !part.locked, 'part-locked': part.locked }"
           >
             <div class="product-image">
               <div class="no-image">
                 <span>[PART]</span>
               </div>
-              <div class="product-badge new" v-if="part.inStock && part.shopPrice > 2000">PRO</div>
-              <div class="product-badge sold" v-if="!part.inStock">SOLD</div>
+              <div class="product-badge new" v-if="part.inStock && !part.locked && part.shopPrice > 2000">PRO</div>
+              <div class="product-badge sold" v-if="!part.inStock && !part.locked">SOLD</div>
+              <div class="product-badge locked" v-if="part.locked">CH.{{ part.requiredChapter }}</div>
             </div>
 
             <div class="product-info">
               <h3 class="product-name">{{ part.niceName }}</h3>
               <div class="product-sku">{{ formatSlotType(part.slotType) }}</div>
-              <div v-if="part.inStock" class="product-stock in-stock">
+              <div v-if="part.locked" class="product-stock locked-label">
+                <span class="stock-dot locked"></span>
+                Requires Chapter {{ part.requiredChapter }}
+              </div>
+              <div v-else-if="part.inStock" class="product-stock in-stock">
                 <span class="stock-dot"></span>
                 In Stock - Ships Today!
               </div>
@@ -244,7 +249,12 @@
             </div>
 
             <div class="product-actions">
-              <template v-if="part.inStock">
+              <template v-if="part.locked">
+                <button class="add-to-cart-btn locked-btn" disabled>
+                  LOCKED - CH.{{ part.requiredChapter }}
+                </button>
+              </template>
+              <template v-else-if="part.inStock">
                 <div class="qty-selector">
                   <label>Qty:</label>
                   <select class="qty-select" v-model="partQuantities[part.name]" disabled>
@@ -315,6 +325,11 @@
           <button class="checkout-btn" @click="checkout" :disabled="checkingOut">
             {{ checkingOut ? 'Processing...' : 'PROCEED TO CHECKOUT' }}
           </button>
+
+          <div v-if="orderError" class="order-error">
+            <span class="error-icon">[!]</span>
+            {{ orderError }}
+          </div>
 
           <button class="clear-cart-btn" @click="clearCart">CLEAR CART</button>
 
@@ -422,6 +437,7 @@ const showOrders = ref(false)
 const cart = ref([])
 const checkingOut = ref(false)
 const orderSuccess = ref(false)
+const orderError = ref("")
 const expandedCategories = reactive({})
 const expandedNodes = reactive({}) // Track expanded state for hierarchical nodes: "wheels:::rims" -> true
 const selectedSubcategory = ref(null)
@@ -1159,8 +1175,8 @@ const selectSubcategory = (categoryName, subcategoryName) => {
 const isInCart = (partName) => cart.value.some(item => item.name === partName)
 
 const addToCart = (part) => {
-  // Don't add if out of stock or already in cart
-  if (!part.inStock || isInCart(part.name)) return
+  // Don't add if out of stock, locked, or already in cart
+  if (!part.inStock || part.locked || isInCart(part.name)) return
   
   // Stock is 1, so quantity is always 1
   cart.value.push({ ...part, quantity: 1 })
@@ -1213,6 +1229,7 @@ const checkout = () => {
   if (cart.value.length === 0 || checkingOut.value) return
 
   checkingOut.value = true
+  orderError.value = ""
 
   try {
     const orderItems = cart.value.map(item => ({
@@ -1229,16 +1246,20 @@ const checkout = () => {
       window.bngApi.engineLua(`career_modules_mysummerPartShops.placeOnlineOrder("${orderData}")`, (result) => {
         if (result && result.success) {
           orderSuccess.value = true
+          orderError.value = ""
         } else {
           console.error('Order failed:', result)
+          orderError.value = (result && result.message) ? result.message : "Order failed. Please try again."
         }
         checkingOut.value = false
       })
     } else {
+      orderError.value = "System error: API not available"
       checkingOut.value = false
     }
   } catch (err) {
     console.error('Checkout error:', err)
+    orderError.value = "Checkout error: " + (err.message || "Unknown error")
     checkingOut.value = false
   }
 }
@@ -1759,22 +1780,57 @@ $border-color: #dddddd;
   &.out-of-stock {
     opacity: 0.6;
     background: #f5f5f5;
-    
+
     &:hover {
       border-color: #999;
       box-shadow: none;
     }
-    
+
     .product-name {
       color: #888;
     }
-    
+
     .price-value {
       color: #999 !important;
     }
-    
+
     .savings {
       color: #999;
+    }
+  }
+
+  &.part-locked {
+    opacity: 0.7;
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+    border-color: #444;
+
+    &:hover {
+      border-color: #666;
+      box-shadow: 0 0 10px rgba(255, 100, 0, 0.2);
+    }
+
+    .product-name {
+      color: #ff9900;
+    }
+
+    .product-sku {
+      color: #888;
+    }
+
+    .price-value {
+      color: #666 !important;
+    }
+
+    .price-msrp {
+      color: #555 !important;
+    }
+
+    .savings {
+      color: #555;
+    }
+
+    .no-image {
+      color: #555;
     }
   }
 }
@@ -1804,9 +1860,15 @@ $border-color: #dddddd;
   font-weight: bold;
   background: $brand-green;
   color: white;
-  
+
   &.sold {
     background: #999;
+  }
+
+  &.locked {
+    background: linear-gradient(135deg, #ff6600 0%, #cc3300 100%);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   }
 }
 
@@ -1835,9 +1897,13 @@ $border-color: #dddddd;
   align-items: center;
   gap: 4px;
   color: $brand-green;
-  
+
   &.out-of-stock-label {
     color: #999;
+  }
+
+  &.locked-label {
+    color: #ff6600;
   }
 }
 
@@ -1846,9 +1912,13 @@ $border-color: #dddddd;
   height: 6px;
   background: $brand-green;
   border-radius: 50%;
-  
+
   &.out {
     background: #999;
+  }
+
+  &.locked {
+    background: #ff6600;
   }
 }
 
@@ -1929,7 +1999,15 @@ $border-color: #dddddd;
     color: #666;
     cursor: not-allowed;
   }
-  
+
+  &.locked-btn {
+    background: linear-gradient(135deg, #333 0%, #222 100%);
+    color: #ff6600;
+    border: 1px solid #444;
+    cursor: not-allowed;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
   &:disabled {
     cursor: not-allowed;
   }
@@ -2131,6 +2209,22 @@ $border-color: #dddddd;
   &:disabled {
     background: #999;
     cursor: default;
+  }
+}
+
+.order-error {
+  margin: 5px 10px;
+  padding: 8px;
+  background: #ff4444;
+  color: white;
+  font-size: 11px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  .error-icon {
+    font-weight: bold;
   }
 }
 

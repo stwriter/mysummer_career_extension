@@ -1,0 +1,681 @@
+{
+  "id": "techie",
+  "name": "Techie",
+  "personality": "technical",
+  "specialty": "ECU tuning and electronics",
+  "description": "Knows every spec, every number. Talk tech or don't talk at all",
+  "isV3Format": true,
+
+  "contextReactions": {
+    "recentPoliceEscape": [
+      "Your escape route was suboptimal. I ran the data. But you made it.",
+      "Interesting driving pattern during that chase. Efficient.",
+      "The police scanners lit up. You caused quite the signal."
+    ],
+    "recentPoliceCaught": [
+      "Your arrest record is now in the system. Problematic.",
+      "Getting caught creates data trails. I don't like data trails.",
+      "The police database has your information now. Be more careful."
+    ],
+    "recentPurchase": [
+      "The components I provided - are they performing within expected parameters?",
+      "Those parts should give you a 12-15% improvement. Confirmed?",
+      "Have you logged the dyno results yet?"
+    ],
+    "recentRaceWin": [
+      "Your telemetry from that race was impressive. Good optimization.",
+      "Win percentage increased. The numbers don't lie.",
+      "Your lap times are improving. The data shows progress."
+    ],
+    "longAbsence": [
+      "Your absence was noted. 47 days without contact.",
+      "I was starting to think you found a different data source.",
+      "Long time. I hope you weren't wasting time with analog methods."
+    ]
+  },
+
+  "conversations": {
+    "level1": {
+      "title": "Initial Analysis",
+      "phases": {
+        "intro": {
+          "exchanges": [
+            { "speaker": "techie", "text": "New contact detected." },
+            { "speaker": "techie", "text": "State your requirements. Be specific." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "ecu",
+                  "text": "I need ECU tuning. My car's running below potential.",
+                  "traits": ["technical"],
+                  "points": 15,
+                  "setsMemory": { "wantsECU": true },
+                  "leadsTo": "intro_ecu"
+                },
+                {
+                  "id": "general",
+                  "text": "I heard you know electronics. I need an edge.",
+                  "traits": ["honest"],
+                  "points": 5,
+                  "leadsTo": "intro_general"
+                },
+                {
+                  "id": "vague",
+                  "text": "I just need parts. Whatever you've got.",
+                  "traits": ["vague"],
+                  "points": -10,
+                  "leadsTo": "intro_vague"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "intro_ecu": [
+              { "speaker": "techie", "text": "ECU tuning. Good." },
+              { "speaker": "techie", "text": "What's your base configuration? Stock maps or aftermarket?" },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "stock",
+                    "text": "Stock for now. But I want to understand the system first.",
+                    "traits": ["patient", "technical"],
+                    "points": 15,
+                    "setsMemory": { "wantsToLearn": true },
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "aftermarket",
+                    "text": "Running a standalone already. Need custom maps.",
+                    "traits": ["technical"],
+                    "points": 20,
+                    "setsMemory": { "hasStandalone": true },
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ],
+            "intro_general": [
+              { "speaker": "techie", "text": "'An edge.' Vague." },
+              { "speaker": "techie", "text": "What are you trying to optimize? Power? Efficiency? Response?" },
+              { "speaker": "techie", "text": "I need data to work with." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "power",
+                    "text": "Power primarily. But reliable power.",
+                    "traits": ["honest"],
+                    "points": 10,
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "everything",
+                    "text": "Balance. I want the car to be better everywhere.",
+                    "traits": ["thoughtful"],
+                    "points": 15,
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ],
+            "intro_vague": [
+              { "speaker": "techie", "text": "..." },
+              { "speaker": "techie", "text": "'Whatever you've got.'" },
+              { "speaker": "techie", "text": "That's not how I work." },
+              { "speaker": "techie", "text": "I deal in precision. Specifications. Data." },
+              { "speaker": "techie", "text": "If you can't be specific, you're wasting both our time." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "apologize",
+                    "text": "You're right. Let me explain what I'm building.",
+                    "traits": ["humble"],
+                    "points": 5,
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "leave",
+                    "text": "Fine. I'll figure it out myself.",
+                    "traits": ["impatient"],
+                    "points": -15,
+                    "endConversation": true,
+                    "result": "rejected",
+                    "cooldown": 300
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "nudo": {
+          "contextTransition": {
+            "default": "Alright. Let me assess your baseline knowledge.",
+            "hasStandalone": "Standalone ECU. Good starting point. You understand the fundamentals.",
+            "wantsToLearn": "Learning first. Logical approach. Most people skip this step."
+          },
+          "exchanges": [
+            { "speaker": "techie", "text": "{{contextTransition}}" },
+            { "speaker": "techie", "text": "Question: What happens when you advance ignition timing?" },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "correct",
+                  "text": "More power, but risk of detonation. Need to balance with fuel and boost.",
+                  "traits": ["knowledgeable"],
+                  "points": 20,
+                  "setsMemory": { "knowsTuning": true },
+                  "leadsTo": "nudo_correct"
+                },
+                {
+                  "id": "partial",
+                  "text": "Engine runs better? More responsive?",
+                  "points": 5,
+                  "leadsTo": "nudo_partial"
+                },
+                {
+                  "id": "wrong",
+                  "text": "No idea. That's why I need you.",
+                  "traits": ["honest"],
+                  "points": 0,
+                  "leadsTo": "nudo_wrong"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "nudo_correct": [
+              { "speaker": "techie", "text": "Correct." },
+              { "speaker": "techie", "text": "You understand the combustion cycle. Good." },
+              { "speaker": "techie", "text": "Most people I deal with don't know the difference between timing and fueling." },
+              { "speaker": "techie", "text": "They just want 'more power' without understanding the trade-offs." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "learned",
+                    "text": "I spent a lot of time studying. Theory before practice.",
+                    "traits": ["dedicated"],
+                    "points": 15,
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "experience",
+                    "text": "Blew an engine once. Best lesson I ever had.",
+                    "traits": ["honest"],
+                    "points": 20,
+                    "setsMemory": { "learnedHardWay": true },
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ],
+            "nudo_partial": [
+              { "speaker": "techie", "text": "Partially correct." },
+              { "speaker": "techie", "text": "Advancing timing moves the spark earlier in the compression stroke." },
+              { "speaker": "techie", "text": "More complete combustion. More power." },
+              { "speaker": "techie", "text": "But too much and you get knock. Engine damage." },
+              { "speaker": "techie", "text": "It's all about finding the edge without going over." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "makes_sense",
+                    "text": "That makes sense. It's about optimization, not maximization.",
+                    "traits": ["perceptive"],
+                    "points": 15,
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "teach_more",
+                    "text": "I want to learn more. Can you teach me?",
+                    "traits": ["humble"],
+                    "points": 10,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ],
+            "nudo_wrong": [
+              { "speaker": "techie", "text": "Honest. But concerning." },
+              { "speaker": "techie", "text": "I'll explain briefly." },
+              { "speaker": "techie", "text": "The ECU controls when the spark fires. When fuel is injected." },
+              { "speaker": "techie", "text": "Get it wrong, you lose power. Get it very wrong, you destroy the engine." },
+              { "speaker": "techie", "text": "This isn't plug and play. It's precision work." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "understand",
+                    "text": "I understand. I'll study before I touch anything.",
+                    "traits": ["humble", "patient"],
+                    "points": 10,
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "guide_me",
+                    "text": "Then guide me. I'm willing to learn.",
+                    "traits": ["dedicated"],
+                    "points": 10,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "desenlace": {
+          "exchanges": [
+            { "speaker": "techie", "text": "Here's what most people don't understand." },
+            { "speaker": "techie", "text": "A car is a system. Every component affects every other." },
+            { "speaker": "techie", "text": "Change one variable, and the optimal values for everything else shift." },
+            { "speaker": "techie", "text": "That's why I work with data. Numbers don't lie." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "data_driven",
+                  "text": "Data-driven approach. I respect that.",
+                  "traits": ["technical"],
+                  "points": 15,
+                  "setsMemory": { "respectsData": true }
+                },
+                {
+                  "id": "intuition",
+                  "text": "What about feel? Experience?",
+                  "points": 5
+                }
+              ]
+            },
+            { "speaker": "techie", "text": "I'll give you access to basic components." },
+            { "speaker": "techie", "text": "Sensors. Wiring. Entry-level tuning equipment." },
+            { "speaker": "techie", "text": "Come back when you have data to show me." },
+            { "speaker": "techie", "text": "And I mean real data. Logs. Numbers. Not feelings." }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 75,
+              "unlocks": ["techie_basic_inventory"]
+            },
+            "cooldown": 180,
+            "teaser": "Collect some telemetry data. Then we can optimize properly."
+          }
+        }
+      },
+
+      "nexos": {
+        "beforeNudo": [
+          "Processing.",
+          "Understood.",
+          "..."
+        ],
+        "beforeDesenlace": [
+          "Analysis complete.",
+          "Noted.",
+          "..."
+        ]
+      }
+    },
+
+    "level2": {
+      "title": "Deep Dive",
+      "requiredMemory": ["respectsData"],
+      "unlockMessage": "Techie is ready to share more advanced knowledge.",
+
+      "phases": {
+        "intro": {
+          "contextAware": true,
+          "exchanges": [
+            { "speaker": "techie", "text": "Contact re-established." },
+            { "speaker": "techie", "text": "{{contextReaction}}" },
+            { "speaker": "techie", "text": "I've reviewed our previous conversation." },
+            { "speaker": "techie", "text": "Your knowledge base shows potential." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "ready",
+                  "text": "Ready to learn more. What's next?",
+                  "traits": ["dedicated"],
+                  "points": 10,
+                  "continueToPhase": "nudo"
+                },
+                {
+                  "id": "results",
+                  "text": "I've been collecting data like you said. Want to see?",
+                  "traits": ["dedicated"],
+                  "points": 15,
+                  "setsMemory": { "broughtData": true },
+                  "continueToPhase": "nudo"
+                }
+              ]
+            }
+          ]
+        },
+
+        "nudo": {
+          "exchanges": [
+            { "speaker": "techie", "text": "Let me tell you how I started in this." },
+            { "speaker": "techie", "text": "I was 14. Couldn't afford a car." },
+            { "speaker": "techie", "text": "But I could build computers. Understand systems." },
+            { "speaker": "techie", "text": "So I started reverse-engineering ECU firmware." },
+            { "speaker": "techie", "text": "Cracking the code that manufacturers didn't want people to see." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "impressive",
+                  "text": "At 14? That's impressive.",
+                  "traits": ["respectful"],
+                  "points": 10,
+                  "leadsTo": "nudo_story"
+                },
+                {
+                  "id": "legal",
+                  "text": "Isn't that... legally complicated?",
+                  "traits": ["cautious"],
+                  "points": 5,
+                  "leadsTo": "nudo_legal"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "nudo_story": [
+              { "speaker": "techie", "text": "Impressive. Also illegal in some jurisdictions." },
+              { "speaker": "techie", "text": "But the knowledge I gained... invaluable." },
+              { "speaker": "techie", "text": "I know things about these systems that dealers don't." },
+              { "speaker": "techie", "text": "Hidden features. Safety limits that can be adjusted." },
+              { "speaker": "techie", "text": "A friend of mine... handles the more sensitive data work now." },
+              { "speaker": "techie", "text": "Different skill set. More... covert." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "shadow",
+                    "text": "Sounds like useful connections to have.",
+                    "traits": ["cautious"],
+                    "points": 10,
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "focus",
+                    "text": "I just want to make my car faster. Legally.",
+                    "traits": ["honest"],
+                    "points": 15,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ],
+            "nudo_legal": [
+              { "speaker": "techie", "text": "Legally complicated. Yes." },
+              { "speaker": "techie", "text": "Which is why I stay on the edge now. Mostly." },
+              { "speaker": "techie", "text": "There's someone else who handles the... deeper work." },
+              { "speaker": "techie", "text": "We've worked together for years. Different domains, same network." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "understand",
+                    "text": "I understand. Everyone has their specialty.",
+                    "traits": ["discrete"],
+                    "points": 15,
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "not_involved",
+                    "text": "I'd rather not get involved in anything too risky.",
+                    "traits": ["cautious"],
+                    "points": 10,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "desenlace": {
+          "exchanges": [
+            { "speaker": "techie", "text": "The point is - information is power." },
+            { "speaker": "techie", "text": "The more you understand the system, the more you can optimize it." },
+            { "speaker": "techie", "text": "I'm opening up my advanced inventory for you." },
+            { "speaker": "techie", "text": "Wideband sensors. Datalogging equipment. Custom harnesses." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "thanks",
+                  "text": "This will help a lot. Thanks.",
+                  "traits": ["respectful"],
+                  "points": 10,
+                  "setsMemory": { "receivedAdvanced": true }
+                },
+                {
+                  "id": "learn_more",
+                  "text": "I want to keep learning. There's always more to understand.",
+                  "traits": ["dedicated"],
+                  "points": 15
+                }
+              ]
+            },
+            { "speaker": "techie", "text": "One more thing." },
+            { "speaker": "techie", "text": "If you ever need... unconventional solutions." },
+            { "speaker": "techie", "text": "There are people in this network who can help." },
+            { "speaker": "techie", "text": "But that's a different level of involvement. Your choice." }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 100,
+              "unlocks": ["techie_advanced_inventory"]
+            },
+            "cooldown": 180,
+            "teaser": "The real optimization starts now. Bring me more data."
+          }
+        }
+      }
+    },
+
+    "level3": {
+      "title": "The Network",
+      "requiredMemory": ["receivedAdvanced"],
+      "unlockMessage": "Techie wants to discuss something important.",
+
+      "phases": {
+        "intro": {
+          "exchanges": [
+            { "speaker": "techie", "text": "I need to tell you something." },
+            { "speaker": "techie", "text": "About how this all connects." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "listening",
+                  "text": "I'm listening.",
+                  "traits": ["patient"],
+                  "points": 10,
+                  "continueToPhase": "nudo"
+                },
+                {
+                  "id": "careful",
+                  "text": "Is this something I should know?",
+                  "traits": ["cautious"],
+                  "points": 10,
+                  "continueToPhase": "nudo"
+                }
+              ]
+            }
+          ]
+        },
+
+        "nudo": {
+          "exchanges": [
+            { "speaker": "techie", "text": "We're all connected. The people in this scene." },
+            { "speaker": "techie", "text": "Ghost. Me. Others you might meet." },
+            { "speaker": "techie", "text": "It's not organized crime. It's more like..." },
+            { "speaker": "techie", "text": "A network of specialists. Each with their domain." },
+            { "speaker": "techie", "text": "I handle data. Electronics. Code." },
+            { "speaker": "techie", "text": "Others handle different things." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "makes_sense",
+                  "text": "Division of expertise. It makes sense.",
+                  "traits": ["perceptive"],
+                  "points": 15,
+                  "leadsTo": "nudo_network"
+                },
+                {
+                  "id": "why_telling",
+                  "text": "Why are you telling me this?",
+                  "points": 10,
+                  "leadsTo": "nudo_why"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "nudo_network": [
+              { "speaker": "techie", "text": "Exactly." },
+              { "speaker": "techie", "text": "We share information. Resources. Contacts." },
+              { "speaker": "techie", "text": "If I can't help you with something, I know who can." },
+              { "speaker": "techie", "text": "And they know me. That matters in this world." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "part_of_it",
+                    "text": "And now I'm part of it?",
+                    "traits": ["cautious"],
+                    "points": 10,
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "trust",
+                    "text": "You're trusting me with this information.",
+                    "traits": ["perceptive"],
+                    "points": 15,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ],
+            "nudo_why": [
+              { "speaker": "techie", "text": "Because you've proven yourself." },
+              { "speaker": "techie", "text": "You learn. You adapt. You respect the process." },
+              { "speaker": "techie", "text": "Those qualities are rare." },
+              { "speaker": "techie", "text": "And they're valuable to people like us." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "honored",
+                    "text": "I won't let you down.",
+                    "traits": ["loyal"],
+                    "points": 15,
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "careful",
+                    "text": "I'll be careful with this trust.",
+                    "traits": ["discrete"],
+                    "points": 15,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "desenlace": {
+          "exchanges": [
+            { "speaker": "techie", "text": "Full access. Everything I have." },
+            { "speaker": "techie", "text": "Custom firmware. Proprietary maps. Hardware that isn't on any market." },
+            { "speaker": "techie", "text": "Use it wisely." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "thanks",
+                  "text": "I will. Thank you.",
+                  "traits": ["respectful"],
+                  "points": 10
+                },
+                {
+                  "id": "questions",
+                  "text": "If I have questions, can I come to you?",
+                  "traits": ["humble"],
+                  "points": 15,
+                  "setsMemory": { "canAskQuestions": true }
+                }
+              ]
+            },
+            { "speaker": "techie", "text": "Always." },
+            { "speaker": "techie", "text": "Data never sleeps. Neither do I." }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 150,
+              "unlocks": ["techie_premium_inventory", "techie_custom_firmware"]
+            },
+            "setsMemory": { "earnedFullTrust": true },
+            "cooldown": 180,
+            "teaser": "You're in the network now. Make it count."
+          }
+        }
+      }
+    }
+  },
+
+  "confrontations": {
+    "afterPoliceEscape": {
+      "chance": 0.3,
+      "text": "I tracked your escape route through traffic cameras. Efficient, but predictable.",
+      "responses": [
+        { "id": "a", "text": "I'll vary my patterns next time.", "traits": ["cautious"], "points": 15 },
+        { "id": "b", "text": "It worked. That's what matters.", "traits": ["confident"], "points": 10 },
+        { "id": "c", "text": "You can track traffic cameras?", "traits": ["curious"], "points": 5 }
+      ]
+    },
+    "randomKnowledgeTest": {
+      "chance": 0.15,
+      "minLevel": 2,
+      "text": "Quick test: What's the ideal air-fuel ratio for gasoline at full throttle?",
+      "responses": [
+        { "id": "a", "text": "12.5:1 to 13:1. Slightly rich for power and cooling.", "traits": ["knowledgeable"], "points": 25 },
+        { "id": "b", "text": "14.7:1? Stoichiometric?", "traits": ["partial"], "points": 10 },
+        { "id": "c", "text": "I'd have to look that up.", "traits": ["honest"], "points": 0 }
+      ]
+    }
+  },
+
+  "exitLines": {
+    "normal": [
+      "Connection terminated.",
+      "I have data to process. We'll talk later.",
+      "Logging off.",
+      "End of session."
+    ],
+    "positive": [
+      "Productive session. Continue learning.",
+      "Your data analysis is improving.",
+      "Good progress. Keep optimizing."
+    ],
+    "negative": [
+      "Insufficient data. Come back prepared.",
+      "We're done for now.",
+      "Review the fundamentals before we talk again."
+    ]
+  }
+}

@@ -19,8 +19,8 @@ local logTag = "mysummerDeepWeb"
 -- ============================================================================
 
 -- Cooldown settings (in seconds)
-local COOLDOWN_BASE = 300  -- 5 minutes base cooldown
-local COOLDOWN_PER_LEVEL = 60  -- Reduced by 1 minute per trust level
+local COOLDOWN_BASE = 180  -- 3 minutes base cooldown
+local COOLDOWN_PER_LEVEL = 30  -- Reduced by 30 seconds per trust level
 local COOLDOWN_MIN = 60  -- Minimum 1 minute cooldown
 
 -- Track last conversation time per contact
@@ -86,9 +86,20 @@ local function loadContactFromJson(contactId)
     return loadedContactData[contactId]
   end
 
-  -- Try v2 format first (with storyArcs)
+  -- Try V3 format first (with phases: intro/nudo/desenlace)
+  local v3Path = contactsJsonPath .. contactId .. "_v3.json"
+  local data = jsonReadFile(v3Path)
+
+  if data and data.conversations then
+    loadedContactData[contactId] = data
+    loadedContactData[contactId].isV3Format = true
+    log("I", logTag, "Loaded V3 contact data from JSON: " .. contactId)
+    return data
+  end
+
+  -- Try V2 format (with storyArcs)
   local v2Path = contactsJsonPath .. contactId .. "_v2.json"
-  local data = jsonReadFile(v2Path)
+  data = jsonReadFile(v2Path)
 
   if data and data.storyArcs then
     loadedContactData[contactId] = data
@@ -112,13 +123,323 @@ local function loadContactFromJson(contactId)
 end
 
 -- ============================================================================
--- FORWARD DECLARATIONS (needed by V2 conversation system)
+-- FORWARD DECLARATIONS (needed by V2/V3 conversation system)
 -- ============================================================================
 
 -- These functions are defined later but needed by getCurrentChapter
 local getContactXP
 local getContactLevel
 local isContactAvailable
+
+-- ============================================================================
+-- PLAYER CONTEXT TRACKING (for V3 contextReactions)
+-- ============================================================================
+
+-- Track recent player events for context-aware dialogue
+local playerContext = {
+  recentPoliceEscape = false,    -- Escaped police recently
+  recentPoliceCaught = false,    -- Got caught by police recently
+  recentPurchase = false,        -- Made a purchase recently
+  recentRaceWin = false,         -- Won a race recently
+  lastContact = nil,             -- Last contact talked to
+  lastContactTime = 0,           -- Timestamp of last conversation
+}
+
+-- Context expiration time (in seconds)
+local CONTEXT_EXPIRATION = 1800  -- 30 minutes
+
+-- Update player context (called from external events)
+local function setPlayerContext(contextKey, value)
+  if playerContext[contextKey] ~= nil then
+    playerContext[contextKey] = value
+    playerContext.lastUpdate = os.time()
+  end
+end
+
+-- Clear expired context
+local function clearExpiredContext()
+  local now = os.time()
+  if playerContext.lastUpdate and (now - playerContext.lastUpdate) > CONTEXT_EXPIRATION then
+    playerContext.recentPoliceEscape = false
+    playerContext.recentPoliceCaught = false
+    playerContext.recentPurchase = false
+    playerContext.recentRaceWin = false
+  end
+end
+
+-- Check if player has been absent for a while (for "longAbsence" context)
+-- Note: vendorState passed directly because state is defined later in file
+local function hasLongAbsence(vendorState)
+  
+  if not vendorState or not vendorState.lastConversationTime then
+    return false
+  end
+  local timeSince = os.time() - vendorState.lastConversationTime
+  return timeSince > 86400  -- More than 24 hours
+end
+
+-- Get active context for a contact conversation
+-- Note: vendorState passed because state is defined later in file
+local function getActiveContext(contactId, vendorState)
+  clearExpiredContext()
+
+  local contexts = {}
+  if playerContext.recentPoliceEscape then
+    table.insert(contexts, "recentPoliceEscape")
+  end
+  if playerContext.recentPoliceCaught then
+    table.insert(contexts, "recentPoliceCaught")
+  end
+  if playerContext.recentPurchase then
+    table.insert(contexts, "recentPurchase")
+  end
+  if playerContext.recentRaceWin then
+    table.insert(contexts, "recentRaceWin")
+  end
+  if hasLongAbsence(vendorState) then
+    table.insert(contexts, "longAbsence")
+  end
+
+  return contexts
+end
+
+-- Select a context reaction from available options
+local function selectContextReaction(contactData, contextType)
+  if not contactData or not contactData.contextReactions then
+    return nil
+  end
+
+  local reactions = contactData.contextReactions[contextType]
+  if reactions and #reactions > 0 then
+    return reactions[math.random(#reactions)]
+  end
+  return nil
+end
+
+-- ============================================================================
+-- V3 CONVERSATION SYSTEM - Phase-based narrative (intro/nudo/desenlace)
+-- ============================================================================
+
+-- Check if contact uses V3 conversation format
+local function isV3Contact(contactId)
+  local data = loadContactFromJson(contactId)
+  return data and data.isV3Format == true
+end
+
+-- Get V3 conversation for a contact based on their level
+local function getV3Conversation(contactId, vendorState)
+  local data = loadContactFromJson(contactId)
+  if not data or not data.conversations then return nil end
+
+  local level = getContactLevel(contactId)
+  local memory = vendorState.conversationMemory or {}
+  local progress = vendorState.conversationProgress or {}
+
+  -- Try to find conversation for current level (level1, level2, level3, etc.)
+  local levelKey = "level" .. level
+  local conversation = data.conversations[levelKey]
+
+  -- Check if this level's conversation is already completed
+  local convId = levelKey
+  if progress.completedConversations and progress.completedConversations[convId] then
+    -- Try next level if available
+    levelKey = "level" .. (level + 1)
+    conversation = data.conversations[levelKey]
+    convId = levelKey
+  end
+
+  -- If still no conversation, look for any uncompleted one
+  if not conversation then
+    for i = 1, 5 do
+      levelKey = "level" .. i
+      convId = levelKey
+      if data.conversations[levelKey] then
+        if not progress.completedConversations or not progress.completedConversations[convId] then
+          conversation = data.conversations[levelKey]
+          break
+        end
+      end
+    end
+  end
+
+  if not conversation then
+    return nil
+  end
+
+  -- Check required memory for this conversation
+  if conversation.requiredMemory then
+    for _, memKey in ipairs(conversation.requiredMemory) do
+      if not memory[memKey] then
+        log("I", logTag, "V3 conversation " .. convId .. " requires memory: " .. memKey)
+        return nil
+      end
+    end
+  end
+
+  return conversation, convId
+end
+
+-- Select a random nexo (transition) for a phase transition
+local function selectNexo(conversation, transitionType)
+  if not conversation or not conversation.nexos then return nil end
+
+  local nexos = conversation.nexos[transitionType]
+  if nexos and #nexos > 0 then
+    return nexos[math.random(#nexos)]
+  end
+  return nil
+end
+
+-- Select an exit line based on conversation outcome
+local function selectExitLine(contactData, outcome)
+  if not contactData or not contactData.exitLines then return nil end
+
+  local lines = contactData.exitLines[outcome] or contactData.exitLines.normal
+  if lines and #lines > 0 then
+    return lines[math.random(#lines)]
+  end
+  return nil
+end
+
+-- Process context transition text ({{contextTransition}} placeholder)
+local function processContextTransition(text, phase, vendorState)
+  if not text or not string.find(text, "{{contextTransition}}") then
+    return text
+  end
+
+  local contextTransition = phase.contextTransition
+  if not contextTransition then
+    return string.gsub(text, "{{contextTransition}}", "")
+  end
+
+  local memory = vendorState.conversationMemory or {}
+
+  -- Check for memory-based transitions first
+  for memKey, transitionText in pairs(contextTransition) do
+    if memKey ~= "default" and memory[memKey] then
+      return string.gsub(text, "{{contextTransition}}", transitionText)
+    end
+  end
+
+  -- Fall back to default
+  local defaultText = contextTransition.default or ""
+  return string.gsub(text, "{{contextTransition}}", defaultText)
+end
+
+-- Process context reaction placeholder ({{contextReaction}})
+local function processContextReaction(text, contactData, contactId, vendorState)
+  if not text or not string.find(text, "{{contextReaction}}") then
+    return text
+  end
+
+  local contexts = getActiveContext(contactId, vendorState)
+  local reaction = nil
+
+  -- Pick the first matching context reaction
+  for _, ctx in ipairs(contexts) do
+    reaction = selectContextReaction(contactData, ctx)
+    if reaction then break end
+  end
+
+  if reaction then
+    return string.gsub(text, "{{contextReaction}}", reaction)
+  else
+    -- Remove the placeholder if no context applies
+    return string.gsub(text, "{{contextReaction}}", "")
+  end
+end
+
+-- Build V3 conversation state
+local function buildV3ConversationState(contactId, vendorState, conversation, convId, contactData)
+  return {
+    vendorId = contactId,
+    isV3 = true,
+    conversationId = convId,
+    conversationTitle = conversation.title,
+    phases = conversation.phases,
+    currentPhase = "intro",  -- Start at intro
+    currentExchangeIndex = 1,
+    currentBranch = nil,
+    sessionPoints = 0,
+    pendingMemory = {},
+    messagesShown = {},
+    contactData = contactData,
+    nexos = conversation.nexos,
+  }
+end
+
+-- Process a V3 exchange and return messages + choices
+local function processV3Exchange(exchange, vendorState, conv)
+  local messages = {}
+  local choices = nil
+  local endConversation = false
+  local result = nil
+  local rewards = nil
+  local setsMemory = nil
+  local continueToPhase = nil
+  local leadsTo = nil
+  local cooldown = nil
+  local teaser = nil
+
+  if exchange.speaker then
+    -- Simple message
+    local sender = exchange.speaker
+    if sender ~= "player" and sender ~= "system" then
+      sender = "vendor"
+    end
+
+    -- Process placeholders in text
+    local text = exchange.text
+    text = processContextTransition(text, conv.phases[conv.currentPhase], vendorState)
+    text = processContextReaction(text, conv.contactData, conv.vendorId, vendorState)
+
+    -- Skip empty messages (from removed placeholders)
+    if text and text ~= "" then
+      table.insert(messages, {
+        sender = sender,
+        text = text,
+        pause = exchange.pause
+      })
+    end
+  elseif exchange.type == "choice" then
+    -- Player choice
+    choices = {}
+    for _, choice in ipairs(exchange.choices) do
+      table.insert(choices, {
+        id = choice.id,
+        text = choice.text,
+        traits = choice.traits,
+        points = choice.points or 0,
+        setsMemory = choice.setsMemory,
+        leadsTo = choice.leadsTo,
+        continueToPhase = choice.continueToPhase,
+        endConversation = choice.endConversation,
+        result = choice.result,
+        cooldown = choice.cooldown,
+      })
+    end
+  elseif exchange.type == "end" or exchange.result then
+    endConversation = true
+    result = exchange.result
+    rewards = exchange.rewards
+    setsMemory = exchange.setsMemory
+    cooldown = exchange.cooldown
+    teaser = exchange.teaser
+  end
+
+  return {
+    messages = messages,
+    choices = choices,
+    endConversation = endConversation,
+    result = result,
+    rewards = rewards,
+    setsMemory = setsMemory,
+    continueToPhase = continueToPhase,
+    leadsTo = leadsTo,
+    cooldown = cooldown,
+    teaser = teaser,
+  }
+end
 
 -- ============================================================================
 -- V2 CONVERSATION SYSTEM - Sequential narratives with chapters
@@ -630,6 +951,24 @@ local vendorDefinitions = {
     -- questionPools loaded dynamically from JSON
   },
 
+  viper = {
+    id = "viper",
+    name = "Viper",
+    personality = "cold",
+    description = "Legendary street racer. Extremely hard to impress. Prove yourself or leave.",
+    trustThreshold = 80,
+    unlockedBy = "ghost",  -- Must earn Ghost's trust first
+    partsInventory = {
+      "etki_engine_race",
+      "etki_turbo_stage3",
+      "etki_differential_R_lsd",
+      "etki_coilover_R_track",
+      "etki_brake_F_carbon",
+      "etki_brake_R_carbon",
+    },
+    -- questionPools loaded dynamically from JSON
+  },
+
   -- AI Pilot Contact - DISABLED (BeamNG CEF blocks external HTTP requests)
   -- To re-enable: uncomment and run ai-proxy server locally
   --[[
@@ -677,7 +1016,7 @@ end
 -- Phase-specific intro messages
 local phaseIntroMessages = {
   ghost = {
-    unknown = "Who the hell are you? How did you get this number?",
+    unknown = "So you're the one someone's been talking about. Question is - can I trust their judgment?",
     acquaintance = "Oh, it's you again. What do you want?",
     associate = "Alright, you've proven yourself. Talk to me.",
     trusted = "Good to see you. Things have been... interesting lately.",
@@ -756,11 +1095,12 @@ local canClearHeatWithShadow
 
 -- Vehicles used by each contact for races
 local contactVehicles = {
-  ghost = { model = "sunburst2", config = "sport_RS_M" },     -- Ex-racer, fast hatch
-  techie = { model = "covet", config = "base" },              -- Compact tuner
-  muscle = { model = "moonhawk", config = "base" },           -- Old-school muscle
-  import = { model = "vivace", config = "base" },             -- JDM style
-  shadow = { model = "fullsize", config = "base" },           -- Sleeper sedan
+  ghost = { model = "covet", config = "ghost_base" },         -- Ex-racer, discrete tuner
+  techie = { model = "covet", config = "base" },              -- Compact tuner project
+  muscle = { model = "moonhawk", config = "muscle_base" },    -- Old-school muscle
+  import = { model = "bx", config = "import_base" },          -- JDM style
+  shadow = { model = "sunburst2", config = "shadow_base" },   -- Fast and invisible
+  viper = { model = "sbr", config = "viper_base" },           -- Legendary racer, SBR beast
 }
 
 -- Race challenge messages
@@ -770,6 +1110,7 @@ local raceChallengeMessages = {
   muscle = "Back in my day, we settled things on the road. You game?",
   import = "Touge style - first to the bottom of the mountain. No excuses.",
   shadow = "Midnight run. No lights, no rules. You in?",
+  viper = "You want my respect? Earn it. One race. No excuses. Winner takes all.",
 }
 
 -- Race result messages
@@ -780,6 +1121,7 @@ local raceResultMessages = {
     muscle = "Kid, you've got some real talent. Reminds me of myself.",
     import = "Clean run. You understand the spirit of racing.",
     shadow = "... You're good. Very good.",
+    viper = "... Not bad. You might actually have what it takes.",
   },
   lose = {
     ghost = "Not bad, but you need more seat time. Keep practicing.",
@@ -787,6 +1129,7 @@ local raceResultMessages = {
     muscle = "Experience beats youth, kid. Come back when you're ready.",
     import = "The mountain doesn't forgive mistakes. Learn from this.",
     shadow = "Slow. But at least you showed up.",
+    viper = "That's it? I expected more. Come back when you're serious.",
   },
 }
 
@@ -1189,6 +1532,11 @@ finishContactRace = function()
   local xpAmount = playerWon and RACE_WIN_XP or RACE_LOSE_XP
   addContactXP(contactId, xpAmount)
 
+  -- Set V3 context for race result
+  if playerWon then
+    setPlayerContext("recentRaceWin", true)
+  end
+
   -- Get result message
   local resultType = playerWon and "win" or "lose"
   local message = raceResultMessages[resultType][contactId] or
@@ -1358,9 +1706,12 @@ end
 -- Check if a contact is available (unlocked)
 -- Note: isContactAvailable is forward declared at the top of CONTACT RACE SYSTEM section
 isContactAvailable = function(contactId)
-  -- Ghost is always available
+  -- Ghost requires first purchase to unlock
   if contactId == "ghost" then
-    return true
+    if career_modules_mysummerParts and career_modules_mysummerParts.hasFirstPurchase then
+      return career_modules_mysummerParts.hasFirstPurchase()
+    end
+    return false
   end
 
   -- Oracle (AI pilot) is always available for testing
@@ -1416,6 +1767,20 @@ local function onPlayerArrested()
       title = "Trust Lost",
       msg = "Your contacts don't trust people who get caught..."
     })
+  end
+end
+
+-- Called when player makes their first part purchase (unlocks Ghost)
+local function onFirstPurchase()
+  log("I", logTag, "First purchase detected! Ghost contact is now available.")
+
+  -- Send Ghost's intro message via the messages system
+  if career_modules_mysummerMessages and career_modules_mysummerMessages.onGhostUnlocked then
+    career_modules_mysummerMessages.onGhostUnlocked()
+  end
+
+  if guihooks then
+    guihooks.trigger("mysummerContactUnlocked", { contactId = "ghost", name = "Ghost" })
   end
 end
 
@@ -2036,6 +2401,468 @@ end
 -- CONVERSATION SYSTEM
 -- ============================================================================
 
+-- Start a V3 conversation with phase-based narrative (intro/nudo/desenlace)
+local function startV3Conversation(vendorId)
+  log("I", logTag, "Starting V3 conversation with: " .. tostring(vendorId))
+
+  local vendorDef = vendorDefinitions[vendorId]
+  local vendorState = state.vendors[vendorId]
+
+  if not vendorState then
+    vendorState = { met = false, blacklisted = false, conversationProgress = {}, conversationMemory = {} }
+    state.vendors[vendorId] = vendorState
+  end
+
+  -- Initialize progress if needed
+  vendorState.conversationProgress = vendorState.conversationProgress or {}
+  vendorState.conversationMemory = vendorState.conversationMemory or {}
+
+  -- Mark as met
+  vendorState.met = true
+
+  -- Get contact data
+  local contactData = loadContactFromJson(vendorId)
+  if not contactData then
+    return nil, "Contact data not found"
+  end
+
+  -- Get conversation for current level
+  local conversation, convId = getV3Conversation(vendorId, vendorState)
+  if not conversation then
+    log("W", logTag, "No available V3 conversation for " .. vendorId)
+    return nil, "fallback_to_v2"
+  end
+
+  -- Build conversation state
+  state.currentConversation = buildV3ConversationState(vendorId, vendorState, conversation, convId, contactData)
+  local conv = state.currentConversation
+
+  -- Process intro phase exchanges until we hit a choice or end
+  local allMessages = {}
+  local choices = nil
+  local ended = false
+
+  -- Add unlock message if this is a new level
+  if conversation.unlockMessage then
+    table.insert(allMessages, {
+      sender = "system",
+      text = conversation.unlockMessage,
+      isSystemMessage = true,
+      isUnlockMessage = true,
+    })
+  end
+
+  -- Get intro phase exchanges
+  local introPhase = conv.phases.intro
+  if not introPhase or not introPhase.exchanges then
+    return nil, "Invalid conversation structure: missing intro phase"
+  end
+
+  conv.currentExchanges = introPhase.exchanges
+  conv.currentBranches = introPhase.branches or {}
+
+  while conv.currentExchangeIndex <= #conv.currentExchanges do
+    local exchange = conv.currentExchanges[conv.currentExchangeIndex]
+    local result = processV3Exchange(exchange, vendorState, conv)
+
+    -- Add messages
+    for _, msg in ipairs(result.messages) do
+      table.insert(allMessages, msg)
+    end
+
+    -- Store shown messages
+    table.insert(conv.messagesShown, exchange)
+
+    if result.choices then
+      choices = result.choices
+      break  -- Stop at choice point
+    elseif result.endConversation then
+      ended = true
+      -- Handle early end (rejection, etc.)
+      if result.setsMemory then
+        for k, v in pairs(result.setsMemory) do
+          vendorState.conversationMemory[k] = v
+        end
+      end
+      if result.rewards and result.rewards.xp then
+        addContactXP(vendorId, result.rewards.xp)
+        conv.sessionPoints = conv.sessionPoints + result.rewards.xp
+      end
+      -- Mark conversation complete
+      vendorState.conversationProgress.completedConversations = vendorState.conversationProgress.completedConversations or {}
+      vendorState.conversationProgress.completedConversations[convId] = true
+      vendorState.conversationProgress.lastResult = result.result
+
+      if result.cooldown then
+        conversationCooldowns[vendorId] = os.time()
+      end
+      break
+    end
+
+    conv.currentExchangeIndex = conv.currentExchangeIndex + 1
+  end
+
+  -- Update last conversation time
+  vendorState.lastConversationTime = os.time()
+
+  if ended then
+    state.currentConversation = nil
+  end
+
+  saveState()
+
+  local currentXP = getContactXP(vendorId)
+  local currentLevel = getContactLevel(vendorId)
+
+  return {
+    vendor = {
+      id = vendorId,
+      name = contactData.name or vendorDef.name or vendorId,
+      color = vendorDef.color or "#8B5CF6",
+      specialty = contactData.specialty or vendorDef.specialty or "Unknown",
+      description = contactData.description or vendorDef.description or "",
+    },
+    messages = allMessages,
+    choices = choices or {},
+    ended = ended,
+    trustXP = currentXP,
+    trustLevel = currentLevel,
+    trustPoints = currentXP,
+    trustThreshold = vendorDef.trustThreshold,
+    phase = conv.currentPhase,
+    conversationTitle = conversation.title,
+    isV3 = true,
+    sessionPoints = conv.sessionPoints,
+    strikes = getStrikes(vendorId),
+    maxStrikes = MAX_STRIKES,
+  }
+end
+
+-- Respond to V3 conversation choice
+local function respondToV3Vendor(responseId)
+  log("I", logTag, "respondToV3Vendor called with: " .. tostring(responseId))
+
+  if not state.currentConversation or not state.currentConversation.isV3 then
+    return nil, "No active V3 conversation"
+  end
+
+  local conv = state.currentConversation
+  local vendorId = conv.vendorId
+  local vendorDef = vendorDefinitions[vendorId]
+  local vendorState = state.vendors[vendorId]
+
+  if not vendorDef or not vendorState then
+    return nil, "Invalid conversation state"
+  end
+
+  -- Get current exchange (should be a choice)
+  local currentExchange = conv.currentExchanges[conv.currentExchangeIndex]
+  if not currentExchange or currentExchange.type ~= "choice" then
+    return nil, "No choice expected at this point"
+  end
+
+  -- Find selected choice
+  local selectedChoice = nil
+  for _, choice in ipairs(currentExchange.choices) do
+    if choice.id == responseId then
+      selectedChoice = choice
+      break
+    end
+  end
+
+  if not selectedChoice then
+    return nil, "Invalid choice: " .. tostring(responseId)
+  end
+
+  -- Award points
+  local points = selectedChoice.points or 0
+  conv.sessionPoints = conv.sessionPoints + points
+  addContactXP(vendorId, points)
+
+  -- Store memory
+  if selectedChoice.setsMemory then
+    for k, v in pairs(selectedChoice.setsMemory) do
+      vendorState.conversationMemory[k] = v
+      conv.pendingMemory[k] = v
+    end
+  end
+
+  -- Build player response message (feedback is natural through contact's response)
+  local allMessages = {
+    { sender = "player", text = selectedChoice.text }
+  }
+
+  -- Handle choice result
+  local choices = nil
+  local ended = false
+
+  -- Check if choice ends conversation early (rejection)
+  if selectedChoice.endConversation then
+    ended = true
+
+    -- Handle rejection with strike system
+    if selectedChoice.result == "rejected" then
+      local nowBlacklisted = addStrike(vendorId)
+      if nowBlacklisted then
+        table.insert(allMessages, {
+          sender = "vendor",
+          text = "We're done. Don't contact me again.",
+          isSystemMessage = true
+        })
+        table.insert(allMessages, {
+          sender = "system",
+          text = "This contact has blacklisted you. Win a race against them or do them a favor to earn back their trust.",
+          isSystemMessage = true
+        })
+      else
+        local strikesLeft = MAX_STRIKES - getStrikes(vendorId)
+        table.insert(allMessages, {
+          sender = "system",
+          text = string.format("Strike received. %d more mistake%s and you'll be blacklisted.", strikesLeft, strikesLeft == 1 and "" or "s"),
+          isSystemMessage = true
+        })
+      end
+    end
+
+    if selectedChoice.cooldown then
+      conversationCooldowns[vendorId] = os.time()
+    end
+  -- Check if choice leads to a branch
+  elseif selectedChoice.leadsTo and conv.currentBranches[selectedChoice.leadsTo] then
+    -- Switch to branch
+    conv.currentExchanges = conv.currentBranches[selectedChoice.leadsTo]
+    conv.currentExchangeIndex = 1
+    conv.currentBranch = selectedChoice.leadsTo
+  -- Check if choice transitions to next phase
+  elseif selectedChoice.continueToPhase then
+    local nextPhase = selectedChoice.continueToPhase
+
+    -- Add nexo (transition) if available
+    local nexoType = "before" .. nextPhase:gsub("^%l", string.upper)  -- "beforeNudo", "beforeDesenlace"
+    local nexo = selectNexo(conv, nexoType)
+    if nexo then
+      table.insert(allMessages, {
+        sender = "vendor",
+        text = nexo,
+        isNexo = true
+      })
+    end
+
+    -- Switch to next phase
+    local phaseData = conv.phases[nextPhase]
+    if phaseData and phaseData.exchanges then
+      conv.currentPhase = nextPhase
+      conv.currentExchanges = phaseData.exchanges
+      conv.currentBranches = phaseData.branches or {}
+      conv.currentExchangeIndex = 1
+      conv.currentBranch = nil
+    else
+      log("E", logTag, "Invalid next phase: " .. tostring(nextPhase))
+    end
+  else
+    -- Continue to next exchange
+    conv.currentExchangeIndex = conv.currentExchangeIndex + 1
+  end
+
+  -- Process exchanges until next choice or end
+  if not ended then
+    while conv.currentExchangeIndex <= #conv.currentExchanges do
+      local exchange = conv.currentExchanges[conv.currentExchangeIndex]
+      local result = processV3Exchange(exchange, vendorState, conv)
+
+      for _, msg in ipairs(result.messages) do
+        table.insert(allMessages, msg)
+      end
+
+      if result.choices then
+        choices = result.choices
+        break
+      elseif result.endConversation then
+        ended = true
+
+        -- Handle end
+        if result.setsMemory then
+          for k, v in pairs(result.setsMemory) do
+            vendorState.conversationMemory[k] = v
+          end
+        end
+        if result.rewards then
+          if result.rewards.xp then
+            addContactXP(vendorId, result.rewards.xp)
+            conv.sessionPoints = conv.sessionPoints + result.rewards.xp
+          end
+          if result.rewards.unlocks then
+            -- Store unlocks in memory for later use
+            for _, unlock in ipairs(result.rewards.unlocks) do
+              vendorState.conversationMemory["unlock_" .. unlock] = true
+            end
+          end
+        end
+
+        -- Mark conversation complete
+        vendorState.conversationProgress.completedConversations = vendorState.conversationProgress.completedConversations or {}
+        vendorState.conversationProgress.completedConversations[conv.conversationId] = true
+        vendorState.conversationProgress.lastResult = result.result
+
+        -- Add teaser for next conversation
+        if result.teaser then
+          table.insert(allMessages, {
+            sender = "vendor",
+            text = result.teaser,
+            isTeaser = true
+          })
+        end
+
+        -- Add exit line
+        local contactData = conv.contactData
+        local exitOutcome = "normal"
+        if result.result == "success" then
+          exitOutcome = conv.sessionPoints >= 50 and "positive" or "normal"
+        elseif result.result == "rejected" or result.result == "failure" then
+          exitOutcome = "negative"
+        end
+        local exitLine = selectExitLine(contactData, exitOutcome)
+        if exitLine then
+          table.insert(allMessages, {
+            sender = "vendor",
+            text = exitLine,
+            isExitLine = true
+          })
+        end
+
+        if result.cooldown then
+          conversationCooldowns[vendorId] = os.time()
+        end
+        break
+      end
+
+      conv.currentExchangeIndex = conv.currentExchangeIndex + 1
+    end
+  end
+
+  -- Check if we've run out of exchanges without an explicit end
+  if conv.currentExchangeIndex > #conv.currentExchanges and not ended and not choices then
+    -- Check if there are more phases to go through
+    local phaseOrder = { "intro", "nudo", "desenlace" }
+    local currentPhaseIndex = 1
+    for i, p in ipairs(phaseOrder) do
+      if p == conv.currentPhase then
+        currentPhaseIndex = i
+        break
+      end
+    end
+
+    if currentPhaseIndex < #phaseOrder then
+      -- Move to next phase automatically
+      local nextPhase = phaseOrder[currentPhaseIndex + 1]
+      local nexoType = "before" .. nextPhase:gsub("^%l", string.upper)
+      local nexo = selectNexo(conv, nexoType)
+      if nexo then
+        table.insert(allMessages, {
+          sender = "vendor",
+          text = nexo,
+          isNexo = true
+        })
+      end
+
+      local phaseData = conv.phases[nextPhase]
+      if phaseData and phaseData.exchanges then
+        conv.currentPhase = nextPhase
+        conv.currentExchanges = phaseData.exchanges
+        conv.currentBranches = phaseData.branches or {}
+        conv.currentExchangeIndex = 1
+        conv.currentBranch = nil
+
+        -- Process the new phase until choice
+        while conv.currentExchangeIndex <= #conv.currentExchanges do
+          local exchange = conv.currentExchanges[conv.currentExchangeIndex]
+          local result = processV3Exchange(exchange, vendorState, conv)
+
+          for _, msg in ipairs(result.messages) do
+            table.insert(allMessages, msg)
+          end
+
+          if result.choices then
+            choices = result.choices
+            break
+          elseif result.endConversation then
+            ended = true
+            -- Same end handling as above
+            if result.setsMemory then
+              for k, v in pairs(result.setsMemory) do
+                vendorState.conversationMemory[k] = v
+              end
+            end
+            if result.rewards and result.rewards.xp then
+              addContactXP(vendorId, result.rewards.xp)
+              conv.sessionPoints = conv.sessionPoints + result.rewards.xp
+            end
+            vendorState.conversationProgress.completedConversations = vendorState.conversationProgress.completedConversations or {}
+            vendorState.conversationProgress.completedConversations[conv.conversationId] = true
+            vendorState.conversationProgress.lastResult = result.result
+
+            if result.teaser then
+              table.insert(allMessages, { sender = "vendor", text = result.teaser, isTeaser = true })
+            end
+
+            local exitLine = selectExitLine(conv.contactData, conv.sessionPoints >= 50 and "positive" or "normal")
+            if exitLine then
+              table.insert(allMessages, { sender = "vendor", text = exitLine, isExitLine = true })
+            end
+
+            if result.cooldown then
+              conversationCooldowns[vendorId] = os.time()
+            end
+            break
+          end
+
+          conv.currentExchangeIndex = conv.currentExchangeIndex + 1
+        end
+      end
+    else
+      -- No more phases, end naturally
+      ended = true
+      vendorState.conversationProgress.completedConversations = vendorState.conversationProgress.completedConversations or {}
+      vendorState.conversationProgress.completedConversations[conv.conversationId] = true
+    end
+  end
+
+  local sessionPoints = conv.sessionPoints
+  local currentStrikes = getStrikes(vendorId)
+
+  if ended then
+    setContactCooldown(vendorId)
+    state.currentConversation = nil
+  end
+
+  saveState()
+
+  local currentXP = getContactXP(vendorId)
+  local currentLevel = getContactLevel(vendorId)
+  local contactData = conv.contactData or loadContactFromJson(vendorId)
+
+  return {
+    vendor = {
+      id = vendorId,
+      name = contactData.name or vendorDef.name or vendorId,
+    },
+    messages = allMessages,
+    choices = choices or {},
+    ended = ended,
+    trustXP = currentXP,
+    trustLevel = currentLevel,
+    trustPoints = currentXP,
+    trustThreshold = vendorDef.trustThreshold,
+    sessionPoints = sessionPoints,
+    strikes = currentStrikes,
+    maxStrikes = MAX_STRIKES,
+    blacklisted = vendorState.blacklisted,
+    redemptionType = vendorState.redemptionType,
+    phase = conv and conv.currentPhase or nil,
+    isV3 = true,
+  }
+end
+
 -- Start a V2 conversation with sequential narrative
 local function startV2Conversation(vendorId)
   log("I", logTag, "Starting V2 conversation with: " .. tostring(vendorId))
@@ -2208,38 +3035,10 @@ local function respondToV2Vendor(responseId)
     end
   end
 
-  -- Build player response message with points feedback
+  -- Build player response message (feedback is natural through contact's response)
   local allMessages = {
     { sender = "player", text = selectedChoice.text }
   }
-
-  -- Add points feedback message
-  if points ~= 0 then
-    local feedbackText = ""
-    if points > 0 then
-      if points >= 20 then
-        feedbackText = string.format("[+%d] Excellent response!", points)
-      elseif points >= 10 then
-        feedbackText = string.format("[+%d] Good answer.", points)
-      else
-        feedbackText = string.format("[+%d] Acceptable.", points)
-      end
-    else
-      if points <= -15 then
-        feedbackText = string.format("[%d] That was a mistake.", points)
-      elseif points <= -5 then
-        feedbackText = string.format("[%d] Not the best choice.", points)
-      else
-        feedbackText = string.format("[%d] Could be better.", points)
-      end
-    end
-    table.insert(allMessages, {
-      sender = "system",
-      text = feedbackText,
-      isSystemMessage = true,
-      pointsChange = points
-    })
-  end
 
   -- Check if we branch to a different path
   local choices = nil
@@ -2450,6 +3249,18 @@ local function startConversation(vendorId)
     return nil, "You've been blocked by this vendor"
   end
 
+  -- Check if this contact uses V3 conversation system (phase-based: intro/nudo/desenlace)
+  if isV3Contact(vendorId) then
+    local result, err = startV3Conversation(vendorId)
+    if result then
+      return result
+    elseif err ~= "fallback_to_v2" then
+      return nil, err
+    end
+    -- Fall through to V2 if V3 returned fallback
+    log("I", logTag, "Falling back to V2 conversation for " .. vendorId)
+  end
+
   -- Check if this contact uses V2 conversation system
   if isV2Contact(vendorId) then
     local result, err = startV2Conversation(vendorId)
@@ -2551,6 +3362,11 @@ local function respondToVendor(responseId)
   if not state.currentConversation then
     log("E", logTag, "No active conversation")
     return nil, "No active conversation"
+  end
+
+  -- Check if this is a V3 conversation (phase-based)
+  if state.currentConversation.isV3 then
+    return respondToV3Vendor(responseId)
   end
 
   -- Check if this is a V2 conversation
@@ -2981,24 +3797,28 @@ local function onPursuitAction(vehId, action, data)
     return
   end
 
-  -- Only handle arrests
-  if action ~= "arrest" then
-    return
-  end
-
-  -- Only apply penalty if the player (not cop) was arrested
+  -- Only handle player vehicle events
   local playerVehId = be:getPlayerVehicleID(0)
   if vehId ~= playerVehId then
     return
   end
 
-  -- Check if player is a cop (cops don't lose trust)
+  -- Check if player is a cop (cops don't affect context)
   if career_modules_playerDriving and career_modules_playerDriving.getPlayerIsCop and career_modules_playerDriving.getPlayerIsCop() then
     return
   end
 
-  log("I", logTag, "Player arrested by police - applying contact trust penalty")
-  onPlayerArrested()
+  -- Handle different pursuit actions for V3 context system
+  if action == "arrest" then
+    log("I", logTag, "Player arrested by police - applying contact trust penalty and setting context")
+    setPlayerContext("recentPoliceCaught", true)
+    setPlayerContext("recentPoliceEscape", false)  -- Clear escape if they got caught
+    onPlayerArrested()
+  elseif action == "evade" or action == "escaped" then
+    log("I", logTag, "Player escaped police pursuit - setting context")
+    setPlayerContext("recentPoliceEscape", true)
+    setPlayerContext("recentPoliceCaught", false)  -- Clear caught if they escaped
+  end
 end
 
 -- ============================================================================
@@ -3118,6 +3938,9 @@ M.getActiveRaceState = getActiveRaceState
 -- Arrest penalty system
 M.onPlayerArrested = onPlayerArrested
 
+-- First purchase callback (Ghost unlock)
+M.onFirstPurchase = onFirstPurchase
+
 -- Shadow heat services
 M.getPlayerHeatInfo = getPlayerHeatInfo
 M.clearHeatWithShadow = clearHeatWithShadow
@@ -3148,6 +3971,10 @@ M.isAIContact = isAIContact
 M.startAIConversation = startAIConversation
 M.sendAIMessage = sendAIMessage
 M.endAIConversation = endAIConversation
+
+-- V3 Context System API (for external events to set player context)
+M.setPlayerContext = setPlayerContext
+M.getActiveContext = getActiveContext
 
 -- Debug: verify exports
 log("D", logTag, "Export check - startContactRace type: " .. type(startContactRace))

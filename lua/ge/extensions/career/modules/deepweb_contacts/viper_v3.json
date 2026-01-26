@@ -1,0 +1,709 @@
+{
+  "id": "viper",
+  "name": "Viper",
+  "personality": "cold",
+  "specialty": "High-performance racing parts",
+  "description": "A legendary street racer who's seen it all and trusts no one",
+  "isV3Format": true,
+
+  "contextReactions": {
+    "recentPoliceEscape": [
+      "Heard you outran the cops. Not bad. But running isn't the same as racing.",
+      "Police chase, huh? Let me guess - you think that makes you fast now?",
+      "So you can shake a cop car. Congratulations. That's the bare minimum."
+    ],
+    "recentPoliceCaught": [
+      "You got caught? Seriously? And you want to talk to me?",
+      "Getting arrested is sloppy. I don't deal with sloppy.",
+      "Caught by the cops. Do you know how that looks?"
+    ],
+    "recentPurchase": [
+      "Using those parts I sold you? Or just letting them collect dust?",
+      "Those parts aren't decorations. You better be putting them to work.",
+      "How are those parts treating you? Actually showing results?"
+    ],
+    "recentRaceWin": [
+      "Heard you won a race. Against who? Amateurs don't count.",
+      "A win is a win, I suppose. Though the competition matters.",
+      "Winning. Good. Now do it consistently."
+    ],
+    "longAbsence": [
+      "Disappeared for a while. Thought you gave up.",
+      "Long time. Did you get scared off?",
+      "Back again. I was starting to think you weren't serious."
+    ]
+  },
+
+  "conversations": {
+    "level1": {
+      "title": "The Test",
+      "phases": {
+        "intro": {
+          "exchanges": [
+            { "speaker": "viper", "text": "..." },
+            { "speaker": "viper", "text": "Another one." },
+            { "speaker": "viper", "text": "Let me save us both some time." },
+            { "speaker": "viper", "text": "I don't deal with tourists. I don't deal with wannabes." },
+            { "speaker": "viper", "text": "And I definitely don't deal with people who waste my time." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "not_tourist",
+                  "text": "I'm not a tourist. I'm here because I'm serious about racing.",
+                  "traits": ["confident"],
+                  "points": 5,
+                  "leadsTo": "intro_serious"
+                },
+                {
+                  "id": "reputation",
+                  "text": "Your reputation is why I'm here. You're the best.",
+                  "traits": ["respectful"],
+                  "points": 0,
+                  "leadsTo": "intro_flattery"
+                },
+                {
+                  "id": "prove_it",
+                  "text": "Then let me prove I'm worth your time.",
+                  "traits": ["determined"],
+                  "points": 10,
+                  "leadsTo": "intro_prove"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "intro_serious": [
+              { "speaker": "viper", "text": "Serious." },
+              { "speaker": "viper", "text": "You know how many 'serious' people have walked through that door?" },
+              { "speaker": "viper", "text": "They're all the same. Big talk. No results." },
+              { "speaker": "viper", "text": "What makes you any different?" },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "results",
+                    "text": "I don't talk. I let my driving speak for itself.",
+                    "traits": ["confident", "humble"],
+                    "points": 15,
+                    "setsMemory": { "actionsNotWords": true },
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "honest",
+                    "text": "Maybe nothing. But I won't know until I try.",
+                    "traits": ["honest"],
+                    "points": 10,
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ],
+            "intro_flattery": [
+              { "speaker": "viper", "text": "The best." },
+              { "speaker": "viper", "text": "..." },
+              { "speaker": "viper", "text": "Flattery doesn't work on me." },
+              { "speaker": "viper", "text": "I've heard every compliment, every sweet word, every promise." },
+              { "speaker": "viper", "text": "Men used to think they could charm their way into my garage." },
+              { "speaker": "viper", "text": "Didn't work then. Won't work now." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "fair",
+                    "text": "Fair. Then tell me what will work.",
+                    "traits": ["honest"],
+                    "points": 10,
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "wasn't_flattery",
+                    "text": "It wasn't flattery. It was the truth. But I get it.",
+                    "traits": ["respectful"],
+                    "points": 5,
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ],
+            "intro_prove": [
+              { "speaker": "viper", "text": "Prove it." },
+              { "speaker": "viper", "text": "Everyone wants to prove themselves." },
+              { "speaker": "viper", "text": "But proving yourself to me? That's different." },
+              { "speaker": "viper", "text": "I've been racing since before you were born." },
+              { "speaker": "viper", "text": "Won championships when people told me I didn't belong." },
+              { "speaker": "viper", "text": "So when I say 'prove it,' I mean it." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "ready",
+                    "text": "I understand. Just give me a chance.",
+                    "traits": ["patient", "determined"],
+                    "points": 15,
+                    "setsMemory": { "askedForChance": true },
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "curious",
+                    "text": "Championships? What stopped you?",
+                    "traits": ["curious"],
+                    "points": 10,
+                    "setsMemory": { "askedAboutPast": true },
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "nudo": {
+          "contextTransition": {
+            "default": "Fine. Let's see what you've got.",
+            "actionsNotWords": "Actions over words. I can respect that.",
+            "askedForChance": "A chance. Alright. One chance.",
+            "askedAboutPast": "My past isn't your concern. Not yet."
+          },
+          "exchanges": [
+            { "speaker": "viper", "text": "{{contextTransition}}" },
+            { "speaker": "viper", "text": "Tell me about your build. What are you working on?" },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "etki",
+                  "text": "ETK-I 2400ti. Building it from the ground up.",
+                  "traits": ["dedicated"],
+                  "points": 10,
+                  "setsMemory": { "hasProject": true },
+                  "leadsTo": "nudo_etki"
+                },
+                {
+                  "id": "learning",
+                  "text": "Still figuring that out. Learning the basics first.",
+                  "traits": ["honest", "humble"],
+                  "points": 5,
+                  "leadsTo": "nudo_learning"
+                },
+                {
+                  "id": "fast_car",
+                  "text": "Whatever's fastest. I just want to win.",
+                  "traits": ["impatient"],
+                  "points": -10,
+                  "leadsTo": "nudo_wrong_answer"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "nudo_etki": [
+              { "speaker": "viper", "text": "ETK-I." },
+              { "speaker": "viper", "text": "Good platform. If you know what you're doing." },
+              { "speaker": "viper", "text": "Most people buy one and give up in a month." },
+              { "speaker": "viper", "text": "The 2400ti has potential, but it needs work. Real work." },
+              { "speaker": "viper", "text": "What's your approach? Power? Handling? Balance?" },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "balance",
+                    "text": "Balance first. A fast car that can't turn is just a straight-line toy.",
+                    "traits": ["knowledgeable"],
+                    "points": 20,
+                    "setsMemory": { "understandsBalance": true },
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "power",
+                    "text": "Power. Can't win if you can't keep up on the straights.",
+                    "traits": ["confident"],
+                    "points": 5,
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "not_sure",
+                    "text": "Still learning what works. That's why I'm here.",
+                    "traits": ["humble"],
+                    "points": 10,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ],
+            "nudo_learning": [
+              { "speaker": "viper", "text": "Learning the basics." },
+              { "speaker": "viper", "text": "..." },
+              { "speaker": "viper", "text": "At least you're honest about it." },
+              { "speaker": "viper", "text": "Most people pretend they know more than they do." },
+              { "speaker": "viper", "text": "What do you actually know? And don't lie to me." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "basics",
+                    "text": "Basic maintenance. Oil changes, brakes, some suspension work.",
+                    "traits": ["honest"],
+                    "points": 15,
+                    "setsMemory": { "honestAboutSkills": true },
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "theory",
+                    "text": "More theory than practice. I've studied a lot, done less.",
+                    "traits": ["honest", "humble"],
+                    "points": 10,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ],
+            "nudo_wrong_answer": [
+              { "speaker": "viper", "text": "Whatever's fastest." },
+              { "speaker": "viper", "text": "..." },
+              { "speaker": "viper", "text": "That's the dumbest thing I've heard all week." },
+              { "speaker": "viper", "text": "You want to know what wins races? Connection." },
+              { "speaker": "viper", "text": "Understanding your machine. Knowing every sound, every vibration." },
+              { "speaker": "viper", "text": "A driver who knows their car beats a faster driver every time." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "point_taken",
+                    "text": "You're right. I have a lot to learn.",
+                    "traits": ["humble"],
+                    "points": 5,
+                    "setsMemory": { "learnedLesson": true },
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "disagree",
+                    "text": "Maybe. But speed still matters.",
+                    "traits": ["stubborn"],
+                    "points": -10,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "desenlace": {
+          "exchanges": [
+            { "speaker": "viper", "text": "Look." },
+            { "speaker": "viper", "text": "I'm going to be straight with you." },
+            { "speaker": "viper", "text": "I've spent my whole life fighting to be taken seriously." },
+            { "speaker": "viper", "text": "When I started racing, they wouldn't even let me on the track." },
+            { "speaker": "viper", "text": "'Women don't race,' they said. 'You'll get hurt.'" },
+            { "speaker": "viper", "text": "I proved them wrong. Every single one of them." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "respect",
+                  "text": "That takes more strength than most people will ever understand.",
+                  "traits": ["respectful"],
+                  "points": 15,
+                  "setsMemory": { "showedRespect": true }
+                },
+                {
+                  "id": "their_loss",
+                  "text": "Their loss. The best drivers I know don't care about gender.",
+                  "traits": ["honest"],
+                  "points": 10
+                }
+              ]
+            },
+            { "speaker": "viper", "text": "..." },
+            { "speaker": "viper", "text": "Most people say the right things. Few mean them." },
+            { "speaker": "viper", "text": "I'll give you access to some basic inventory." },
+            { "speaker": "viper", "text": "Prove you're not wasting my time, and maybe we talk again." },
+            { "speaker": "viper", "text": "Now leave. I have work to do." }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 60,
+              "unlocks": ["viper_basic_inventory"]
+            },
+            "cooldown": 240,
+            "teaser": "Come back when you have results to show me. Not words. Results."
+          }
+        }
+      },
+
+      "nexos": {
+        "beforeNudo": [
+          "...",
+          "Fine.",
+          "Hmm."
+        ],
+        "beforeDesenlace": [
+          "...",
+          "Listen.",
+          "Look."
+        ]
+      }
+    },
+
+    "level2": {
+      "title": "The Wall",
+      "requiredMemory": ["showedRespect"],
+      "unlockMessage": "Viper is slightly less hostile. That's progress.",
+
+      "phases": {
+        "intro": {
+          "contextAware": true,
+          "exchanges": [
+            { "speaker": "viper", "text": "You again." },
+            { "speaker": "viper", "text": "{{contextReaction}}" },
+            { "speaker": "viper", "text": "Most people don't come back." },
+            { "speaker": "viper", "text": "Either I scare them off or they realize they're not cut out for this." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "not_scared",
+                  "text": "I don't scare easily. And I don't give up.",
+                  "traits": ["determined"],
+                  "points": 15,
+                  "continueToPhase": "nudo"
+                },
+                {
+                  "id": "learn_more",
+                  "text": "I'm here to learn. Even if it's hard.",
+                  "traits": ["humble", "patient"],
+                  "points": 10,
+                  "continueToPhase": "nudo"
+                }
+              ]
+            }
+          ]
+        },
+
+        "nudo": {
+          "exchanges": [
+            { "speaker": "viper", "text": "Let me tell you something." },
+            { "speaker": "viper", "text": "In 1998, I qualified fastest for the regional championship." },
+            { "speaker": "viper", "text": "Fastest time. By three seconds." },
+            { "speaker": "viper", "text": "They disqualified me. Said my car failed inspection." },
+            { "speaker": "viper", "text": "..." },
+            { "speaker": "viper", "text": "It didn't. They just couldn't handle a woman beating them." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "angry",
+                  "text": "That's... I don't even have words. That's wrong.",
+                  "traits": ["honest"],
+                  "points": 10,
+                  "leadsTo": "nudo_anger"
+                },
+                {
+                  "id": "what_then",
+                  "text": "What did you do?",
+                  "traits": ["curious"],
+                  "points": 15,
+                  "leadsTo": "nudo_response"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "nudo_anger": [
+              { "speaker": "viper", "text": "Wrong." },
+              { "speaker": "viper", "text": "It was beyond wrong. It was my life's work, stolen." },
+              { "speaker": "viper", "text": "I'd trained for years. Sacrificed everything." },
+              { "speaker": "viper", "text": "And they took it away because they couldn't accept reality." },
+              { "speaker": "viper", "text": "That's when I learned." },
+              { "speaker": "viper", "text": "You can't just be good. You have to be undeniable." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "understand",
+                    "text": "So you became undeniable.",
+                    "traits": ["perceptive"],
+                    "points": 20,
+                    "setsMemory": { "understandsHer": true },
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "unfair",
+                    "text": "You shouldn't have had to. It should have been enough.",
+                    "traits": ["honest"],
+                    "points": 15,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ],
+            "nudo_response": [
+              { "speaker": "viper", "text": "What did I do." },
+              { "speaker": "viper", "text": "I went underground. Street racing." },
+              { "speaker": "viper", "text": "No officials. No inspections. No politics." },
+              { "speaker": "viper", "text": "Just driving. Just winning." },
+              { "speaker": "viper", "text": "Built a reputation they couldn't ignore." },
+              { "speaker": "viper", "text": "Now? Now they come to ME for parts. For advice." },
+              { "speaker": "viper", "text": "The same people who disqualified me." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "revenge",
+                    "text": "That must feel satisfying.",
+                    "traits": ["honest"],
+                    "points": 10,
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "better_person",
+                    "text": "You're a better person than me. I don't know if I could help them.",
+                    "traits": ["honest"],
+                    "points": 15,
+                    "setsMemory": { "showedHonesty": true },
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "desenlace": {
+          "exchanges": [
+            { "speaker": "viper", "text": "I don't help them because I forgave them." },
+            { "speaker": "viper", "text": "I help them because it proves they were wrong." },
+            { "speaker": "viper", "text": "Every time they ask for my advice, they admit I was better." },
+            { "speaker": "viper", "text": "..." },
+            { "speaker": "viper", "text": "That's worth more than any championship." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "powerful",
+                  "text": "That's... actually powerful. Winning on your terms.",
+                  "traits": ["perceptive"],
+                  "points": 15,
+                  "setsMemory": { "understandsVictory": true }
+                },
+                {
+                  "id": "respect",
+                  "text": "You turned their hatred into your advantage.",
+                  "traits": ["respectful"],
+                  "points": 10
+                }
+              ]
+            },
+            { "speaker": "viper", "text": "You're... not as annoying as most people." },
+            { "speaker": "viper", "text": "That's high praise from me, by the way." },
+            { "speaker": "viper", "text": "I'm opening up better inventory for you." },
+            { "speaker": "viper", "text": "Don't make me regret it." }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 100,
+              "unlocks": ["viper_performance_inventory"]
+            },
+            "cooldown": 200,
+            "teaser": "There's more to this story. Maybe I'll tell you someday."
+          }
+        }
+      }
+    },
+
+    "level3": {
+      "title": "The Real Race",
+      "requiredMemory": ["understandsHer"],
+      "unlockMessage": "Viper has something important to tell you.",
+
+      "phases": {
+        "intro": {
+          "exchanges": [
+            { "speaker": "viper", "text": "Sit down." },
+            { "speaker": "viper", "text": "I'm going to tell you something I've never told anyone." },
+            { "speaker": "viper", "text": "And if you repeat it, I'll deny everything." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "listening",
+                  "text": "I'm listening. And I won't say a word.",
+                  "traits": ["loyal", "discrete"],
+                  "points": 15,
+                  "continueToPhase": "nudo"
+                },
+                {
+                  "id": "honored",
+                  "text": "I'm honored you trust me with this.",
+                  "traits": ["respectful"],
+                  "points": 10,
+                  "continueToPhase": "nudo"
+                }
+              ]
+            }
+          ]
+        },
+
+        "nudo": {
+          "exchanges": [
+            { "speaker": "viper", "text": "That championship in '98?" },
+            { "speaker": "viper", "text": "The one they stole from me?" },
+            { "speaker": "viper", "text": "I wasn't just racing for myself." },
+            { "speaker": "viper", "text": "My daughter was in the stands. Five years old." },
+            { "speaker": "viper", "text": "I wanted her to see that women can do anything." },
+            { "speaker": "viper", "text": "Instead, she watched them take it away from me." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "that_hurts",
+                  "text": "That... I can't imagine how that felt.",
+                  "traits": ["empathetic"],
+                  "points": 15,
+                  "leadsTo": "nudo_daughter"
+                },
+                {
+                  "id": "where_now",
+                  "text": "Where is she now?",
+                  "traits": ["curious"],
+                  "points": 10,
+                  "leadsTo": "nudo_daughter"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "nudo_daughter": [
+              { "speaker": "viper", "text": "She's a mechanic now. Classic performance." },
+              { "speaker": "viper", "text": "Learned everything from me. Then made it her own." },
+              { "speaker": "viper", "text": "She uses a different name in the scene. Doesn't want people to know." },
+              { "speaker": "viper", "text": "Says she had to earn it herself. Not ride on anyone's reputation." },
+              { "speaker": "viper", "text": "Stubborn. Just like me." },
+              { "speaker": "viper", "text": "..." },
+              { "speaker": "viper", "text": "We don't talk much anymore. But I keep an eye on her." },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "legacy",
+                    "text": "She learned the real lesson. Fight back. Make it better.",
+                    "traits": ["perceptive"],
+                    "points": 20,
+                    "setsMemory": { "understandsLegacy": true },
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "proud",
+                    "text": "You should be proud. You raised her right.",
+                    "traits": ["respectful"],
+                    "points": 15,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "desenlace": {
+          "exchanges": [
+            { "speaker": "viper", "text": "The point is..." },
+            { "speaker": "viper", "text": "We don't just race for ourselves." },
+            { "speaker": "viper", "text": "Every time you win, you prove something." },
+            { "speaker": "viper", "text": "Every time you show up, you make it easier for the next person." },
+            { "speaker": "viper", "text": "Man, woman, doesn't matter." },
+            { "speaker": "viper", "text": "We're all fighting the same fight. Against people who say we can't." },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "fight_together",
+                  "text": "Then let's fight it together.",
+                  "traits": ["loyal", "determined"],
+                  "points": 20,
+                  "setsMemory": { "joinedFight": true }
+                },
+                {
+                  "id": "honor",
+                  "text": "I won't let you down. I promise.",
+                  "traits": ["loyal"],
+                  "points": 15
+                }
+              ]
+            },
+            { "speaker": "viper", "text": "..." },
+            { "speaker": "viper", "text": "You know what?" },
+            { "speaker": "viper", "text": "You're alright." },
+            { "speaker": "viper", "text": "That's the highest compliment I give." },
+            { "speaker": "viper", "text": "Full access. Everything I have. It's yours." },
+            { "speaker": "viper", "text": "Now go win something. And don't forget where you came from." }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 150,
+              "unlocks": ["viper_premium_inventory", "viper_racing_secrets"]
+            },
+            "setsMemory": { "earnedFullTrust": true },
+            "cooldown": 180,
+            "teaser": "You've earned my respect. That's not easy. Make it count."
+          }
+        }
+      }
+    }
+  },
+
+  "confrontations": {
+    "afterPoliceEscape": {
+      "chance": 0.35,
+      "text": "Running from cops doesn't impress me. Racing them would.",
+      "responses": [
+        { "id": "a", "text": "It wasn't about impressing anyone. It was about surviving.", "traits": ["honest"], "points": 15 },
+        { "id": "b", "text": "What counts is I didn't get caught.", "traits": ["confident"], "points": 10 },
+        { "id": "c", "text": "I was scared, honestly.", "traits": ["honest", "humble"], "points": 5 }
+      ]
+    },
+    "randomSkillTest": {
+      "chance": 0.2,
+      "minLevel": 2,
+      "text": "Quick. Understeer in a corner. What do you do?",
+      "responses": [
+        { "id": "a", "text": "Lift off, look where I want to go, let the car rotate.", "traits": ["knowledgeable"], "points": 25 },
+        { "id": "b", "text": "Slow down and correct.", "traits": ["cautious"], "points": 10 },
+        { "id": "c", "text": "More gas?", "traits": ["reckless"], "points": -15 }
+      ]
+    },
+    "randomRespectTest": {
+      "chance": 0.15,
+      "minLevel": 3,
+      "text": "Someone told me women shouldn't be giving racing advice. What do you think?",
+      "responses": [
+        { "id": "a", "text": "I think they should race you. Then they'd learn.", "traits": ["confident", "loyal"], "points": 25 },
+        { "id": "b", "text": "Their loss. Ignorance is its own punishment.", "traits": ["wise"], "points": 20 },
+        { "id": "c", "text": "Maybe they have a point?", "traits": ["disloyal"], "points": -30 }
+      ]
+    }
+  },
+
+  "exitLines": {
+    "normal": [
+      "We're done here.",
+      "That's enough for today. Go.",
+      "I have things to do. Leave.",
+      "Time's up. Come back when you have something to show."
+    ],
+    "positive": [
+      "Not bad today. Keep it up.",
+      "You're growing on me. Don't let it go to your head.",
+      "Decent talk. Now go prove it on the road."
+    ],
+    "negative": [
+      "Disappointing.",
+      "We're done. Don't come back for a while.",
+      "I expected more. Clearly I was wrong."
+    ]
+  }
+}

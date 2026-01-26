@@ -520,6 +520,412 @@ local function setRecordDistance(distance)
 end
 
 -- ============================================================================
+-- Native Format Export & Mission Generation
+-- ============================================================================
+
+local function getMissionsFolder()
+  return "gameplay/missions/" .. getCurrentLevel() .. "/aiRace/"
+end
+
+-- Calculate normal vector (direction to next point)
+local function calculateNormal(pos1, pos2)
+  local v1 = toVec3(pos1)
+  local v2 = toVec3(pos2)
+  if not v1 or not v2 then
+    return {-1, 0, 0}  -- Default facing
+  end
+  local dir = (v2 - v1):normalized()
+  return {dir.x, dir.y, dir.z}
+end
+
+-- Generate grid of start positions based on first checkpoint
+local function generateStartPositions(startPos, startRot, count)
+  local positions = {}
+  local pos = toVec3(startPos)
+  if not pos then return positions end
+
+  -- Default rotation if not provided
+  local rot = startRot or {0, 0, 0, 1}
+
+  -- Calculate perpendicular vector for grid offset
+  local forward = vec3(rot[1] or 0, rot[2] or 0, 0):normalized()
+  if forward:length() < 0.1 then
+    forward = vec3(1, 0, 0)
+  end
+  local right = vec3(-forward.y, forward.x, 0):normalized()
+
+  -- Grid: 2 columns, offset back and sideways
+  local rowSpacing = 10  -- meters between rows
+  local colSpacing = 5   -- meters between columns
+
+  for i = 1, count do
+    local row = math.floor((i - 1) / 2)
+    local col = (i - 1) % 2
+
+    local offset = forward * (-row * rowSpacing) + right * ((col - 0.5) * colSpacing)
+    local gridPos = pos + offset
+
+    table.insert(positions, {
+      name = "Racer Start " .. i,
+      oldId = i + 1,
+      pos = {gridPos.x, gridPos.y, gridPos.z},
+      rot = rot
+    })
+  end
+
+  return positions
+end
+
+-- Export race to native BeamNG .race.json format
+local function exportToNativeFormat(raceName)
+  local race = savedRaces[raceName]
+  if not race then
+    log("E", "mysummerRaceEditor", "Race not found: " .. tostring(raceName))
+    return nil
+  end
+
+  local checkpoints = race.checkpoints
+  if not checkpoints or #checkpoints < 2 then
+    log("E", "mysummerRaceEditor", "Race has insufficient checkpoints")
+    return nil
+  end
+
+  -- Build pathnodes
+  local pathnodes = {}
+  local baseId = 12  -- BeamNG convention starts at 12
+
+  for i, cp in ipairs(checkpoints) do
+    local nextCp = checkpoints[i + 1] or checkpoints[1]  -- Loop back for closed circuits
+    local normal = calculateNormal(cp.pos, nextCp.pos)
+
+    table.insert(pathnodes, {
+      customFields = { names = {}, tags = {}, types = {}, values = {} },
+      mode = "manual",
+      name = "Pathnode " .. i,
+      navRadiusScale = 1,
+      normal = normal,
+      oldId = baseId + i - 1,
+      pos = cp.pos,
+      radius = cp.radius or 15,
+      recovery = -1,
+      reverseRecovery = -1,
+      sidePadding = {1, 3},
+      visible = true
+    })
+  end
+
+  -- Build segments
+  local segments = {}
+  for i = 1, #checkpoints do
+    local fromId = baseId + i - 1
+    local toId
+    if i == #checkpoints then
+      if race.closed then
+        toId = baseId  -- Loop back to start
+      else
+        break  -- Open track, no final segment
+      end
+    else
+      toId = baseId + i
+    end
+
+    table.insert(segments, {
+      capsules = {},
+      from = fromId,
+      to = toId,
+      mode = "waypoint",
+      name = "Segment " .. i,
+      oldId = baseId + #checkpoints + i - 1
+    })
+  end
+
+  -- Generate start positions
+  local firstCp = checkpoints[1]
+  local startRot = firstCp.rotation or {0, 0, 0, 1}
+  local startPositions = generateStartPositions(firstCp.pos, startRot, 10)
+
+  -- Build race.json structure
+  local raceJson = {
+    authors = race.author or "Player",
+    classification = {
+      allowRollingStart = false,
+      branching = false,
+      closed = race.closed or false,
+      reversible = false
+    },
+    date = race.created or os.time(),
+    defaultLaps = race.laps or (race.closed and 3 or 1),
+    defaultStartPosition = 2,
+    description = "Custom race created with MySummer Race Editor",
+    difficulty = 24,
+    endNode = -1,
+    forwardPrefabs = {},
+    hideMission = false,
+    name = race.name or "Custom Race",
+    pacenotes = {},
+    pathnodes = pathnodes,
+    prefabs = {},
+    reversePrefabs = {},
+    reverseStartPosition = -1,
+    rollingReverseStartPosition = -1,
+    rollingStartPosition = -1,
+    segments = segments,
+    startNode = baseId,
+    startPositions = startPositions
+  }
+
+  log("I", "mysummerRaceEditor", string.format(
+    "Exported race '%s': %d pathnodes, %d segments, %d start positions",
+    raceName, #pathnodes, #segments, #startPositions
+  ))
+
+  return raceJson
+end
+
+-- Generate complete mission structure (info.json + race.race.json)
+local function generateMission(raceName, missionId)
+  local race = savedRaces[raceName]
+  if not race then
+    log("E", "mysummerRaceEditor", "Race not found: " .. tostring(raceName))
+    return nil
+  end
+
+  -- Generate race.json first
+  local raceJson = exportToNativeFormat(raceName)
+  if not raceJson then
+    return nil
+  end
+
+  -- Create mission folder name
+  missionId = missionId or string.format("%03d-CUSTOM-%s", os.time() % 1000, raceName:gsub("[^%w]", ""):sub(1, 10))
+  local missionFolder = getMissionsFolder() .. missionId .. "/"
+
+  -- Ensure folder exists
+  if not FS:directoryExists(missionFolder) then
+    FS:directoryCreate(missionFolder, true)
+  end
+
+  -- Get start position for trigger
+  local firstCp = race.checkpoints[1]
+  local startPos = firstCp.pos
+  local startRot = firstCp.rotation or {0, 0, 0, 1}
+
+  -- Build info.json
+  local infoJson = {
+    additionalAttributes = {
+      difficulty = "medium"
+    },
+    author = race.author or "Player",
+    careerSetup = {
+      defaultStarKeys = {"justFinish", "finishSilver", "finishGold"},
+      showInCareer = false,
+      showInFreeroam = true,
+      skill = "(none)",
+      starOutroTexts = {
+        cleanGoldRace = "Way to go!",
+        noStarUnlocked = "Tough luck. Want to try again?"
+      },
+      starRewards = {
+        finishGold = {
+          { attributeKey = "money", rewardAmount = 3000 },
+          { attributeKey = "beamXP", rewardAmount = 15 }
+        },
+        finishSilver = {
+          { attributeKey = "money", rewardAmount = 1500 },
+          { attributeKey = "beamXP", rewardAmount = 10 }
+        },
+        justFinish = {
+          { attributeKey = "beamXP", rewardAmount = 5 }
+        }
+      },
+      starsActive = {
+        finishBronze = false,
+        finishGold = true,
+        finishSilver = true,
+        justFinish = true
+      }
+    },
+    customAdditionalAttributes = {},
+    date = os.time(),
+    description = "Custom race: " .. (race.name or raceName),
+    devMission = true,  -- Mark as dev mission for testing
+    grouping = {
+      id = "CUSTOMRACE",
+      label = "Custom Races"
+    },
+    isAvailableAsScenario = true,
+    layers = {
+      {
+        dir = "/" .. missionFolder,
+        fixed = true,
+        isMissionFolderDir = true,
+        isMissionTypeDir = false
+      },
+      {
+        dir = "/gameplay/missionTypes/aiRace/",
+        fixed = true,
+        isMissionFolderDir = false,
+        isMissionTypeDir = true
+      }
+    },
+    missionType = "aiRace",
+    missionTypeData = {
+      allowFlip = true,
+      allowRecover = true,
+      camPathActive = true,
+      damageFailActive = false,
+      damageLimit = 10000,
+      flipLimit = -1,
+      goalLaps = race.laps or (race.closed and 3 or 1),
+      goalTime = 300,  -- 5 minutes default
+      lapCount = race.laps or (race.closed and 3 or 1),
+      mapPreviewMode = "navgraph",
+      maxRacerCount = 9,
+      minRacerCount = 1,
+      prefabActive = false,
+      raceFile = "/" .. missionFolder .. "race.race.json",
+      racerAggression = 1.0,
+      racerAwareness = true,
+      racerCount = 5,  -- Default 5 AI
+      racerRandomnessScale = 1,
+      racerRough = false,
+      racerRubberbandMode = false,
+      racerSkill = 0.8,
+      recoverLimit = -1,
+      shuffleGroup = true,
+      smartStartPlace = true,
+      startTitle = race.name or "Custom Race",
+      startText = "Custom race created with MySummer Race Editor. Good luck!",
+      stoppedLimit = 0,
+      useGroundmarkers = false,
+      vehicleGroupActive = true
+    },
+    name = race.name or "Custom Race",
+    retryBehaviour = "infiniteRetries",
+    setupModules = {
+      environment = { enabled = false },
+      traffic = {
+        activeAmount = 0,
+        amount = 0,
+        enabled = false,
+        useTraffic = false
+      },
+      vehicles = {
+        enabled = true,
+        includePlayerVehicle = true,
+        prioritizePlayerVehicle = true,
+        vehicles = {}
+      }
+    },
+    startCondition = { type = "always" },
+    startTrigger = {
+      level = getCurrentLevel(),
+      pos = startPos,
+      radius = 10,
+      rot = startRot,
+      type = "coordinates"
+    },
+    visibleCondition = { type = "always" }
+  }
+
+  -- Write files
+  local raceFilePath = missionFolder .. "race.race.json"
+  local infoFilePath = missionFolder .. "info.json"
+
+  jsonWriteFile(raceFilePath, raceJson, true)
+  jsonWriteFile(infoFilePath, infoJson, true)
+
+  log("I", "mysummerRaceEditor", "Generated mission at: " .. missionFolder)
+  guihooks.trigger("toastrMsg", {
+    type = "success",
+    title = "Mission Generated",
+    msg = "Mission created at: " .. missionFolder
+  })
+
+  return {
+    missionId = missionId,
+    folder = missionFolder,
+    raceFile = raceFilePath,
+    infoFile = infoFilePath
+  }
+end
+
+-- Test mission ID (000-TEST template)
+local testMissionId = "west_coast_usa/aiRace/000-TEST"
+local testRaceFilePath = "/gameplay/missions/west_coast_usa/aiRace/000-TEST/race.race.json"
+
+-- Test race with AI - writes to 000-TEST template and starts it
+local function testRace(raceName)
+  local race = savedRaces[raceName]
+  if not race then
+    log("E", "mysummerRaceEditor", "Race not found: " .. tostring(raceName))
+    guihooks.trigger("toastrMsg", {
+      type = "error",
+      title = "Test Failed",
+      msg = "Race '" .. tostring(raceName) .. "' not found. Use listRaces() to see available."
+    })
+    return false
+  end
+
+  -- Export our race to native format
+  local raceJson = exportToNativeFormat(raceName)
+  if not raceJson then
+    guihooks.trigger("toastrMsg", {
+      type = "error",
+      title = "Test Failed",
+      msg = "Failed to export race to native format"
+    })
+    return false
+  end
+
+  -- Write to the test mission's race file
+  jsonWriteFile(testRaceFilePath, raceJson, true)
+  log("I", "mysummerRaceEditor", "Wrote race to: " .. testRaceFilePath)
+
+  guihooks.trigger("toastrMsg", {
+    type = "info",
+    title = "Starting Test Race",
+    msg = "Loading: " .. raceName
+  })
+
+  -- Start the test mission
+  if gameplay_missions_missionScreen then
+    gameplay_missions_missionScreen.startMissionById(testMissionId, {}, {})
+    log("I", "mysummerRaceEditor", "Test mission started: " .. testMissionId)
+  else
+    log("E", "mysummerRaceEditor", "Mission screen not available")
+    return false
+  end
+
+  return true
+end
+
+-- List available races for testing
+local function listRaces()
+  local races = {}
+  for name, race in pairs(savedRaces) do
+    table.insert(races, {
+      name = name,
+      checkpoints = #(race.checkpoints or {}),
+      closed = race.closed,
+      level = race.level
+    })
+  end
+
+  if #races == 0 then
+    log("I", "mysummerRaceEditor", "No races saved. Use enableEditor() and drive to record a race.")
+  else
+    log("I", "mysummerRaceEditor", "Available races:")
+    for _, r in ipairs(races) do
+      log("I", "mysummerRaceEditor", string.format("  - %s (%d checkpoints, %s, %s)",
+        r.name, r.checkpoints, r.closed and "circuit" or "sprint", r.level))
+    end
+  end
+
+  return races
+end
+
+-- ============================================================================
 -- Lifecycle
 -- ============================================================================
 
@@ -553,6 +959,12 @@ M.getRacesForLevel = getRacesForLevel
 M.saveRaceFromConfig = saveRaceFromConfig
 M.deleteRace = deleteRace
 M.setRecordDistance = setRecordDistance
+
+-- Native format export & testing
+M.exportToNativeFormat = exportToNativeFormat
+M.generateMission = generateMission
+M.testRace = testRace
+M.listRaces = listRaces
 
 -- Lifecycle hooks
 M.onExtensionLoaded = onExtensionLoaded

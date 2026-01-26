@@ -38,6 +38,12 @@
   <MySummerRaceSelect />
   <StreetRaceResults />
 
+  <!-- MySummer Mission HUDs -->
+  <SurveillanceHUD />
+
+  <!-- MySummer Dialogue Overlay (story/narrative) -->
+  <DialogueOverlay />
+
   <div id="vue-app-container">
     <template v-for="(app, index) of apps" :key="app.appKey">
       <Teleport v-if="appTargets[app.teleport]" :to="app.teleport">
@@ -70,8 +76,17 @@ import MySummerRaceResults from "@/modules/apps/mysummerRace/MySummerRaceResults
 import MySummerRaceConfig from "@/modules/apps/mysummerRace/MySummerRaceConfig.vue"
 import MySummerRaceSelect from "@/modules/apps/mysummerRace/MySummerRaceSelect.vue"
 import StreetRaceResults from "@/modules/apps/mysummerRace/StreetRaceResults.vue"
+// MySummer Mission HUD components
+import SurveillanceHUD from "@/modules/apps/mysummerMissions/SurveillanceHUD.vue"
+// MySummer Dialogue Overlay (for story/narrative)
+import DialogueOverlay from "@/modules/career/components/mysummer/DialogueOverlay.vue"
+// MySummer Story System - Initialize store to listen for narrative events
+import { useMySummerStoryStore } from "@/modules/career/stores/mysummerStoryStore"
 
 const route = useRoute()
+
+// Initialize story store to listen for global narrative events (like intro letter)
+const storyStore = useMySummerStoryStore()
 
 const settings = useSettings()
 

@@ -120,6 +120,18 @@
         v-else-if="currentPage === 'checklist'"
         @navigate="navigateTo"
       />
+
+      <!-- Email Inbox (legacy) -->
+      <EmailInboxPage
+        v-else-if="currentPage === 'email'"
+        @navigate="navigateTo"
+      />
+
+      <!-- Chat / Messages -->
+      <ChatPage
+        v-else-if="currentPage === 'chat'"
+        @navigate="navigateTo"
+      />
     </div>
 
     <!-- Status Bar -->
@@ -142,6 +154,8 @@ import DeepWebPage from "./browser/DeepWebPage.vue"
 import PartsBayPage from "./browser/PartsBayPage.vue"
 import OfficialStorePage from "./browser/OfficialStorePage.vue"
 import ProjectChecklistPage from "./browser/ProjectChecklistPage.vue"
+import EmailInboxPage from "./browser/EmailInboxPage.vue"
+import ChatPage from "./browser/ChatPage.vue"
 
 const store = useMySummerPartsStore()
 
@@ -149,14 +163,24 @@ const currentPage = ref("home")
 const history = ref(["home"])
 const historyIndex = ref(0)
 const addressBarValue = ref("about:home")
+const ghostAvailable = ref(false)
 
-const bookmarks = [
+// All bookmarks definition
+const allBookmarks = [
+  {
+    id: "chat",
+    name: "Messages",
+    icon: "[M]",
+    url: "chat.westcoast.local",
+    description: "Your conversations"
+  },
   {
     id: "deepweb",
     name: "SilkRoad Parts",
     icon: "[!]",
     url: "s1lkr04d.onion",
-    description: "Anonymous leads... shh!"
+    description: "Anonymous leads... shh!",
+    requiresGhost: true
   },
   {
     id: "partsbay",
@@ -181,8 +205,15 @@ const bookmarks = [
   }
 ]
 
+// Computed bookmarks - filters based on Ghost availability
+const bookmarks = computed(() => {
+  return allBookmarks.filter(b => !b.requiresGhost || ghostAvailable.value)
+})
+
 const urls = {
   home: "about:home",
+  chat: "http://chat.westcoast.local/",
+  email: "http://mail.westcoast.local/",
   deepweb: "http://s1lkr04d.onion/",
   partsbay: "http://www.partsbay.com/",
   official: "https://www.speedparts.com/",
@@ -192,6 +223,8 @@ const urls = {
 // Reverse lookup: URL pattern to page ID
 const urlToPage = {
   "about:home": "home",
+  "chat.westcoast.local": "chat",
+  "mail.westcoast.local": "email",
   "s1lkr04d.onion": "deepweb",
   "partsbay.com": "partsbay",
   "speedparts.com": "official",
@@ -302,12 +335,36 @@ const closeMenu = () => {
   store.closeMenu()
 }
 
+// Check if Ghost contact is available (requires first purchase)
+const checkGhostAvailability = () => {
+  if (window.bngApi) {
+    window.bngApi.engineLua('career_modules_mysummerParts.hasFirstPurchase()', (result) => {
+      ghostAvailable.value = result === true
+    })
+  }
+}
+
+// Handle Ghost contact being unlocked
+const handleContactUnlocked = (data) => {
+  if (data && data.contactId === "ghost") {
+    ghostAvailable.value = true
+  }
+}
+
 onMounted(() => {
   store.requestData()
+  checkGhostAvailability()
+
+  // Listen for Ghost unlock event
+  if (window.bngApi) {
+    window.bngApi.engineLua('extensions.hook("mysummerContactUnlocked")')
+  }
+  window.addEventListener('bng_mysummerContactUnlocked', handleContactUnlocked)
 })
 
 onUnmounted(() => {
   store.dispose()
+  window.removeEventListener('bng_mysummerContactUnlocked', handleContactUnlocked)
 })
 </script>
 

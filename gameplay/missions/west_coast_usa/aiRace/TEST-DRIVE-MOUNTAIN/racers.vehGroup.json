@@ -1,0 +1,27 @@
+{
+  "data":[
+    {
+      "config":"base_race1",
+      "model":"pigeon"
+    },
+    {
+      "config":"base_race1",
+      "model":"legran"
+    },
+    {
+      "config":"base_race1",
+      "model":"autobello"
+    },
+    {
+      "config":"base_race1",
+      "model":"midsize"
+    },
+    {
+      "config":"base_race1",
+      "model":"lansdale"
+    }
+  ],
+  "name":"RACE1 SERIES",
+  "tags":{},
+  "type":"custom"
+}

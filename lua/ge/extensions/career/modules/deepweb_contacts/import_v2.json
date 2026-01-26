@@ -256,7 +256,7 @@
                   {
                     "type": "end",
                     "result": "partial",
-                    "cooldown": 300
+                    "cooldown": 180
                   }
                 ]
               }
