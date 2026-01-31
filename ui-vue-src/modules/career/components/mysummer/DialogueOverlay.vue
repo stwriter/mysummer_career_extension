@@ -7,8 +7,14 @@
           <div class="portrait-area" :class="[currentMessage.contactId, { 'unknown': !currentMessage.isUnlocked }]">
             <div class="portrait-frame">
               <div class="portrait-image" v-if="currentMessage.isUnlocked">
-                <!-- Future: actual character images -->
-                <span class="portrait-letter">{{ getInitial(currentMessage.contactName) }}</span>
+                <!-- Character image if available, fallback to initial -->
+                <img
+                  v-if="hasContactImage(currentMessage.contactId)"
+                  :src="getContactAvatar(currentMessage.contactId, currentMessage.emotion)"
+                  :alt="currentMessage.contactName"
+                  class="portrait-img"
+                />
+                <span v-else class="portrait-letter">{{ getInitial(currentMessage.contactName) }}</span>
               </div>
               <div class="portrait-image unknown" v-else>
                 <span class="portrait-letter">?</span>
@@ -43,6 +49,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useEvents } from '@/services/events'
+import { getContactImage, EMOTIONS } from '../../utils/contactImages'
 
 const events = useEvents()
 
@@ -63,6 +70,19 @@ const queueLength = computed(() => messageQueue.value.length)
 // Methods
 const getInitial = (name) => {
   return name ? name.charAt(0).toUpperCase() : '?'
+}
+
+// Contact image helpers
+const VALID_CONTACT_IDS = ['grandfather', 'ghost', 'import', 'muscle', 'nova', 'rook', 'shadow', 'techie', 'viper']
+
+const hasContactImage = (contactId) => {
+  return VALID_CONTACT_IDS.includes(contactId)
+}
+
+const getContactAvatar = (contactId, emotion) => {
+  // Default to standard emotion if not provided
+  const emotionState = emotion || EMOTIONS.STANDARD
+  return getContactImage(contactId, emotionState)
 }
 
 let typingInterval = null
@@ -239,6 +259,10 @@ $techie-color: #3498db;
 $muscle-color: #e74c3c;
 $import-color: #f39c12;
 $shadow-color: #2c3e50;
+$nova-color: #e91e63;
+$rook-color: #8e44ad;
+$viper-color: #c0392b;
+$grandfather-color: #95a5a6;
 $system-color: #7f8c8d;
 $unknown-color: #555;
 
@@ -298,6 +322,22 @@ $unknown-color: #555;
     background: linear-gradient(135deg, rgba($shadow-color, 0.3) 0%, $bg-darker 100%);
     .portrait-frame { border-color: rgba($shadow-color, 0.7); }
   }
+  &.nova {
+    background: linear-gradient(135deg, rgba($nova-color, 0.2) 0%, $bg-darker 100%);
+    .portrait-frame { border-color: rgba($nova-color, 0.7); }
+  }
+  &.rook {
+    background: linear-gradient(135deg, rgba($rook-color, 0.2) 0%, $bg-darker 100%);
+    .portrait-frame { border-color: rgba($rook-color, 0.7); }
+  }
+  &.viper {
+    background: linear-gradient(135deg, rgba($viper-color, 0.2) 0%, $bg-darker 100%);
+    .portrait-frame { border-color: rgba($viper-color, 0.7); }
+  }
+  &.grandfather {
+    background: linear-gradient(135deg, rgba($grandfather-color, 0.2) 0%, $bg-darker 100%);
+    .portrait-frame { border-color: rgba($grandfather-color, 0.7); }
+  }
   &.system {
     background: linear-gradient(135deg, rgba($system-color, 0.2) 0%, $bg-darker 100%);
     .portrait-frame { border-color: rgba($system-color, 0.7); }
@@ -327,6 +367,13 @@ $unknown-color: #555;
 
   &.unknown {
     background: linear-gradient(135deg, #333 0%, #222 100%);
+  }
+
+  .portrait-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
   }
 }
 

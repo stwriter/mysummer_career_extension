@@ -8,6 +8,8 @@ M.moduleName = "career_modules_mysummerChat"
 M.dependencies = {
   "career_career",
   "career_saveSystem",
+  "career_branches",
+  "career_modules_playerAttributes",
 }
 
 local logTag = "mysummerChat"
@@ -31,7 +33,8 @@ end
 -- ============================================================================
 
 -- Contact IDs and avatars (non-localized)
-local contactIds = { "ghost", "techie", "muscle", "import", "shadow", "system" }
+-- Teammates (rook, nova) + Underground contacts + system + player (for internal thoughts)
+local contactIds = { "rook", "nova", "ghost", "techie", "muscle", "import", "shadow", "system", "player" }
 
 -- Returns localized contact definition
 local function getContactDefinition(contactId)
@@ -45,6 +48,12 @@ local function getContactDefinition(contactId)
   }
   if contactId == "system" then
     def.isSystem = true
+  end
+  -- Player contact is for internal thoughts/monologues
+  if contactId == "player" then
+    def.displayName = "..."  -- Ellipsis for thoughts
+    def.unknownName = "..."
+    def.isSystem = true  -- Don't show in contact list
   end
   return def
 end
@@ -95,6 +104,14 @@ local state = {
 
   -- Typing indicator state
   typingContacts = {},
+
+  -- Affinity/Effects tracking for narrative system
+  -- Keys: rook_affinity, nova_affinity, ambition, caution, loyalty, etc.
+  affinityEffects = {},
+
+  -- Recent events for context reactions
+  -- Keys: policeEscape, policeCaught, raceWin, purchase
+  recentEvents = {},
 }
 
 -- Forward declarations for functions used before definition
@@ -125,6 +142,94 @@ local function deepcopy(orig)
     copy = orig
   end
   return copy
+end
+
+-- Get localized text from a value that can be:
+--   - A simple string: "Hello"
+--   - A bilingual table: { es = "Hola", en = "Hello" }
+local function getLocalizedText(textValue)
+  if type(textValue) == "string" then
+    return textValue
+  elseif type(textValue) == "table" then
+    -- Get current language from BeamNG settings
+    local lang = Lua and Lua.get("core_settings.locale") or "en_US"
+    local langCode = string.sub(lang, 1, 2) -- "en_US" -> "en", "es_ES" -> "es"
+
+    -- Try exact match, then fallback
+    if textValue[langCode] then
+      return textValue[langCode]
+    elseif textValue.en then
+      return textValue.en
+    elseif textValue.es then
+      return textValue.es
+    else
+      -- Return first available value
+      for _, v in pairs(textValue) do
+        if type(v) == "string" then return v end
+      end
+    end
+  end
+  return ""
+end
+
+-- ============================================================================
+-- AFFINITY/EFFECTS SYSTEM
+-- ============================================================================
+
+-- Apply effects from a conversation choice
+-- effects: table of { effectName = delta } e.g. { rook_affinity = 10, ambition = 5 }
+local function applyEffects(effects)
+  if not effects then return end
+
+  for effectName, delta in pairs(effects) do
+    local currentValue = state.affinityEffects[effectName] or 0
+    state.affinityEffects[effectName] = currentValue + delta
+    log("I", logTag, string.format("Effect applied: %s %+d (now %d)",
+        effectName, delta, state.affinityEffects[effectName]))
+  end
+
+  -- Trigger UI update
+  guihooks.trigger("mysummerAffinityUpdated", deepcopy(state.affinityEffects))
+end
+
+-- Get current value of an effect
+local function getEffectValue(effectName)
+  return state.affinityEffects[effectName] or 0
+end
+
+-- Get all effects
+local function getAllEffects()
+  return deepcopy(state.affinityEffects)
+end
+
+-- Check if player is aligned more with Rook or Nova
+-- Returns: "rook", "nova", or "neutral"
+local function getTeammateAlignment()
+  local rookAffinity = state.affinityEffects.rook_affinity or 0
+  local novaAffinity = state.affinityEffects.nova_affinity or 0
+
+  if rookAffinity > novaAffinity + 20 then
+    return "rook"
+  elseif novaAffinity > rookAffinity + 20 then
+    return "nova"
+  else
+    return "neutral"
+  end
+end
+
+-- Check player's general approach (cautious vs ambitious)
+-- Returns: "cautious", "ambitious", or "balanced"
+local function getPlayerApproach()
+  local caution = state.affinityEffects.caution or 0
+  local ambition = state.affinityEffects.ambition or 0
+
+  if caution > ambition + 15 then
+    return "cautious"
+  elseif ambition > caution + 15 then
+    return "ambitious"
+  else
+    return "balanced"
+  end
 end
 
 -- ============================================================================
@@ -170,6 +275,20 @@ local function getContactLevel(contactId)
   return 1
 end
 
+-- Get current narrative phase from streetracing skill level
+-- This controls which conversations are available based on story progression
+local function getCurrentNarrativePhase()
+  if not career_branches or not career_modules_playerAttributes then
+    return 0
+  end
+
+  local skillId = "mysummer-streetracing"
+  local totalXP = career_modules_playerAttributes.getAttributeValue(skillId) or 0
+  local level = career_branches.calcBranchLevelFromValue(totalXP, skillId)
+
+  return level or 0
+end
+
 -- Get contact XP
 local function getContactXP(contactId)
   if career_modules_mysummerDeepWeb and career_modules_mysummerDeepWeb.getContactXP then
@@ -191,6 +310,7 @@ local function getV3Conversation(contactId, scriptState)
   if not data or not data.conversations then return nil end
 
   local level = getContactLevel(contactId)
+  local narrativePhase = getCurrentNarrativePhase()
   local memory = scriptState.memory or {}
   local completed = scriptState.completed or {}
 
@@ -222,6 +342,15 @@ local function getV3Conversation(contactId, scriptState)
 
   if not conversation then
     return nil
+  end
+
+  -- Check required narrative phase (story progression)
+  if conversation.requiredPhase then
+    if narrativePhase < conversation.requiredPhase then
+      log("I", logTag, string.format("V3 conversation %s requires narrative phase %d (current: %d)",
+          convId, conversation.requiredPhase, narrativePhase))
+      return nil
+    end
   end
 
   -- Check required memory
@@ -281,6 +410,47 @@ local function processContextTransition(text, phase, memory)
   return string.gsub(text, "{{contextTransition}}", defaultText)
 end
 
+-- Process context reaction placeholder (based on recent player events)
+local function processContextReaction(text, contactData)
+  if not text or not string.find(text, "{{contextReaction}}") then
+    return text
+  end
+
+  local contextReactions = contactData and contactData.contextReactions
+  if not contextReactions then
+    return string.gsub(text, "{{contextReaction}}", "")
+  end
+
+  -- Check recent events (priority order)
+  -- TODO: Integrate with actual game state tracking
+  local selectedReaction = nil
+
+  -- Check for recent police escape (example - would need real game state)
+  if contextReactions.recentPoliceEscape and state.recentEvents and state.recentEvents.policeEscape then
+    local reactions = contextReactions.recentPoliceEscape
+    selectedReaction = reactions[math.random(#reactions)]
+  -- Check for recent race win
+  elseif contextReactions.recentRaceWin and state.recentEvents and state.recentEvents.raceWin then
+    local reactions = contextReactions.recentRaceWin
+    selectedReaction = reactions[math.random(#reactions)]
+  -- Check for recent purchase from this contact
+  elseif contextReactions.recentPurchase and state.recentEvents and state.recentEvents.purchase then
+    local reactions = contextReactions.recentPurchase
+    selectedReaction = reactions[math.random(#reactions)]
+  -- Default: long absence or generic
+  elseif contextReactions.longAbsence then
+    local reactions = contextReactions.longAbsence
+    selectedReaction = reactions[math.random(#reactions)]
+  end
+
+  -- Fallback to empty string if nothing matches
+  if not selectedReaction then
+    selectedReaction = ""
+  end
+
+  return string.gsub(text, "{{contextReaction}}", selectedReaction)
+end
+
 -- Process V3 exchange and return messages + choices
 local function processV3Exchange(exchange, scriptState, currentPhase, contactData)
   local messages = {}
@@ -305,9 +475,10 @@ local function processV3Exchange(exchange, scriptState, currentPhase, contactDat
       senderType = "system"
     end
 
-    -- Process placeholders
-    local text = exchange.text
+    -- Process placeholders and localization
+    local text = getLocalizedText(exchange.text)
     text = processContextTransition(text, currentPhase, memory)
+    text = processContextReaction(text, contactData)
 
     -- Skip empty messages
     if text and text ~= "" then
@@ -325,9 +496,10 @@ local function processV3Exchange(exchange, scriptState, currentPhase, contactDat
     for _, choice in ipairs(exchange.choices) do
       table.insert(choices, {
         id = choice.id,
-        text = choice.text,
+        text = getLocalizedText(choice.text),
         traits = choice.traits,
         points = choice.points or 0,
+        effects = choice.effects,
         setsMemory = choice.setsMemory,
         leadsTo = choice.leadsTo,
         continueToPhase = choice.continueToPhase,
@@ -708,23 +880,77 @@ local function setContactTyping(contactId, isTyping, duration)
   end
 end
 
+-- Get typing state for a contact (used by UI polling)
+local function isContactTyping(contactId)
+  return state.typingContacts[contactId] == true
+end
+
 -- ============================================================================
 -- CHOICES / DIALOGUE
 -- ============================================================================
 
-local function setPendingChoices(contactId, choices, timeout)
-  state.pendingChoices = {
-    contactId = contactId,
-    choices = choices,
-    timeout = timeout,
-    setAt = getTimestamp(),
-  }
+-- Pending choices queue (for delayed choice display)
+-- IMPORTANT: Choices are NOT stored in state.pendingChoices until delay expires
+-- This prevents UI from showing choices too early when calling getConversation()
+local pendingChoicesQueue = {}
 
-  guihooks.trigger("mysummerChatChoices", {
-    contactId = contactId,
-    choices = choices,
-    timeout = timeout,
-  })
+local function setPendingChoices(contactId, choices, timeout, delay)
+  -- If delay specified, queue EVERYTHING for later (don't save to state yet)
+  if delay and delay > 0 then
+    table.insert(pendingChoicesQueue, {
+      contactId = contactId,
+      choices = choices,
+      timeout = timeout,
+      triggerAt = getTimestamp() + delay / 1000,  -- Convert ms to seconds
+    })
+    log("I", logTag, string.format("Choices queued with %dms delay for %s", delay, contactId))
+  else
+    -- No delay: save to state and trigger immediately
+    state.pendingChoices = {
+      contactId = contactId,
+      choices = choices,
+      timeout = timeout,
+      setAt = getTimestamp(),
+    }
+    guihooks.trigger("mysummerChatChoices", {
+      contactId = contactId,
+      choices = choices,
+      timeout = timeout,
+    })
+  end
+end
+
+-- Process pending choices (called from onUpdate)
+local function processPendingChoices()
+  if #pendingChoicesQueue == 0 then return end
+
+  local now = getTimestamp()
+  local toRemove = {}
+
+  for i, pending in ipairs(pendingChoicesQueue) do
+    if now >= pending.triggerAt then
+      -- NOW save to state (so getConversation returns them)
+      state.pendingChoices = {
+        contactId = pending.contactId,
+        choices = pending.choices,
+        timeout = pending.timeout,
+        setAt = now,
+      }
+      -- And trigger UI
+      guihooks.trigger("mysummerChatChoices", {
+        contactId = pending.contactId,
+        choices = pending.choices,
+        timeout = pending.timeout,
+      })
+      log("I", logTag, string.format("Choices now active for %s", pending.contactId))
+      table.insert(toRemove, i)
+    end
+  end
+
+  -- Remove processed (in reverse order)
+  for i = #toRemove, 1, -1 do
+    table.remove(pendingChoicesQueue, toRemove[i])
+  end
 end
 
 local function clearPendingChoices()
@@ -747,11 +973,14 @@ local pendingMessages = {}
 local messageProcessingActive = false
 
 local function queueMessage(contactId, messageData, delay)
+  local sendAt = getTimestamp() + (delay or 0) / 1000
   table.insert(pendingMessages, {
     contactId = contactId,
     messageData = messageData,
-    sendAt = getTimestamp() + (delay or 0) / 1000,  -- Convert ms to seconds
+    sendAt = sendAt,
   })
+  log("I", logTag, string.format("Message queued for %s, delay=%dms, content=%s",
+      contactId, delay or 0, string.sub(messageData.content or "", 1, 30)))
 end
 
 -- Process pending messages (called from onUpdate)
@@ -766,6 +995,9 @@ local function processPendingMessages()
       -- Send the message
       local contactId = pending.contactId
       local msgData = pending.messageData
+
+      log("I", logTag, string.format("Processing message for %s: %s",
+          contactId, string.sub(msgData.content or "", 1, 30)))
 
       -- Clear typing indicator
       setContactTyping(contactId, false)
@@ -908,9 +1140,9 @@ local function startDialogue(contactId)
     end
 
     if result.choices then
-      -- Store choices for player to respond
+      -- Store choices for player to respond (with delay so they appear after messages)
       choices = result.choices
-      setPendingChoices(contactId, choices)
+      setPendingChoices(contactId, choices, nil, cumulativeDelay + 500)
       break
     elseif result.endConversation then
       ended = true
@@ -1002,6 +1234,28 @@ local function continueDialogue(contactId, choiceId)
   local points = selectedChoice.points or 0
   scriptState.sessionPoints = scriptState.sessionPoints + points
   addContactXP(contactId, points)
+
+  -- Apply narrative effects (affinity, ambition, caution, etc.)
+  if selectedChoice.effects then
+    applyEffects(selectedChoice.effects)
+  end
+
+  -- Auto-apply affinity based on points for teammates (rook, nova)
+  -- This ensures relationship tracking even without explicit effects
+  if points ~= 0 and (contactId == "rook" or contactId == "nova") then
+    local affinityKey = contactId .. "_affinity"
+    local autoEffects = { [affinityKey] = points }
+    applyEffects(autoEffects)
+  end
+
+  -- Track player traits from choices
+  if selectedChoice.traits then
+    for _, trait in ipairs(selectedChoice.traits) do
+      local traitKey = "trait_" .. trait
+      local currentCount = state.affinityEffects[traitKey] or 0
+      state.affinityEffects[traitKey] = currentCount + 1
+    end
+  end
 
   -- Store memory
   if selectedChoice.setsMemory then
@@ -1099,8 +1353,9 @@ local function continueDialogue(contactId, choiceId)
       end
 
       if result.choices then
+        -- Store choices for player to respond (with delay so they appear after messages)
         choices = result.choices
-        setPendingChoices(contactId, choices)
+        setPendingChoices(contactId, choices, nil, cumulativeDelay + 500)
         break
       elseif result.endConversation then
         ended = true
@@ -1275,6 +1530,7 @@ loadState = function()
     state.nextMessageId = data.nextMessageId or 1
     state.nextConversationId = data.nextConversationId or 1
     state.unreadByContact = data.unreadByContact or {}
+    state.affinityEffects = data.affinityEffects or {}
 
     -- Recalculate total unread
     state.totalUnread = 0
@@ -1303,6 +1559,7 @@ saveState = function(currentSavePath)
     nextMessageId = state.nextMessageId,
     nextConversationId = state.nextConversationId,
     unreadByContact = state.unreadByContact,
+    affinityEffects = state.affinityEffects,
   }
 
   career_saveSystem.jsonWriteFileSafe(filePath, data, true)
@@ -1337,6 +1594,7 @@ local function onCareerActive(active)
     state.activeDialogue = nil
     state.pendingChoices = nil
     pendingMessages = {}
+    pendingChoicesQueue = {}
     contactDataCache = {}
     conversationCooldowns = {}
   end
@@ -1351,6 +1609,7 @@ local function onUpdate(dtReal)
   if not career_career or not career_career.isActive() then return end
 
   processPendingMessages()
+  processPendingChoices()
   processDialogueQueue()
 end
 
@@ -1371,8 +1630,10 @@ local function showDialogue(contactId, messages)
 
   for _, msg in ipairs(messages) do
     local content = msg
+    local emotion = nil
     if type(msg) == "table" then
       content = msg.content or msg.text or msg[1] or ""
+      emotion = msg.emotion -- optional emotion state (standard, happy, angry, sad, etc)
     end
 
     table.insert(formattedMessages, {
@@ -1380,6 +1641,7 @@ local function showDialogue(contactId, messages)
       contactName = contact.displayName or contactId,
       isUnlocked = contact.isUnlocked,
       content = content,
+      emotion = emotion, -- pass emotion to UI (defaults to 'standard' in Vue)
     })
   end
 
@@ -1401,14 +1663,55 @@ local function showDialogueMessage(contactId, content)
 end
 
 -- Queue dialogue to show after current one finishes
+-- Also adds messages to chat history so they appear in the phone app
 local function queueDialogue(contactId, messages, delay)
-  table.insert(dialogueQueue, {
-    contactId = contactId,
-    messages = messages,
-    delay = delay or 0,
-    timestamp = getTimestamp(),
-  })
-  log("I", logTag, "Queued dialogue from " .. contactId)
+  -- First, ensure contact is unlocked so messages can be received
+  unlockContact(contactId)
+
+  -- Add messages to chat with typing delays
+  local baseDelay = delay or 0
+  local currentDelay = baseDelay
+
+  for i, msg in ipairs(messages) do
+    local content = msg
+    local speaker = contactId
+    if type(msg) == "table" then
+      content = msg.content or msg.text or msg[1] or ""
+      speaker = msg.speaker or contactId
+    end
+
+    -- Only queue messages from the contact (not player messages)
+    if speaker ~= "player" and content and content ~= "" then
+      -- Calculate typing delay based on content length
+      local typingDelay = math.min(string.len(content) * 40 + 500, 3000)
+
+      -- Queue the message with proper format
+      queueMessage(contactId, {
+        content = content,
+        sender = speaker,
+        senderType = "contact",
+      }, currentDelay)
+
+      -- Set typing indicator for this contact
+      setContactTyping(contactId, true, typingDelay / 1000)
+
+      -- Add delay for next message (typing + pause between messages)
+      currentDelay = currentDelay + typingDelay + 800
+    end
+  end
+
+  -- Also queue for screen display (overlay dialogue) - optional
+  -- Only show overlay if messages array has more than 1 message (narrative scenes)
+  if #messages > 1 then
+    table.insert(dialogueQueue, {
+      contactId = contactId,
+      messages = messages,
+      delay = delay or 0,
+      timestamp = getTimestamp(),
+    })
+  end
+
+  log("I", logTag, "Queued dialogue from " .. contactId .. " (" .. #messages .. " messages to chat)")
 end
 
 -- Hide the current dialogue
@@ -1472,6 +1775,7 @@ M.getContactDisplayName = getContactDisplayName
 
 -- Typing indicators
 M.setContactTyping = setContactTyping
+M.isContactTyping = isContactTyping
 
 -- Choices/Dialogue (V3 integration)
 M.setPendingChoices = setPendingChoices
@@ -1486,6 +1790,14 @@ M.hasAvailableDialogue = hasAvailableDialogue
 M.isV3Contact = isV3Contact
 M.getContactLevel = getContactLevel
 M.getContactXP = getContactXP
+M.getCurrentNarrativePhase = getCurrentNarrativePhase
+
+-- Affinity/Effects system
+M.applyEffects = applyEffects
+M.getEffectValue = getEffectValue
+M.getAllEffects = getAllEffects
+M.getTeammateAlignment = getTeammateAlignment
+M.getPlayerApproach = getPlayerApproach
 
 -- On-screen dialogue
 M.showDialogue = showDialogue
