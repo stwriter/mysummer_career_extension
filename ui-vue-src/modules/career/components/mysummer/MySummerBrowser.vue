@@ -132,6 +132,12 @@
         v-else-if="currentPage === 'chat'"
         @navigate="navigateTo"
       />
+
+      <!-- Story Races -->
+      <StoryRacesPage
+        v-else-if="currentPage === 'storyraces'"
+        @navigate="navigateTo"
+      />
     </div>
 
     <!-- Status Bar -->
@@ -156,6 +162,7 @@ import OfficialStorePage from "./browser/OfficialStorePage.vue"
 import ProjectChecklistPage from "./browser/ProjectChecklistPage.vue"
 import EmailInboxPage from "./browser/EmailInboxPage.vue"
 import ChatPage from "./browser/ChatPage.vue"
+import StoryRacesPage from "./browser/StoryRacesPage.vue"
 
 const store = useMySummerPartsStore()
 
@@ -173,6 +180,13 @@ const allBookmarks = [
     icon: "[M]",
     url: "chat.westcoast.local",
     description: "Your conversations"
+  },
+  {
+    id: "storyraces",
+    name: "Story Races",
+    icon: "[R]",
+    url: "racing.westcoast.local",
+    description: "Your racing career"
   },
   {
     id: "deepweb",
@@ -213,6 +227,7 @@ const bookmarks = computed(() => {
 const urls = {
   home: "about:home",
   chat: "http://chat.westcoast.local/",
+  storyraces: "http://racing.westcoast.local/",
   email: "http://mail.westcoast.local/",
   deepweb: "http://s1lkr04d.onion/",
   partsbay: "http://www.partsbay.com/",
@@ -224,6 +239,7 @@ const urls = {
 const urlToPage = {
   "about:home": "home",
   "chat.westcoast.local": "chat",
+  "racing.westcoast.local": "storyraces",
   "mail.westcoast.local": "email",
   "s1lkr04d.onion": "deepweb",
   "partsbay.com": "partsbay",
@@ -680,6 +696,12 @@ $border-sunken: inset 1px 1px $win-shadow, inset -1px -1px $win-light, inset 2px
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     border-color: #0f3460;
     .icon-glyph { color: #00ff00; }
+  }
+
+  &.storyraces {
+    background: linear-gradient(135deg, #cc0000 0%, #990000 100%);
+    border-color: #660000;
+    .icon-glyph { color: #ffcc00; }
   }
 
   &.partsbay {

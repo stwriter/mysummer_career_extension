@@ -16,6 +16,8 @@ M.dependencies = {
 
 local logTag = "mysummerCareer"
 local cachedParkingSites = nil  -- Cache for parking sites
+local state  -- Forward declaration (initialized later)
+local saveState  -- Forward declaration (defined later)
 
 -- Helper function to check if a table contains a value
 local function tableContains(tbl, value)
@@ -262,6 +264,324 @@ local function getLocalizedText(textTable)
   return textTable[lang] or textTable.en or ""
 end
 
+local function getLocalizedTextList(textList)
+  if type(textList) == "string" then
+    return { textList }
+  end
+  if type(textList) ~= "table" then
+    return {}
+  end
+  if textList.en or textList.es then
+    return { getLocalizedText(textList) }
+  end
+  local resolved = {}
+  for _, entry in ipairs(textList) do
+    if type(entry) == "table" and entry.content then
+      table.insert(resolved, {
+        text = getLocalizedText(entry.content),
+        emotion = entry.emotion,
+      })
+    else
+      table.insert(resolved, getLocalizedText(entry))
+    end
+  end
+  return resolved
+end
+
+-- ============================================================================
+-- STORY SCENE SYSTEM
+-- ============================================================================
+
+local sceneDefinitions = {
+  chapter1_first_race = {
+    id = "chapter1_first_race",
+    scenes = {
+      {
+        id = "c1_first_rook",
+        contactId = "rook",
+        name = { en = "Rook", es = "Rook" },
+        emotion = "content",
+        text = {
+          {
+            content = { en = "You are not just the new kid.", es = "No eres solo el nuevo." },
+            emotion = "content",
+          },
+          {
+            content = {
+              en = "You drive like you already know the exits, like you have been here before.",
+              es = "Conduces como si ya conocieras las salidas, como si ya hubieras estado aqui antes.",
+            },
+            emotion = "content",
+          },
+          {
+            content = {
+              en = "That is rare.",
+              es = "Eso es raro.",
+            },
+            emotion = "content",
+          },
+          {
+            content = {
+              en = "Most chase noise; you chase the line, and the line keeps you alive.",
+              es = "La mayoria persigue ruido; tu persigues la linea, y la linea te mantiene vivo.",
+            },
+            emotion = "sad",
+          },
+          {
+            content = { en = "Keep the car honest and keep yourself honest, or the street will do it for you.", es = "Manten el coche honesto y mantente honesto, o la calle lo hara por ti." },
+            emotion = "standard",
+          },
+          {
+            content = { en = "Do not waste it.", es = "No lo desperdicies." },
+            emotion = "content",
+          },
+        },
+      },
+      {
+        id = "c1_first_nova",
+        contactId = "nova",
+        name = { en = "Nova", es = "Nova" },
+        emotion = "content",
+        text = {
+          {
+            content = { en = "Good start.", es = "Buen arranque." },
+            emotion = "content",
+          },
+          {
+            content = {
+              en = "Keep this pace and people will say your name without looking, like it has always been there.",
+              es = "Si mantienes el ritmo, la gente dira tu nombre sin mirarte, como si siempre hubiera estado ahi.",
+            },
+            emotion = "content",
+          },
+          {
+            content = { en = "You are not invisible anymore.", es = "Ya no eres invisible." },
+            emotion = "happy",
+          },
+          {
+            content = {
+              en = "So does money, and money changes the rules faster than any race.",
+              es = "Y el dinero tambien, y el dinero cambia las reglas mas rapido que cualquier carrera.",
+            },
+            emotion = "standard",
+          },
+          {
+            content = { en = "We can go further if you want it, but it will not be polite.", es = "Podemos ir mas lejos si lo quieres, pero no sera educado." },
+            emotion = "content",
+          },
+          {
+            content = { en = "Do not slow down now.", es = "No bajes el ritmo ahora." },
+            emotion = "content",
+          },
+        },
+      },
+    },
+  },
+  chapter1_end = {
+    id = "chapter1_end",
+    scenes = {
+      {
+        id = "c1_end_nova",
+        contactId = "nova",
+        name = { en = "Nova", es = "Nova" },
+        emotion = "standard",
+        text = {
+          {
+            content = { en = "This is not a game anymore.", es = "Esto ya no es un juego." },
+            emotion = "standard",
+          },
+          {
+            content = { en = "Hesitation is loud; it tells everyone you are waiting to be saved.", es = "La duda se escucha; le dice a todos que esperas que te salven." },
+            emotion = "angry",
+          },
+          {
+            content = { en = "Risk means moving before the door closes, while you still have both hands on it.", es = "Arriesgar es moverte antes de que la puerta cierre, mientras aun la tienes en las manos." },
+            emotion = "content",
+          },
+          {
+            content = { en = "Say the word, and we go.", es = "Di la palabra y arrancamos." },
+            emotion = "content",
+          },
+          {
+            content = { en = "Not today. Not later. Now.", es = "No hoy. No despues. Ahora." },
+            emotion = "angry",
+          },
+          {
+            content = { en = "Choose.", es = "Elige." },
+            emotion = "standard",
+          },
+        },
+        choices = {
+          { value = "push", label = { en = "Push harder", es = "Aceleremos esto" } },
+          { value = "steady", label = { en = "Step by step", es = "Paso a paso" } },
+        },
+      },
+      {
+        id = "c1_end_rook",
+        contactId = "rook",
+        name = { en = "Rook", es = "Rook" },
+        emotion = "sad",
+        text = {
+          {
+            content = { en = "Do not get cocky.", es = "No te confies." },
+            emotion = "sad",
+          },
+          {
+            content = { en = "The circuit is watching, and it bites.", es = "El circuito te mira, y cuando muerde, no avisa." },
+            emotion = "sad",
+          },
+          {
+            content = { en = "I have seen nights go bad in one corner, one mistake, one glance at the wrong time.", es = "He visto noches romperse en una sola curva, un error, un vistazo en el peor momento." },
+            emotion = "sad",
+          },
+          {
+            content = { en = "Keep your head colder than the asphalt, even when they cheer your name.", es = "Manten la cabeza mas fria que el asfalto, incluso cuando griten tu nombre." },
+            emotion = "standard",
+          },
+          {
+            content = { en = "Breathe.", es = "Respira." },
+            emotion = "content",
+          },
+          {
+            content = { en = "Then keep going.", es = "Y sigue." },
+            emotion = "content",
+          },
+        },
+      },
+      {
+        id = "c1_end_ghost",
+        contactId = "ghost",
+        name = { en = "Ghost", es = "Ghost" },
+        emotion = "standard",
+        text = {
+          {
+            content = { en = "I saw you.", es = "Te vi." },
+            emotion = "standard",
+          },
+          {
+            content = { en = "It was not luck.", es = "No fue suerte." },
+            emotion = "standard",
+          },
+          {
+            content = { en = "Luck dies early around here, and careless drivers die with it.", es = "La suerte muere temprano por aqui, y los imprudentes mueren con ella." },
+            emotion = "sad",
+          },
+          {
+            content = { en = "Every move leaves a trail, and someone always follows it.", es = "Cada movimiento deja un rastro, y alguien siempre lo sigue." },
+            emotion = "standard",
+          },
+          {
+            content = { en = "Do not get comfortable.", es = "No te acomodes." },
+            emotion = "angry",
+          },
+          {
+            content = { en = "You will be offered a shortcut; remember this night when it happens.", es = "Te van a ofrecer un atajo; recuerda esta noche cuando ocurra." },
+            emotion = "standard",
+          },
+        },
+      },
+    },
+  },
+}
+
+local function buildScenePayload(scene)
+  local resolvedTexts = getLocalizedTextList(scene.text)
+  local payload = {
+    id = scene.id,
+    contactId = scene.contactId,
+    contactName = getLocalizedText(scene.name),
+    emotion = scene.emotion or "standard",
+    title = scene.title and getLocalizedText(scene.title) or nil,
+    text = resolvedTexts[1] or "",
+    texts = resolvedTexts,
+  }
+
+  if scene.choices then
+    payload.choices = {}
+    for _, choice in ipairs(scene.choices) do
+      table.insert(payload.choices, {
+        value = choice.value,
+        label = getLocalizedText(choice.label),
+      })
+    end
+  end
+
+  return payload
+end
+
+local function showSceneSequence(sequenceId)
+  if not guihooks then return end
+  local def = sceneDefinitions[sequenceId]
+  if not def or not def.scenes then return end
+
+  local scenesPayload = {}
+  for _, scene in ipairs(def.scenes) do
+    table.insert(scenesPayload, buildScenePayload(scene))
+  end
+
+  guihooks.trigger("mysummerShowSceneSequence", {
+    sequenceId = sequenceId,
+    scenes = scenesPayload,
+    language = getCurrentLang(),
+  })
+end
+
+local function queueSceneSequence(sequenceId, delaySeconds)
+  if not sequenceId or state.sceneFlags[sequenceId] then return end
+  if not sceneDefinitions[sequenceId] then return end
+
+  -- Avoid duplicate queue entries
+  for _, pending in ipairs(state.pendingSceneSequences) do
+    if pending.id == sequenceId then
+      return
+    end
+  end
+
+  table.insert(state.pendingSceneSequences, {
+    id = sequenceId,
+    delayRemaining = delaySeconds or 0,
+  })
+  state.sceneFlags[sequenceId] = true
+  saveState()
+end
+
+local function handleSceneChoice(sequenceId, sceneId, choiceValue)
+  if not sequenceId or not sceneId then return end
+  if not state.sceneChoices[sequenceId] then
+    state.sceneChoices[sequenceId] = {}
+  end
+  state.sceneChoices[sequenceId][sceneId] = choiceValue
+  saveState()
+  log("I", logTag, string.format("Scene choice recorded: %s / %s = %s",
+    tostring(sequenceId), tostring(sceneId), tostring(choiceValue)))
+end
+
+-- Debug helpers (console use)
+-- Example: career_modules_mysummerCareer.debugShowSceneSequence("chapter1_end")
+local function debugShowSceneSequence(sequenceId)
+  if not sequenceId then
+    log("W", logTag, "debugShowSceneSequence called without sequenceId")
+    return
+  end
+  log("I", logTag, "DEBUG: Showing scene sequence " .. tostring(sequenceId))
+  showSceneSequence(sequenceId)
+end
+
+-- Example: career_modules_mysummerCareer.debugQueueSceneSequence("chapter1_first_race", 0)
+local function debugQueueSceneSequence(sequenceId, delaySeconds)
+  queueSceneSequence(sequenceId, delaySeconds or 0)
+  log("I", logTag, "DEBUG: Queued scene sequence " .. tostring(sequenceId))
+end
+
+-- Example: career_modules_mysummerCareer.debugResetSceneFlags()
+local function debugResetSceneFlags()
+  state.sceneFlags = {}
+  state.sceneChoices = {}
+  state.pendingSceneSequences = {}
+  saveState()
+  log("I", logTag, "DEBUG: Scene flags, choices, and queues reset")
+end
+
 -- ============================================================================
 -- RACE LOCATIONS
 -- ============================================================================
@@ -357,7 +677,7 @@ local rlsRaceMapping = {
 -- STATE
 -- ============================================================================
 
-local state = {
+state = {  -- Using forward declaration from top of file
   -- Story/Narrative flags
   hasSeenIntro = false,  -- First time intro (grandfather's letter)
   currentChapter = 1,    -- Current story chapter (1-6)
@@ -395,11 +715,18 @@ local state = {
   -- Pending intro (grandfather's letter, shown after delay)
   pendingIntro = nil,  -- { data, delayRemaining }
 
+  -- Pending story scene sequences (shown after delay)
+  pendingSceneSequences = {},  -- { { id, delayRemaining } }
+
   -- Chapter progression (2 races won = 1 chapter completed)
   chapterProgress = {
     racesWonTotal = 0,
     currentChapter = 1,  -- 1-5 (derived from racesWonTotal)
   },
+
+  -- Story scene flags and choices
+  sceneFlags = {},   -- { [sequenceId] = true }
+  sceneChoices = {}, -- { [sequenceId] = { [sceneId] = choiceValue } }
 }
 
 -- Custom race definitions (MySummer original races with AI)
@@ -420,48 +747,32 @@ local customRaces = {
 -- SAVE/LOAD
 -- ============================================================================
 
-local function getSaveFilePath()
-  local savePath = career_saveSystem.getSaveRootDirectory()
-  if not savePath then
-    return nil
-  end
-  return savePath .. "/career/rls_career/mysummer/career.json"
-end
-
-local function saveState()
-  local saveFile = getSaveFilePath()
-  if not saveFile then
-    log("W", logTag, "Cannot save - no save path available")
-    return
-  end
-
-  -- Create directory if needed
-  local dir = saveFile:match("(.+)/[^/]+$")
-  if dir then
-    FS:directoryCreate(dir, true)
-  end
-
-  jsonWriteFile(saveFile, state, true)
-  log("I", logTag, "State saved")
-end
+local saveFile = "mysummer_career.json"
 
 local function loadState()
-  local saveFile = getSaveFilePath()
-  if not saveFile then
+  local _, savePath = career_saveSystem.getCurrentSaveSlot()
+  if not savePath then
     log("W", logTag, "Cannot load - no save path available")
     return
   end
 
-  if not FS:fileExists(saveFile) then
-    log("I", logTag, "No save file found, using defaults")
+  local filePath = savePath .. "/career/mysummer/" .. saveFile
+  log("I", logTag, "Looking for save file at: " .. tostring(filePath))
+
+  if not FS:fileExists(filePath) then
+    log("I", logTag, "No save file found at " .. tostring(filePath) .. ", using defaults (hasSeenIntro will be FALSE)")
     return
   end
 
-  local data = jsonReadFile(saveFile)
+  log("I", logTag, "Save file EXISTS, loading...")
+
+  local data = jsonReadFile(filePath)
   if not data then
     log("E", logTag, "Failed to load save file")
     return
   end
+
+  log("I", logTag, "Loaded data.hasSeenIntro = " .. tostring(data.hasSeenIntro))
 
   -- Restore state
   state.reputation = data.reputation or state.reputation
@@ -482,8 +793,42 @@ local function loadState()
   state.hasSeenIntro = data.hasSeenIntro or false
   state.currentChapter = data.currentChapter or 1
   state.seenChapterIntros = data.seenChapterIntros or {}
+  state.sceneFlags = data.sceneFlags or {}
+  state.sceneChoices = data.sceneChoices or {}
+
+  -- SAFETY CHECK REMOVED: The previous check was too aggressive and would reset
+  -- hasSeenIntro even after the player had legitimately seen it.
+  -- The flag is now trusted from the save file.
+  --
+  -- Original logic was:
+  -- If (phase 0-1, level 0, no races won, no initial vehicles) AND hasSeenIntro=true
+  -- then reset hasSeenIntro to false
+  --
+  -- This caused problems because:
+  -- 1. Player closes intro letter -> hasSeenIntro saved as true
+  -- 2. But hasInitialVehicles might still be false (vehicles spawn async)
+  -- 3. Next load -> safety check triggers -> intro resets -> always shows intro
+  --
+  -- Solution: Trust the save file. If player wants to reset, they can use
+  -- career_modules_mysummerCareer.resetIntro() console command
 
   log("I", logTag, "State loaded - Phase: " .. state.currentPhase .. ", Chapter: " .. state.chapterProgress.currentChapter .. ", Level: " .. state.reputation.level .. ", IntroSeen: " .. tostring(state.hasSeenIntro))
+end
+
+saveState = function(currentSavePath)
+  local _, savePath = career_saveSystem.getCurrentSaveSlot()
+  savePath = currentSavePath or savePath
+  if not savePath then
+    log("W", logTag, "Cannot save - no save path available")
+    return
+  end
+
+  local dirPath = savePath .. "/career/mysummer"
+  FS:directoryCreate(dirPath, true)
+
+  local filePath = dirPath .. "/" .. saveFile
+  jsonWriteFile(filePath, state, true)
+  log("I", logTag, "State saved to " .. filePath)
 end
 
 -- ============================================================================
@@ -618,6 +963,20 @@ local function recordRaceWin(raceId)
     end
   end
 
+  -- Story scenes for Chapter 1 milestones
+  -- These are mutually exclusive - either it's the first win OR chapter completion, not both at once
+  if oldChapter == 1 and state.chapterProgress.currentChapter == 2 then
+    -- Chapter completed - show end sequence
+    queueSceneSequence("chapter1_end", 4.0)
+  elseif state.chapterProgress.racesWonTotal == 1 and state.chapterProgress.currentChapter == 1 then
+    -- First win but still in chapter 1 - show first race sequence
+    -- Only show if teammates have been met (narrative progression)
+    local narrative = career_modules_mysummerNarrative
+    if narrative and narrative.getStoryFlag and narrative.getStoryFlag("teammates_met") then
+      queueSceneSequence("chapter1_first_race", 4.0)
+    end
+  end
+
   saveState()
   sendCareerUpdate()
 end
@@ -718,7 +1077,7 @@ local function startPhase(phaseId)
   saveState()
   sendCareerUpdate()
 
-  log("I", logTag, "Started Phase " .. phaseId .. ": " .. phaseDefinitions[phaseId].name)
+  log("I", logTag, "Started Phase " .. phaseId .. ": " .. getLocalizedText(phaseDefinitions[phaseId].name))
   return true
 end
 
@@ -765,7 +1124,7 @@ local function completePhase(phaseId)
   if phaseDef.cashReward and phaseDef.cashReward > 0 and career_modules_payment then
     career_modules_payment.reward(
       { money = { amount = phaseDef.cashReward } },
-      { label = "Phase " .. phaseId .. " completion: " .. phaseDef.name, tags = { "gameplay", "reward", "phase" } },
+      { label = "Phase " .. phaseId .. " completion: " .. getLocalizedText(phaseDef.name), tags = { "gameplay", "reward", "phase" } },
       true
     )
   end
@@ -1374,10 +1733,8 @@ local function spawnInitialVehicles()
     end
   end
 
-  -- Ensure default garage exists
-  if career_modules_garageManager and career_modules_garageManager.purchaseDefaultGarage then
-    career_modules_garageManager.purchaseDefaultGarage()
-  end
+  -- Note: Starting garage is handled by MySummer challenge (Sealbrick1058Garage)
+  -- If no challenge is active, RLS will use its default starter garage
 
   local garageId = career_modules_garageManager and career_modules_garageManager.getNextAvailableSpace() or nil
   if not garageId then
@@ -1402,6 +1759,21 @@ end
 local function onSetupInventoryFinished()
   -- Vehicle spawning is handled by mysummerParts module
   -- Here we just check for existing project vehicle and start phase 1
+
+  -- Teleport to MySummer starting garage (Sealbrick) if this is a new career
+  -- This overrides RLS's spawn location which would use Chinatown
+  if not state.hasSeenIntro and freeroam_facilities and freeroam_facilities.teleportToGarage then
+    local mysummerGarageId = "Sealbrick1058Garage"
+    local playerVeh = getPlayerVehicle(0)
+    if playerVeh then
+      -- Small delay to ensure RLS has finished its spawn logic
+      extensions.core_jobsystem.create(function(job)
+        job.sleep(0.5)
+        log("I", logTag, "New career - teleporting to MySummer garage: " .. mysummerGarageId)
+        freeroam_facilities.teleportToGarage(mysummerGarageId, playerVeh)
+      end)
+    end
+  end
 
   -- Check if project vehicle exists
   if not state.projectInventoryId then
@@ -1756,6 +2128,19 @@ end
 
 local function onExtensionLoaded()
   log("I", logTag, "MySummer Career module loaded")
+
+  -- Override RLS's purchaseDefaultGarage to use Sealbrick instead of Chinatown
+  if career_modules_garageManager then
+    local originalPurchaseDefaultGarage = career_modules_garageManager.purchaseDefaultGarage
+    career_modules_garageManager.purchaseDefaultGarage = function()
+      -- Purchase Sealbrick garage instead of the default starter garage
+      if career_modules_garageManager.addPurchasedGarage then
+        log("I", logTag, "MySummer: Purchasing Sealbrick1058Garage as starting garage")
+        career_modules_garageManager.addPurchasedGarage("Sealbrick1058Garage")
+      end
+    end
+    log("I", logTag, "Overrode purchaseDefaultGarage to use Sealbrick1058Garage")
+  end
 end
 
 local function onCareerActive(enabled)
@@ -1829,6 +2214,7 @@ local function onCareerActive(enabled)
         signName = signName,
         postscript = postscript,
         chapter1Data = chapter1Data,  -- Include Chapter I data
+        language = getCurrentLang(),  -- Pass language for Vue components
       },
       delayRemaining = 5.0,  -- Wait 5 seconds before showing the letter
     }
@@ -1843,6 +2229,15 @@ local function markIntroSeen()
   state.hasSeenIntro = true
   saveState()
   log("I", logTag, "Intro marked as seen")
+end
+
+-- Debug function to reset intro (call from console: career_modules_mysummerCareer.resetIntro())
+local function resetIntro()
+  state.hasSeenIntro = false
+  state.pendingIntro = nil
+  saveState()
+  log("I", logTag, "Intro reset - will show on next career load")
+  print("MySummer: Intro reset. Reload career to see the grandfather's letter.")
 end
 
 -- ============================================================================
@@ -1919,6 +2314,17 @@ local function onUpdate(dtReal, dtSim, dtRaw)
       log("I", logTag, "Showing grandfather's letter intro")
       guihooks.trigger("mysummerShowIntro", state.pendingIntro.data)
       state.pendingIntro = nil
+    end
+  end
+
+  -- Process pending story scene sequences
+  if state.pendingSceneSequences and #state.pendingSceneSequences > 0 then
+    local current = state.pendingSceneSequences[1]
+    current.delayRemaining = current.delayRemaining - dtReal
+    if current.delayRemaining <= 0 then
+      log("I", logTag, "Showing scene sequence: " .. tostring(current.id))
+      showSceneSequence(current.id)
+      table.remove(state.pendingSceneSequences, 1)
     end
   end
 end
@@ -2137,6 +2543,7 @@ M.onBranchTierReached = onBranchTierReached  -- Listen for skill level ups
 
 -- Story/Narrative API
 M.markIntroSeen = markIntroSeen
+M.resetIntro = resetIntro  -- Debug: reset intro to show grandfather's letter again
 M.onUpdate = onUpdate  -- Process pending AI configs and timers
 
 -- Career data API
@@ -2158,5 +2565,11 @@ M.recordRaceWin = recordRaceWin
 M.getCurrentChapter = getCurrentChapter
 M.getTotalRacesWon = getTotalRacesWon
 M.getChapterProgress = getChapterProgress
+
+-- Story scene API
+M.handleSceneChoice = handleSceneChoice
+M.debugShowSceneSequence = debugShowSceneSequence
+M.debugQueueSceneSequence = debugQueueSceneSequence
+M.debugResetSceneFlags = debugResetSceneFlags
 
 return M

@@ -1,101 +1,56 @@
 {
   "additionalAttributes": {
-    "difficulty": "low"
+    "difficulty": "very hard"
   },
-  "author": "ToeBee",
+  "author": "MySummer Team",
   "careerSetup": {
     "defaultStarKeys": [
-      "justFinish",
+      "finishBronze",
       "finishSilver",
       "finishGold"
     ],
     "showInCareer": false,
-    "showInFreeroam": true,
-    "skill": "(none)",
-    "starOutroTexts": {
-      "cleanGoldRace": "Way to go!",
-      "noStarUnlocked": "Tough luck. Want to try again?"
-    },
+    "showInFreeroam": false,
+    "skill": "mysummer-streetracing",
+    "starOutroTexts": {},
     "starRewards": {
-      "beatGoalTime": [
-        {
-          "attributeKey": "bonusStars",
-          "rewardAmount": 1
-        }
-      ],
-      "cleanGoldRace": [
-        {
-          "attributeKey": "bonusStars",
-          "rewardAmount": 1
-        }
-      ],
       "finishBronze": [
         {
           "attributeKey": "money",
-          "rewardAmount": 100
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 50
+          "rewardAmount": 900
         }
       ],
       "finishGold": [
         {
           "attributeKey": "money",
-          "rewardAmount": 3000
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 15
+          "rewardAmount": 5500
         },
         {
           "attributeKey": "mysummer-streetracing",
-          "rewardAmount": 200
+          "rewardAmount": 320
         }
       ],
       "finishSilver": [
         {
           "attributeKey": "money",
-          "rewardAmount": 1500
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 10
-        },
-        {
-          "attributeKey": "mysummer-streetracing",
-          "rewardAmount": 100
-        }
-      ],
-      "justFinish": [
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 5
-        },
-        {
-          "attributeKey": "mysummer-streetracing",
-          "rewardAmount": 50
+          "rewardAmount": 2800
         }
       ]
     },
     "starsActive": {
-      "beatGoalTime": true,
-      "cleanGoldRace": true,
-      "finishBronze": false,
+      "finishBronze": true,
       "finishGold": true,
-      "finishSilver": true,
-      "justFinish": true
+      "finishSilver": true
     }
   },
   "customAdditionalAttributes": {},
-  "date": 1699022175,
-  "description": "Race Richie Racer's Kustom ETK I-Series in a street race with up to 9 opponents in completely different vehicles. Richie is wealthy and spoiled. His car is highly customized and probably the most expensive car in the group. Richie has everything he ever wanted, except for the excitement and challenge that street racing gives him.",
+  "date": 1699024500,
+  "description": "The airport perimeter. Long runways with no speed limits, but watch for the tight turns around hangars. Late night, minimal security, maximum speed. Just don't clip a parked plane.",
   "devMission": false,
   "grouping": {
     "id": "STREETRACE",
     "label": "Street Races"
   },
-  "isAvailableAsScenario": true,
   "layers": [
     {
       "dir": "/gameplay/missions/west_coast_usa/aiRace/008-STREET/",
@@ -114,20 +69,21 @@
   "missionTypeData": {
     "allowFlip": true,
     "allowRecover": true,
-    "camPathActive": true,
+    "camPathActive": false,
     "damageFailActive": false,
-    "damageFailText": "You got wrecked!",
+    "damageFailText": "missions.aiRace.general.damageFail",
     "damageLimit": 10000,
     "flipLimit": -1,
     "goalCollisionsLimit": 1,
     "goalCollisionsTarget": 5,
     "goalLaps": 3,
     "goalRecoveries": 0,
-    "goalTime": 235,
-    "lapCount": 2,
+    "goalTime": 240,
+    "lapCount": 3,
     "mapPreviewMode": "navgraph",
     "maxRacerCount": 9,
     "minRacerCount": 1,
+    "playerStartIndex": 6,
     "prefabActive": false,
     "raceFile": "/gameplay/missions/west_coast_usa/aiRace/008-STREET/race.race.json",
     "racerAggression": 1,
@@ -139,44 +95,42 @@
     "racerSkill": 1,
     "recoverLimit": -1,
     "shuffleGroup": true,
-    "smartStartPlace": true,
-    "startText": "These races are designed to have a high level of carnage. If you would like less carnage and more racing try turning off traffic. If your FPS gets too low the AI will drive badly. Try lowering the number of AI cars if you need more FPS.",
-    "startTitle": "Street Race #8",
+    "smartStartPlace": false,
+    "startText": "Runway racing. Flat out on the straights, technical around the terminals.",
     "stoppedLimit": 0,
     "useGroundmarkers": false,
     "vehicleGroupActive": true
   },
-  "name": "Street Race #8",
+  "name": "Runway Rampage",
   "retryBehaviour": "infiniteRetries",
   "setupModules": {
     "environment": {
-      "enabled": true,
-      "fogDensity": 0,
-      "time": 0.2083333333,
-      "timeScale": 0,
-      "windDirAngle": 0,
-      "windSpeed": 0
+      "enabled": false
     },
     "traffic": {
-      "activeAmount": 1,
-      "amount": 10,
-      "enabled": true,
+      "activeAmount": 0,
+      "amount": 0,
+      "enabled": false,
       "parkedAmount": 0,
-      "respawnRate": 3,
+      "respawnRate": 1,
+      "useCustomGroup": false,
       "useGameOptions": false,
       "usePrevTraffic": false,
-      "useSimpleVehs": true,
-      "useTraffic": true
+      "useSimpleVehs": false,
+      "useTraffic": false
     },
     "vehicles": {
       "enabled": true,
       "includePlayerVehicle": true,
-      "prioritizePlayerVehicle": true,
-      "vehicles": []
+      "playerVehicleDiffs": {},
+      "prioritizePlayerVehicle": false,
+      "vehicles": {}
     }
   },
   "startCondition": {
-    "type": "always"
+    "branchId": "mysummer-streetracing",
+    "level": 2,
+    "type": "branchLevel"
   },
   "startTrigger": {
     "level": "west_coast_usa",
@@ -185,16 +139,16 @@
       -21.24062729,
       99.29327393
     ],
-    "radius": 3,
-    "rot": [
-      0,
-      0,
-      0.9988707304,
-      0.04751176387
-    ],
+    "radius": 5,
+    "rot": {
+      "w": 0.04751176387,
+      "x": 0,
+      "y": 0,
+      "z": 0.9988707304
+    },
     "type": "coordinates"
   },
   "visibleCondition": {
-    "type": "always"
+    "type": "automatic"
   }
 }

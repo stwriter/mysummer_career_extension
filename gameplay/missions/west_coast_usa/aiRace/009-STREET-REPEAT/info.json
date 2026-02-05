@@ -1,0 +1,150 @@
+{
+  "additionalAttributes": {
+    "difficulty": "very hard"
+  },
+  "author": "MySummer Team",
+  "careerSetup": {
+    "defaultStarKeys": [
+      "finishBronze",
+      "finishSilver",
+      "finishGold"
+    ],
+    "showInCareer": false,
+    "showInFreeroam": false,
+    "skill": null,
+    "starOutroTexts": {},
+    "starRewards": {
+      "finishBronze": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 1000
+        }
+      ],
+      "finishGold": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 6000
+        }
+      ],
+      "finishSilver": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 3000
+        }
+      ]
+    },
+    "starsActive": {
+      "finishBronze": true,
+      "finishGold": true,
+      "finishSilver": true
+    }
+  },
+  "customAdditionalAttributes": {},
+  "date": 1699025000,
+  "description": "Mountain pass at sunset. Technical switchbacks, elevation changes, and breathtaking views you won't have time to admire. The locals know every inch of this road. Do you? (Repeatable - No skill XP)",
+  "devMission": false,
+  "grouping": {
+    "id": "STREETRACE-REPEAT",
+    "label": "Street Races (Repeat)"
+  },
+  "layers": [
+    {
+      "dir": "/gameplay/missions/west_coast_usa/aiRace/009-STREET-REPEAT/",
+      "fixed": true,
+      "isMissionFolderDir": true,
+      "isMissionTypeDir": false
+    },
+    {
+      "dir": "/gameplay/missionTypes/aiRace/",
+      "fixed": true,
+      "isMissionFolderDir": false,
+      "isMissionTypeDir": true
+    }
+  ],
+  "missionType": "aiRace",
+  "missionTypeData": {
+    "allowFlip": true,
+    "allowRecover": true,
+    "camPathActive": false,
+    "damageFailActive": false,
+    "damageFailText": "missions.aiRace.general.damageFail",
+    "damageLimit": 10000,
+    "flipLimit": -1,
+    "goalCollisionsLimit": 1,
+    "goalCollisionsTarget": 5,
+    "goalLaps": 3,
+    "goalRecoveries": 0,
+    "goalTime": 260,
+    "lapCount": 3,
+    "mapPreviewMode": "navgraph",
+    "maxRacerCount": 9,
+    "minRacerCount": 1,
+    "playerStartIndex": 9,
+    "prefabActive": false,
+    "raceFile": "/gameplay/missions/west_coast_usa/aiRace/009-STREET-REPEAT/race.race.json",
+    "racerAggression": 1.1,
+    "racerAwareness": true,
+    "racerCount": 9,
+    "racerRandomnessScale": 1,
+    "racerRough": false,
+    "racerRubberbandMode": false,
+    "racerSkill": 1,
+    "recoverLimit": -1,
+    "shuffleGroup": true,
+    "smartStartPlace": false,
+    "startText": "Mountain roads. Precision driving is everything. One slip and it's a long way down.",
+    "stoppedLimit": 0,
+    "useGroundmarkers": false,
+    "vehicleGroupActive": true
+  },
+  "name": "Summit Surge (Repeat)",
+  "retryBehaviour": "infiniteRetries",
+  "setupModules": {
+    "environment": {
+      "enabled": false
+    },
+    "traffic": {
+      "activeAmount": 0,
+      "amount": 0,
+      "enabled": false,
+      "parkedAmount": 0,
+      "respawnRate": 1,
+      "useCustomGroup": false,
+      "useGameOptions": false,
+      "usePrevTraffic": false,
+      "useSimpleVehs": false,
+      "useTraffic": false
+    },
+    "vehicles": {
+      "enabled": true,
+      "includePlayerVehicle": true,
+      "playerVehicleDiffs": {},
+      "prioritizePlayerVehicle": false,
+      "vehicles": {}
+    }
+  },
+  "startCondition": {
+    "branchId": "mysummer-streetracing",
+    "level": 4,
+    "type": "branchLevel"
+  },
+  "startTrigger": {
+    "level": "west_coast_usa",
+    "pos": [
+      -438.7001953,
+      696.8010864,
+      74.91223907
+    ],
+    "radius": 5,
+    "rot": {
+      "w": 0.3845315576,
+      "x": 0,
+      "y": 0,
+      "z": 0.9231119156
+    },
+    "type": "coordinates"
+  },
+  "visibleCondition": {
+    "type": "automatic"
+  }
+}

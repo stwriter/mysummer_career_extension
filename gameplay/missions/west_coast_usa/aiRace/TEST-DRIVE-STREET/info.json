@@ -2,94 +2,50 @@
   "additionalAttributes": {
     "difficulty": "medium"
   },
-  "author": "MySummer",
+  "author": "MySummer Team",
   "careerSetup": {
     "defaultStarKeys": [
-      "justFinish",
+      "finishBronze",
       "finishSilver",
       "finishGold"
     ],
     "showInCareer": false,
     "showInFreeroam": true,
-    "skill": "(none)",
-    "starOutroTexts": {
-      "cleanGoldRace": "Way to go!",
-      "noStarUnlocked": "Tough luck. Want to try again?"
-    },
+    "skill": "mysummer-streetracing",
+    "starOutroTexts": {},
     "starRewards": {
-      "beatGoalTime": [
-        {
-          "attributeKey": "bonusStars",
-          "rewardAmount": 1
-        }
-      ],
-      "cleanGoldRace": [
-        {
-          "attributeKey": "bonusStars",
-          "rewardAmount": 1
-        }
-      ],
       "finishBronze": [
         {
           "attributeKey": "money",
-          "rewardAmount": 100
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 50
+          "rewardAmount": 350
         }
       ],
       "finishGold": [
         {
           "attributeKey": "money",
-          "rewardAmount": 3000
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 15
+          "rewardAmount": 2200
         },
         {
           "attributeKey": "mysummer-streetracing",
-          "rewardAmount": 200
+          "rewardAmount": 160
         }
       ],
       "finishSilver": [
         {
           "attributeKey": "money",
-          "rewardAmount": 1500
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 10
-        },
-        {
-          "attributeKey": "mysummer-streetracing",
-          "rewardAmount": 100
-        }
-      ],
-      "justFinish": [
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 5
-        },
-        {
-          "attributeKey": "mysummer-streetracing",
-          "rewardAmount": 50
+          "rewardAmount": 1100
         }
       ]
     },
     "starsActive": {
-      "beatGoalTime": true,
-      "cleanGoldRace": true,
-      "finishBronze": false,
+      "finishBronze": true,
       "finishGold": true,
-      "finishSilver": true,
-      "justFinish": true
+      "finishSilver": true
     }
   },
   "customAdditionalAttributes": {},
   "date": 1706187600,
-  "description": "Street circuit test drive with custom opponents.",
+  "description": "Fast-paced street circuit through urban roads. Wide lanes, sweeping corners, and plenty of room for overtaking. Perfect for newcomers to test their racing skills.",
   "devMission": false,
   "grouping": {
     "id": "STREETRACE",
@@ -114,9 +70,9 @@
   "missionTypeData": {
     "allowFlip": true,
     "allowRecover": true,
-    "camPathActive": true,
+    "camPathActive": false,
     "damageFailActive": false,
-    "damageFailText": "You got wrecked!",
+    "damageFailText": "missions.aiRace.general.damageFail",
     "damageLimit": 20000,
     "flipLimit": -1,
     "goalCollisionsLimit": 1,
@@ -128,10 +84,10 @@
     "mapPreviewMode": "navgraph",
     "maxRacerCount": 9,
     "minRacerCount": 1,
-    "playerStartIndex": 0,
-    "prefabActive": true,
+    "playerStartIndex": 5,
+    "prefabActive": false,
     "raceFile": "/gameplay/missions/west_coast_usa/aiRace/TEST-DRIVE-STREET/race.race.json",
-    "racerAggression": 1.0,
+    "racerAggression": 1,
     "racerAwareness": true,
     "racerCount": 5,
     "racerRandomnessScale": 1,
@@ -141,12 +97,12 @@
     "recoverLimit": -1,
     "shuffleGroup": true,
     "smartStartPlace": false,
-    "startText": "Vanilla circuit with IROK Race Series cars. Good luck!",
+    "startText": "Street racing basics. Show what you've got on these urban roads.",
     "stoppedLimit": 4,
     "useGroundmarkers": false,
     "vehicleGroupActive": true
   },
-  "name": "Test Drive - Street",
+  "name": "Street Circuit",
   "retryBehaviour": "infiniteRetries",
   "setupModules": {
     "environment": {
@@ -162,12 +118,13 @@
     "vehicles": {
       "enabled": true,
       "includePlayerVehicle": true,
-      "prioritizePlayerVehicle": true,
-      "vehicles": []
+      "playerVehicleDiffs": {},
+      "prioritizePlayerVehicle": false,
+      "vehicles": {}
     }
   },
   "startCondition": {
-    "type": "always"
+    "type": "automatic"
   },
   "startTrigger": {
     "level": "west_coast_usa",
@@ -176,16 +133,16 @@
       346.99,
       101.84
     ],
-    "radius": 15,
-    "rot": [
-      0,
-      0,
-      0.7,
-      0.7
-    ],
+    "radius": 5,
+    "rot": {
+      "w": 0.7,
+      "x": 0,
+      "y": 0,
+      "z": 0.7
+    },
     "type": "coordinates"
   },
   "visibleCondition": {
-    "type": "always"
+    "type": "automatic"
   }
 }

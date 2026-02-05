@@ -3,7 +3,7 @@
 ## Estado Actual del Proyecto
 
 ### Implementado
-- [x] Sistema de Progresion Nativo (domain `mysummer`, skill `streetracing` con 5 niveles)
+- [x] Sistema de Progresion Nativo (domain `mysummer`, skill `streetracing` con 7 niveles v4)
 - [x] 10 carreras street racing con recompensas
 - [x] Mercado de Piezas basico (PartsBay, SpeedParts, SilkRoad)
 - [x] Vehiculos iniciales (Miramar + ETK-I chasis)
@@ -21,6 +21,7 @@
 - [x] **Sprint 22**: App de email en movil (PhoneEmail.vue)
 - [x] **Sprint 15**: Sistema de misiones de contactos (delivery + chase missions)
 - [x] **Sprint 24**: Sistema de Chat Unificado (WhatsApp-style, reemplaza email, integra DeepWeb V3)
+- [x] **Sprint 25**: Sistema de Capitulos v4 (6 capitulos, 18 carreras + 6 misiones de contacto, dialogos de conduccion)
 
 ---
 
@@ -493,6 +494,8 @@ Conversaciones dinamicas generadas por IA usando APIs gratuitas.
 | ~~7~~ | ~~ETK-I Basico~~ | ~~ALTA~~ | COMPLETADO |
 | ~~8.2~~ | ~~Kilometraje inicial~~ | ~~MEDIA~~ | COMPLETADO |
 | ~~13~~ | ~~Traits y Cooldowns~~ | ~~ALTA~~ | COMPLETADO |
+| ~~24~~ | ~~Chat Unificado~~ | ~~ALTA~~ | COMPLETADO |
+| **25** | **Capitulos v4 + Carreras** | **ALTA** | **EN PROGRESO** |
 | 14 | Multiples Fuentes XP | ALTA | Pendiente |
 | 15 | Misiones Contactos | ALTA | EN PROGRESO (Delivery+Chase OK, faltan Surveillance/Escort/FindPart) |
 | 1 | Sistema Cargo | ALTA | Pendiente |
@@ -510,14 +513,156 @@ Conversaciones dinamicas generadas por IA usando APIs gratuitas.
 
 ---
 
+## SPRINT 25: Sistema de Capitulos v4 con Carreras y Narrativa
+**Prioridad: ALTA** | **Estado: EN PROGRESO**
+
+### Objetivo
+Implementar la estructura de 6 capitulos (v4) con carreras PLACEHOLDER y sistema narrativo completo.
+
+### Documentacion Narrativa
+Ver `/docs/narrative_v4/` para:
+- `v4_hilo_narrativo.md` - Biblia narrativa completa
+- `rook_full.json` - Dialogos de Rook (piloto ansioso)
+- `nova_full.json` - Dialogos de Nova (ambiciosa)
+- `ghost_full.json` - Dialogos de Ghost (fixer misterioso)
+- `techie_full.json`, `muscle_full.json`, `import_full.json`, `shadow_full.json`, `viper_full.json`
+
+### Sistema de Fases Narrativas
+
+| Fase | Nombre | Trigger | Personajes Activos |
+|------|--------|---------|-------------------|
+| 0 | Legacy | Carta abuelo | Sistema |
+| 1 | Origins | Primeras carreras | Rook, Nova |
+| 2 | The Contact | Primera compra performance | Ghost |
+| 3 | The Split | Conflicto Rook/Nova | Todos |
+| 4 | The Fall | Sabotaje del coche | Ghost, Shadow |
+| 5 | The Climb | Recuperar coche | Todos |
+| 6 | The Legend | The Big One | Viper |
+
+### Estructura v4 (6 Capitulos)
+
+| Cap | Nombre | Contacto | Coche | Carreras |
+|-----|--------|----------|-------|----------|
+| 0 | Prologo - El Garaje | Sistema | Miramar | - |
+| 1 | Carreras entre conocidos | Rook, Nova | Cualquiera | 3 |
+| 2 | Underground bajo | Ghost | Cualquiera | 3 |
+| 3 | Rallys regionales | Techie/Muscle/Import | Cualquiera | 3 |
+| 4 | Underground alto | Shadow | Cualquiera | 3 |
+| 5 | Rallys oficiales | Ghost | **Proyecto** | 3 |
+| 6 | Camino a The Big One | Todos | **Proyecto** | 3 |
+
+### Sistema de Carreras (PLACEHOLDER)
+
+Las carreras son PLACEHOLDERS que:
+1. **Waypoint**: Al aceptar, se crea waypoint al punto de inicio
+2. **Activacion**: Al llegar al punto, se activa la mision nativa de BeamNG
+3. **Misiones**: Usar carreras existentes de BeamNG/IROK (`race.race.json` original)
+4. **Vehiculos rivales**: Usar configs que terminan en `_race1.pc`
+5. **Recompensas**: Dar las recompensas ya definidas (dinero + XP)
+6. **Repeticion**: OK que se repitan carreras entre capitulos
+
+### Nuevos Personajes
+
+**Rook** (Piloto ansioso/leal)
+- Pareja de Nova
+- Mecanico del grupo
+- Inseguro, siempre "un paso detras"
+- Teme perder a Nova y quedarse atras
+
+**Nova** (Piloto ambiciosa)
+- Pareja de Rook
+- Directa, observadora
+- Quiere salir del circuito pequenio
+- No traiciona por maldad, sino por conviccion
+
+### Sistema de Personalidad del Jugador
+
+Traits (0-100):
+- `ambition`: Deseo de ganar, voluntad de riesgo
+- `loyalty`: Dedicacion a companieros
+- `caution`: Planificacion vs velocidad imprudente
+
+Relaciones dinamicas:
+- `rook_confidence`: Confianza de Rook en si mismo
+- `rook_trust`: Confianza de Rook en el jugador
+- `rook_affinity`: Afinidad con Rook
+- `nova_respect`: Respeto de Nova hacia el jugador
+- `nova_affinity`: Afinidad con Nova
+
+### Contenido por Capitulo
+- **3 carreras** placeholder (de existentes)
+- **1 mision de contacto** obligatoria
+- **Dialogos en pantalla** durante conduccion
+- **Mensajes de chat** dinamicos segun fase
+
+### Tareas
+
+#### Sistema de Carreras Placeholder
+- [x] Actualizar skill streetracing a 7 niveles (0-6)
+- [x] Crear `mysummerStoryRaces.lua` con estructura
+- [ ] Simplificar sistema: waypoint -> llegar -> mision nativa
+- [ ] Definir 18 carreras usando misiones existentes de BeamNG
+- [ ] Configurar vehiculos rivales con `_race1.pc`
+- [ ] Sistema de recompensas por carrera
+
+#### Sistema Narrativo V4
+- [x] Crear `mysummerNarrative.lua` (Story Orchestrator) - Eventos narrativos por fase
+- [x] Anadir Rook y Nova como contactos en chat (rook_v3.json, nova_v3.json)
+- [x] Sistema de personality tracking (affinityEffects en mysummerChat.lua)
+- [x] Sistema de relaciones (rook_affinity, nova_affinity, getTeammateAlignment)
+- [x] Triggers de conversacion por fase (mysummerNarrative events)
+- [x] Extender `mysummerChat.lua` con formato V3/V4 (queueDialogue, queueMessage)
+- [x] Fix plantillas {{contextReaction}} y {{contextTransition}}
+- [x] Fix queueDialogue para enviar mensajes al chat del telefono
+- [x] Actualizar Ghost V3 para nuevo contexto narrativo (Ghost te contacta primero)
+- [ ] Completar level2 y level3 de Ghost V3
+- [ ] Testing completo del sistema narrativo
+
+#### Misiones de Contacto
+- [ ] 6 misiones obligatorias (1 por capitulo)
+- [ ] Tipos: delivery, chase (ya implementados)
+- [ ] Integracion con progresion de fase
+
+#### UI
+- [ ] Actualizar selector de carreras
+- [ ] Mostrar Rook/Nova en lista de contactos
+- [ ] Dialogos overlay durante conduccion
+- [ ] Testing completo
+
+### Archivos
+
+Existentes a modificar:
+- `gameplay/domains/mysummer/skills/streetracing/info.json` - Ya tiene 7 niveles
+- `lua/ge/extensions/career/modules/mysummerStoryRaces.lua` - Simplificar
+- `lua/ge/extensions/career/modules/mysummerMissions.lua` - Extender
+- `lua/ge/extensions/career/modules/mysummerChat.lua` - Formato V4
+
+Ya creados:
+- `lua/ge/extensions/career/modules/mysummerNarrative.lua` - Story Orchestrator con eventos por fase
+- `lua/ge/extensions/career/modules/deepweb_contacts/rook_v3.json` - Dialogos de Rook (mecanico ansioso)
+- `lua/ge/extensions/career/modules/deepweb_contacts/nova_v3.json` - Dialogos de Nova (copiloto ambiciosa)
+- `lua/ge/extensions/career/modules/deepweb_contacts/ghost_v3.json` - Ghost (misterioso, conoce al abuelo)
+- `gameplay/domains/mysummer/skills/rook/info.json` - Skill de relacion con Rook
+- `gameplay/domains/mysummer/skills/nova/info.json` - Skill de relacion con Nova
+- `docs/narrative_test_guide.md` - Guia de prueba del sistema narrativo
+
+Documentacion (ya existe):
+- `/docs/narrative_v4/` - Todos los JSONs narrativos
+- `/docs/V4_SYSTEM_DESIGN.md` - Diseno tecnico
+
+---
+
 ## Archivos Clave del Proyecto
 
 ### Lua (Backend)
 - `lua/ge/extensions/career/modules/mysummerParts.lua` - Mercado de piezas
 - `lua/ge/extensions/career/modules/mysummerPartShops.lua` - Tiendas oficiales
-- `lua/ge/extensions/career/modules/mysummerRaceManager.lua` - Carreras
-- `lua/ge/extensions/career/modules/mysummerCore.lua` - Core del mod
-- `lua/ge/extensions/career/modules/mysummerChecklist.lua` - Checklist (crear)
+- `lua/ge/extensions/career/modules/mysummerRaceManager.lua` - Carreras antiguas
+- `lua/ge/extensions/career/modules/mysummerStoryRaces.lua` - Sistema de carreras v4
+- `lua/ge/extensions/career/modules/mysummerCareer.lua` - Progresion de capitulos
+- `lua/ge/extensions/career/modules/mysummerChat.lua` - Sistema de chat/contactos
+- `lua/ge/extensions/career/modules/mysummerMissions.lua` - Misiones de contactos
+- `lua/ge/extensions/career/modules/mysummerStory.lua` - Story Orchestrator (CREAR)
 
 ### Vue (Frontend)
 - `ui-vue-src/modules/career/components/mysummer/browser/` - Paginas del navegador
@@ -526,10 +671,215 @@ Conversaciones dinamicas generadas por IA usando APIs gratuitas.
 
 ### Configuraciones
 - `vehicles/etki/mysummer_2400ti_ttsport_chassis.pc` - Config actual ETK-I
+- `vehicles/*/*.pc` terminados en `_race1.pc` - Configs de rivales para carreras
 - `gameplay/domains/mysummer/` - Domain y skills
-- `gameplay/missions/west_coast_usa/aiRace/` - Misiones de carreras
+- `gameplay/missions/west_coast_usa/aiRace/` - Misiones de carreras BeamNG
+
+### Documentacion Narrativa
+- `/docs/narrative_v4/v4_hilo_narrativo.md` - Biblia narrativa
+- `/docs/narrative_v4/*_full.json` - Dialogos por personaje
+- `/docs/V4_SYSTEM_DESIGN.md` - Arquitectura tecnica V4
+
+---
+
+## Tono Narrativo (Reglas de Oro)
+
+Del documento `v4_hilo_narrativo.md`:
+
+1. **Mundo realista**, no heroico
+2. Nadie es completamente bueno ni malo
+3. Las decisiones tienen **consecuencias lentas**, no inmediatas
+4. El pasado pesa mas que el presente
+5. El coche no es solo un objeto: es **identidad**
+
+**Mensaje central:**
+> No heredas los errores de otros. Los repites... o no.
+
+**Regla de oro para contenido:**
+Si un dialogo, mision o evento:
+- no refuerza una personalidad
+- no empuja un conflicto
+- no deja una duda
+-> **no pertenece a esta historia**
+
+---
+
+---
+
+## SPRINT 26: Sistemas Narrativos Expandidos
+**Prioridad: ALTA** | **Estado: EN PROGRESO**
+
+### Objetivo
+Expandir la narrativa más allá del chat con múltiples canales de comunicación y un sistema de debug completo.
+
+### Documentación
+Ver `/docs/narrative_v4/narrative_systems_design.md` para diseño completo.
+
+### Nuevos Sistemas
+
+#### 26.1 Monólogos Internos
+Pensamientos del protagonista en pantalla mientras conduce.
+
+**Triggers:**
+- Al iniciar una misión/carrera
+- Después de eventos narrativos
+- Al pasar cerca de lugares significativos
+- Aleatorios según fase narrativa
+
+**UI:**
+- Texto en cursiva, centro-inferior
+- Fade in/out suave (5s visible)
+- Sin interacción del jugador
+
+**Contenido por fase:**
+- Fase 0-1: Primeros pasos, dudas sobre el coche
+- Fase 2: Preguntas sobre Ghost y el abuelo
+- Fase 3: Tensión Rook/Nova
+- Fase 4: Conflicto y desconfianza
+- Fase 5: Advertencias, cercanía a The Big One
+- Fase 6: Post-robo, búsqueda de respuestas
+
+**Archivos:**
+- `lua/ge/extensions/career/modules/mysummerMonologues.lua`
+- `deepweb_contacts/monologues/phase*.json`
+
+#### 26.2 Sistema de Llamadas
+Conversaciones telefónicas durante la conducción.
+
+**Características:**
+- Más inmersivas que el chat
+- Pueden interrumpir al jugador
+- Opción de contestar o ignorar
+- Diálogo con opciones de respuesta
+
+**UI:**
+- Notificación de llamada entrante
+- Overlay durante llamada con texto
+- Opciones de respuesta numeradas
+- Timer de duración
+
+**Llamadas principales:**
+- Fase 2: Primera llamada de Ghost (críptica)
+- Fase 4: Llamada de Rook (nervioso, pide consejo)
+- Fase 4: Llamada de Nova (frustrada, planes)
+- Fase 5: Advertencia urgente de Ghost
+- Fase 6: Llamada de revelación
+
+**Archivos:**
+- `lua/ge/extensions/career/modules/mysummerCalls.lua`
+- `deepweb_contacts/calls/ghost_calls.json`
+- `deepweb_contacts/calls/rook_calls.json`
+- `deepweb_contacts/calls/nova_calls.json`
+
+#### 26.3 Sistema de Debug Narrativo
+Herramientas para probar toda la historia sin jugar.
+
+**Comandos de consola:**
+```lua
+-- Estado actual
+career_modules_mysummerNarrative.debugStatus()
+
+-- Avanzar a fase
+career_modules_mysummerNarrative.debugSetPhase(3)
+
+-- Disparar evento
+career_modules_mysummerNarrative.forceTriggerEvent("ghost_first_message")
+
+-- Listar eventos
+career_modules_mysummerNarrative.debugListEvents()
+
+-- Reproducir historia completa
+career_modules_mysummerNarrative.debugPlayFullStory()
+
+-- Reproducir fase específica
+career_modules_mysummerNarrative.debugPlayPhase(2)
+
+-- Desbloquear documentos
+career_modules_mysummerNarrative.debugUnlockAllDocuments()
+
+-- Reset completo
+career_modules_mysummerNarrative.debugReset()
+
+-- Modo teatro (speedMultiplier: 1=normal, 5=5x, 0=instantáneo)
+career_modules_mysummerNarrative.debugTheaterMode(5)
+```
+
+**Modo Teatro:**
+- Reproduce toda la historia en secuencia
+- Muestra monólogos, mensajes, llamadas, documentos
+- Controles: ESPACIO (pausa), FLECHA (saltar), ESC (salir)
+- Velocidad configurable
+
+**Archivos:**
+- `lua/ge/extensions/career/modules/mysummerNarrativeDebug.lua`
+
+### Arquitectura de Módulos
+
+```
+mysummerNarrative.lua          -- Eventos y lógica principal (existente)
+       │
+       ├── mysummerMonologues.lua     -- Sistema de monólogos
+       ├── mysummerCalls.lua          -- Sistema de llamadas
+       └── mysummerNarrativeDebug.lua -- Herramientas de debug
+```
+
+### Tareas
+
+#### Implementación Base
+- [ ] Crear `mysummerMonologues.lua` con sistema básico
+- [ ] Crear `mysummerCalls.lua` con sistema de llamadas
+- [ ] Crear `mysummerNarrativeDebug.lua` con comandos de debug
+
+#### UI
+- [ ] Overlay de monólogos (texto fade in/out)
+- [ ] UI de llamada entrante
+- [ ] UI de llamada activa con opciones
+- [ ] Panel de debug (opcional, para desarrollo)
+
+#### Contenido
+- [ ] Escribir monólogos para cada fase (6 fases × 5-10 monólogos)
+- [ ] Escribir diálogos de llamadas para Ghost, Rook, Nova
+- [ ] Integrar con eventos narrativos existentes
+
+#### Testing
+- [ ] Probar modo teatro completo
+- [ ] Verificar triggers de monólogos
+- [ ] Testear sistema de llamadas
+
+### Prioridad de Implementación
+
+1. **Debug básico** - Para poder probar todo rápido
+2. **Monólogos** - El más fácil de implementar
+3. **Llamadas** - El más complejo, requiere UI interactiva
+
+---
+
+## Orden de Prioridades (Actualizado)
+
+| Sprint | Nombre | Prioridad | Estado |
+|--------|--------|-----------|--------|
+| ~~7~~ | ~~ETK-I Basico~~ | ~~ALTA~~ | COMPLETADO |
+| ~~8.2~~ | ~~Kilometraje inicial~~ | ~~MEDIA~~ | COMPLETADO |
+| ~~13~~ | ~~Traits y Cooldowns~~ | ~~ALTA~~ | COMPLETADO |
+| ~~24~~ | ~~Chat Unificado~~ | ~~ALTA~~ | COMPLETADO |
+| **25** | **Capitulos v4 + Narrativa** | **ALTA** | **EN PROGRESO** |
+| **26** | **Narrativa Expandida + Debug** | **ALTA** | **EN PROGRESO** |
+| 14 | Multiples Fuentes XP | ALTA | Pendiente |
+| 15 | Misiones Contactos | ALTA | EN PROGRESO |
+| 1 | Sistema Cargo | ALTA | Pendiente |
+| 2 | Stock Unico | ALTA | Pendiente |
+| 3 | Carreras Listener | ALTA | Pendiente |
+| 16 | Consecuencias | MEDIA | Pendiente |
+| 17 | IA Conversaciones | MEDIA | Pendiente |
+| 4 | Desbloqueo Carreras | MEDIA | Pendiente |
+| 5 | Rivales | MEDIA | Pendiente |
+| 12 | Checklist | MEDIA | Pendiente |
+| 6 | DeepWeb | MEDIA | Pendiente |
+| 9 | Fallos por KM | BAJA | Pendiente |
+| 10 | Eventos Dinamicos | BAJA | Pendiente |
+| 11 | UI Catalogo | BAJA | Pendiente |
 
 ---
 
 *Documento creado: Enero 2025*
-*Actualizar segun avance del desarrollo*
+*Ultima actualizacion: Sprint 26 - Sistemas Narrativos Expandidos*

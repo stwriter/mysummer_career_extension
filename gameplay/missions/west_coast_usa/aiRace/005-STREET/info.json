@@ -1,101 +1,56 @@
 {
   "additionalAttributes": {
-    "difficulty": "high"
+    "difficulty": "hard"
   },
-  "author": "ToeBee",
+  "author": "MySummer Team",
   "careerSetup": {
     "defaultStarKeys": [
-      "justFinish",
+      "finishBronze",
       "finishSilver",
       "finishGold"
     ],
     "showInCareer": false,
-    "showInFreeroam": true,
-    "skill": "(none)",
-    "starOutroTexts": {
-      "cleanGoldRace": "Way to go!",
-      "noStarUnlocked": "Tough luck. Want to try again?"
-    },
+    "showInFreeroam": false,
+    "skill": "mysummer-streetracing",
+    "starOutroTexts": {},
     "starRewards": {
-      "beatGoalTime": [
-        {
-          "attributeKey": "bonusStars",
-          "rewardAmount": 1
-        }
-      ],
-      "cleanGoldRace": [
-        {
-          "attributeKey": "bonusStars",
-          "rewardAmount": 1
-        }
-      ],
       "finishBronze": [
         {
           "attributeKey": "money",
-          "rewardAmount": 100
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 50
+          "rewardAmount": 600
         }
       ],
       "finishGold": [
         {
           "attributeKey": "money",
-          "rewardAmount": 3000
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 15
+          "rewardAmount": 4000
         },
         {
           "attributeKey": "mysummer-streetracing",
-          "rewardAmount": 200
+          "rewardAmount": 250
         }
       ],
       "finishSilver": [
         {
           "attributeKey": "money",
-          "rewardAmount": 1500
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 10
-        },
-        {
-          "attributeKey": "mysummer-streetracing",
-          "rewardAmount": 100
-        }
-      ],
-      "justFinish": [
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 5
-        },
-        {
-          "attributeKey": "mysummer-streetracing",
-          "rewardAmount": 50
+          "rewardAmount": 2000
         }
       ]
     },
     "starsActive": {
-      "beatGoalTime": true,
-      "cleanGoldRace": true,
-      "finishBronze": false,
+      "finishBronze": true,
       "finishGold": true,
-      "finishSilver": true,
-      "justFinish": true
+      "finishSilver": true
     }
   },
   "customAdditionalAttributes": {},
-  "date": 1699022154,
-  "description": "Race Walt Powerski's Kustom Gavril Barstow in a street race with up to 9 opponents in completely different vehicles. Walt is an old street racer who is grumpy and stubborn. He bought his car new, and treats it better than he treats people. Which makes his old Barstow pretty fast.",
+  "date": 1699023000,
+  "description": "Waterfront warehouse district. The docks come alive at midnight with engine roars echoing off container stacks. Slippery surfaces, tight corners between shipping containers, and zero margin for error.",
   "devMission": false,
   "grouping": {
     "id": "STREETRACE",
     "label": "Street Races"
   },
-  "isAvailableAsScenario": true,
   "layers": [
     {
       "dir": "/gameplay/missions/west_coast_usa/aiRace/005-STREET/",
@@ -114,23 +69,24 @@
   "missionTypeData": {
     "allowFlip": true,
     "allowRecover": true,
-    "camPathActive": true,
+    "camPathActive": false,
     "damageFailActive": false,
-    "damageFailText": "You got wrecked!",
+    "damageFailText": "missions.aiRace.general.damageFail",
     "damageLimit": 10000,
     "flipLimit": -1,
     "goalCollisionsLimit": 1,
     "goalCollisionsTarget": 5,
     "goalLaps": 3,
     "goalRecoveries": 0,
-    "goalTime": 272,
+    "goalTime": 210,
     "lapCount": 3,
     "mapPreviewMode": "navgraph",
     "maxRacerCount": 9,
     "minRacerCount": 1,
+    "playerStartIndex": 5,
     "prefabActive": false,
     "raceFile": "/gameplay/missions/west_coast_usa/aiRace/005-STREET/race.race.json",
-    "racerAggression": 1.075000048,
+    "racerAggression": 1.1,
     "racerAwareness": true,
     "racerCount": 9,
     "racerRandomnessScale": 1,
@@ -139,44 +95,42 @@
     "racerSkill": 1,
     "recoverLimit": -1,
     "shuffleGroup": true,
-    "smartStartPlace": true,
-    "startText": "These races are designed to have a high level of carnage. If you would like less carnage and more racing try turning off traffic. If your FPS gets too low the AI will drive badly. Try lowering the number of AI cars if you need more FPS.",
-    "startTitle": "Street Race #5",
+    "smartStartPlace": false,
+    "startText": "The docks. Steel containers and concrete. One mistake and you're swimming with the fishes.",
     "stoppedLimit": 0,
     "useGroundmarkers": false,
     "vehicleGroupActive": true
   },
-  "name": "Street Race #5",
+  "name": "Dockside Drift",
   "retryBehaviour": "infiniteRetries",
   "setupModules": {
     "environment": {
-      "enabled": true,
-      "fogDensity": 0,
-      "time": 0.2083333333,
-      "timeScale": 0,
-      "windDirAngle": 0,
-      "windSpeed": 0
+      "enabled": false
     },
     "traffic": {
-      "activeAmount": 1,
-      "amount": 10,
-      "enabled": true,
+      "activeAmount": 0,
+      "amount": 0,
+      "enabled": false,
       "parkedAmount": 0,
-      "respawnRate": 3,
+      "respawnRate": 1,
+      "useCustomGroup": false,
       "useGameOptions": false,
       "usePrevTraffic": false,
-      "useSimpleVehs": true,
-      "useTraffic": true
+      "useSimpleVehs": false,
+      "useTraffic": false
     },
     "vehicles": {
       "enabled": true,
       "includePlayerVehicle": true,
-      "prioritizePlayerVehicle": true,
-      "vehicles": []
+      "playerVehicleDiffs": {},
+      "prioritizePlayerVehicle": false,
+      "vehicles": {}
     }
   },
   "startCondition": {
-    "type": "always"
+    "branchId": "mysummer-streetracing",
+    "level": 1,
+    "type": "branchLevel"
   },
   "startTrigger": {
     "level": "west_coast_usa",
@@ -185,16 +139,16 @@
       -397.8637695,
       100.9491043
     ],
-    "radius": 3,
-    "rot": [
-      0,
-      0,
-      0.9352796078,
-      -0.3539098203
-    ],
+    "radius": 5,
+    "rot": {
+      "w": -0.3539098203,
+      "x": 0,
+      "y": 0,
+      "z": 0.9352796078
+    },
     "type": "coordinates"
   },
   "visibleCondition": {
-    "type": "always"
+    "type": "automatic"
   }
 }

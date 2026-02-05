@@ -1,151 +1,150 @@
 {
   "id": "ghost",
   "name": "Ghost",
-  "personality": "paranoid",
-  "specialty": "Untraceable parts",
-  "description": "A paranoid parts dealer who values discretion above all",
+  "personality": "enigmatic_observer",
+  "specialty": "The Past",
+  "description": "A mysterious figure who seems to know your family history. Speaks in riddles and watches from the shadows.",
   "isV3Format": true,
 
   "contextReactions": {
     "recentPoliceEscape": [
-      "Heard you had some heat on you recently. You shook them off?",
-      "Word travels fast. The cops were after you, huh? You handled it well.",
-      "Someone told me you had a close call with the law. Impressive."
+      {"es": "Los perdiste. Bien. Él habría hecho lo mismo.", "en": "You lost them. Good. He would have done the same."},
+      {"es": "Rápido pensamiento en la carretera. Está en la sangre.", "en": "Quick thinking on the road. It runs in the blood."},
+      {"es": "La policía no tiene nada contra ti. Como antes.", "en": "The cops got nothing on you. Just like before."}
     ],
     "recentPoliceCaught": [
-      "You got picked up by the cops. That's... concerning.",
-      "I heard about your little incident with the police. We need to be more careful.",
-      "Getting caught isn't a good look. Makes me nervous."
-    ],
-    "recentPurchase": [
-      "Those parts working out for you?",
-      "You got what you needed last time?",
-      "The stuff I sent your way... it's holding up?"
+      {"es": "Que te atrapen... así empezó para él también.", "en": "Getting caught... that's how it started for him too."},
+      {"es": "Ten cuidado. La historia tiende a repetirse.", "en": "Be careful. History has a way of repeating itself."},
+      {"es": "La placa te ve ahora. Eso cambia las cosas.", "en": "The badge sees you now. That changes things."}
     ],
     "recentRaceWin": [
-      "Heard you've been winning races. Good. Keeps the heat off.",
-      "Nice driving out there. You've got skills.",
-      "Word is you're making a name for yourself on the streets."
+      {"es": "Otra victoria. Te estás haciendo un nombre.", "en": "Another win. You're making a name for yourself."},
+      {"es": "La gente empieza a notarte. Como lo notaron a él.", "en": "People are starting to notice you. Just like they noticed him."},
+      {"es": "La victoria te sienta bien. Pero trae atención.", "en": "Victory suits you. But victory brings attention."}
+    ],
+    "recentRaceLoss": [
+      {"es": "Una derrota. Pasa. Él perdió muchas antes del final.", "en": "A loss. It happens. He lost plenty before the end."},
+      {"es": "La derrota enseña más que la victoria. Recuérdalo.", "en": "Defeat teaches more than victory. Remember that."},
+      {"es": "No dejes que una derrota te defina.", "en": "Don't let one loss define you."}
     ],
     "longAbsence": [
-      "Been a while. Thought you forgot about me.",
-      "Where've you been? I was starting to wonder.",
-      "You disappeared for a bit there. Everything okay?"
+      {"es": "Has estado callado. Estaba observando.", "en": "You've been quiet. I was watching."},
+      {"es": "Pensé que te habrías ido. Pero aquí estás.", "en": "Thought you might have walked away. But here you are."},
+      {"es": "El tiempo pasa. El pasado no.", "en": "Time passes. The past doesn't."}
     ]
   },
 
   "conversations": {
     "level1": {
-      "title": "First Contact",
+      "title": {"es": "El Primer Mensaje", "en": "The First Message"},
+      "requiredPhase": 2,
       "phases": {
         "intro": {
           "exchanges": [
             { "speaker": "ghost", "text": "..." },
-            { "speaker": "ghost", "text": "You shouldn't have this number." },
+            { "speaker": "ghost", "text": {"es": "Respondiste.", "en": "You responded."} },
+            { "speaker": "ghost", "text": {"es": "No estaba seguro de que lo harías.", "en": "I wasn't sure you would."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "referred",
-                  "text": "Someone gave it to me. Said you could help with parts.",
-                  "traits": ["discrete"],
-                  "points": 15,
-                  "setsMemory": { "wasReferred": true },
-                  "leadsTo": "intro_referred"
-                },
-                {
-                  "id": "found",
-                  "text": "Found it myself. Took some digging.",
+                  "id": "who_are_you",
+                  "text": {"es": "¿Quién eres? ¿Cómo sabes cómo conduzco?", "en": "Who are you? How do you know how I drive?"},
                   "traits": ["cautious"],
                   "points": 10,
-                  "setsMemory": { "foundAlone": true },
-                  "leadsTo": "intro_found"
+                  "setsMemory": { "askedIdentity": true },
+                  "leadsTo": "intro_identity"
                 },
                 {
-                  "id": "impatient",
-                  "text": "Does it matter? I need parts, you sell parts.",
-                  "traits": ["impatient"],
-                  "points": -15,
-                  "leadsTo": "intro_impatient"
+                  "id": "what_mean",
+                  "text": {"es": "¿Qué quisiste decir con 'conduzco como él'? ¿Como quién?", "en": "What did you mean, 'I drive like him'? Like who?"},
+                  "traits": ["curious"],
+                  "points": 15,
+                  "setsMemory": { "askedAboutHim": true },
+                  "leadsTo": "intro_grandfather"
+                },
+                {
+                  "id": "leave_alone",
+                  "text": {"es": "Déjame en paz. No te conozco.", "en": "Leave me alone. I don't know you."},
+                  "traits": ["defensive"],
+                  "points": -5,
+                  "leadsTo": "intro_defensive"
                 }
               ]
             }
           ],
           "branches": {
-            "intro_referred": [
-              { "speaker": "ghost", "text": "Someone. That's wonderfully specific." },
-              { "speaker": "ghost", "text": "If they vouched for you, they're putting their neck on the line." },
-              { "speaker": "ghost", "text": "You understand what that means?" },
+            "intro_identity": [
+              { "speaker": "ghost", "text": {"es": "Quién soy no importa.", "en": "Who I am doesn't matter."} },
+              { "speaker": "ghost", "text": {"es": "Lo que importa es que he estado observando este ambiente durante mucho tiempo.", "en": "What matters is that I've been watching this scene for a long time."} },
+              { "speaker": "ghost", "text": {"es": "Y tú... me recuerdas a alguien.", "en": "And you... you remind me of someone."} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "understand",
-                    "text": "I understand. I won't let them down.",
-                    "traits": ["loyal"],
+                    "id": "who_someone",
+                    "text": {"es": "¿A quién? Dímelo.", "en": "Someone who? Tell me."},
+                    "traits": ["curious"],
                     "points": 15,
-                    "setsMemory": { "promisedLoyalty": true },
                     "continueToPhase": "nudo"
                   },
                   {
-                    "id": "their_problem",
-                    "text": "That's between you and them.",
-                    "traits": ["discrete"],
-                    "points": 10,
-                    "continueToPhase": "nudo"
-                  }
-                ]
-              }
-            ],
-            "intro_found": [
-              { "speaker": "ghost", "text": "Found it yourself. Great." },
-              { "speaker": "ghost", "text": "That means my number's floating around somewhere I don't control." },
-              { "speaker": "ghost", "text": "Thanks for that." },
-              {
-                "type": "choice",
-                "choices": [
-                  {
-                    "id": "hard_find",
-                    "text": "It wasn't easy. Took me weeks. Most people would give up.",
-                    "traits": ["patient"],
-                    "points": 10,
-                    "continueToPhase": "nudo"
-                  },
-                  {
-                    "id": "help_clean",
-                    "text": "I can help you clean your digital traces if you want.",
-                    "traits": ["secretive"],
-                    "points": 20,
-                    "setsMemory": { "offeredHelp": true },
-                    "continueToPhase": "nudo"
-                  }
-                ]
-              }
-            ],
-            "intro_impatient": [
-              { "speaker": "ghost", "text": "..." },
-              { "speaker": "ghost", "text": "It matters. Everything matters." },
-              { "speaker": "ghost", "text": "The way you found me. The way you talk. The car you drove here." },
-              { "speaker": "ghost", "text": "If you can't understand that, we're done." },
-              {
-                "type": "choice",
-                "choices": [
-                  {
-                    "id": "apologize",
-                    "text": "You're right. I'm sorry. I've just been looking for quality parts for months.",
-                    "traits": ["patient"],
-                    "points": 5,
-                    "setsMemory": { "apologized": true },
-                    "continueToPhase": "nudo"
-                  },
-                  {
-                    "id": "leave",
-                    "text": "Fine. Your loss.",
+                    "id": "stop_games",
+                    "text": {"es": "Deja de jugar. Di lo que tengas que decir.", "en": "Stop playing games. Say what you want to say."},
                     "traits": ["impatient"],
-                    "points": -20,
+                    "points": 5,
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ],
+            "intro_grandfather": [
+              { "speaker": "ghost", "text": {"es": "Lo descubriste más rápido de lo que esperaba.", "en": "You figured it out faster than I expected."} },
+              { "speaker": "ghost", "text": {"es": "Sí. Él.", "en": "Yes. Him."} },
+              { "speaker": "ghost", "text": {"es": "Las mismas manos en el volante. El mismo hambre en los ojos.", "en": "The same hands on the wheel. The same hunger in the eyes."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "knew_him",
+                    "text": {"es": "¿Conociste a mi abuelo?", "en": "You knew my grandfather?"},
+                    "traits": ["curious"],
+                    "points": 20,
+                    "setsMemory": { "confirmedGrandfather": true },
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "dont_compare",
+                    "text": {"es": "No me compares con él. Soy mi propia persona.", "en": "Don't compare me to him. I'm my own person."},
+                    "traits": ["independent"],
+                    "points": 10,
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ],
+            "intro_defensive": [
+              { "speaker": "ghost", "text": "..." },
+              { "speaker": "ghost", "text": {"es": "Puedes apartarme.", "en": "You can push me away."} },
+              { "speaker": "ghost", "text": {"es": "Pero no puedes huir del pasado.", "en": "But you can't outrun the past."} },
+              { "speaker": "ghost", "text": {"es": "Ni del tuyo. Ni del suyo.", "en": "Not yours. Not his."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "fine_talk",
+                    "text": {"es": "...Vale. Habla.", "en": "...Fine. Talk."},
+                    "traits": ["curious"],
+                    "points": 10,
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "block_you",
+                    "text": {"es": "Voy a bloquear este número.", "en": "I'm blocking this number."},
+                    "points": -15,
                     "endConversation": true,
                     "result": "rejected",
-                    "cooldown": 180
+                    "cooldown": 300
                   }
                 ]
               }
@@ -155,114 +154,86 @@
 
         "nudo": {
           "contextTransition": {
-            "default": "Let's say I'm willing to talk.",
-            "offeredHelp": "That's... actually useful. Maybe you're not a complete waste of time.",
-            "apologized": "At least you can admit when you're wrong. That's something."
+            "default": {"es": "Hay cosas que deberías saber.", "en": "There are things you should know."},
+            "confirmedGrandfather": {"es": "Te mereces saber qué pasó.", "en": "You deserve to know what happened."},
+            "askedIdentity": {"es": "Algunos me llaman Ghost. Es suficiente por ahora.", "en": "Some call me Ghost. That's enough for now."}
           },
           "exchanges": [
             { "speaker": "ghost", "text": "{{contextTransition}}" },
-            { "speaker": "ghost", "text": "But talking doesn't mean I trust you. Trust is earned." },
-            { "speaker": "ghost", "text": "So tell me - what do you need? And don't waste my time." },
+            { "speaker": "ghost", "text": {"es": "Tu abuelo... no era un corredor.", "en": "Your grandfather... he wasn't a racer."} },
+            { "speaker": "ghost", "text": {"es": "Era un mecánico. El mejor mecánico.", "en": "He was a mechanic. The best mechanic."} },
+            { "speaker": "ghost", "text": {"es": "Todos en el underground lo conocían. Viper ganó sus carreras más grandes con sus coches.", "en": "Everyone in the underground knew him. Viper won her biggest races with his cars."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "etki_project",
-                  "text": "I'm building an ETK-I. Need performance parts that won't raise questions.",
-                  "traits": ["discrete"],
+                  "id": "what_happened",
+                  "text": {"es": "Entonces, ¿por qué dices que conduzco como él?", "en": "Then why do you say I drive like him?"},
+                  "traits": ["curious"],
                   "points": 15,
-                  "setsMemory": { "hasETKI": true, "mentionedProject": true },
-                  "leadsTo": "nudo_etki"
+                  "setsMemory": { "askedWhatHappened": true },
+                  "leadsTo": "nudo_tragedy"
                 },
                 {
-                  "id": "rare_parts",
-                  "text": "I heard you have access to rare stuff. Things that are hard to find.",
+                  "id": "why_telling",
+                  "text": {"es": "¿Cómo sabes todo esto?", "en": "How do you know all this?"},
                   "traits": ["cautious"],
                   "points": 10,
-                  "setsMemory": { "seekingRare": true },
-                  "leadsTo": "nudo_rare"
-                },
-                {
-                  "id": "racing",
-                  "text": "I want to race. Need an edge over the competition.",
-                  "points": 5,
-                  "setsMemory": { "wantsToRace": true },
-                  "leadsTo": "nudo_racing"
+                  "leadsTo": "nudo_connection"
                 }
               ]
             }
           ],
           "branches": {
-            "nudo_etki": [
-              { "speaker": "ghost", "text": "ETK-I. The 2400ti?" },
-              { "speaker": "player", "text": "That's the one." },
-              { "speaker": "ghost", "text": "Good platform. Lots of potential." },
-              { "speaker": "ghost", "text": "Most people buy one, realize how much work it needs, and let it rot in a garage somewhere." },
+            "nudo_tragedy": [
+              { "speaker": "ghost", "text": {"es": "Porque lo intentó. Una vez.", "en": "Because he tried to race. Once."} },
+              { "speaker": "ghost", "text": {"es": "Construyó el coche perfecto para sí mismo. El ETK-I que tienes ahora.", "en": "He built the perfect car for himself. The ETK-I you have now."} },
+              { "speaker": "ghost", "text": {"es": "Pero la noche antes de su primera carrera... alguien cercano a él murió.", "en": "But the night before his first race... someone close to him died."} },
+              { "speaker": "ghost", "text": "..." },
+              { "speaker": "ghost", "text": {"es": "Nunca volvió a ponerse al volante.", "en": "He never got behind the wheel again."} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "not_most",
-                    "text": "I'm not most people. I've already started on the chassis.",
-                    "traits": ["patient"],
+                    "id": "scared",
+                    "text": {"es": "Tenía miedo.", "en": "He was scared."},
+                    "traits": ["perceptive"],
                     "points": 15,
-                    "setsMemory": { "startedWork": true },
+                    "setsMemory": { "understoodFear": true },
                     "continueToPhase": "desenlace"
                   },
                   {
-                    "id": "research",
-                    "text": "I know what I'm getting into. Done my homework.",
-                    "traits": ["cautious"],
-                    "points": 10,
-                    "setsMemory": { "didResearch": true },
+                    "id": "regret",
+                    "text": {"es": "Se arrepintió toda su vida, ¿verdad?", "en": "He regretted it his whole life, didn't he?"},
+                    "traits": ["empathetic"],
+                    "points": 20,
+                    "setsMemory": { "understoodRegret": true },
                     "continueToPhase": "desenlace"
                   }
                 ]
               }
             ],
-            "nudo_rare": [
-              { "speaker": "ghost", "text": "Rare stuff." },
-              { "speaker": "ghost", "text": "I might know where to find certain things. Depends on what you're looking for." },
-              { "speaker": "ghost", "text": "And more importantly, depends on whether I decide you're worth the risk." },
+            "nudo_connection": [
+              { "speaker": "ghost", "text": {"es": "Muscle me lo contó.", "en": "Muscle told me."} },
+              { "speaker": "ghost", "text": {"es": "Estuvimos juntos durante años. Ella es la hija de Viper.", "en": "We were together for years. She's Viper's daughter."} },
+              { "speaker": "ghost", "text": {"es": "Creció en ese mundo. Sabe cosas que la mayoría no sabe.", "en": "She grew up in that world. Knows things most people don't."} },
+              { "speaker": "ghost", "text": "..." },
+              { "speaker": "ghost", "text": {"es": "Las historias sobre tu abuelo... no son solo leyendas.", "en": "The stories about your grandfather... they're not just legends."} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "understand_risk",
-                    "text": "I understand. I'm not asking you to trust me yet. Just give me a chance.",
-                    "traits": ["patient"],
+                    "id": "small_world",
+                    "text": {"es": "El mundo es un pañuelo.", "en": "Small world."},
+                    "points": 10,
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "tell_more",
+                    "text": {"es": "Cuéntame más sobre él.", "en": "Tell me more about him."},
+                    "traits": ["curious"],
                     "points": 15,
-                    "continueToPhase": "desenlace"
-                  },
-                  {
-                    "id": "prove_it",
-                    "text": "Tell me what I need to do to prove myself.",
-                    "traits": ["dedicated"],
-                    "points": 10,
-                    "setsMemory": { "wantsToProve": true },
-                    "continueToPhase": "desenlace"
-                  }
-                ]
-              }
-            ],
-            "nudo_racing": [
-              { "speaker": "ghost", "text": "Racing." },
-              { "speaker": "ghost", "text": "Racing attracts attention. Attention attracts cops." },
-              { "speaker": "ghost", "text": "You sure that's what you want?" },
-              {
-                "type": "choice",
-                "choices": [
-                  {
-                    "id": "careful_racing",
-                    "text": "I race smart. Stay under the radar.",
-                    "traits": ["cautious"],
-                    "points": 10,
-                    "continueToPhase": "desenlace"
-                  },
-                  {
-                    "id": "worth_risk",
-                    "text": "Some risks are worth taking.",
-                    "points": 5,
+                    "setsMemory": { "wantsToKnowMore": true },
                     "continueToPhase": "desenlace"
                   }
                 ]
@@ -273,61 +244,41 @@
 
         "desenlace": {
           "exchanges": [
-            { "speaker": "ghost", "text": "Look, I'm going to be straight with you." },
-            { "speaker": "ghost", "text": "I don't know you. And in my line of work, that's dangerous." },
-            { "speaker": "ghost", "text": "But..." },
-            { "speaker": "ghost", "text": "...something tells me you might be okay." },
-            { "speaker": "ghost", "text": "I'm going to give you access to some basic inventory. Nothing fancy." },
-            { "speaker": "ghost", "text": "Prove you're reliable, and maybe we talk again." },
+            { "speaker": "ghost", "text": {"es": "No puedo contártelo todo. Todavía no.", "en": "I can't tell you everything. Not yet."} },
+            { "speaker": "ghost", "text": {"es": "Pero estaré observando.", "en": "But I'll be watching."} },
+            { "speaker": "ghost", "text": {"es": "Cuando necesites saber más... te contactaré.", "en": "When you need to know more... I'll reach out."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "thanks",
-                  "text": "I appreciate the chance. I won't disappoint.",
-                  "traits": ["loyal"],
-                  "points": 10
+                  "text": {"es": "Gracias. Por contarme esto.", "en": "Thank you. For telling me this."},
+                  "traits": ["grateful"],
+                  "points": 15
                 },
                 {
-                  "id": "fair_enough",
-                  "text": "Fair enough. I'll prove myself.",
-                  "traits": ["patient"],
+                  "id": "trust_you",
+                  "text": {"es": "¿Cómo sé que puedo confiar en ti?", "en": "How do I know I can trust you?"},
+                  "traits": ["cautious"],
                   "points": 10
                 }
               ]
             },
-            { "speaker": "ghost", "text": "One more thing." },
-            { "speaker": "ghost", "text": "If anyone asks about me - you've never heard the name Ghost." },
-            { "speaker": "ghost", "text": "We clear?" },
-            {
-              "type": "choice",
-              "choices": [
-                {
-                  "id": "ghost_who",
-                  "text": "Ghost? Who's that? Never heard of him.",
-                  "traits": ["discrete", "secretive"],
-                  "points": 20,
-                  "setsMemory": { "passedSecrecyTest": true }
-                },
-                {
-                  "id": "understood",
-                  "text": "Crystal clear.",
-                  "traits": ["discrete"],
-                  "points": 10
-                }
-              ]
-            },
-            { "speaker": "ghost", "text": "Good. Now get out of here. I've got things to do." },
-            { "speaker": "ghost", "text": "And next time you come to see me... make sure you're not being followed." }
+            { "speaker": "ghost", "text": {"es": "No puedes saberlo.", "en": "You don't."} },
+            { "speaker": "ghost", "text": {"es": "Pero yo no estaba allí cuando él cayó.", "en": "But I wasn't there when he fell."} },
+            { "speaker": "ghost", "text": "..." },
+            { "speaker": "ghost", "text": {"es": "No dejaré que te pase lo mismo.", "en": "I won't let the same happen to you."} },
+            { "speaker": "ghost", "text": {"es": "Mantente alerta. Vigila a tus amigos.", "en": "Stay sharp. Watch your friends."} },
+            { "speaker": "ghost", "text": {"es": "No todos a tu alrededor son quienes parecen.", "en": "Not everyone around you is who they seem."} }
           ],
           "end": {
             "result": "success",
             "rewards": {
-              "xp": 75,
-              "unlocks": ["ghost_basic_inventory"]
+              "xp": 100,
+              "unlocks": ["ghost_contact"]
             },
-            "cooldown": 180,
-            "teaser": "I might have something interesting for you next time. If you don't screw this up."
+            "cooldown": 300,
+            "teaser": {"es": "El pasado se acerca. Prepárate.", "en": "The past is catching up. Be ready."}
           }
         }
       },
@@ -335,36 +286,36 @@
       "nexos": {
         "beforeNudo": [
           "...",
-          "Hmm.",
-          "Fine."
+          {"es": "Escucha.", "en": "Listen."},
+          {"es": "Esto es importante.", "en": "This is important."}
         ],
         "beforeDesenlace": [
           "...",
-          "Look.",
-          "Okay."
+          {"es": "Una cosa más.", "en": "One more thing."},
+          {"es": "Recuerda esto.", "en": "Remember this."}
         ]
       }
     },
 
     "level2": {
-      "title": "Earning Trust",
+      "title": {"es": "Ganando Confianza", "en": "Earning Trust"},
       "requiredMemory": ["passedSecrecyTest"],
-      "unlockMessage": "Ghost seems more relaxed this time. Maybe you're earning his trust.",
+      "unlockMessage": {"es": "Ghost parece más relajado esta vez. Quizás estés ganándote su confianza.", "en": "Ghost seems more relaxed this time. Maybe you're earning his trust."},
 
       "phases": {
         "intro": {
           "contextAware": true,
           "exchanges": [
-            { "speaker": "ghost", "text": "You came back." },
+            { "speaker": "ghost", "text": {"es": "Volviste.", "en": "You came back."} },
             { "speaker": "ghost", "text": "{{contextReaction}}" },
-            { "speaker": "ghost", "text": "Most people I deal with... they get what they need and disappear." },
-            { "speaker": "ghost", "text": "But you keep showing up. That's either loyalty or stupidity." },
+            { "speaker": "ghost", "text": {"es": "La mayoría de la gente con la que trato... consigue lo que necesita y desaparece.", "en": "Most people I deal with... they get what they need and disappear."} },
+            { "speaker": "ghost", "text": {"es": "Pero tú sigues apareciendo. Eso es lealtad o estupidez.", "en": "But you keep showing up. That's either loyalty or stupidity."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "loyalty",
-                  "text": "I'd like to think it's loyalty.",
+                  "text": {"es": "Me gustaría pensar que es lealtad.", "en": "I'd like to think it's loyalty."},
                   "traits": ["loyal"],
                   "points": 15,
                   "setsMemory": { "claimsLoyalty": true },
@@ -372,14 +323,14 @@
                 },
                 {
                   "id": "good_source",
-                  "text": "You're a good source. Hard to find quality in this business.",
+                  "text": {"es": "Eres una buena fuente. Es difícil encontrar calidad en este negocio.", "en": "You're a good source. Hard to find quality in this business."},
                   "traits": ["honest"],
                   "points": 10,
                   "continueToPhase": "nudo"
                 },
                 {
                   "id": "curious",
-                  "text": "Maybe I'm just curious about you.",
+                  "text": {"es": "Quizás solo tengo curiosidad por ti.", "en": "Maybe I'm just curious about you."},
                   "points": 5,
                   "setsMemory": { "showedCuriosity": true },
                   "continueToPhase": "nudo"
@@ -391,18 +342,18 @@
 
         "nudo": {
           "exchanges": [
-            { "speaker": "ghost", "text": "You want to know something about me." },
-            { "speaker": "ghost", "text": "Fine. I'll tell you a story." },
-            { "speaker": "ghost", "text": "Three years ago, I had a partner. Good guy. We worked well together." },
-            { "speaker": "ghost", "text": "Then he got comfortable. Started trusting the wrong people." },
+            { "speaker": "ghost", "text": {"es": "Quieres saber algo sobre mí.", "en": "You want to know something about me."} },
+            { "speaker": "ghost", "text": {"es": "Vale. Te contaré una historia.", "en": "Fine. I'll tell you a story."} },
+            { "speaker": "ghost", "text": {"es": "Hace tres años, tuve un socio. Buen tío. Trabajábamos bien juntos.", "en": "Three years ago, I had a partner. Good guy. We worked well together."} },
+            { "speaker": "ghost", "text": {"es": "Luego se puso cómodo. Empezó a confiar en la gente equivocada.", "en": "Then he got comfortable. Started trusting the wrong people."} },
             { "speaker": "ghost", "text": "..." },
-            { "speaker": "ghost", "text": "He's doing eight years now." },
+            { "speaker": "ghost", "text": {"es": "Ahora está cumpliendo ocho años.", "en": "He's doing eight years now."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "sorry",
-                  "text": "I'm sorry. That explains a lot about you.",
+                  "text": {"es": "Lo siento. Eso explica mucho sobre ti.", "en": "I'm sorry. That explains a lot about you."},
                   "traits": ["patient"],
                   "points": 10,
                   "setsMemory": { "showedEmpathy": true },
@@ -410,7 +361,7 @@
                 },
                 {
                   "id": "what_happened",
-                  "text": "What exactly went wrong?",
+                  "text": {"es": "¿Qué salió mal exactamente?", "en": "What exactly went wrong?"},
                   "traits": ["cautious"],
                   "points": 15,
                   "setsMemory": { "wantsToLearn": true },
@@ -418,7 +369,7 @@
                 },
                 {
                   "id": "his_fault",
-                  "text": "Sounds like his own fault.",
+                  "text": {"es": "Parece culpa suya.", "en": "Sounds like his own fault."},
                   "points": -5,
                   "leadsTo": "nudo_cold"
                 }
@@ -427,23 +378,23 @@
           ],
           "branches": {
             "nudo_empathy": [
-              { "speaker": "ghost", "text": "Yeah. It does." },
-              { "speaker": "ghost", "text": "I used to be... different. More open. More trusting." },
-              { "speaker": "ghost", "text": "Watching your best friend get dragged away in cuffs changes you." },
-              { "speaker": "ghost", "text": "Now I don't trust anyone. Not fully." },
+              { "speaker": "ghost", "text": {"es": "Sí. Así es.", "en": "Yeah. It does."} },
+              { "speaker": "ghost", "text": {"es": "Solía ser... diferente. Más abierto. Más confiado.", "en": "I used to be... different. More open. More trusting."} },
+              { "speaker": "ghost", "text": {"es": "Ver a tu mejor amigo arrastrado esposado te cambia.", "en": "Watching your best friend get dragged away in cuffs changes you."} },
+              { "speaker": "ghost", "text": {"es": "Ahora no confío en nadie. No del todo.", "en": "Now I don't trust anyone. Not fully."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "earn_trust",
-                    "text": "I hope someday I can earn that trust.",
+                    "text": {"es": "Espero que algún día pueda ganarme esa confianza.", "en": "I hope someday I can earn that trust."},
                     "traits": ["patient", "loyal"],
                     "points": 15,
                     "continueToPhase": "desenlace"
                   },
                   {
                     "id": "understand",
-                    "text": "I understand. You do what you have to do to survive.",
+                    "text": {"es": "Lo entiendo. Haces lo que tienes que hacer para sobrevivir.", "en": "I understand. You do what you have to do to survive."},
                     "traits": ["cautious"],
                     "points": 10,
                     "continueToPhase": "desenlace"
@@ -452,23 +403,23 @@
               }
             ],
             "nudo_learn": [
-              { "speaker": "ghost", "text": "He dealt with someone new. Didn't vet them properly." },
-              { "speaker": "ghost", "text": "Turned out to be undercover. Had him on tape selling parts from a stolen Covet." },
-              { "speaker": "ghost", "text": "One conversation. One moment of trust. Eight years." },
-              { "speaker": "ghost", "text": "That's why I test everyone. Including you." },
+              { "speaker": "ghost", "text": {"es": "Trató con alguien nuevo. No lo investigó bien.", "en": "He dealt with someone new. Didn't vet them properly."} },
+              { "speaker": "ghost", "text": {"es": "Resultó ser un infiltrado. Lo tenían grabado vendiendo piezas de un Covet robado.", "en": "Turned out to be undercover. Had him on tape selling parts from a stolen Covet."} },
+              { "speaker": "ghost", "text": {"es": "Una conversación. Un momento de confianza. Ocho años.", "en": "One conversation. One moment of trust. Eight years."} },
+              { "speaker": "ghost", "text": {"es": "Por eso pongo a prueba a todos. Incluido tú.", "en": "That's why I test everyone. Including you."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "passed_test",
-                    "text": "And have I passed your tests?",
+                    "text": {"es": "¿Y he pasado tus pruebas?", "en": "And have I passed your tests?"},
                     "traits": ["cautious"],
                     "points": 10,
                     "continueToPhase": "desenlace"
                   },
                   {
                     "id": "understand_now",
-                    "text": "Now I understand why you're so careful. It makes sense.",
+                    "text": {"es": "Ahora entiendo por qué eres tan cuidadoso. Tiene sentido.", "en": "Now I understand why you're so careful. It makes sense."},
                     "traits": ["patient"],
                     "points": 15,
                     "setsMemory": { "understandsParanoia": true },
@@ -479,22 +430,22 @@
             ],
             "nudo_cold": [
               { "speaker": "ghost", "text": "..." },
-              { "speaker": "ghost", "text": "Cold." },
-              { "speaker": "ghost", "text": "Maybe. But he was my friend." },
-              { "speaker": "ghost", "text": "I don't expect you to understand that." },
+              { "speaker": "ghost", "text": {"es": "Frío.", "en": "Cold."} },
+              { "speaker": "ghost", "text": {"es": "Quizás. Pero era mi amigo.", "en": "Maybe. But he was my friend."} },
+              { "speaker": "ghost", "text": {"es": "No espero que lo entiendas.", "en": "I don't expect you to understand that."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "apologize",
-                    "text": "That came out wrong. I'm sorry.",
+                    "text": {"es": "Salió mal. Lo siento.", "en": "That came out wrong. I'm sorry."},
                     "traits": ["honest"],
                     "points": 5,
                     "continueToPhase": "desenlace"
                   },
                   {
                     "id": "double_down",
-                    "text": "In this business, you can't afford to be sentimental.",
+                    "text": {"es": "En este negocio, no puedes permitirte ser sentimental.", "en": "In this business, you can't afford to be sentimental."},
                     "points": -10,
                     "continueToPhase": "desenlace"
                   }
@@ -506,32 +457,32 @@
 
         "desenlace": {
           "exchanges": [
-            { "speaker": "ghost", "text": "Look..." },
-            { "speaker": "ghost", "text": "I don't know why I'm telling you all this." },
-            { "speaker": "ghost", "text": "Maybe because you actually listen. Most people just want to get their parts and leave." },
-            { "speaker": "ghost", "text": "You're different." },
+            { "speaker": "ghost", "text": {"es": "Mira...", "en": "Look..."} },
+            { "speaker": "ghost", "text": {"es": "No sé por qué te estoy contando todo esto.", "en": "I don't know why I'm telling you all this."} },
+            { "speaker": "ghost", "text": {"es": "Quizás porque realmente escuchas. La mayoría solo quiere sus piezas e irse.", "en": "Maybe because you actually listen. Most people just want to get their parts and leave."} },
+            { "speaker": "ghost", "text": {"es": "Eres diferente.", "en": "You're different."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "appreciate",
-                  "text": "I appreciate you sharing that with me.",
+                  "text": {"es": "Te agradezco que compartas esto conmigo.", "en": "I appreciate you sharing that with me."},
                   "traits": ["loyal"],
                   "points": 15
                 },
                 {
                   "id": "secret_safe",
-                  "text": "Your secret is safe with me. Always.",
+                  "text": {"es": "Tu secreto está a salvo conmigo. Siempre.", "en": "Your secret is safe with me. Always."},
                   "traits": ["discrete", "secretive"],
                   "points": 20,
                   "setsMemory": { "promisedSecrecy": true }
                 }
               ]
             },
-            { "speaker": "ghost", "text": "I've got some better inventory coming in. Performance stuff." },
-            { "speaker": "ghost", "text": "When it arrives, you'll be first to know." },
-            { "speaker": "ghost", "text": "But I gotta go. Someone's coming." },
-            { "speaker": "ghost", "text": "Stay sharp out there." }
+            { "speaker": "ghost", "text": {"es": "Voy a conseguir mejor inventario. Piezas de rendimiento.", "en": "I've got some better inventory coming in. Performance stuff."} },
+            { "speaker": "ghost", "text": {"es": "Cuando llegue, serás el primero en saberlo.", "en": "When it arrives, you'll be first to know."} },
+            { "speaker": "ghost", "text": {"es": "Pero me tengo que ir. Alguien viene.", "en": "But I gotta go. Someone's coming."} },
+            { "speaker": "ghost", "text": {"es": "Mantente alerta ahí fuera.", "en": "Stay sharp out there."} }
           ],
           "end": {
             "result": "success",
@@ -540,28 +491,28 @@
               "unlocks": ["ghost_performance_inventory"]
             },
             "cooldown": 180,
-            "teaser": "Next time, I might tell you about the network. If you're ready to hear it."
+            "teaser": {"es": "La próxima vez, podría contarte sobre la red. Si estás listo para oírlo.", "en": "Next time, I might tell you about the network. If you're ready to hear it."}
           }
         }
       }
     },
 
     "level3": {
-      "title": "The Network",
+      "title": {"es": "La Red", "en": "The Network"},
       "requiredMemory": ["promisedSecrecy"],
-      "unlockMessage": "Ghost has something important to tell you.",
+      "unlockMessage": {"es": "Ghost tiene algo importante que decirte.", "en": "Ghost has something important to tell you."},
 
       "phases": {
         "intro": {
           "exchanges": [
-            { "speaker": "ghost", "text": "We need to talk." },
-            { "speaker": "ghost", "text": "Somewhere private. You didn't bring anyone, right?" },
+            { "speaker": "ghost", "text": {"es": "Tenemos que hablar.", "en": "We need to talk."} },
+            { "speaker": "ghost", "text": {"es": "En algún sitio privado. No has traído a nadie, ¿verdad?", "en": "Somewhere private. You didn't bring anyone, right?"} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "alone",
-                  "text": "I'm alone. Changed routes three times getting here.",
+                  "text": {"es": "Estoy solo. Cambié de ruta tres veces para llegar aquí.", "en": "I'm alone. Changed routes three times getting here."},
                   "traits": ["cautious", "secretive"],
                   "points": 20,
                   "setsMemory": { "usedTradecraft": true },
@@ -569,7 +520,7 @@
                 },
                 {
                   "id": "of_course",
-                  "text": "Of course. I know better by now.",
+                  "text": {"es": "Por supuesto. Ya sé cómo va esto.", "en": "Of course. I know better by now."},
                   "traits": ["discrete"],
                   "points": 10,
                   "continueToPhase": "nudo"
@@ -581,24 +532,24 @@
 
         "nudo": {
           "exchanges": [
-            { "speaker": "ghost", "text": "Good." },
-            { "speaker": "ghost", "text": "Because what I'm about to tell you... it stays between us. Forever." },
-            { "speaker": "ghost", "text": "I'm not just a dealer." },
-            { "speaker": "ghost", "text": "I'm part of something bigger. A network." },
-            { "speaker": "ghost", "text": "We move parts across the entire region. High-end, rare... sometimes gray market." },
+            { "speaker": "ghost", "text": {"es": "Bien.", "en": "Good."} },
+            { "speaker": "ghost", "text": {"es": "Porque lo que voy a contarte... se queda entre nosotros. Para siempre.", "en": "Because what I'm about to tell you... it stays between us. Forever."} },
+            { "speaker": "ghost", "text": {"es": "No soy solo un vendedor.", "en": "I'm not just a dealer."} },
+            { "speaker": "ghost", "text": {"es": "Soy parte de algo más grande. Una red.", "en": "I'm part of something bigger. A network."} },
+            { "speaker": "ghost", "text": {"es": "Movemos piezas por toda la región. De alta gama, raras... a veces mercado gris.", "en": "We move parts across the entire region. High-end, rare... sometimes gray market."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "how_big",
-                  "text": "How big are we talking?",
+                  "text": {"es": "¿De qué tamaño estamos hablando?", "en": "How big are we talking?"},
                   "traits": ["cautious"],
                   "points": 10,
                   "leadsTo": "nudo_scale"
                 },
                 {
                   "id": "why_telling",
-                  "text": "Why are you telling me this?",
+                  "text": {"es": "¿Por qué me cuentas esto?", "en": "Why are you telling me this?"},
                   "points": 15,
                   "leadsTo": "nudo_why"
                 }
@@ -607,23 +558,23 @@
           ],
           "branches": {
             "nudo_scale": [
-              { "speaker": "ghost", "text": "Big enough that we have people in every city." },
-              { "speaker": "ghost", "text": "Mechanics, drivers, people who... clean things." },
-              { "speaker": "ghost", "text": "It's not organized crime. It's more like... a community." },
-              { "speaker": "ghost", "text": "We help each other. Protect each other." },
+              { "speaker": "ghost", "text": {"es": "Lo suficientemente grande como para tener gente en cada ciudad.", "en": "Big enough that we have people in every city."} },
+              { "speaker": "ghost", "text": {"es": "Mecánicos, conductores, gente que... limpia cosas.", "en": "Mechanics, drivers, people who... clean things."} },
+              { "speaker": "ghost", "text": {"es": "No es crimen organizado. Es más como... una comunidad.", "en": "It's not organized crime. It's more like... a community."} },
+              { "speaker": "ghost", "text": {"es": "Nos ayudamos. Nos protegemos.", "en": "We help each other. Protect each other."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "sounds_solid",
-                    "text": "Sounds like a solid operation.",
+                    "text": {"es": "Suena como una operación sólida.", "en": "Sounds like a solid operation."},
                     "traits": ["cautious"],
                     "points": 10,
                     "continueToPhase": "desenlace"
                   },
                   {
                     "id": "want_in",
-                    "text": "What would it take to be part of that?",
+                    "text": {"es": "¿Qué haría falta para ser parte de eso?", "en": "What would it take to be part of that?"},
                     "traits": ["dedicated"],
                     "points": 15,
                     "setsMemory": { "wantsNetwork": true },
@@ -633,16 +584,16 @@
               }
             ],
             "nudo_why": [
-              { "speaker": "ghost", "text": "Because I've been watching you." },
-              { "speaker": "ghost", "text": "The way you handle yourself. The way you keep secrets." },
-              { "speaker": "ghost", "text": "You're not just another customer." },
-              { "speaker": "ghost", "text": "I think you could be one of us." },
+              { "speaker": "ghost", "text": {"es": "Porque te he estado observando.", "en": "Because I've been watching you."} },
+              { "speaker": "ghost", "text": {"es": "La forma en que te manejas. La forma en que guardas secretos.", "en": "The way you handle yourself. The way you keep secrets."} },
+              { "speaker": "ghost", "text": {"es": "No eres solo otro cliente.", "en": "You're not just another customer."} },
+              { "speaker": "ghost", "text": {"es": "Creo que podrías ser uno de nosotros.", "en": "I think you could be one of us."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "honored",
-                    "text": "I'm honored you'd consider me.",
+                    "text": {"es": "Me honra que me consideres.", "en": "I'm honored you'd consider me."},
                     "traits": ["loyal"],
                     "points": 15,
                     "setsMemory": { "showedGratitude": true },
@@ -650,7 +601,7 @@
                   },
                   {
                     "id": "what_means",
-                    "text": "What would that mean for me?",
+                    "text": {"es": "¿Qué significaría eso para mí?", "en": "What would that mean for me?"},
                     "traits": ["cautious"],
                     "points": 10,
                     "continueToPhase": "desenlace"
@@ -663,33 +614,33 @@
 
         "desenlace": {
           "exchanges": [
-            { "speaker": "ghost", "text": "For now? Just keep doing what you're doing." },
-            { "speaker": "ghost", "text": "Build your car. Stay clean. Keep your head down." },
-            { "speaker": "ghost", "text": "When the time is right, I'll bring you in properly." },
-            { "speaker": "ghost", "text": "Until then..." },
-            { "speaker": "ghost", "text": "You have access to my full inventory now. The real stuff." },
+            { "speaker": "ghost", "text": {"es": "¿Por ahora? Solo sigue haciendo lo que haces.", "en": "For now? Just keep doing what you're doing."} },
+            { "speaker": "ghost", "text": {"es": "Construye tu coche. Mantente limpio. Pasa desapercibido.", "en": "Build your car. Stay clean. Keep your head down."} },
+            { "speaker": "ghost", "text": {"es": "Cuando sea el momento adecuado, te introduciré apropiadamente.", "en": "When the time is right, I'll bring you in properly."} },
+            { "speaker": "ghost", "text": {"es": "Hasta entonces...", "en": "Until then..."} },
+            { "speaker": "ghost", "text": {"es": "Tienes acceso a mi inventario completo ahora. Las cosas de verdad.", "en": "You have access to my full inventory now. The real stuff."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "wont_forget",
-                  "text": "I won't forget this. Thank you.",
+                  "text": {"es": "No olvidaré esto. Gracias.", "en": "I won't forget this. Thank you."},
                   "traits": ["loyal"],
                   "points": 15
                 },
                 {
                   "id": "ready",
-                  "text": "I'll be ready when you call.",
+                  "text": {"es": "Estaré listo cuando llames.", "en": "I'll be ready when you call."},
                   "traits": ["dedicated"],
                   "points": 15,
                   "setsMemory": { "readyForNetwork": true }
                 }
               ]
             },
-            { "speaker": "ghost", "text": "Oh, and one more thing." },
-            { "speaker": "ghost", "text": "My real name is Marcus." },
+            { "speaker": "ghost", "text": {"es": "Ah, y una cosa más.", "en": "Oh, and one more thing."} },
+            { "speaker": "ghost", "text": {"es": "Mi nombre real es Marcus.", "en": "My real name is Marcus."} },
             { "speaker": "ghost", "text": "..." },
-            { "speaker": "ghost", "text": "Don't ever use it." }
+            { "speaker": "ghost", "text": {"es": "No lo uses nunca.", "en": "Don't ever use it."} }
           ],
           "end": {
             "result": "success",
@@ -699,9 +650,688 @@
             },
             "setsMemory": { "knowsRealName": true, "joinedNetwork": true },
             "cooldown": 180,
-            "teaser": "Welcome to the network. Things are about to get interesting."
+            "teaser": {"es": "Bienvenido a la red. Las cosas se van a poner interesantes.", "en": "Welcome to the network. Things are about to get interesting."}
           }
         }
+      }
+    },
+
+    "level4": {
+      "title": {"es": "Señales de Alarma", "en": "Warning Signs"},
+      "requiredPhase": 4,
+      "requiredMemory": ["joinedNetwork"],
+      "unlockMessage": {"es": "Ghost parece preocupado. Dice que necesita advertirte sobre algo.", "en": "Ghost seems concerned. Says he needs to warn you about something."},
+
+      "phases": {
+        "intro": {
+          "exchanges": [
+            { "speaker": "ghost", "text": {"es": "Tenemos un problema.", "en": "We have a problem."} },
+            { "speaker": "ghost", "text": {"es": "No grande. Todavía. Pero he estado observando las cosas.", "en": "Not a big one. Yet. But I've been watching things."} },
+            { "speaker": "ghost", "text": {"es": "La red está... tensa últimamente.", "en": "The network is... tense lately."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "what_happened",
+                  "text": {"es": "¿Qué ha pasado?", "en": "What happened?"},
+                  "traits": ["concerned"],
+                  "points": 10,
+                  "leadsTo": "intro_details"
+                },
+                {
+                  "id": "affects_me",
+                  "text": {"es": "¿Esto me afecta a mí?", "en": "Does this affect me?"},
+                  "traits": ["cautious"],
+                  "points": 5,
+                  "leadsTo": "intro_personal"
+                },
+                {
+                  "id": "can_help",
+                  "text": {"es": "¿Hay algo que pueda hacer para ayudar?", "en": "Is there something I can do to help?"},
+                  "traits": ["loyal"],
+                  "points": 15,
+                  "setsMemory": { "offeredHelp": true },
+                  "leadsTo": "intro_details"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "intro_details": [
+              { "speaker": "ghost", "text": {"es": "La policía ha intensificado las cosas. Más patrullas. Más investigaciones.", "en": "The cops have stepped things up. More patrols. More investigations."} },
+              { "speaker": "ghost", "text": {"es": "Y cuando la presión aumenta... la gente empieza a ponerse nerviosa.", "en": "And when the pressure goes up... people start getting nervous."} },
+              { "speaker": "ghost", "text": {"es": "Rook y Nova... están bajo mucha presión.", "en": "Rook and Nova... they're under a lot of pressure."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "trust_them",
+                    "text": {"es": "Confío en ellos. Nos cubrimos las espaldas.", "en": "I trust them. We have each other's backs."},
+                    "traits": ["loyal"],
+                    "points": 15,
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "should_worry",
+                    "text": {"es": "¿Debería preocuparme?", "en": "Should I be worried?"},
+                    "traits": ["cautious"],
+                    "points": 10,
+                    "setsMemory": { "showedConcern": true },
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ],
+            "intro_personal": [
+              { "speaker": "ghost", "text": {"es": "Potencialmente. Sí.", "en": "Potentially. Yes."} },
+              { "speaker": "ghost", "text": {"es": "Estás trabajando con Rook y Nova, ¿verdad?", "en": "You're working with Rook and Nova, right?"} },
+              { "speaker": "ghost", "text": {"es": "Ellos están bajo presión. Mucha presión.", "en": "They're under pressure. A lot of pressure."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "what_kind",
+                    "text": {"es": "¿Qué tipo de presión?", "en": "What kind of pressure?"},
+                    "traits": ["curious"],
+                    "points": 10,
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "trust_them_still",
+                    "text": {"es": "Aun así confío en ellos.", "en": "I still trust them."},
+                    "traits": ["loyal"],
+                    "points": 15,
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "nudo": {
+          "exchanges": [
+            { "speaker": "ghost", "text": {"es": "Mira, no te digo que no confíes en ellos.", "en": "Look, I'm not telling you not to trust them."} },
+            { "speaker": "ghost", "text": {"es": "Solo... ten los ojos abiertos.", "en": "Just... keep your eyes open."} },
+            { "speaker": "ghost", "text": {"es": "La gente bajo presión hace cosas que normalmente no haría.", "en": "People under pressure do things they normally wouldn't."} },
+            { "speaker": "ghost", "text": "..." },
+            { "speaker": "ghost", "text": {"es": "Tu abuelo aprendió eso por las malas.", "en": "Your grandfather learned that the hard way."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "what_do_you_mean",
+                  "text": {"es": "¿Qué quieres decir con eso?", "en": "What do you mean by that?"},
+                  "traits": ["curious"],
+                  "points": 15,
+                  "setsMemory": { "askedAboutBetrayal": true },
+                  "leadsTo": "nudo_grandfather"
+                },
+                {
+                  "id": "ill_be_careful",
+                  "text": {"es": "Tendré cuidado. Gracias por la advertencia.", "en": "I'll be careful. Thanks for the warning."},
+                  "traits": ["cautious"],
+                  "points": 10,
+                  "continueToPhase": "desenlace"
+                },
+                {
+                  "id": "can_handle_it",
+                  "text": {"es": "Puedo manejarlo. No te preocupes por mí.", "en": "I can handle it. Don't worry about me."},
+                  "traits": ["confident"],
+                  "points": 5,
+                  "continueToPhase": "desenlace"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "nudo_grandfather": [
+              { "speaker": "ghost", "text": {"es": "Tu abuelo confiaba en alguien. Alguien cercano.", "en": "Your grandfather trusted someone. Someone close."} },
+              { "speaker": "ghost", "text": {"es": "Esa persona... bajo presión... tomó una decisión.", "en": "That person... under pressure... made a choice."} },
+              { "speaker": "ghost", "text": {"es": "Una decisión que le costó todo a tu abuelo.", "en": "A choice that cost your grandfather everything."} },
+              { "speaker": "ghost", "text": "..." },
+              { "speaker": "ghost", "text": {"es": "No puedo decirte más. Todavía no.", "en": "I can't tell you more. Not yet."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "need_to_know",
+                    "text": {"es": "Necesito saberlo. Es mi familia.", "en": "I need to know. It's my family."},
+                    "traits": ["determined"],
+                    "points": 20,
+                    "setsMemory": { "demandedTruth": true },
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "when_ready",
+                    "text": {"es": "Está bien. Cuando estés listo para contarme.", "en": "It's okay. When you're ready to tell me."},
+                    "traits": ["patient"],
+                    "points": 15,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "desenlace": {
+          "exchanges": [
+            { "speaker": "ghost", "text": {"es": "Solo... mantente alerta, ¿vale?", "en": "Just... stay alert, okay?"} },
+            { "speaker": "ghost", "text": {"es": "Confía en tu equipo, pero verifica.", "en": "Trust your team, but verify."} },
+            { "speaker": "ghost", "text": {"es": "Y si algo se siente mal... escucha ese instinto.", "en": "And if something feels off... listen to that instinct."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "appreciate_it",
+                  "text": {"es": "Te lo agradezco. En serio.", "en": "I appreciate it. Really."},
+                  "traits": ["grateful"],
+                  "points": 15
+                },
+                {
+                  "id": "watching_too",
+                  "text": {"es": "Estaré atento. Tú también ten cuidado.", "en": "I'll watch out. You be careful too."},
+                  "traits": ["loyal"],
+                  "points": 15,
+                  "setsMemory": { "showedMutualConcern": true }
+                }
+              ]
+            },
+            { "speaker": "ghost", "text": {"es": "Siempre lo estoy.", "en": "Always am."} },
+            { "speaker": "ghost", "text": "..." },
+            { "speaker": "ghost", "text": {"es": "Y una cosa más.", "en": "And one more thing."} },
+            { "speaker": "ghost", "text": {"es": "Ese ETK-I tuyo... protégelo con tu vida.", "en": "That ETK-I of yours... protect it with your life."} },
+            { "speaker": "ghost", "text": {"es": "Hay gente que daría cualquier cosa por tener lo que tú tienes.", "en": "There are people who would give anything to have what you've got."} }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 125,
+              "unlocks": ["ghost_security_tips"]
+            },
+            "setsMemory": { "ghostWarnedAboutTeam": true },
+            "cooldown": 150,
+            "teaser": {"es": "La tensión está aumentando. Ten cuidado con quién confías.", "en": "The tension is rising. Be careful who you trust."}
+          }
+        }
+      },
+
+      "nexos": {
+        "beforeNudo": [
+          "...",
+          {"es": "Escucha atentamente.", "en": "Listen carefully."},
+          {"es": "Esto es serio.", "en": "This is serious."}
+        ],
+        "beforeDesenlace": [
+          "...",
+          {"es": "Recuerda lo que te digo.", "en": "Remember what I'm saying."},
+          {"es": "Puede salvarte.", "en": "It could save you."}
+        ]
+      }
+    },
+
+    "level5": {
+      "title": {"es": "El Robo", "en": "The Theft"},
+      "requiredPhase": 5,
+      "requiredMemory": ["ghostWarnedAboutTeam"],
+      "unlockMessage": {"es": "Ghost tiene noticias urgentes. Algo ha pasado con tu coche.", "en": "Ghost has urgent news. Something happened with your car."},
+
+      "phases": {
+        "intro": {
+          "exchanges": [
+            { "speaker": "ghost", "text": {"es": "No preguntes cómo lo supe.", "en": "Don't ask how I knew."} },
+            { "speaker": "ghost", "text": {"es": "Pero tu coche... lo tengo yo.", "en": "But your car... I have it."} },
+            { "speaker": "ghost", "text": {"es": "Está a salvo.", "en": "It's safe."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "what_happened",
+                  "text": {"es": "¿Qué demonios ha pasado?", "en": "What the hell happened?"},
+                  "traits": ["concerned"],
+                  "points": 10,
+                  "leadsTo": "intro_explanation"
+                },
+                {
+                  "id": "who_took_it",
+                  "text": {"es": "¿Quién intentó robarlo?", "en": "Who tried to steal it?"},
+                  "traits": ["angry"],
+                  "points": 15,
+                  "setsMemory": { "demandedName": true },
+                  "leadsTo": "intro_explanation"
+                },
+                {
+                  "id": "thank_you",
+                  "text": {"es": "Gracias. Gracias por salvarlo.", "en": "Thank you. Thank you for saving it."},
+                  "traits": ["grateful"],
+                  "points": 20,
+                  "setsMemory": { "expressedGratitude": true },
+                  "leadsTo": "intro_explanation"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "intro_explanation": [
+              { "speaker": "ghost", "text": {"es": "Anoche. Alguien intentó moverlo.", "en": "Last night. Someone tried to move it."} },
+              { "speaker": "ghost", "text": {"es": "Tenía sensores en el garaje. Los configuré después de nuestra última conversación.", "en": "I had sensors on the garage. Set them up after our last talk."} },
+              { "speaker": "ghost", "text": {"es": "Cuando saltó la alarma, llegué antes de que pudieran sacarlo.", "en": "When the alarm went off, I got there before they could get it out."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "saw_them",
+                    "text": {"es": "¿Los viste? ¿Quiénes eran?", "en": "Did you see them? Who were they?"},
+                    "traits": ["determined"],
+                    "points": 15,
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "why_watching",
+                    "text": {"es": "¿Por qué estabas vigilando mi garaje?", "en": "Why were you watching my garage?"},
+                    "traits": ["suspicious"],
+                    "points": 5,
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "nudo": {
+          "exchanges": [
+            { "speaker": "ghost", "text": "..." },
+            { "speaker": "ghost", "text": {"es": "No puedo decirte quién era. Todavía.", "en": "I can't tell you who it was. Not yet."} },
+            { "speaker": "ghost", "text": {"es": "Pero era alguien que conoces. Alguien cercano.", "en": "But it was someone you know. Someone close."} },
+            { "speaker": "ghost", "text": {"es": "Alguien del equipo.", "en": "Someone from the team."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "rook",
+                  "text": {"es": "¿Rook? ¿Fue Rook?", "en": "Rook? Was it Rook?"},
+                  "traits": ["suspicious"],
+                  "points": 5,
+                  "setsMemory": { "suspectsRook": true },
+                  "leadsTo": "nudo_reveal"
+                },
+                {
+                  "id": "nova",
+                  "text": {"es": "¿Nova? No... ella no haría eso.", "en": "Nova? No... she wouldn't do that."},
+                  "traits": ["defensive"],
+                  "points": 5,
+                  "setsMemory": { "defendedNova": true },
+                  "leadsTo": "nudo_reveal"
+                },
+                {
+                  "id": "tell_me",
+                  "text": {"es": "Necesito saber. Dímelo ahora.", "en": "I need to know. Tell me now."},
+                  "traits": ["determined"],
+                  "points": 15,
+                  "setsMemory": { "demandedAnswer": true },
+                  "leadsTo": "nudo_reveal"
+                },
+                {
+                  "id": "doesnt_matter",
+                  "text": {"es": "No importa quién fue. El coche está a salvo.", "en": "It doesn't matter who it was. The car is safe."},
+                  "traits": ["pragmatic"],
+                  "points": 10,
+                  "leadsTo": "nudo_pragmatic"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "nudo_reveal": [
+              { "speaker": "ghost", "text": {"es": "No voy a darte un nombre.", "en": "I'm not giving you a name."} },
+              { "speaker": "ghost", "text": {"es": "Porque si lo hago, irás a por ellos. Lo sé.", "en": "Because if I do, you'll go after them. I know you will."} },
+              { "speaker": "ghost", "text": {"es": "Y eso arruinará todo el plan.", "en": "And that will ruin the whole plan."} },
+              { "speaker": "ghost", "text": "..." },
+              { "speaker": "ghost", "text": {"es": "Confía en mí. Estoy manejando esto.", "en": "Trust me. I'm handling this."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "what_plan",
+                    "text": {"es": "¿Qué plan? ¿De qué estás hablando?", "en": "What plan? What are you talking about?"},
+                    "traits": ["confused"],
+                    "points": 10,
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "trust_you",
+                    "text": {"es": "Está bien. Confío en ti.", "en": "Okay. I trust you."},
+                    "traits": ["loyal"],
+                    "points": 20,
+                    "setsMemory": { "trustedGhost": true },
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ],
+            "nudo_pragmatic": [
+              { "speaker": "ghost", "text": {"es": "Inteligente.", "en": "Smart."} },
+              { "speaker": "ghost", "text": {"es": "Sí, el coche está a salvo. Eso es lo que importa.", "en": "Yeah, the car is safe. That's what matters."} },
+              { "speaker": "ghost", "text": {"es": "Pero esto no ha terminado.", "en": "But this isn't over."} },
+              { "speaker": "ghost", "text": {"es": "Quien lo intentó... lo intentará de nuevo.", "en": "Whoever tried this... they'll try again."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "what_do_we_do",
+                    "text": {"es": "¿Qué hacemos entonces?", "en": "What do we do then?"},
+                    "traits": ["pragmatic"],
+                    "points": 15,
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "keep_it_safe",
+                    "text": {"es": "Mantenlo a salvo. Haré lo que tenga que hacer.", "en": "Keep it safe. I'll do what I need to do."},
+                    "traits": ["determined"],
+                    "points": 10,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "desenlace": {
+          "exchanges": [
+            { "speaker": "ghost", "text": {"es": "Voy a guardar el coche en un sitio seguro.", "en": "I'm keeping the car somewhere safe."} },
+            { "speaker": "ghost", "text": {"es": "Un lugar que solo yo conozco.", "en": "A place only I know about."} },
+            { "speaker": "ghost", "text": {"es": "Cuando esto termine... te lo devolveré.", "en": "When this is over... I'll give it back."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "when_over",
+                  "text": {"es": "¿Cuándo terminará esto?", "en": "When will this be over?"},
+                  "traits": ["impatient"],
+                  "points": 5
+                },
+                {
+                  "id": "do_what_necessary",
+                  "text": {"es": "Haz lo que sea necesario. Protégelo.", "en": "Do whatever is necessary. Protect it."},
+                  "traits": ["trusting"],
+                  "points": 20,
+                  "setsMemory": { "fullTrustInGhost": true }
+                }
+              ]
+            },
+            { "speaker": "ghost", "text": {"es": "Pronto.", "en": "Soon."} },
+            { "speaker": "ghost", "text": "..." },
+            { "speaker": "ghost", "text": {"es": "Hay más en esta historia de lo que sabes.", "en": "There's more to this story than you know."} },
+            { "speaker": "ghost", "text": {"es": "Sobre tu abuelo. Sobre Viper. Sobre todo.", "en": "About your grandfather. About Viper. About everything."} },
+            { "speaker": "ghost", "text": {"es": "La próxima vez que hablemos... te lo contaré todo.", "en": "Next time we talk... I'll tell you everything."} }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 150,
+              "unlocks": ["ghost_safehouse_access"]
+            },
+            "setsMemory": { "ghostSavedCar": true, "knowsAboutBetrayal": true },
+            "cooldown": 120,
+            "teaser": {"es": "La verdad completa está cerca. Prepárate para lo que viene.", "en": "The full truth is close. Prepare yourself for what's coming."}
+          }
+        }
+      },
+
+      "nexos": {
+        "beforeNudo": [
+          "...",
+          {"es": "Necesitas entender algo.", "en": "You need to understand something."},
+          {"es": "Esto es más grande de lo que piensas.", "en": "This is bigger than you think."}
+        ],
+        "beforeDesenlace": [
+          "...",
+          {"es": "Casi estamos.", "en": "We're almost there."},
+          {"es": "Solo un poco más.", "en": "Just a little longer."}
+        ]
+      }
+    },
+
+    "level6": {
+      "title": {"es": "La Verdad Completa", "en": "The Full Truth"},
+      "requiredPhase": 6,
+      "requiredMemory": ["knowsAboutBetrayal"],
+      "unlockMessage": {"es": "Ghost está listo para contarte todo. La historia completa de tu abuelo.", "en": "Ghost is ready to tell you everything. The full story of your grandfather."},
+
+      "phases": {
+        "intro": {
+          "exchanges": [
+            { "speaker": "ghost", "text": {"es": "Es hora.", "en": "It's time."} },
+            { "speaker": "ghost", "text": {"es": "Es hora de que sepas toda la verdad.", "en": "Time you knew the whole truth."} },
+            { "speaker": "ghost", "text": {"es": "Sobre tu abuelo. Sobre Viper. Sobre por qué Muscle realmente te ayuda.", "en": "About your grandfather. About Viper. About why Muscle really helps you."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "been_waiting",
+                  "text": {"es": "He estado esperando esto.", "en": "I've been waiting for this."},
+                  "traits": ["patient"],
+                  "points": 15,
+                  "continueToPhase": "nudo"
+                },
+                {
+                  "id": "tell_me_everything",
+                  "text": {"es": "Cuéntamelo todo. No omitas nada.", "en": "Tell me everything. Don't leave anything out."},
+                  "traits": ["determined"],
+                  "points": 10,
+                  "continueToPhase": "nudo"
+                }
+              ]
+            }
+          ]
+        },
+
+        "nudo": {
+          "exchanges": [
+            { "speaker": "ghost", "text": {"es": "Tu abuelo no era solo un mecánico.", "en": "Your grandfather wasn't just a mechanic."} },
+            { "speaker": "ghost", "text": {"es": "Era el ingeniero jefe de Viper.", "en": "He was Viper's chief engineer."} },
+            { "speaker": "ghost", "text": {"es": "Cada coche que ella condujo a la victoria... él lo construyó.", "en": "Every car she drove to victory... he built it."} },
+            { "speaker": "ghost", "text": {"es": "Eran un equipo. El mejor equipo del underground.", "en": "They were a team. The best team in the underground."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "what_happened_then",
+                  "text": {"es": "¿Entonces qué pasó?", "en": "So what happened?"},
+                  "traits": ["curious"],
+                  "points": 15,
+                  "leadsTo": "nudo_betrayal"
+                },
+                {
+                  "id": "viper_knew",
+                  "text": {"es": "¿Viper sabía que yo era su nieto?", "en": "Did Viper know I was his grandson?"},
+                  "traits": ["perceptive"],
+                  "points": 20,
+                  "setsMemory": { "askedAboutViperKnowledge": true },
+                  "leadsTo": "nudo_viper"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "nudo_betrayal": [
+              { "speaker": "ghost", "text": {"es": "Los patrocinadores llegaron.", "en": "The sponsors came."} },
+              { "speaker": "ghost", "text": {"es": "Grandes marcas. Dinero real. Fama.", "en": "Big brands. Real money. Fame."} },
+              { "speaker": "ghost", "text": {"es": "Pero tenían condiciones. Querían que Viper trabajara con sus ingenieros.", "en": "But they had conditions. They wanted Viper to work with their engineers."} },
+              { "speaker": "ghost", "text": {"es": "Viper eligió el dinero.", "en": "Viper chose the money."} },
+              { "speaker": "ghost", "text": "..." },
+              { "speaker": "ghost", "text": {"es": "Dejó a tu abuelo atrás.", "en": "Left your grandfather behind."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "she_abandoned_him",
+                    "text": {"es": "Lo abandonó. Después de todo lo que hicieron juntos.", "en": "She abandoned him. After everything they did together."},
+                    "traits": ["empathetic"],
+                    "points": 15,
+                    "setsMemory": { "understandsAbandonment": true },
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "cant_blame_her",
+                    "text": {"es": "No puedo culparla del todo. Esa es una decisión difícil.", "en": "I can't blame her entirely. That's a tough choice."},
+                    "traits": ["pragmatic"],
+                    "points": 10,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ],
+            "nudo_viper": [
+              { "speaker": "ghost", "text": {"es": "Desde el principio.", "en": "From the beginning."} },
+              { "speaker": "ghost", "text": {"es": "Por eso aceptó entrenarte. Por eso fue tan dura contigo.", "en": "That's why she agreed to train you. That's why she was so hard on you."} },
+              { "speaker": "ghost", "text": {"es": "Culpa.", "en": "Guilt."} },
+              { "speaker": "ghost", "text": "..." },
+              { "speaker": "ghost", "text": {"es": "Dejó a tu abuelo cuando los patrocinadores llegaron.", "en": "She left your grandfather when the sponsors came."} },
+              { "speaker": "ghost", "text": {"es": "Eligió la fama sobre la lealtad.", "en": "Chose fame over loyalty."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "muscle_too",
+                    "text": {"es": "¿Y Muscle? ¿También lo sabe?", "en": "And Muscle? Does she know too?"},
+                    "traits": ["perceptive"],
+                    "points": 20,
+                    "setsMemory": { "connectedTheDots": true },
+                    "leadsTo": "nudo_muscle"
+                  },
+                  {
+                    "id": "all_lies",
+                    "text": {"es": "Así que todo ha sido mentira. Desde el principio.", "en": "So it's all been a lie. From the start."},
+                    "traits": ["angry"],
+                    "points": 10,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ],
+            "nudo_muscle": [
+              { "speaker": "ghost", "text": {"es": "Muscle lo vio todo.", "en": "Muscle saw it all."} },
+              { "speaker": "ghost", "text": {"es": "Era una niña entonces, pero lo recuerda.", "en": "She was a kid then, but she remembers."} },
+              { "speaker": "ghost", "text": {"es": "Vio a su madre abandonar al hombre que la hizo campeona.", "en": "Saw her mother abandon the man who made her a champion."} },
+              { "speaker": "ghost", "text": {"es": "Por eso te ayuda. Por eso se arriesga por ti.", "en": "That's why she helps you. That's why she risks for you."} },
+              { "speaker": "ghost", "text": {"es": "Está intentando arreglar lo que su madre rompió.", "en": "She's trying to fix what her mother broke."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "they_all_knew",
+                    "text": {"es": "Todos lo sabían. Y nadie me dijo nada.", "en": "They all knew. And nobody told me."},
+                    "traits": ["hurt"],
+                    "points": 15,
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "understand_now",
+                    "text": {"es": "Ahora lo entiendo todo. Por qué Muscle ha estado ahí.", "en": "I understand now. Why Muscle has been there."},
+                    "traits": ["empathetic"],
+                    "points": 20,
+                    "setsMemory": { "understandsMuscleMotivation": true },
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "desenlace": {
+          "exchanges": [
+            { "speaker": "ghost", "text": {"es": "Ahora lo sabes todo.", "en": "Now you know everything."} },
+            { "speaker": "ghost", "text": {"es": "La pregunta es... ¿qué vas a hacer con eso?", "en": "The question is... what are you going to do with it?"} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "honor_him",
+                  "text": {"es": "Voy a honrar su memoria. Terminaré lo que él empezó.", "en": "I'm going to honor his memory. Finish what he started."},
+                  "traits": ["determined", "loyal"],
+                  "points": 25,
+                  "setsMemory": { "choosesHonor": true }
+                },
+                {
+                  "id": "forgive_viper",
+                  "text": {"es": "Voy a perdonar a Viper. Todos cometemos errores.", "en": "I'm going to forgive Viper. We all make mistakes."},
+                  "traits": ["empathetic", "mature"],
+                  "points": 25,
+                  "setsMemory": { "choosesForgiveness": true }
+                },
+                {
+                  "id": "my_own_path",
+                  "text": {"es": "Voy a seguir mi propio camino. No el suyo, no el de ella.", "en": "I'm going to follow my own path. Not his, not hers."},
+                  "traits": ["independent"],
+                  "points": 20,
+                  "setsMemory": { "choosesIndependence": true }
+                },
+                {
+                  "id": "need_time",
+                  "text": {"es": "Necesito tiempo para procesar todo esto.", "en": "I need time to process all of this."},
+                  "traits": ["thoughtful"],
+                  "points": 15
+                }
+              ]
+            },
+            { "speaker": "ghost", "text": "..." },
+            { "speaker": "ghost", "text": {"es": "Tu coche está en el almacén del viejo muelle. Coordenadas enviadas.", "en": "Your car is at the old dock warehouse. Coordinates sent."} },
+            { "speaker": "ghost", "text": {"es": "Está intacto. Mejor que intacto, de hecho.", "en": "It's untouched. Better than untouched, actually."} },
+            { "speaker": "ghost", "text": {"es": "Le hice algunas mejoras mientras lo tenía.", "en": "Made some improvements while I had it."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "thank_you_everything",
+                  "text": {"es": "Gracias. Por todo. Por salvar el coche, por la verdad.", "en": "Thank you. For everything. For saving the car, for the truth."},
+                  "traits": ["grateful"],
+                  "points": 25
+                },
+                {
+                  "id": "why_help_me",
+                  "text": {"es": "¿Por qué me has ayudado tanto? ¿Qué ganas tú con esto?", "en": "Why have you helped me so much? What do you get out of this?"},
+                  "traits": ["cautious"],
+                  "points": 10
+                }
+              ]
+            },
+            { "speaker": "ghost", "text": {"es": "Porque tu abuelo me salvó la vida una vez.", "en": "Because your grandfather saved my life once."} },
+            { "speaker": "ghost", "text": {"es": "Era joven. Estúpido. Metido en problemas profundos.", "en": "I was young. Stupid. In deep trouble."} },
+            { "speaker": "ghost", "text": {"es": "Él me sacó. Me dio una segunda oportunidad.", "en": "He pulled me out. Gave me a second chance."} },
+            { "speaker": "ghost", "text": "..." },
+            { "speaker": "ghost", "text": {"es": "Esta es mi forma de devolverle el favor.", "en": "This is my way of returning the favor."} },
+            { "speaker": "ghost", "text": {"es": "Ahora ve. Construye algo grande.", "en": "Now go. Build something great."} },
+            { "speaker": "ghost", "text": {"es": "Hazlo orgulloso.", "en": "Make him proud."} }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 200,
+              "unlocks": ["ghost_legendary_parts", "ghost_full_story_complete"]
+            },
+            "setsMemory": { "knowsGrandfatherTruth": true, "knowsViperConnection": true, "ghostStoryComplete": true },
+            "cooldown": 300,
+            "teaser": {"es": "La historia completa revelada. Ahora el futuro está en tus manos.", "en": "The full story revealed. Now the future is in your hands."}
+          }
+        }
+      },
+
+      "nexos": {
+        "beforeNudo": [
+          "...",
+          {"es": "Respira hondo.", "en": "Take a deep breath."},
+          {"es": "Esto va a cambiar todo.", "en": "This is going to change everything."}
+        ],
+        "beforeDesenlace": [
+          "...",
+          {"es": "Y ahí lo tienes.", "en": "And there it is."},
+          {"es": "La verdad completa.", "en": "The whole truth."}
+        ]
       }
     }
   },
@@ -709,42 +1339,42 @@
   "confrontations": {
     "afterPoliceEscape": {
       "chance": 0.4,
-      "text": "About that police chase... How'd you lose them?",
+      "text": {"es": "Sobre esa persecución policial... ¿Cómo los perdiste?", "en": "About that police chase... How'd you lose them?"},
       "responses": [
-        { "id": "a", "text": "Took some back roads I know. Lost them in the maze.", "traits": ["cautious"], "points": 15 },
-        { "id": "b", "text": "I don't want to talk about it.", "traits": ["secretive"], "points": 10 },
-        { "id": "c", "text": "Just drove faster than they could.", "traits": ["reckless"], "points": -5 }
+        { "id": "a", "text": {"es": "Tomé algunas calles traseras que conozco. Los perdí en el laberinto.", "en": "Took some back roads I know. Lost them in the maze."}, "traits": ["cautious"], "points": 15 },
+        { "id": "b", "text": {"es": "No quiero hablar de ello.", "en": "I don't want to talk about it."}, "traits": ["secretive"], "points": 10 },
+        { "id": "c", "text": {"es": "Simplemente conduje más rápido de lo que podían.", "en": "Just drove faster than they could."}, "traits": ["reckless"], "points": -5 }
       ]
     },
     "randomSecrecyTest": {
       "chance": 0.15,
       "minLevel": 2,
-      "text": "Someone's been asking around about me. What did you tell them?",
+      "text": {"es": "Alguien ha estado preguntando por mí. ¿Qué les dijiste?", "en": "Someone's been asking around about me. What did you tell them?"},
       "responses": [
-        { "id": "a", "text": "Nothing. I don't know any Ghost.", "traits": ["secretive", "discrete"], "points": 25 },
-        { "id": "b", "text": "Who's asking? I need details.", "traits": ["cautious"], "points": 10 },
-        { "id": "c", "text": "I might have mentioned your name...", "traits": ["talkative"], "points": -25 }
+        { "id": "a", "text": {"es": "Nada. No conozco a ningún Ghost.", "en": "Nothing. I don't know any Ghost."}, "traits": ["secretive", "discrete"], "points": 25 },
+        { "id": "b", "text": {"es": "¿Quién pregunta? Necesito detalles.", "en": "Who's asking? I need details."}, "traits": ["cautious"], "points": 10 },
+        { "id": "c", "text": {"es": "Puede que mencionara tu nombre...", "en": "I might have mentioned your name..."}, "traits": ["talkative"], "points": -25 }
       ]
     }
   },
 
   "exitLines": {
     "normal": [
-      "I gotta go. Someone's coming.",
-      "That's enough for today. Stay safe.",
-      "We're done here. Watch your back.",
-      "I've got other business. Talk later.",
-      "Time to disappear. You know how to reach me."
+      {"es": "Me tengo que ir. Alguien viene.", "en": "I gotta go. Someone's coming."},
+      {"es": "Es suficiente por hoy. Mantente a salvo.", "en": "That's enough for today. Stay safe."},
+      {"es": "Hemos terminado aquí. Cúbrete las espaldas.", "en": "We're done here. Watch your back."},
+      {"es": "Tengo otros asuntos. Hablamos luego.", "en": "I've got other business. Talk later."},
+      {"es": "Es hora de desaparecer. Ya sabes cómo contactarme.", "en": "Time to disappear. You know how to reach me."}
     ],
     "positive": [
-      "Good talk. Let's do this again.",
-      "You're alright, kid. Stay sharp.",
-      "I've got a good feeling about you. Don't prove me wrong."
+      {"es": "Buena charla. Hagámoslo de nuevo.", "en": "Good talk. Let's do this again."},
+      {"es": "Eres legal, chaval. Mantente alerta.", "en": "You're alright, kid. Stay sharp."},
+      {"es": "Tengo buenas sensaciones contigo. No me decepciones.", "en": "I've got a good feeling about you. Don't prove me wrong."}
     ],
     "negative": [
-      "We're done. For now.",
-      "I need to think about this. Don't contact me for a while.",
-      "You're on thin ice. Remember that."
+      {"es": "Hemos terminado. Por ahora.", "en": "We're done. For now."},
+      {"es": "Necesito pensar sobre esto. No me contactes durante un tiempo.", "en": "I need to think about this. Don't contact me for a while."},
+      {"es": "Estás en una cuerda floja. Recuérdalo.", "en": "You're on thin ice. Remember that."}
     ]
   }
 }

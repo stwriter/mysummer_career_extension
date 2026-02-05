@@ -1,101 +1,56 @@
 {
   "additionalAttributes": {
-    "difficulty": "high"
+    "difficulty": "extreme"
   },
-  "author": "ToeBee",
+  "author": "MySummer Team",
   "careerSetup": {
     "defaultStarKeys": [
-      "justFinish",
+      "finishBronze",
       "finishSilver",
       "finishGold"
     ],
     "showInCareer": false,
-    "showInFreeroam": true,
-    "skill": "(none)",
-    "starOutroTexts": {
-      "cleanGoldRace": "Way to go!",
-      "noStarUnlocked": "Tough luck. Want to try again?"
-    },
+    "showInFreeroam": false,
+    "skill": "mysummer-streetracing",
+    "starOutroTexts": {},
     "starRewards": {
-      "beatGoalTime": [
-        {
-          "attributeKey": "bonusStars",
-          "rewardAmount": 1
-        }
-      ],
-      "cleanGoldRace": [
-        {
-          "attributeKey": "bonusStars",
-          "rewardAmount": 1
-        }
-      ],
       "finishBronze": [
         {
           "attributeKey": "money",
-          "rewardAmount": 100
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 50
+          "rewardAmount": 1200
         }
       ],
       "finishGold": [
         {
           "attributeKey": "money",
-          "rewardAmount": 3000
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 15
+          "rewardAmount": 7500
         },
         {
           "attributeKey": "mysummer-streetracing",
-          "rewardAmount": 200
+          "rewardAmount": 400
         }
       ],
       "finishSilver": [
         {
           "attributeKey": "money",
-          "rewardAmount": 1500
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 10
-        },
-        {
-          "attributeKey": "mysummer-streetracing",
-          "rewardAmount": 100
-        }
-      ],
-      "justFinish": [
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 5
-        },
-        {
-          "attributeKey": "mysummer-streetracing",
-          "rewardAmount": 50
+          "rewardAmount": 3500
         }
       ]
     },
     "starsActive": {
-      "beatGoalTime": true,
-      "cleanGoldRace": true,
-      "finishBronze": false,
+      "finishBronze": true,
       "finishGold": true,
-      "finishSilver": true,
-      "justFinish": true
+      "finishSilver": true
     }
   },
   "customAdditionalAttributes": {},
-  "date": 1699022191,
-  "description": "Race Chase Speeder's Gavril Grand Marshal in a street race with up to 9 opponents in completely different vehicles. Chase is a retired police officer. After years of trying to catch the fastest street racers and coming up empty handed. He decided to retire and to try building a car that could catch and even beat the fastest of rivals.",
+  "date": 1699025500,
+  "description": "The ultimate test. A combination of everything you've learned: city streets, highways, technical sections, and traffic. This is The Big One - the race that separates the legends from everyone else.",
   "devMission": false,
   "grouping": {
     "id": "STREETRACE",
     "label": "Street Races"
   },
-  "isAvailableAsScenario": true,
   "layers": [
     {
       "dir": "/gameplay/missions/west_coast_usa/aiRace/010-STREET/",
@@ -114,23 +69,24 @@
   "missionTypeData": {
     "allowFlip": true,
     "allowRecover": true,
-    "camPathActive": true,
+    "camPathActive": false,
     "damageFailActive": false,
-    "damageFailText": "You got wrecked!",
+    "damageFailText": "missions.aiRace.general.damageFail",
     "damageLimit": 10000,
     "flipLimit": -1,
     "goalCollisionsLimit": 1,
     "goalCollisionsTarget": 5,
     "goalLaps": 3,
     "goalRecoveries": 0,
-    "goalTime": 255,
-    "lapCount": 2,
+    "goalTime": 280,
+    "lapCount": 3,
     "mapPreviewMode": "navgraph",
     "maxRacerCount": 9,
     "minRacerCount": 1,
+    "playerStartIndex": 7,
     "prefabActive": false,
     "raceFile": "/gameplay/missions/west_coast_usa/aiRace/010-STREET/race.race.json",
-    "racerAggression": 1.179999948,
+    "racerAggression": 1.2,
     "racerAwareness": true,
     "racerCount": 9,
     "racerRandomnessScale": 1,
@@ -139,44 +95,42 @@
     "racerSkill": 1,
     "recoverLimit": -1,
     "shuffleGroup": true,
-    "smartStartPlace": true,
-    "startText": "These races are designed to have a high level of carnage. If you would like less carnage and more racing try turning off traffic. If your FPS gets too low the AI will drive badly. Try lowering the number of AI cars if you need more FPS.",
-    "startTitle": "Street Race #10",
+    "smartStartPlace": false,
+    "startText": "This is it. The Big One. Win this and your name goes down in history.",
     "stoppedLimit": 0,
     "useGroundmarkers": false,
     "vehicleGroupActive": true
   },
-  "name": "Street Race #10",
+  "name": "The Big One",
   "retryBehaviour": "infiniteRetries",
   "setupModules": {
     "environment": {
-      "enabled": true,
-      "fogDensity": 0,
-      "time": 0.2083333333,
-      "timeScale": 0,
-      "windDirAngle": 0,
-      "windSpeed": 0
+      "enabled": false
     },
     "traffic": {
-      "activeAmount": 1,
-      "amount": 10,
-      "enabled": true,
+      "activeAmount": 0,
+      "amount": 0,
+      "enabled": false,
       "parkedAmount": 0,
-      "respawnRate": 3,
+      "respawnRate": 1,
+      "useCustomGroup": false,
       "useGameOptions": false,
       "usePrevTraffic": false,
-      "useSimpleVehs": true,
-      "useTraffic": true
+      "useSimpleVehs": false,
+      "useTraffic": false
     },
     "vehicles": {
       "enabled": true,
       "includePlayerVehicle": true,
-      "prioritizePlayerVehicle": true,
-      "vehicles": []
+      "playerVehicleDiffs": {},
+      "prioritizePlayerVehicle": false,
+      "vehicles": {}
     }
   },
   "startCondition": {
-    "type": "always"
+    "branchId": "mysummer-streetracing",
+    "level": 4,
+    "type": "branchLevel"
   },
   "startTrigger": {
     "level": "west_coast_usa",
@@ -185,16 +139,16 @@
       1825.43335,
       101.7489548
     ],
-    "radius": 3,
-    "rot": [
-      0,
-      0,
-      0.7555139413,
-      0.6551328104
-    ],
+    "radius": 5,
+    "rot": {
+      "w": 0.6551328104,
+      "x": 0,
+      "y": 0,
+      "z": 0.7555139413
+    },
     "type": "coordinates"
   },
   "visibleCondition": {
-    "type": "always"
+    "type": "automatic"
   }
 }

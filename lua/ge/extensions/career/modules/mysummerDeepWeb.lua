@@ -1658,6 +1658,24 @@ addContactXP = function(contactId, amount)
   end
 
   local attKey = "mysummer-" .. contactId
+
+  -- If subtracting, ensure we don't go below 0
+  if amount < 0 then
+    local currentValue = career_modules_playerAttributes.getAttributeValue(attKey) or 0
+    local newValue = currentValue + amount
+    if newValue < 0 then
+      -- Clamp to 0 - only subtract what we have
+      amount = -currentValue
+      log("D", logTag, string.format("Clamping XP subtraction to prevent negative (would be %d, clamping to -%d)", newValue, currentValue))
+    end
+  end
+
+  -- Skip if nothing to add
+  if amount == 0 then
+    log("D", logTag, string.format("Skipping XP change of 0 for %s", attKey))
+    return
+  end
+
   log("D", logTag, string.format("Adding %d XP to attribute key: %s", amount, attKey))
 
   career_modules_playerAttributes.addAttributes(
@@ -1926,7 +1944,7 @@ local function getSaveFilePath()
   if not savePath then
     return nil
   end
-  return savePath .. "/career/rls_career/mysummer/deepweb.json"
+  return savePath .. "/career/mysummer/mysummer_deepweb.json"
 end
 
 local function initializeVendors()

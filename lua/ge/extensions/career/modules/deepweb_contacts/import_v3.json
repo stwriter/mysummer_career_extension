@@ -22,26 +22,26 @@
             "id": "intro_test",
             "condition": "firstContact",
             "exchanges": [
-              { "speaker": "import", "text": "New face in the scene." },
-              { "speaker": "import", "text": "Let me guess. You want JDM parts because they look cool in videos." },
-              { "speaker": "import", "text": "Everyone wants the aesthetic. Few understand the soul." },
-              { "speaker": "import", "text": "Tell me something. What does 'tuning' mean to you?" }
+              { "speaker": "import", "text": { "es": "Una cara nueva en el mundillo.", "en": "New face in the scene." } },
+              { "speaker": "import", "text": { "es": "Déjame adivinar. Quieres piezas JDM porque quedan chulas en los vídeos.", "en": "Let me guess. You want JDM parts because they look cool in videos." } },
+              { "speaker": "import", "text": { "es": "Todo el mundo quiere la estética. Pocos entienden el alma.", "en": "Everyone wants the aesthetic. Few understand the soul." } },
+              { "speaker": "import", "text": { "es": "Dime algo. ¿Qué significa 'tuning' para ti?", "en": "Tell me something. What does 'tuning' mean to you?" } }
             ],
             "requiresResponse": true,
             "responseOptions": [
-              { "id": "a", "text": "Making a car faster. More power, better handling.", "traits": ["practical"], "points": 5 },
-              { "id": "b", "text": "Balance. Finding harmony between all the components.", "traits": ["philosophical"], "points": 15 },
-              { "id": "c", "text": "Looking good. Stance, wheels, the right badges.", "traits": ["superficial"], "points": -5 },
-              { "id": "d", "text": "I'm still learning. That's why I'm here.", "traits": ["humble"], "points": 10 }
+              { "id": "a", "text": { "es": "Hacer un coche más rápido. Más potencia, mejor manejo.", "en": "Making a car faster. More power, better handling." }, "traits": ["practical"], "points": 5 },
+              { "id": "b", "text": { "es": "Equilibrio. Encontrar armonía entre todos los componentes.", "en": "Balance. Finding harmony between all the components." }, "traits": ["philosophical"], "points": 15 },
+              { "id": "c", "text": { "es": "Que quede bien. Stance, llantas, las pegatinas correctas.", "en": "Looking good. Stance, wheels, the right badges." }, "traits": ["superficial"], "points": -5 },
+              { "id": "d", "text": { "es": "Todavía estoy aprendiendo. Por eso estoy aquí.", "en": "I'm still learning. That's why I'm here." }, "traits": ["humble"], "points": 10 }
             ]
           },
           {
             "id": "intro_return",
             "condition": "returning",
             "exchanges": [
-              { "speaker": "import", "text": "Back again." },
-              { "speaker": "import", "text": "Still chasing the spirit of JDM?" },
-              { "speaker": "import", "text": "Good. Persistence matters in this world." }
+              { "speaker": "import", "text": { "es": "De vuelta.", "en": "Back again." } },
+              { "speaker": "import", "text": { "es": "¿Sigues persiguiendo el espíritu del JDM?", "en": "Still chasing the spirit of JDM?" } },
+              { "speaker": "import", "text": { "es": "Bien. La persistencia importa en este mundo.", "en": "Good. Persistence matters in this world." } }
             ]
           }
         ]
@@ -49,18 +49,18 @@
       "nudo": {
         "branches": {
           "nudo_philosophy": [
-            { "speaker": "import", "text": "People think JDM is about brand names." },
-            { "speaker": "import", "text": "Skyline. Supra. Silvia. Names everyone knows." },
-            { "speaker": "import", "text": "But the magic was never the cars themselves." },
-            { "speaker": "import", "text": "It was the workshops. The midnight mechanics. The street knowledge." },
-            { "speaker": "import", "text": "That culture of perfection through iteration." }
+            { "speaker": "import", "text": { "es": "La gente piensa que el JDM va de marcas.", "en": "People think JDM is about brand names." } },
+            { "speaker": "import", "text": { "es": "Skyline. Supra. Silvia. Nombres que todo el mundo conoce.", "en": "Skyline. Supra. Silvia. Names everyone knows." } },
+            { "speaker": "import", "text": { "es": "Pero la magia nunca fueron los coches en sí.", "en": "But the magic was never the cars themselves." } },
+            { "speaker": "import", "text": { "es": "Eran los talleres. Los mecánicos de medianoche. El conocimiento de la calle.", "en": "It was the workshops. The midnight mechanics. The street knowledge." } },
+            { "speaker": "import", "text": { "es": "Esa cultura de perfección a través de la iteración.", "en": "That culture of perfection through iteration." } }
           ],
           "nudo_business": [
-            { "speaker": "import", "text": "I import parts. Authentic only." },
-            { "speaker": "import", "text": "No replicas. No knockoffs. The real thing or nothing." },
-            { "speaker": "import", "text": "It costs more. It takes longer." },
-            { "speaker": "import", "text": "But when you install a genuine piece..." },
-            { "speaker": "import", "text": "You're connecting to something. History. Craftsmanship." }
+            { "speaker": "import", "text": { "es": "Importo piezas. Solo auténticas.", "en": "I import parts. Authentic only." } },
+            { "speaker": "import", "text": { "es": "Nada de réplicas. Nada de imitaciones. Lo auténtico o nada.", "en": "No replicas. No knockoffs. The real thing or nothing." } },
+            { "speaker": "import", "text": { "es": "Cuesta más pasta. Tarda más tiempo.", "en": "It costs more. It takes longer." } },
+            { "speaker": "import", "text": { "es": "Pero cuando instalas una pieza genuina...", "en": "But when you install a genuine piece..." } },
+            { "speaker": "import", "text": { "es": "Te conectas con algo. Historia. Artesanía.", "en": "You're connecting to something. History. Craftsmanship." } }
           ]
         },
         "randomEvents": {
@@ -68,11 +68,11 @@
           "events": [
             {
               "id": "fake_parts",
-              "text": "Someone tried to sell me counterfeit coilovers last week. Thought I wouldn't notice.",
+              "text": { "es": "Alguien intentó venderme amortiguadores falsos la semana pasada. Pensó que no me daría cuenta.", "en": "Someone tried to sell me counterfeit coilovers last week. Thought I wouldn't notice." },
               "responses": [
-                { "id": "a", "text": "How could you tell they were fake?", "traits": ["curious"], "points": 5 },
-                { "id": "b", "text": "The market is full of fakes now. Hard to trust anyone.", "traits": ["aware"], "points": 10 },
-                { "id": "c", "text": "Does it matter if they work the same?", "traits": ["pragmatic"], "points": -10 }
+                { "id": "a", "text": { "es": "¿Cómo supiste que eran falsos?", "en": "How could you tell they were fake?" }, "traits": ["curious"], "points": 5 },
+                { "id": "b", "text": { "es": "El mercado está lleno de falsificaciones. Difícil confiar en nadie.", "en": "The market is full of fakes now. Hard to trust anyone." }, "traits": ["aware"], "points": 10 },
+                { "id": "c", "text": { "es": "¿Importa si funcionan igual?", "en": "Does it matter if they work the same?" }, "traits": ["pragmatic"], "points": -10 }
               ]
             }
           ]
@@ -84,18 +84,18 @@
             "id": "end_neutral",
             "condition": "default",
             "exchanges": [
-              { "speaker": "import", "text": "We'll see if you have patience for this path." },
-              { "speaker": "import", "text": "JDM isn't a shortcut. It's a commitment." },
-              { "speaker": "import", "text": "Come back when you're ready to learn more." }
+              { "speaker": "import", "text": { "es": "Ya veremos si tienes paciencia para este camino.", "en": "We'll see if you have patience for this path." } },
+              { "speaker": "import", "text": { "es": "El JDM no es un atajo. Es un compromiso.", "en": "JDM isn't a shortcut. It's a commitment." } },
+              { "speaker": "import", "text": { "es": "Vuelve cuando estés listo para aprender más.", "en": "Come back when you're ready to learn more." } }
             ]
           },
           {
             "id": "end_positive",
             "condition": "goodInteraction",
             "exchanges": [
-              { "speaker": "import", "text": "You listen. That's rare." },
-              { "speaker": "import", "text": "Maybe you'll understand someday." },
-              { "speaker": "import", "text": "I'll have some starter parts for you next time." }
+              { "speaker": "import", "text": { "es": "Escuchas. Eso es raro.", "en": "You listen. That's rare." } },
+              { "speaker": "import", "text": { "es": "Quizás algún día lo entiendas.", "en": "Maybe you'll understand someday." } },
+              { "speaker": "import", "text": { "es": "Tendré algunas piezas de iniciación para ti la próxima vez.", "en": "I'll have some starter parts for you next time." } }
             ]
           }
         ]
@@ -108,9 +108,9 @@
             "id": "intro_growing",
             "condition": "default",
             "exchanges": [
-              { "speaker": "import", "text": "You came back. Good." },
-              { "speaker": "import", "text": "Most people lose interest when they realize this isn't instant." },
-              { "speaker": "import", "text": "Let's talk properly this time." }
+              { "speaker": "import", "text": { "es": "Has vuelto. Bien.", "en": "You came back. Good." } },
+              { "speaker": "import", "text": { "es": "La mayoría pierde el interés cuando se da cuenta de que esto no es instantáneo.", "en": "Most people lose interest when they realize this isn't instant." } },
+              { "speaker": "import", "text": { "es": "Hablemos como debe ser esta vez.", "en": "Let's talk properly this time." } }
             ]
           }
         ]
@@ -118,25 +118,25 @@
       "nudo": {
         "branches": {
           "nudo_origins": [
-            { "speaker": "import", "text": "I started in the late 90s. Peak era." },
-            { "speaker": "import", "text": "Worked at a shop in Osaka for two years. Best education of my life." },
-            { "speaker": "import", "text": "The masters there... they could diagnose an engine by sound alone." },
-            { "speaker": "import", "text": "That knowledge is disappearing. New generation doesn't have patience." },
-            { "speaker": "import", "text": "Someone has to preserve it." }
+            { "speaker": "import", "text": { "es": "Empecé a finales de los 90. La época dorada.", "en": "I started in the late 90s. Peak era." } },
+            { "speaker": "import", "text": { "es": "Trabajé en un taller en Osaka durante dos años. La mejor educación de mi vida.", "en": "Worked at a shop in Osaka for two years. Best education of my life." } },
+            { "speaker": "import", "text": { "es": "Los maestros allí... podían diagnosticar un motor solo por el sonido.", "en": "The masters there... they could diagnose an engine by sound alone." } },
+            { "speaker": "import", "text": { "es": "Ese conocimiento está desapareciendo. La nueva generación no tiene paciencia.", "en": "That knowledge is disappearing. New generation doesn't have patience." } },
+            { "speaker": "import", "text": { "es": "Alguien tiene que preservarlo.", "en": "Someone has to preserve it." } }
           ],
           "nudo_network": [
-            { "speaker": "import", "text": "I know people. Here and overseas." },
-            { "speaker": "import", "text": "Some specialize in engines. Some in suspension. Some in electronics." },
-            { "speaker": "import", "text": "There's a woman here... handles muscle cars mostly. American iron." },
-            { "speaker": "import", "text": "Different world from JDM, but... she understands the craft." },
-            { "speaker": "import", "text": "Doesn't chase trends. Knows what matters." }
+            { "speaker": "import", "text": { "es": "Conozco gente. Aquí y en el extranjero.", "en": "I know people. Here and overseas." } },
+            { "speaker": "import", "text": { "es": "Algunos se especializan en motores. Otros en suspensión. Otros en electrónica.", "en": "Some specialize in engines. Some in suspension. Some in electronics." } },
+            { "speaker": "import", "text": { "es": "Hay una mujer aquí... maneja sobre todo muscle cars. Hierro americano.", "en": "There's a woman here... handles muscle cars mostly. American iron." } },
+            { "speaker": "import", "text": { "es": "Mundo diferente al JDM, pero... entiende la artesanía.", "en": "Different world from JDM, but... she understands the craft." } },
+            { "speaker": "import", "text": { "es": "No persigue tendencias. Sabe lo que importa.", "en": "Doesn't chase trends. Knows what matters." } }
           ],
           "nudo_respect": [
-            { "speaker": "import", "text": "You know what I respect? Dedication." },
-            { "speaker": "import", "text": "Doesn't matter if it's Japanese, American, European." },
-            { "speaker": "import", "text": "If someone truly knows their craft... that transcends borders." },
-            { "speaker": "import", "text": "I've met builders who never left their hometown." },
-            { "speaker": "import", "text": "But their understanding? World class." }
+            { "speaker": "import", "text": { "es": "¿Sabes qué respeto? La dedicación.", "en": "You know what I respect? Dedication." } },
+            { "speaker": "import", "text": { "es": "No importa si es japonés, americano, europeo.", "en": "Doesn't matter if it's Japanese, American, European." } },
+            { "speaker": "import", "text": { "es": "Si alguien realmente conoce su oficio... eso trasciende fronteras.", "en": "If someone truly knows their craft... that transcends borders." } },
+            { "speaker": "import", "text": { "es": "He conocido preparadores que nunca salieron de su ciudad natal.", "en": "I've met builders who never left their hometown." } },
+            { "speaker": "import", "text": { "es": "¿Pero su comprensión? De clase mundial.", "en": "But their understanding? World class." } }
           ]
         },
         "randomEvents": {
@@ -144,20 +144,20 @@
           "events": [
             {
               "id": "rare_find",
-              "text": "Just secured a set of original TE37s. 1996 production run.",
+              "text": { "es": "Acabo de conseguir un juego de TE37 originales. Serie de 1996.", "en": "Just secured a set of original TE37s. 1996 production run." },
               "responses": [
-                { "id": "a", "text": "Those are legendary. How did you find them?", "traits": ["knowledgeable"], "points": 15 },
-                { "id": "b", "text": "Nice. How much are you asking?", "traits": ["transactional"], "points": 0 },
-                { "id": "c", "text": "What makes them special versus new ones?", "traits": ["learning"], "points": 10 }
+                { "id": "a", "text": { "es": "Son legendarias. ¿Cómo las encontraste?", "en": "Those are legendary. How did you find them?" }, "traits": ["knowledgeable"], "points": 15 },
+                { "id": "b", "text": { "es": "Guay. ¿Cuánto pides?", "en": "Nice. How much are you asking?" }, "traits": ["transactional"], "points": 0 },
+                { "id": "c", "text": { "es": "¿Qué las hace especiales comparadas con las nuevas?", "en": "What makes them special versus new ones?" }, "traits": ["learning"], "points": 10 }
               ]
             },
             {
               "id": "cultural_test",
-              "text": "Quick question. What's the difference between 'touge' and 'wangan' style builds?",
+              "text": { "es": "Pregunta rápida. ¿Cuál es la diferencia entre preparaciones estilo 'touge' y 'wangan'?", "en": "Quick question. What's the difference between 'touge' and 'wangan' style builds?" },
               "responses": [
-                { "id": "a", "text": "Touge is mountain passes. Light, agile. Wangan is highway. Top speed focus.", "traits": ["educated"], "points": 20 },
-                { "id": "b", "text": "Both are about going fast, just different roads.", "traits": ["basic"], "points": 5 },
-                { "id": "c", "text": "I don't know those terms yet.", "traits": ["honest"], "points": 8 }
+                { "id": "a", "text": { "es": "Touge son puertos de montaña. Ligero, ágil. Wangan es autopista. Enfoque en velocidad punta.", "en": "Touge is mountain passes. Light, agile. Wangan is highway. Top speed focus." }, "traits": ["educated"], "points": 20 },
+                { "id": "b", "text": { "es": "Ambos van de ir rápido, solo que en carreteras diferentes.", "en": "Both are about going fast, just different roads." }, "traits": ["basic"], "points": 5 },
+                { "id": "c", "text": { "es": "Aún no conozco esos términos.", "en": "I don't know those terms yet." }, "traits": ["honest"], "points": 8 }
               ]
             }
           ]
@@ -169,18 +169,18 @@
             "id": "end_growing",
             "condition": "default",
             "exchanges": [
-              { "speaker": "import", "text": "Your knowledge is growing. I can tell." },
-              { "speaker": "import", "text": "Keep this pace. You'll earn access to better stock." },
-              { "speaker": "import", "text": "Patience and respect. That's all I ask." }
+              { "speaker": "import", "text": { "es": "Tu conocimiento está creciendo. Lo noto.", "en": "Your knowledge is growing. I can tell." } },
+              { "speaker": "import", "text": { "es": "Mantén este ritmo. Ganarás acceso a mejor stock.", "en": "Keep this pace. You'll earn access to better stock." } },
+              { "speaker": "import", "text": { "es": "Paciencia y respeto. Eso es todo lo que pido.", "en": "Patience and respect. That's all I ask." } }
             ]
           },
           {
             "id": "end_impressed",
             "condition": "highPoints",
             "exchanges": [
-              { "speaker": "import", "text": "Not bad. You actually understand some of this." },
-              { "speaker": "import", "text": "Rare to find someone who cares about the why, not just the what." },
-              { "speaker": "import", "text": "I'll start keeping the good stuff for you." }
+              { "speaker": "import", "text": { "es": "Nada mal. Realmente entiendes algo de esto.", "en": "Not bad. You actually understand some of this." } },
+              { "speaker": "import", "text": { "es": "Es raro encontrar a alguien que se preocupe por el porqué, no solo por el qué.", "en": "Rare to find someone who cares about the why, not just the what." } },
+              { "speaker": "import", "text": { "es": "Empezaré a guardarte las cosas buenas.", "en": "I'll start keeping the good stuff for you." } }
             ]
           }
         ]
@@ -193,8 +193,8 @@
             "id": "intro_trusted",
             "condition": "default",
             "exchanges": [
-              { "speaker": "import", "text": "You've earned some trust." },
-              { "speaker": "import", "text": "Time to show you what real collecting looks like." }
+              { "speaker": "import", "text": { "es": "Te has ganado algo de confianza.", "en": "You've earned some trust." } },
+              { "speaker": "import", "text": { "es": "Es hora de enseñarte cómo es el coleccionismo de verdad.", "en": "Time to show you what real collecting looks like." } }
             ]
           }
         ]
@@ -202,24 +202,24 @@
       "nudo": {
         "branches": {
           "nudo_collection": [
-            { "speaker": "import", "text": "I have pieces in my personal collection that will never sell." },
-            { "speaker": "import", "text": "Not because of value. Because of what they represent." },
-            { "speaker": "import", "text": "A throttle body from a Group A Skyline. Touched by legends." },
-            { "speaker": "import", "text": "You can't put a price on connection to history." }
+            { "speaker": "import", "text": { "es": "Tengo piezas en mi colección personal que nunca venderé.", "en": "I have pieces in my personal collection that will never sell." } },
+            { "speaker": "import", "text": { "es": "No por su valor. Por lo que representan.", "en": "Not because of value. Because of what they represent." } },
+            { "speaker": "import", "text": { "es": "Un cuerpo de aceleración de un Skyline Grupo A. Tocado por leyendas.", "en": "A throttle body from a Group A Skyline. Touched by legends." } },
+            { "speaker": "import", "text": { "es": "No puedes ponerle precio a la conexión con la historia.", "en": "You can't put a price on connection to history." } }
           ],
           "nudo_connections": [
-            { "speaker": "import", "text": "The network runs deeper than you think." },
-            { "speaker": "import", "text": "I know someone who moves information. Digital ghost type." },
-            { "speaker": "import", "text": "Helped me trace the provenance of a rare manifold once." },
-            { "speaker": "import", "text": "If you ever need to know something's history... they can find it." },
-            { "speaker": "import", "text": "Works mostly at night. Never met them in person." }
+            { "speaker": "import", "text": { "es": "La red es más profunda de lo que piensas.", "en": "The network runs deeper than you think." } },
+            { "speaker": "import", "text": { "es": "Conozco a alguien que mueve información. Tipo fantasma digital.", "en": "I know someone who moves information. Digital ghost type." } },
+            { "speaker": "import", "text": { "es": "Me ayudó a rastrear la procedencia de un colector raro una vez.", "en": "Helped me trace the provenance of a rare manifold once." } },
+            { "speaker": "import", "text": { "es": "Si alguna vez necesitas saber el historial de algo... puede encontrarlo.", "en": "If you ever need to know something's history... they can find it." } },
+            { "speaker": "import", "text": { "es": "Trabaja sobre todo de noche. Nunca le he conocido en persona.", "en": "Works mostly at night. Never met them in person." } }
           ],
           "nudo_philosophy_deep": [
-            { "speaker": "import", "text": "You know what I've learned after all these years?" },
-            { "speaker": "import", "text": "The car is a mirror. It reflects who you are." },
-            { "speaker": "import", "text": "Patient people build clean. Reckless people cut corners." },
-            { "speaker": "import", "text": "Every part choice tells a story about the builder." },
-            { "speaker": "import", "text": "When I look at a build... I see the person behind it." }
+            { "speaker": "import", "text": { "es": "¿Sabes qué he aprendido después de todos estos años?", "en": "You know what I've learned after all these years?" } },
+            { "speaker": "import", "text": { "es": "El coche es un espejo. Refleja quién eres.", "en": "The car is a mirror. It reflects who you are." } },
+            { "speaker": "import", "text": { "es": "La gente paciente construye limpio. La imprudente toma atajos.", "en": "Patient people build clean. Reckless people cut corners." } },
+            { "speaker": "import", "text": { "es": "Cada elección de pieza cuenta una historia sobre el preparador.", "en": "Every part choice tells a story about the builder." } },
+            { "speaker": "import", "text": { "es": "Cuando miro una preparación... veo a la persona detrás de ella.", "en": "When I look at a build... I see the person behind it." } }
           ]
         },
         "randomEvents": {
@@ -227,11 +227,11 @@
           "events": [
             {
               "id": "legendary_find",
-              "text": "I have a lead on a complete RB26 from a BNR32 Nismo. Documented history.",
+              "text": { "es": "Tengo una pista sobre un RB26 completo de un BNR32 Nismo. Historial documentado.", "en": "I have a lead on a complete RB26 from a BNR32 Nismo. Documented history." },
               "responses": [
-                { "id": "a", "text": "That's museum-grade. Are you keeping it?", "traits": ["respectful"], "points": 15 },
-                { "id": "b", "text": "How much and when can I get it?", "traits": ["eager"], "points": 5 },
-                { "id": "c", "text": "Would you trust me to do it justice?", "traits": ["humble"], "points": 20 }
+                { "id": "a", "text": { "es": "Eso es nivel museo. ¿Te lo quedas?", "en": "That's museum-grade. Are you keeping it?" }, "traits": ["respectful"], "points": 15 },
+                { "id": "b", "text": { "es": "¿Cuánto y cuándo puedo conseguirlo?", "en": "How much and when can I get it?" }, "traits": ["eager"], "points": 5 },
+                { "id": "c", "text": { "es": "¿Confiarías en mí para hacerle justicia?", "en": "Would you trust me to do it justice?" }, "traits": ["humble"], "points": 20 }
               ]
             }
           ]
@@ -243,19 +243,19 @@
             "id": "end_trusted",
             "condition": "default",
             "exchanges": [
-              { "speaker": "import", "text": "You're part of something now." },
-              { "speaker": "import", "text": "This network... it protects the culture." },
-              { "speaker": "import", "text": "We keep the flame alive for those who truly care." }
+              { "speaker": "import", "text": { "es": "Ahora formas parte de algo.", "en": "You're part of something now." } },
+              { "speaker": "import", "text": { "es": "Esta red... protege la cultura.", "en": "This network... it protects the culture." } },
+              { "speaker": "import", "text": { "es": "Mantenemos viva la llama para quienes realmente se preocupan.", "en": "We keep the flame alive for those who truly care." } }
             ]
           },
           {
             "id": "end_family",
             "condition": "maxTrust",
             "exchanges": [
-              { "speaker": "import", "text": "I don't say this often." },
-              { "speaker": "import", "text": "You understand. Really understand." },
-              { "speaker": "import", "text": "Whatever you need. If I can find it... it's yours." },
-              { "speaker": "import", "text": "That's what family means in this world." }
+              { "speaker": "import", "text": { "es": "No digo esto a menudo.", "en": "I don't say this often." } },
+              { "speaker": "import", "text": { "es": "Entiendes. Realmente entiendes.", "en": "You understand. Really understand." } },
+              { "speaker": "import", "text": { "es": "Lo que necesites. Si puedo encontrarlo... es tuyo.", "en": "Whatever you need. If I can find it... it's yours." } },
+              { "speaker": "import", "text": { "es": "Eso es lo que significa familia en este mundo.", "en": "That's what family means in this world." } }
             ]
           }
         ]
@@ -268,8 +268,8 @@
             "id": "intro_family",
             "condition": "default",
             "exchanges": [
-              { "speaker": "import", "text": "Brother." },
-              { "speaker": "import", "text": "Welcome back." }
+              { "speaker": "import", "text": { "es": "Hermano.", "en": "Brother." } },
+              { "speaker": "import", "text": { "es": "Bienvenido de nuevo.", "en": "Welcome back." } }
             ]
           }
         ]
@@ -277,18 +277,18 @@
       "nudo": {
         "branches": {
           "nudo_legacy": [
-            { "speaker": "import", "text": "I think about legacy sometimes." },
-            { "speaker": "import", "text": "All these parts. All this knowledge." },
-            { "speaker": "import", "text": "What happens when our generation is gone?" },
-            { "speaker": "import", "text": "That's why I teach. Why I share with people like you." },
-            { "speaker": "import", "text": "The parts are just things. The understanding... that's what matters." }
+            { "speaker": "import", "text": { "es": "A veces pienso en el legado.", "en": "I think about legacy sometimes." } },
+            { "speaker": "import", "text": { "es": "Todas estas piezas. Todo este conocimiento.", "en": "All these parts. All this knowledge." } },
+            { "speaker": "import", "text": { "es": "¿Qué pasa cuando nuestra generación se vaya?", "en": "What happens when our generation is gone?" } },
+            { "speaker": "import", "text": { "es": "Por eso enseño. Por eso comparto con gente como tú.", "en": "That's why I teach. Why I share with people like you." } },
+            { "speaker": "import", "text": { "es": "Las piezas son solo cosas. La comprensión... eso es lo que importa.", "en": "The parts are just things. The understanding... that's what matters." } }
           ],
           "nudo_secrets": [
-            { "speaker": "import", "text": "There are things I've never told anyone." },
-            { "speaker": "import", "text": "Sources in Japan. Connections to old racing teams." },
-            { "speaker": "import", "text": "Parts that officially don't exist." },
-            { "speaker": "import", "text": "You've earned the right to know about them." },
-            { "speaker": "import", "text": "Use this access wisely." }
+            { "speaker": "import", "text": { "es": "Hay cosas que nunca le he contado a nadie.", "en": "There are things I've never told anyone." } },
+            { "speaker": "import", "text": { "es": "Fuentes en Japón. Conexiones con viejos equipos de carreras.", "en": "Sources in Japan. Connections to old racing teams." } },
+            { "speaker": "import", "text": { "es": "Piezas que oficialmente no existen.", "en": "Parts that officially don't exist." } },
+            { "speaker": "import", "text": { "es": "Te has ganado el derecho a conocerlas.", "en": "You've earned the right to know about them." } },
+            { "speaker": "import", "text": { "es": "Usa este acceso con sabiduría.", "en": "Use this access wisely." } }
           ]
         }
       },
@@ -298,10 +298,10 @@
             "id": "end_complete",
             "condition": "default",
             "exchanges": [
-              { "speaker": "import", "text": "We've come a long way." },
-              { "speaker": "import", "text": "You started as a stranger. Now you're family." },
-              { "speaker": "import", "text": "Whatever road you take from here... the spirit of JDM goes with you." },
-              { "speaker": "import", "text": "Make me proud." }
+              { "speaker": "import", "text": { "es": "Hemos recorrido un largo camino.", "en": "We've come a long way." } },
+              { "speaker": "import", "text": { "es": "Empezaste como un extraño. Ahora eres familia.", "en": "You started as a stranger. Now you're family." } },
+              { "speaker": "import", "text": { "es": "Sea cual sea el camino que tomes desde aquí... el espíritu del JDM va contigo.", "en": "Whatever road you take from here... the spirit of JDM goes with you." } },
+              { "speaker": "import", "text": { "es": "Hazme sentir orgulloso.", "en": "Make me proud." } }
             ]
           }
         ]
@@ -311,22 +311,22 @@
   "nexos": {
     "transitionPhrases": {
       "toNudo": [
-        "But let me tell you something...",
-        "You know what though...",
-        "Here's the thing...",
-        "Speaking of which..."
+        { "es": "Pero déjame contarte algo...", "en": "But let me tell you something..." },
+        { "es": "Sabes qué, sin embargo...", "en": "You know what though..." },
+        { "es": "El caso es que...", "en": "Here's the thing..." },
+        { "es": "Hablando de eso...", "en": "Speaking of which..." }
       ],
       "toDesenlace": [
-        "Anyway. Enough philosophy for today.",
-        "But I've talked enough.",
-        "We should wrap this up.",
-        "Time to focus."
+        { "es": "En fin. Suficiente filosofía por hoy.", "en": "Anyway. Enough philosophy for today." },
+        { "es": "Pero ya he hablado bastante.", "en": "But I've talked enough." },
+        { "es": "Deberíamos acabar con esto.", "en": "We should wrap this up." },
+        { "es": "Hora de centrarse.", "en": "Time to focus." }
       ],
       "topicChange": [
-        "On another note...",
-        "Actually, something else...",
-        "This reminds me...",
-        "Different topic..."
+        { "es": "Por otro lado...", "en": "On another note..." },
+        { "es": "De hecho, otra cosa...", "en": "Actually, something else..." },
+        { "es": "Esto me recuerda...", "en": "This reminds me..." },
+        { "es": "Tema diferente...", "en": "Different topic..." }
       ]
     },
     "flowControl": {
@@ -339,33 +339,33 @@
     "recentPurchase": {
       "chance": 0.3,
       "responses": [
-        "How's that part working out?",
-        "Installed it yet? Curious about your impressions.",
-        "Quality speaks for itself, doesn't it?"
+        { "es": "¿Qué tal funciona esa pieza?", "en": "How's that part working out?" },
+        { "es": "¿Ya la has instalado? Tengo curiosidad por tus impresiones.", "en": "Installed it yet? Curious about your impressions." },
+        { "es": "La calidad habla por sí sola, ¿verdad?", "en": "Quality speaks for itself, doesn't it?" }
       ]
     },
     "longAbsence": {
       "chance": 0.8,
       "responses": [
-        "Been a while. Thought you'd forgotten about real parts.",
-        "You disappeared. Life get busy?",
-        "Back from wherever you were. Good to see you."
+        { "es": "Ha pasado tiempo. Pensé que te habías olvidado de las piezas auténticas.", "en": "Been a while. Thought you'd forgotten about real parts." },
+        { "es": "Desapareciste. ¿La vida te absorbió?", "en": "You disappeared. Life get busy?" },
+        { "es": "De vuelta de donde sea que estuvieras. Me alegro de verte.", "en": "Back from wherever you were. Good to see you." }
       ]
     },
     "frequentVisitor": {
       "chance": 0.25,
       "responses": [
-        "You're becoming a regular. I like that.",
-        "Back again already? Dedicated.",
-        "Consistent. That's the JDM way."
+        { "es": "Te estás volviendo un habitual. Me gusta eso.", "en": "You're becoming a regular. I like that." },
+        { "es": "¿Otra vez aquí ya? Dedicado.", "en": "Back again already? Dedicated." },
+        { "es": "Constante. Esa es la forma JDM.", "en": "Consistent. That's the JDM way." }
       ]
     },
     "afterGoodDeal": {
       "chance": 0.4,
       "responses": [
-        "Happy with the last transaction?",
-        "Word travels. Heard you're putting those parts to good use.",
-        "Trust well placed, I think."
+        { "es": "¿Contento con la última transacción?", "en": "Happy with the last transaction?" },
+        { "es": "Las palabras viajan. He oído que estás dando buen uso a esas piezas.", "en": "Word travels. Heard you're putting those parts to good use." },
+        { "es": "Confianza bien depositada, creo.", "en": "Trust well placed, I think." }
       ]
     }
   },
@@ -379,9 +379,9 @@
     ],
     "referenceProbability": 0.2,
     "referenceTemplates": {
-      "purchase": "Remember when you got that {item}? Quality choice.",
-      "knowledge": "You knew about {topic}. That stuck with me.",
-      "growth": "You've learned a lot since we first talked."
+      "purchase": { "es": "Recuerdo cuando conseguiste ese {item}. Buena elección.", "en": "Remember when you got that {item}? Quality choice." },
+      "knowledge": { "es": "Sabías sobre {topic}. Eso se me quedó grabado.", "en": "You knew about {topic}. That stuck with me." },
+      "growth": { "es": "Has aprendido mucho desde que hablamos por primera vez.", "en": "You've learned a lot since we first talked." }
     }
   },
   "strikeSystem": {
@@ -393,10 +393,10 @@
       "treating_culture_as_trend"
     ],
     "strikeResponses": [
-      "That's not how this works.",
-      "Maybe you don't understand what I'm about.",
-      "We might not be a good fit after all."
+      { "es": "Esto no funciona así.", "en": "That's not how this works." },
+      { "es": "Quizás no entiendas de qué voy.", "en": "Maybe you don't understand what I'm about." },
+      { "es": "Puede que no encajemos después de todo.", "en": "We might not be a good fit after all." }
     ],
-    "banMessage": "I only work with people who respect the craft. Find someone else."
+    "banMessage": { "es": "Solo trabajo con gente que respeta la artesanía. Búscate a otro.", "en": "I only work with people who respect the craft. Find someone else." }
   }
 }

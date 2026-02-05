@@ -1,0 +1,1367 @@
+{
+  "id": "rook",
+  "name": "Rook",
+  "personality": "anxious_loyal",
+  "specialty": "Mechanic",
+  "description": "Your nervous but loyal mechanic. Keeps the car running and worries about everything.",
+  "isV3Format": true,
+  "isTeammate": true,
+
+  "contextReactions": {
+    "recentPoliceEscape": [
+      {"es": "Dios mío, pensé que nos pillaban. ¿Estás bien?", "en": "God, I thought they had us. Are you okay?"},
+      {"es": "Eso ha estado muy cerca. Demasiado cerca.", "en": "That was close. Too close."},
+      {"es": "Mi corazón todavía está a mil. No vuelvas a hacer eso.", "en": "My heart is still racing. Don't do that again."}
+    ],
+    "recentPoliceCaught": [
+      {"es": "Te lo dije. Te lo dije que esto iba a pasar.", "en": "I told you. I told you this would happen."},
+      {"es": "¿Sabes lo que cuesta sacarte de comisaría? No solo dinero...", "en": "You know what it costs to get you out of the station? Not just money..."},
+      {"es": "La próxima vez, escúchame cuando te digo que pares.", "en": "Next time, listen when I tell you to stop."}
+    ],
+    "recentRaceWin": [
+      {"es": "¡Lo conseguimos! Aunque el motor sonaba raro en la última vuelta...", "en": "We did it! Though the engine sounded weird on the last lap..."},
+      {"es": "Bien hecho. Pero no te acostumbres, el coche necesita descanso.", "en": "Well done. But don't get used to it, the car needs rest."},
+      {"es": "Victoria. Ahora déjame revisar los frenos antes de la siguiente.", "en": "Victory. Now let me check the brakes before the next one."}
+    ],
+    "recentRaceLoss": [
+      {"es": "No pasa nada. Aprendemos y seguimos.", "en": "It's okay. We learn and keep going."},
+      {"es": "El coche aguantó. Eso es lo importante.", "en": "The car held up. That's what matters."},
+      {"es": "La próxima vez lo haremos mejor. Confía en mí.", "en": "Next time we'll do better. Trust me."}
+    ],
+    "longAbsence": [
+      {"es": "¿Dónde te habías metido? Estaba preocupado.", "en": "Where have you been? I was worried."},
+      {"es": "Pensé que te había pasado algo. No desaparezcas así.", "en": "I thought something happened to you. Don't disappear like that."},
+      {"es": "El coche te echaba de menos. Yo también, supongo.", "en": "The car missed you. Me too, I guess."}
+    ]
+  },
+
+  "conversations": {
+    "level1": {
+      "title": {"es": "El Comienzo", "en": "The Beginning"},
+      "requiredPhase": 1,
+      "phases": {
+        "intro": {
+          "exchanges": [
+            { "speaker": "rook", "text": {"es": "Oye... ¿seguro que este trasto aguanta? El motor suena a cafetera vieja.", "en": "Hey... you sure this junker will hold up? Engine sounds like an old coffee maker."} },
+            { "speaker": "rook", "text": {"es": "No tenemos pasta para reparaciones si lo rompes hoy. Recuerda que es nuestro único coche.", "en": "We don't have cash for repairs if you break it today. Remember it's our only car."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "reassure",
+                  "text": {"es": "Tranquilo, sé lo que hago. Confía en mis manos.", "en": "Relax, I know what I'm doing. Trust my hands."},
+                  "traits": ["confident"],
+                  "points": 15,
+                  "setsMemory": { "playerReassured": true },
+                  "leadsTo": "intro_positive"
+                },
+                {
+                  "id": "dismiss",
+                  "text": {"es": "Deja de llorar y sube. Hemos venido a correr.", "en": "Stop whining and get in. We came here to race."},
+                  "traits": ["impatient"],
+                  "points": -10,
+                  "setsMemory": { "playerDismissive": true },
+                  "leadsTo": "intro_negative"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "intro_positive": [
+              { "speaker": "rook", "text": {"es": "Vale, vale. Solo digo que... vayamos con calma en las curvas.", "en": "Okay, okay. I'm just saying... let's take it easy on the corners."} },
+              { "speaker": "rook", "text": {"es": "He revisado los frenos tres veces. Deberían aguantar.", "en": "I've checked the brakes three times. They should hold."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "thanks",
+                    "text": {"es": "Gracias por cuidar del coche. Eres el mejor mecánico.", "en": "Thanks for taking care of the car. You're the best mechanic."},
+                    "traits": ["loyal"],
+                    "points": 20,
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "lets_go",
+                    "text": {"es": "Perfecto. Vamos allá.", "en": "Perfect. Let's go."},
+                    "points": 10,
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ],
+            "intro_negative": [
+              { "speaker": "rook", "text": {"es": "... Como quieras. Pero si explota, tú empujas hasta casa.", "en": "... Whatever. But if it blows up, you push it home."} },
+              { "speaker": "rook", "text": {"es": "Solo intento que no nos matemos, ¿sabes?", "en": "I'm just trying to keep us from getting killed, you know?"} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "apologize",
+                    "text": {"es": "Perdona. Estoy nervioso. Confío en tu trabajo.", "en": "Sorry. I'm nervous. I trust your work."},
+                    "traits": ["honest"],
+                    "points": 10,
+                    "setsMemory": { "apologized": true },
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "whatever",
+                    "text": {"es": "Lo que sea. Vámonos.", "en": "Whatever. Let's go."},
+                    "points": -5,
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "nudo": {
+          "exchanges": [
+            { "speaker": "rook", "text": {"es": "Escucha, antes de la carrera...", "en": "Listen, before the race..."} },
+            { "speaker": "rook", "text": {"es": "Sé que Nova quiere ganar a toda costa. Y tú también.", "en": "I know Nova wants to win at all costs. You too."} },
+            { "speaker": "rook", "text": {"es": "Pero yo... yo solo quiero que volvamos a casa enteros.", "en": "But I... I just want us to get home in one piece."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "promise",
+                  "text": {"es": "Te lo prometo. Nada de locuras hoy.", "en": "I promise. No crazy stuff today."},
+                  "traits": ["cautious", "loyal"],
+                  "points": 20,
+                  "setsMemory": { "promisedSafety": true },
+                  "continueToPhase": "desenlace"
+                },
+                {
+                  "id": "no_promises",
+                  "text": {"es": "No puedo prometer nada. Pero haré lo que pueda.", "en": "I can't promise anything. But I'll do what I can."},
+                  "traits": ["honest"],
+                  "points": 10,
+                  "continueToPhase": "desenlace"
+                }
+              ]
+            }
+          ]
+        },
+
+        "desenlace": {
+          "exchanges": [
+            { "speaker": "rook", "text": {"es": "Bien. Eso es todo lo que pido.", "en": "Good. That's all I ask."} },
+            { "speaker": "rook", "text": {"es": "Mira, sé que a veces soy un poco... intenso.", "en": "Look, I know I can be a bit... intense sometimes."} },
+            { "speaker": "rook", "text": {"es": "Pero es porque me importa esto. El equipo. El coche. Tú.", "en": "But it's because I care about this. The team. The car. You."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "team",
+                  "text": {"es": "Somos un equipo. No lo olvides.", "en": "We're a team. Don't forget that."},
+                  "traits": ["loyal"],
+                  "points": 15
+                },
+                {
+                  "id": "appreciate",
+                  "text": {"es": "Lo sé. Y lo aprecio más de lo que crees.", "en": "I know. And I appreciate it more than you think."},
+                  "traits": ["honest"],
+                  "points": 15,
+                  "setsMemory": { "showedAppreciation": true }
+                }
+              ]
+            },
+            { "speaker": "rook", "text": {"es": "Venga, vamos. Y recuerda: frena antes de la curva 3, no después.", "en": "Come on, let's go. And remember: brake before turn 3, not after."} }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 50
+            },
+            "cooldown": 120,
+            "teaser": {"es": "Rook parece más tranquilo contigo. Quizás deberías hablar más con él.", "en": "Rook seems calmer around you. Maybe you should talk to him more."}
+          }
+        }
+      }
+    },
+
+    "level2": {
+      "title": {"es": "Reacción a Ghost", "en": "Reaction to Ghost"},
+      "requiredPhase": 2,
+      "requiredMemory": ["ghost_contact_made"],
+      "unlockMessage": {"es": "Rook ha oído hablar de tu nuevo contacto...", "en": "Rook has heard about your new contact..."},
+
+      "phases": {
+        "intro": {
+          "exchanges": [
+            { "speaker": "rook", "text": {"es": "¿Has visto el mensaje? ¿Quién es ese 'Ghost'?", "en": "Did you see the message? Who is this 'Ghost'?"} },
+            { "speaker": "rook", "text": {"es": "No me gusta nada. Gente que se oculta... suelen traer problemas.", "en": "I don't like this at all. People who hide... usually bring trouble."} },
+            { "speaker": "rook", "text": {"es": "Deberíamos ignorarlo.", "en": "We should ignore him."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "agree",
+                  "text": {"es": "Tienes razón. Tendremos cuidado.", "en": "You're right. We'll be careful."},
+                  "traits": ["cautious"],
+                  "points": 20,
+                  "setsMemory": { "agreedCaution": true },
+                  "leadsTo": "intro_cautious"
+                },
+                {
+                  "id": "disagree",
+                  "text": {"es": "Necesitamos sus piezas si queremos ganar.", "en": "We need his parts if we want to win."},
+                  "traits": ["ambitious"],
+                  "points": -5,
+                  "setsMemory": { "choseAmbition": true },
+                  "leadsTo": "intro_ambitious"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "intro_cautious": [
+              { "speaker": "rook", "text": {"es": "Bien. Mantengamos las distancias. Solo negocios.", "en": "Good. Let's keep our distance. Just business."} },
+              { "speaker": "rook", "text": {"es": "Nada de visitas a lugares raros ni entregas sospechosas.", "en": "No visits to weird places or suspicious deliveries."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "promise",
+                    "text": {"es": "Te lo prometo. Nada de riesgos innecesarios.", "en": "I promise. No unnecessary risks."},
+                    "traits": ["loyal"],
+                    "points": 15,
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "mostly",
+                    "text": {"es": "Haré lo que pueda.", "en": "I'll do what I can."},
+                    "points": 5,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ],
+            "intro_ambitious": [
+              { "speaker": "rook", "text": {"es": "Ganar no sirve de nada si acabamos en la cárcel.", "en": "Winning means nothing if we end up in jail."} },
+              { "speaker": "rook", "text": {"es": "¿De verdad merece la pena el riesgo?", "en": "Is the risk really worth it?"} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "reconsider",
+                    "text": {"es": "Quizás tengas razón. Lo pensaré mejor.", "en": "Maybe you're right. I'll think it over."},
+                    "traits": ["cautious"],
+                    "points": 10,
+                    "setsMemory": { "reconsidered": true },
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "worth_it",
+                    "text": {"es": "Sí. El riesgo merece la pena.", "en": "Yes. The risk is worth it."},
+                    "traits": ["ambitious"],
+                    "points": -10,
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "desenlace": {
+          "contextTransition": {
+            "default": {"es": "Solo... ten cuidado, ¿vale?", "en": "Just... be careful, okay?"},
+            "reconsidered": {"es": "Gracias por escucharme. No siempre lo haces.", "en": "Thanks for listening. You don't always do that."},
+            "agreedCaution": {"es": "Me alegra que pienses igual que yo.", "en": "I'm glad you think the same way I do."}
+          },
+          "exchanges": [
+            { "speaker": "rook", "text": "{{contextTransition}}" },
+            { "speaker": "rook", "text": {"es": "Nova va a presionarte para usar esas piezas. Lo sabes, ¿no?", "en": "Nova's going to pressure you to use those parts. You know that, right?"} },
+            { "speaker": "rook", "text": {"es": "Intenta mantener el equilibrio. Por el equipo.", "en": "Try to keep the balance. For the team."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "balance",
+                  "text": {"es": "Lo intentaré. Gracias por preocuparte.", "en": "I'll try. Thanks for caring."},
+                  "traits": ["loyal"],
+                  "points": 15
+                },
+                {
+                  "id": "manage",
+                  "text": {"es": "Sé manejar a Nova. No te preocupes.", "en": "I can handle Nova. Don't worry."},
+                  "points": 5
+                }
+              ]
+            }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 75
+            },
+            "cooldown": 180,
+            "teaser": {"es": "La tensión entre Rook y Nova está creciendo...", "en": "The tension between Rook and Nova is growing..."}
+          }
+        }
+      }
+    },
+
+    "level3": {
+      "title": {"es": "El Conflicto", "en": "The Conflict"},
+      "requiredPhase": 3,
+      "unlockMessage": {"es": "Rook necesita hablar contigo. Es urgente.", "en": "Rook needs to talk to you. It's urgent."},
+
+      "phases": {
+        "intro": {
+          "exchanges": [
+            { "speaker": "rook", "text": {"es": "Tenemos que hablar. Ahora.", "en": "We need to talk. Now."} },
+            { "speaker": "rook", "text": {"es": "Nova ha perdido la cabeza. Quiere correr en los muelles.", "en": "Nova has lost her mind. She wants to race at the docks."} },
+            { "speaker": "rook", "text": {"es": "Es una ratonera. Si la poli aparece, no hay salida.", "en": "It's a mousetrap. If the cops show up, there's no way out."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "what_race",
+                  "text": {"es": "¿Qué carrera? ¿De qué hablas?", "en": "What race? What are you talking about?"},
+                  "points": 5,
+                  "leadsTo": "intro_explain"
+                },
+                {
+                  "id": "calm_down",
+                  "text": {"es": "Tranquilo. Explícame todo desde el principio.", "en": "Calm down. Explain everything from the beginning."},
+                  "traits": ["patient"],
+                  "points": 10,
+                  "leadsTo": "intro_explain"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "intro_explain": [
+              { "speaker": "rook", "text": {"es": "Ghost ofrece una carrera ilegal en el puerto. Sin reglas. Mucho dinero.", "en": "Ghost is offering an illegal race at the port. No rules. Lots of money."} },
+              { "speaker": "rook", "text": {"es": "Nova dice que es nuestra oportunidad de entrar en las ligas mayores.", "en": "Nova says it's our chance to break into the big leagues."} },
+              { "speaker": "rook", "text": {"es": "Pero el coche no está listo. Y ese sitio... es peligroso.", "en": "But the car isn't ready. And that place... it's dangerous."} },
+              { "speaker": "rook", "text": {"es": "Dile que no. Por favor.", "en": "Tell her no. Please."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "side_rook",
+                    "text": {"es": "Estoy contigo. Es demasiado riesgo.", "en": "I'm with you. It's too much risk."},
+                    "traits": ["cautious", "loyal"],
+                    "points": 30,
+                    "setsMemory": { "sidedWithRook": true, "phase3Choice": "rook" },
+                    "continueToPhase": "desenlace_rook"
+                  },
+                  {
+                    "id": "side_nova",
+                    "text": {"es": "Lo siento, Rook. Vamos a correr.", "en": "Sorry, Rook. We're racing."},
+                    "traits": ["ambitious"],
+                    "points": -20,
+                    "setsMemory": { "sidedWithNova": true, "phase3Choice": "nova" },
+                    "continueToPhase": "desenlace_nova"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "desenlace_rook": {
+          "exchanges": [
+            { "speaker": "rook", "text": {"es": "Gracias. Sabía que tenías cabeza.", "en": "Thanks. I knew you had sense."} },
+            { "speaker": "rook", "text": {"es": "Se lo diré yo a Nova. No va a gustarle, pero...", "en": "I'll tell Nova. She won't like it, but..."} },
+            { "speaker": "rook", "text": {"es": "Es lo correcto. Para el equipo.", "en": "It's the right thing. For the team."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "together",
+                  "text": {"es": "Se lo decimos juntos. Somos un equipo.", "en": "We'll tell her together. We're a team."},
+                  "traits": ["loyal"],
+                  "points": 15,
+                  "setsMemory": { "facedNovaTogether": true }
+                },
+                {
+                  "id": "you_tell",
+                  "text": {"es": "Díselo tú. Yo hablaré con ella después.", "en": "You tell her. I'll talk to her later."},
+                  "points": 5
+                }
+              ]
+            },
+            { "speaker": "rook", "text": {"es": "Oye... gracias por escucharme. No todos lo hacen.", "en": "Hey... thanks for listening to me. Not everyone does."} }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 100,
+              "unlocks": ["rook_loyalty_boost"]
+            },
+            "setsMemory": { "rookTrustsYou": true },
+            "cooldown": 240,
+            "teaser": {"es": "Rook confía en ti más que nunca. Pero Nova está furiosa...", "en": "Rook trusts you more than ever. But Nova is furious..."}
+          }
+        },
+
+        "desenlace_nova": {
+          "exchanges": [
+            { "speaker": "rook", "text": {"es": "...", "en": "..."} },
+            { "speaker": "rook", "text": {"es": "Espero que tengas un buen plan de fuga.", "en": "I hope you have a good escape plan."} },
+            { "speaker": "rook", "text": {"es": "Porque yo no voy a poder salvarte si sale mal.", "en": "Because I won't be able to save you if it goes wrong."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "trust_me",
+                  "text": {"es": "Confía en mí. Sé lo que hago.", "en": "Trust me. I know what I'm doing."},
+                  "points": -5
+                },
+                {
+                  "id": "sorry",
+                  "text": {"es": "Lo siento, Rook. Pero tenemos que arriesgarnos.", "en": "I'm sorry, Rook. But we have to take the risk."},
+                  "traits": ["honest"],
+                  "points": 0,
+                  "setsMemory": { "apologizedForChoice": true }
+                }
+              ]
+            },
+            { "speaker": "rook", "text": {"es": "Prepararé el coche. Pero que conste que no estoy de acuerdo.", "en": "I'll prep the car. But for the record, I don't agree with this."} }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 50
+            },
+            "setsMemory": { "rookDisappointed": true },
+            "cooldown": 240,
+            "teaser": {"es": "Rook hará su trabajo, pero algo se ha roto entre vosotros...", "en": "Rook will do his job, but something has broken between you..."}
+          }
+        }
+      }
+    },
+
+    "level4": {
+      "title": {"es": "Presión Creciente", "en": "Rising Pressure"},
+      "requiredPhase": 4,
+      "requiredMemory": ["sidedWithRook", "sidedWithNova"],
+      "unlockMessage": {"es": "Rook parece más tenso que nunca...", "en": "Rook seems more tense than ever..."},
+
+      "phases": {
+        "intro": {
+          "exchanges": [
+            { "speaker": "rook", "text": {"es": "Hay demasiada gente ahora. Shadow, Techie, Import...", "en": "There are too many people now. Shadow, Techie, Import..."} },
+            { "speaker": "rook", "text": {"es": "Cada uno con su propia agenda. Su propio plan.", "en": "Each with their own agenda. Their own plan."} },
+            { "speaker": "rook", "text": {"es": "Ya no sé en quién confiar.", "en": "I don't know who to trust anymore."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "me",
+                  "text": {"es": "En mí. Siempre puedes confiar en mí.", "en": "In me. You can always trust me."},
+                  "traits": ["loyal"],
+                  "points": 20,
+                  "leadsTo": "intro_reassure"
+                },
+                {
+                  "id": "paranoid",
+                  "text": {"es": "¿No estarás siendo un poco paranoico?", "en": "Aren't you being a bit paranoid?"},
+                  "points": -10,
+                  "leadsTo": "intro_defensive"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "intro_reassure": [
+              {
+                "speaker": "rook",
+                "text": {
+                  "contextIf": "sidedWithRook",
+                  "value": {"es": "Sí. Después de lo de los muelles... sé que me respaldarás.", "en": "Yeah. After what happened at the docks... I know you'll back me up."}
+                }
+              },
+              {
+                "speaker": "rook",
+                "text": {
+                  "contextIf": "sidedWithNova",
+                  "value": {"es": "¿De verdad? Porque la última vez elegiste a Nova, no a mí.", "en": "Really? Because last time you chose Nova, not me."}
+                }
+              },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "still_trust",
+                    "text": {"es": "Las cosas han cambiado. Confía en mí ahora.", "en": "Things have changed. Trust me now."},
+                    "traits": ["honest"],
+                    "points": 15,
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "team",
+                    "text": {"es": "Somos un equipo. Estamos juntos en esto.", "en": "We're a team. We're in this together."},
+                    "traits": ["loyal"],
+                    "points": 10,
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ],
+            "intro_defensive": [
+              { "speaker": "rook", "text": {"es": "¿Paranoico? Mira a tu alrededor.", "en": "Paranoid? Look around you."} },
+              { "speaker": "rook", "text": {"es": "Shadow vende información. Techie solo piensa en sus máquinas. Import... ni siquiera sé qué quiere.", "en": "Shadow sells information. Techie only thinks about his machines. Import... I don't even know what he wants."} },
+              { "speaker": "rook", "text": {"es": "Y Nova... Nova solo piensa en ganar. Cueste lo que cueste.", "en": "And Nova... Nova only thinks about winning. Whatever it takes."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "sorry",
+                    "text": {"es": "Tienes razón. Perdona. Cuéntame más.", "en": "You're right. Sorry. Tell me more."},
+                    "traits": ["honest"],
+                    "points": 5,
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "fine",
+                    "text": {"es": "Como quieras. Pero no pierdas la cabeza.", "en": "Whatever. But don't lose your head."},
+                    "points": -5,
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "nudo": {
+          "exchanges": [
+            { "speaker": "rook", "text": {"es": "El coche... el coche está casi listo para lo grande.", "en": "The car... the car is almost ready for the big one."} },
+            { "speaker": "rook", "text": {"es": "He instalado todas las piezas. Las de Ghost, las de Import, todo.", "en": "I've installed all the parts. Ghost's, Import's, everything."} },
+            { "speaker": "rook", "text": {"es": "Está perfecto. Demasiado perfecto.", "en": "It's perfect. Too perfect."} },
+            { "speaker": "rook", "text": {"es": "Y eso me asusta.", "en": "And that scares me."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "why_scared",
+                  "text": {"es": "¿Por qué te asusta? Hemos trabajado para esto.", "en": "Why does it scare you? We've worked for this."},
+                  "points": 5,
+                  "leadsTo": "nudo_explain"
+                },
+                {
+                  "id": "trust_work",
+                  "text": {"es": "Confía en tu trabajo. Eres el mejor.", "en": "Trust your work. You're the best."},
+                  "traits": ["loyal"],
+                  "points": 15,
+                  "leadsTo": "nudo_explain"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "nudo_explain": [
+              { "speaker": "rook", "text": {"es": "Porque cuando algo es tan valioso... la gente hace locuras.", "en": "Because when something is this valuable... people do crazy things."} },
+              { "speaker": "rook", "text": {"es": "Ese coche vale una fortuna. En piezas. En tecnología.", "en": "That car is worth a fortune. In parts. In technology."} },
+              {
+                "speaker": "rook",
+                "text": {
+                  "contextIf": "sidedWithRook",
+                  "value": {"es": "Nova sigue resentida por lo de los muelles. Apenas me habla.", "en": "Nova is still resentful about the docks thing. She barely talks to me."}
+                }
+              },
+              {
+                "speaker": "rook",
+                "text": {
+                  "contextIf": "sidedWithNova",
+                  "value": {"es": "Nova está... distante. Como si estuviera planeando algo.", "en": "Nova is... distant. Like she's planning something."}
+                }
+              },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "watch_nova",
+                    "text": {"es": "Vigilaré a Nova. No te preocupes.", "en": "I'll keep an eye on Nova. Don't worry."},
+                    "traits": ["cautious"],
+                    "points": 10,
+                    "setsMemory": { "rookStressLevel": "medium" },
+                    "continueToPhase": "desenlace"
+                  },
+                  {
+                    "id": "watch_everyone",
+                    "text": {"es": "Vigilaremos a todos. Incluso entre nosotros.", "en": "We'll watch everyone. Even each other."},
+                    "traits": ["cautious", "honest"],
+                    "points": 15,
+                    "setsMemory": { "rookStressLevel": "high" },
+                    "continueToPhase": "desenlace"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "desenlace": {
+          "exchanges": [
+            { "speaker": "rook", "text": {"es": "Bien. Me alegra que entiendas la gravedad.", "en": "Good. I'm glad you understand the gravity."} },
+            { "speaker": "rook", "text": {"es": "Solo... mantén los ojos abiertos, ¿vale?", "en": "Just... keep your eyes open, okay?"} },
+            { "speaker": "rook", "text": {"es": "Y pase lo que pase... asegúrate de que el coche esté a salvo.", "en": "And whatever happens... make sure the car is safe."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "promise",
+                  "text": {"es": "Te lo prometo. El coche está seguro conmigo.", "en": "I promise. The car is safe with me."},
+                  "traits": ["loyal"],
+                  "points": 20
+                },
+                {
+                  "id": "do_best",
+                  "text": {"es": "Haré lo que pueda. Pero no puedo prometer nada.", "en": "I'll do my best. But I can't promise anything."},
+                  "traits": ["honest"],
+                  "points": 10
+                }
+              ]
+            },
+            { "speaker": "rook", "text": {"es": "Eso es todo lo que puedo pedir. Cuídate.", "en": "That's all I can ask. Take care."} }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 125
+            },
+            "cooldown": 300,
+            "teaser": {"es": "La tensión aumenta. Algo malo se avecina...", "en": "Tension is rising. Something bad is coming..."}
+          }
+        }
+      }
+    },
+
+    "level5": {
+      "title": {"es": "El Punto de Quiebre", "en": "The Breaking Point"},
+      "requiredPhase": 5,
+      "requiredMemory": ["rookStressLevel"],
+      "unlockMessage": {"es": "Rook necesita hablar urgentemente...", "en": "Rook needs to talk urgently..."},
+
+      "phases": {
+        "intro": {
+          "exchanges": [
+            { "speaker": "rook", "text": {"es": "Tengo que decirte algo. Y no va a gustarte.", "en": "I need to tell you something. And you're not going to like it."} },
+            { "speaker": "rook", "text": {"es": "He estado revisando las cuentas. El dinero que entra, el que sale...", "en": "I've been checking the accounts. Money coming in, money going out..."} },
+            { "speaker": "rook", "text": {"es": "No cuadra. Falta dinero.", "en": "It doesn't add up. Money is missing."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "how_much",
+                  "text": {"es": "¿Cuánto falta?", "en": "How much is missing?"},
+                  "points": 5,
+                  "leadsTo": "intro_explain"
+                },
+                {
+                  "id": "sure",
+                  "text": {"es": "¿Estás seguro? Quizás te has equivocado.", "en": "Are you sure? Maybe you made a mistake."},
+                  "points": -5,
+                  "leadsTo": "intro_defensive"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "intro_explain": [
+              { "speaker": "rook", "text": {"es": "Suficiente como para comprar piezas caras. O para... otra cosa.", "en": "Enough to buy expensive parts. Or for... something else."} },
+              { "speaker": "rook", "text": {"es": "Y no soy el único que lo ha notado. Shadow también lo sabe.", "en": "And I'm not the only one who noticed. Shadow knows too."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "who",
+                    "text": {"es": "¿Quién crees que es?", "en": "Who do you think it is?"},
+                    "points": 10,
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "confront",
+                    "text": {"es": "Tenemos que confrontar al equipo. Ya.", "en": "We need to confront the team. Now."},
+                    "traits": ["confident"],
+                    "points": 5,
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ],
+            "intro_defensive": [
+              { "speaker": "rook", "text": {"es": "He revisado los números tres veces. No me equivoco.", "en": "I've checked the numbers three times. I'm not wrong."} },
+              { "speaker": "rook", "text": {"es": "Alguien del equipo nos está robando. O peor.", "en": "Someone on the team is stealing from us. Or worse."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "believe",
+                    "text": {"es": "Te creo. Perdona. ¿Qué hacemos?", "en": "I believe you. Sorry. What do we do?"},
+                    "traits": ["honest"],
+                    "points": 10,
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "paranoia",
+                    "text": {"es": "Rook, creo que estás paranoico.", "en": "Rook, I think you're being paranoid."},
+                    "points": -15,
+                    "continueToPhase": "nudo_rejected"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "nudo": {
+          "exchanges": [
+            {
+              "speaker": "rook",
+              "text": {
+                "contextIf": "rookTrustsYou",
+                "value": {"es": "Mira... voy a ser sincero contigo. Porque confío en ti.", "en": "Look... I'm going to be honest with you. Because I trust you."}
+              }
+            },
+            {
+              "speaker": "rook",
+              "text": {
+                "contextIf": "rookDisappointed",
+                "value": {"es": "No sé si debería decirte esto, pero... no tengo a nadie más.", "en": "I don't know if I should tell you this, but... I have no one else."}
+              }
+            },
+            { "speaker": "rook", "text": {"es": "Creo que alguien va a traicionarnos. Pronto.", "en": "I think someone is going to betray us. Soon."} },
+            { "speaker": "rook", "text": {"es": "Y creo que tiene que ver con el coche.", "en": "And I think it has to do with the car."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "listen",
+                  "text": {"es": "Te escucho. Cuéntame todo lo que sabes.", "en": "I'm listening. Tell me everything you know."},
+                  "traits": ["patient", "loyal"],
+                  "points": 20,
+                  "setsMemory": { "rookWarnedBetrayal": true },
+                  "leadsTo": "nudo_theory"
+                },
+                {
+                  "id": "dismiss",
+                  "text": {"es": "Creo que te estás obsesionando con esto.", "en": "I think you're getting obsessed with this."},
+                  "points": -10,
+                  "leadsTo": "nudo_rejected"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "nudo_theory": [
+              { "speaker": "rook", "text": {"es": "Ghost ofreció mucho dinero por ese coche. Demasiado.", "en": "Ghost offered a lot of money for that car. Too much."} },
+              { "speaker": "rook", "text": {"es": "Y luego Import aparece con piezas que solo Ghost podría conseguir.", "en": "And then Import shows up with parts that only Ghost could get."} },
+              { "speaker": "rook", "text": {"es": "Shadow vende información. Nova quiere ganar a toda costa.", "en": "Shadow sells information. Nova wants to win at all costs."} },
+              { "speaker": "rook", "text": {"es": "No sé quién es. Pero alguien va a vender ese coche. O robarlo.", "en": "I don't know who it is. But someone is going to sell that car. Or steal it."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "protect",
+                    "text": {"es": "Entonces lo protegeremos. Juntos.", "en": "Then we'll protect it. Together."},
+                    "traits": ["loyal"],
+                    "points": 25,
+                    "continueToPhase": "desenlace_believed"
+                  },
+                  {
+                    "id": "watch",
+                    "text": {"es": "Montaremos guardia. No dejaremos el coche solo.", "en": "We'll mount guard. We won't leave the car alone."},
+                    "traits": ["cautious"],
+                    "points": 20,
+                    "continueToPhase": "desenlace_believed"
+                  }
+                ]
+              }
+            ],
+            "nudo_rejected": [
+              { "speaker": "rook", "text": {"es": "Ya veo. No me crees.", "en": "I see. You don't believe me."} },
+              { "speaker": "rook", "text": {"es": "Bien. Ya lo verás tú mismo cuando pase.", "en": "Fine. You'll see for yourself when it happens."} },
+              { "speaker": "rook", "text": {"es": "Solo espero que no sea demasiado tarde.", "en": "I just hope it's not too late."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "wait",
+                    "text": {"es": "Espera, Rook. Quizás tengas razón...", "en": "Wait, Rook. Maybe you're right..."},
+                    "traits": ["honest"],
+                    "points": 5,
+                    "continueToPhase": "desenlace_reconcile"
+                  },
+                  {
+                    "id": "fine",
+                    "text": {"es": "Como quieras. Haz lo que creas necesario.", "en": "Whatever. Do what you think is necessary."},
+                    "points": -10,
+                    "continueToPhase": "desenlace_dismissed"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "desenlace_believed": {
+          "exchanges": [
+            { "speaker": "rook", "text": {"es": "Gracias. De verdad. Gracias por creerme.", "en": "Thank you. Really. Thank you for believing me."} },
+            { "speaker": "rook", "text": {"es": "Voy a preparar algunas cosas. Rastreadores GPS, cámaras...", "en": "I'm going to prepare some things. GPS trackers, cameras..."} },
+            { "speaker": "rook", "text": {"es": "Si alguien intenta algo, lo sabremos.", "en": "If anyone tries anything, we'll know."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "good_plan",
+                  "text": {"es": "Buen plan. Mantenme informado.", "en": "Good plan. Keep me informed."},
+                  "traits": ["cautious"],
+                  "points": 15
+                },
+                {
+                  "id": "together",
+                  "text": {"es": "Cuenta conmigo. Esto lo hacemos juntos.", "en": "Count on me. We do this together."},
+                  "traits": ["loyal"],
+                  "points": 20
+                }
+              ]
+            },
+            { "speaker": "rook", "text": {"es": "Pase lo que pase... me alegra tenerte de mi lado.", "en": "Whatever happens... I'm glad to have you on my side."} }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 150
+            },
+            "cooldown": 360,
+            "teaser": {"es": "Rook está preparándose para lo peor. ¿Llegará a tiempo?", "en": "Rook is preparing for the worst. Will he be in time?"}
+          }
+        },
+
+        "desenlace_reconcile": {
+          "exchanges": [
+            { "speaker": "rook", "text": {"es": "No. Ya es tarde. Debería haber confiado en mi instinto.", "en": "No. It's too late. I should have trusted my instinct."} },
+            { "speaker": "rook", "text": {"es": "Haré lo que tenga que hacer. Solo.", "en": "I'll do what I have to do. Alone."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "insist",
+                  "text": {"es": "No, escúchame. Realmente quiero ayudar.", "en": "No, listen to me. I really want to help."},
+                  "traits": ["honest"],
+                  "points": 10
+                },
+                {
+                  "id": "let_go",
+                  "text": {"es": "Está bien. Haz lo que tengas que hacer.", "en": "Okay. Do what you have to do."},
+                  "points": 0
+                }
+              ]
+            },
+            { "speaker": "rook", "text": {"es": "Solo... cuida el coche. Es todo lo que te pido.", "en": "Just... take care of the car. That's all I ask."} }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 100
+            },
+            "cooldown": 360,
+            "teaser": {"es": "Rook se aleja, determinado y solo...", "en": "Rook walks away, determined and alone..."}
+          }
+        },
+
+        "desenlace_dismissed": {
+          "exchanges": [
+            { "speaker": "rook", "text": {"es": "...", "en": "..."} },
+            { "speaker": "rook", "text": {"es": "Cuando todo explote, recuerda que intenté avisarte.", "en": "When everything blows up, remember I tried to warn you."} }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 75
+            },
+            "cooldown": 360,
+            "teaser": {"es": "Has perdido la confianza de Rook. Quizás para siempre.", "en": "You've lost Rook's trust. Maybe forever."}
+          }
+        }
+      }
+    },
+
+    "level6": {
+      "title": {"es": "La Verdad", "en": "The Truth"},
+      "requiredPhase": 6,
+      "requiredMemory": ["car_recovered", "knowsAboutBetrayal"],
+      "unlockMessage": {"es": "Rook tiene algo importante que decir...", "en": "Rook has something important to say..."},
+
+      "phases": {
+        "intro": {
+          "exchanges": [
+            { "speaker": "rook", "text": {"es": "Tenemos que hablar. Sobre lo que pasó.", "en": "We need to talk. About what happened."} },
+            { "speaker": "rook", "text": {"es": "Sobre el coche. Sobre la traición.", "en": "About the car. About the betrayal."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "ready",
+                  "text": {"es": "Estoy listo. Cuéntame todo.", "en": "I'm ready. Tell me everything."},
+                  "points": 10,
+                  "leadsTo": "intro_continue"
+                },
+                {
+                  "id": "not_now",
+                  "text": {"es": "No estoy seguro de querer saber.", "en": "I'm not sure I want to know."},
+                  "points": -5,
+                  "leadsTo": "intro_reluctant"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "intro_continue": [
+              { "speaker": "rook", "text": {"es": "Bien. Porque esto es importante.", "en": "Good. Because this is important."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "proceed",
+                    "text": {"es": "Adelante.", "en": "Go ahead."},
+                    "points": 5,
+                    "continueToPhase": "revelation"
+                  }
+                ]
+              }
+            ],
+            "intro_reluctant": [
+              { "speaker": "rook", "text": {"es": "Pues vas a tener que saberlo de todas formas.", "en": "Well, you're going to have to know anyway."} },
+              { "speaker": "rook", "text": {"es": "Porque afecta a todo. A todos.", "en": "Because it affects everything. Everyone."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "fine",
+                    "text": {"es": "Está bien. Cuéntame.", "en": "Fine. Tell me."},
+                    "points": 0,
+                    "continueToPhase": "revelation"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "revelation": {
+          "exchanges": [
+            {
+              "speaker": "rook",
+              "text": {
+                "contextIf": "rookWarnedBetrayal",
+                "value": {"es": "Te lo dije. Te dije que alguien iba a traicionarnos.", "en": "I told you. I told you someone was going to betray us."}
+              }
+            },
+            {
+              "speaker": "rook",
+              "text": {
+                "contextIf": "!rookWarnedBetrayal",
+                "value": {"es": "Ojalá me hubieras escuchado cuando intenté advertirte.", "en": "I wish you had listened when I tried to warn you."}
+              }
+            },
+            { "speaker": "rook", "text": {"es": "Lo que pasó con el coche... yo estaba allí.", "en": "What happened with the car... I was there."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "what",
+                  "text": {"es": "¿Qué quieres decir con 'estabas allí'?", "en": "What do you mean 'you were there'?"},
+                  "points": 5,
+                  "leadsTo": "revelation_explain"
+                },
+                {
+                  "id": "knew_it",
+                  "text": {"es": "Lo sabía. Sabía que ocultabas algo.", "en": "I knew it. I knew you were hiding something."},
+                  "points": -5,
+                  "leadsTo": "revelation_defensive"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "revelation_explain": [
+              {
+                "speaker": "rook",
+                "text": {
+                  "contextIf": "rookTrustsYou",
+                  "value": {"es": "Vi lo que iba a pasar. E intenté detenerlo.", "en": "I saw what was going to happen. And I tried to stop it."}
+                }
+              },
+              {
+                "speaker": "rook",
+                "text": {
+                  "contextIf": "rookDisappointed",
+                  "value": {"es": "Vi lo que iba a pasar. Pero no pude hacer nada solo.", "en": "I saw what was going to happen. But I couldn't do anything alone."}
+              }
+              },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "continue",
+                    "text": {"es": "Sigue. Te escucho.", "en": "Continue. I'm listening."},
+                    "points": 10,
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ],
+            "revelation_defensive": [
+              { "speaker": "rook", "text": {"es": "No he ocultado nada. He intentado proteger el coche. Protegernos a todos.", "en": "I haven't hidden anything. I've tried to protect the car. Protect all of us."} },
+              { "speaker": "rook", "text": {"es": "Pero tú nunca me escuchaste.", "en": "But you never listened to me."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "sorry",
+                    "text": {"es": "Tienes razón. Lo siento. Cuéntame ahora.", "en": "You're right. I'm sorry. Tell me now."},
+                    "traits": ["honest"],
+                    "points": 5,
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "whatever",
+                    "text": {"es": "Solo cuéntame qué pasó.", "en": "Just tell me what happened."},
+                    "points": 0,
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "nudo": {
+          "exchanges": [
+            {
+              "speaker": "rook",
+              "text": {
+                "contextIf": "rookTrustsYou",
+                "value": {"es": "Ghost me contactó. Me ofreció dinero por sabotear el coche.", "en": "Ghost contacted me. Offered me money to sabotage the car."}
+              }
+            },
+            {
+              "speaker": "rook",
+              "text": {
+                "contextIf": "rookDisappointed",
+                "value": {"es": "Cuando nadie me escuchaba... Ghost me hizo una oferta.", "en": "When no one would listen... Ghost made me an offer."}
+              }
+            },
+            { "speaker": "rook", "text": {"es": "Mucho dinero. Suficiente para empezar de nuevo.", "en": "A lot of money. Enough to start over."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "accepted",
+                  "text": {"es": "¿Y aceptaste?", "en": "And you accepted?"},
+                  "points": 0,
+                  "leadsTo": "nudo_choice"
+                },
+                {
+                  "id": "betrayed_us",
+                  "text": {"es": "Nos traicionaste...", "en": "You betrayed us..."},
+                  "points": -10,
+                  "leadsTo": "nudo_betrayal_path"
+                }
+              ]
+            }
+          ],
+          "branches": {
+            "nudo_choice": [
+              {
+                "speaker": "rook",
+                "text": {
+                  "contextIf": "rookTrustsYou",
+                  "value": {"es": "No. Le dije que se fuera al infierno. Y contacté a Ghost para avisarte.", "en": "No. I told him to go to hell. And I contacted Ghost to warn you."}
+                }
+              },
+              {
+                "speaker": "rook",
+                "text": {
+                  "contextIf": "rookDisappointed",
+                  "value": {"es": "Estuve tentado. Muy tentado. Pero al final... no pude hacerlo.", "en": "I was tempted. Very tempted. But in the end... I couldn't do it."}
+                }
+              },
+              { "speaker": "rook", "text": {"es": "Cuando vinieron a por el coche, yo estaba allí. Intenté defenderlo.", "en": "When they came for the car, I was there. I tried to defend it."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "thank_you",
+                    "text": {"es": "Gracias. Gracias por quedarte con nosotros.", "en": "Thank you. Thank you for staying with us."},
+                    "traits": ["loyal"],
+                    "points": 30,
+                    "setsMemory": { "rookFinalStanding": "loyal" },
+                    "continueToPhase": "desenlace_loyal"
+                  },
+                  {
+                    "id": "should_told",
+                    "text": {"es": "Deberías habérmelo dicho antes.", "en": "You should have told me earlier."},
+                    "traits": ["honest"],
+                    "points": 10,
+                    "setsMemory": { "rookFinalStanding": "complicated" },
+                    "continueToPhase": "desenlace_complicated"
+                  }
+                ]
+              }
+            ],
+            "nudo_betrayal_path": [
+              {
+                "speaker": "rook",
+                "text": {
+                  "contextIf": "rookDisappointed",
+                  "value": {"es": "Sí. Acepté. Porque nadie me escuchaba. Nadie me valoraba.", "en": "Yes. I accepted. Because no one listened to me. No one valued me."}
+                }
+              },
+              {
+                "speaker": "rook",
+                "text": {
+                  "contextIf": "!rookDisappointed",
+                  "value": {"es": "No. No lo hice. Pero quizás debería haberlo hecho.", "en": "No. I didn't. But maybe I should have."}
+                }
+              },
+              { "speaker": "rook", "text": {"es": "Pero luego... luego vi lo que significaba de verdad.", "en": "But then... then I saw what it really meant."} },
+              { "speaker": "rook", "text": {"es": "Y no pude seguir adelante.", "en": "And I couldn't go through with it."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "forgive",
+                    "text": {"es": "Entiendo. Lo importante es que al final hiciste lo correcto.", "en": "I understand. What matters is you did the right thing in the end."},
+                    "traits": ["patient", "loyal"],
+                    "points": 20,
+                    "setsMemory": { "rookFinalStanding": "complicated" },
+                    "continueToPhase": "desenlace_complicated"
+                  },
+                  {
+                    "id": "cant_forgive",
+                    "text": {"es": "No sé si puedo perdonarte por esto.", "en": "I don't know if I can forgive you for this."},
+                    "points": -15,
+                    "setsMemory": { "rookFinalStanding": "traitor" },
+                    "continueToPhase": "desenlace_traitor"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        "desenlace_loyal": {
+          "exchanges": [
+            { "speaker": "rook", "text": {"es": "No tienes que agradecerme. Es lo que hacen los amigos.", "en": "You don't have to thank me. That's what friends do."} },
+            { "speaker": "rook", "text": {"es": "El equipo. El coche. Tú. Eso es lo que importa.", "en": "The team. The car. You. That's what matters."} },
+            { "speaker": "rook", "text": {"es": "Y ahora... ahora tenemos que decidir qué hacer con los que realmente traicionaron.", "en": "And now... now we have to decide what to do with those who really betrayed us."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "together",
+                  "text": {"es": "Lo decidiremos juntos. Como siempre debió ser.", "en": "We'll decide together. Like it always should have been."},
+                  "traits": ["loyal"],
+                  "points": 25
+                },
+                {
+                  "id": "trust_you",
+                  "text": {"es": "Confío en tu juicio. ¿Qué crees que deberíamos hacer?", "en": "I trust your judgment. What do you think we should do?"},
+                  "traits": ["loyal"],
+                  "points": 20
+                }
+              ]
+            },
+            { "speaker": "rook", "text": {"es": "Pase lo que pase... me alegra que sigamos siendo un equipo.", "en": "Whatever happens... I'm glad we're still a team."} }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 200,
+              "unlocks": ["rook_ultimate_loyalty"]
+            },
+            "cooldown": 480,
+            "teaser": {"es": "Rook se ha convertido en tu aliado más leal. Pase lo que pase.", "en": "Rook has become your most loyal ally. Whatever happens."}
+          }
+        },
+
+        "desenlace_complicated": {
+          "exchanges": [
+            { "speaker": "rook", "text": {"es": "Lo sé. Debería habértelo dicho. Debería haber confiado más.", "en": "I know. I should have told you. I should have trusted more."} },
+            { "speaker": "rook", "text": {"es": "Pero tenía miedo. De que no me creyeras. De que me echaras.", "en": "But I was scared. That you wouldn't believe me. That you'd kick me out."} },
+            { "speaker": "rook", "text": {"es": "Al final, solo quería proteger lo que habíamos construido.", "en": "In the end, I just wanted to protect what we'd built."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "understand",
+                  "text": {"es": "Lo entiendo. Todos cometemos errores.", "en": "I understand. We all make mistakes."},
+                  "traits": ["patient"],
+                  "points": 15
+                },
+                {
+                  "id": "move_forward",
+                  "text": {"es": "Dejemos el pasado atrás. Miremos hacia adelante.", "en": "Let's leave the past behind. Let's look forward."},
+                  "traits": ["confident"],
+                  "points": 10
+                }
+              ]
+            },
+            { "speaker": "rook", "text": {"es": "Gracias. Por darme otra oportunidad.", "en": "Thank you. For giving me another chance."} }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 175
+            },
+            "cooldown": 480,
+            "teaser": {"es": "Tu relación con Rook es complicada, pero hay esperanza.", "en": "Your relationship with Rook is complicated, but there's hope."}
+          }
+        },
+
+        "desenlace_traitor": {
+          "exchanges": [
+            { "speaker": "rook", "text": {"es": "...", "en": "..."} },
+            { "speaker": "rook", "text": {"es": "Lo entiendo.", "en": "I understand."} },
+            { "speaker": "rook", "text": {"es": "No espero tu perdón. Solo quería que supieras la verdad.", "en": "I don't expect your forgiveness. I just wanted you to know the truth."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "leave",
+                  "text": {"es": "Creo que es mejor que te vayas.", "en": "I think it's best if you leave."},
+                  "points": -20
+                },
+                {
+                  "id": "stay_away",
+                  "text": {"es": "Puedes quedarte. Pero mantente alejado de mí.", "en": "You can stay. But keep away from me."},
+                  "points": -10
+                }
+              ]
+            },
+            { "speaker": "rook", "text": {"es": "Como quieras. Pero si algún día cambias de opinión... sabes dónde encontrarme.", "en": "As you wish. But if you ever change your mind... you know where to find me."} }
+          ],
+          "end": {
+            "result": "success",
+            "rewards": {
+              "xp": 150
+            },
+            "cooldown": 480,
+            "teaser": {"es": "Rook se aleja, derrotado. Quizás esto sea el final.", "en": "Rook walks away, defeated. Maybe this is the end."}
+          }
+        }
+      }
+    }
+  },
+
+  "pools": {
+    "acquaintance": [
+      {
+        "id": "check_oil",
+        "text": {"es": "¿Has revisado la presión del aceite? La vi baja ayer.", "en": "Checked the oil pressure? I saw it low yesterday."},
+        "choices": [
+          { "id": "yes", "text": {"es": "Sí, está todo en orden.", "en": "Yeah, everything's fine."}, "traits": ["cautious"], "points": 5 },
+          { "id": "later", "text": {"es": "Lo miraré luego.", "en": "I'll check later."}, "points": -5 }
+        ]
+      },
+      {
+        "id": "cheap_part",
+        "text": {"es": "He encontrado una caja de cambios barata en el desguace. ¿La pillo?", "en": "Found a cheap gearbox at the junkyard. Should I grab it?"},
+        "choices": [
+          { "id": "buy", "text": {"es": "Cómprala. Siempre vienen bien repuestos.", "en": "Buy it. Always good to have spares."}, "traits": ["cautious"], "points": 10 },
+          { "id": "save", "text": {"es": "Guarda el dinero para el turbo.", "en": "Save the money for the turbo."}, "traits": ["ambitious"], "points": 5 }
+        ]
+      },
+      {
+        "id": "nervous",
+        "text": {"es": "Tengo un mal presentimiento sobre la carrera de esta noche.", "en": "I have a bad feeling about tonight's race."},
+        "choices": [
+          { "id": "comfort", "text": {"es": "No pasará nada. Estamos preparados.", "en": "Nothing will happen. We're ready."}, "traits": ["confident"], "points": 10 },
+          { "id": "ignore", "text": {"es": "Siempre tienes malos presentimientos.", "en": "You always have bad feelings."}, "points": -10 }
+        ]
+      },
+      {
+        "id": "tire_pressure",
+        "text": {"es": "Los neumáticos delanteros están un poco bajos. ¿Los inflo más?", "en": "Front tires are a bit low. Should I inflate them more?"},
+        "choices": [
+          { "id": "yes", "text": {"es": "Sí, déjalos al máximo recomendado.", "en": "Yeah, set them to max recommended."}, "traits": ["cautious"], "points": 5 },
+          { "id": "leave", "text": {"es": "Déjalos como están, así agarran mejor.", "en": "Leave them as is, better grip that way."}, "points": 0 }
+        ]
+      }
+    ],
+    "associate": [
+      {
+        "id": "nova_worry",
+        "text": {"es": "Nova me preocupa. Está obsesionada con ganar a cualquier precio.", "en": "Nova worries me. She's obsessed with winning at any cost."},
+        "choices": [
+          { "id": "agree", "text": {"es": "Lo sé. Hay que vigilarla.", "en": "I know. We have to watch her."}, "traits": ["cautious"], "points": 15 },
+          { "id": "defend", "text": {"es": "Es ambición. La necesitamos.", "en": "It's ambition. We need it."}, "points": -5 }
+        ]
+      },
+      {
+        "id": "car_love",
+        "text": {"es": "¿Sabes? A veces pienso que este coche tiene alma. Me odia, pero tiene alma.", "en": "You know? Sometimes I think this car has a soul. It hates me, but it has a soul."},
+        "choices": [
+          { "id": "agree", "text": {"es": "Claro que sí. Es parte del equipo.", "en": "Of course it does. It's part of the team."}, "traits": ["loyal"], "points": 15 },
+          { "id": "laugh", "text": {"es": "Es solo metal y goma, Rook.", "en": "It's just metal and rubber, Rook."}, "points": -5 }
+        ]
+      },
+      {
+        "id": "old_days",
+        "text": {"es": "¿Te acuerdas cuando empezamos? El coche ni arrancaba.", "en": "Remember when we started? The car wouldn't even start."},
+        "choices": [
+          { "id": "nostalgia", "text": {"es": "Hemos llegado lejos. Gracias a ti.", "en": "We've come a long way. Thanks to you."}, "traits": ["loyal"], "points": 20 },
+          { "id": "forward", "text": {"es": "Mejor no mirar atrás. Hay que seguir adelante.", "en": "Better not look back. We have to keep moving forward."}, "points": 5 }
+        ]
+      },
+      {
+        "id": "future",
+        "text": {"es": "¿Qué harás cuando todo esto acabe? ¿Seguirás corriendo?", "en": "What will you do when this is all over? Will you keep racing?"},
+        "choices": [
+          { "id": "together", "text": {"es": "Espero que sigamos juntos, hagas lo que hagas.", "en": "I hope we stay together, whatever you do."}, "traits": ["loyal"], "points": 20 },
+          { "id": "dunno", "text": {"es": "No lo sé. No pienso tan lejos.", "en": "I don't know. I don't think that far ahead."}, "points": 5 }
+        ]
+      }
+    ]
+  },
+
+  "confrontations": {
+    "afterDangerousRace": {
+      "chance": 0.5,
+      "text": {"es": "Eso ha sido muy peligroso. ¿Merece la pena arriesgar así?", "en": "That was really dangerous. Is it worth risking like that?"},
+      "responses": [
+        { "id": "a", "text": {"es": "Tienes razón. Seré más cuidadoso.", "en": "You're right. I'll be more careful."}, "traits": ["cautious"], "points": 15 },
+        { "id": "b", "text": {"es": "A veces hay que arriesgarse.", "en": "Sometimes you have to take risks."}, "traits": ["ambitious"], "points": -5 },
+        { "id": "c", "text": {"es": "Confía en mí. Sé lo que hago.", "en": "Trust me. I know what I'm doing."}, "traits": ["confident"], "points": 5 }
+      ]
+    },
+    "afterCarDamage": {
+      "chance": 0.6,
+      "text": {"es": "El coche está hecho polvo. ¿Sabes cuánto va a costar arreglarlo?", "en": "The car is wrecked. Do you know how much it'll cost to fix?"},
+      "responses": [
+        { "id": "a", "text": {"es": "Lo siento. Pagaré las reparaciones.", "en": "I'm sorry. I'll pay for the repairs."}, "traits": ["honest"], "points": 10 },
+        { "id": "b", "text": {"es": "Es parte del juego. Los coches se rompen.", "en": "It's part of the game. Cars break."}, "points": -10 },
+        { "id": "c", "text": {"es": "Sé que puedes arreglarlo. Confío en ti.", "en": "I know you can fix it. I trust you."}, "traits": ["loyal"], "points": 5 }
+      ]
+    }
+  },
+
+  "exitLines": {
+    "normal": [
+      {"es": "Voy a revisar el motor. Hablamos luego.", "en": "I'm going to check the engine. Talk later."},
+      {"es": "Tengo que ajustar la suspensión. Nos vemos.", "en": "I need to adjust the suspension. See you."},
+      {"es": "Bueno, el coche me llama. Hasta luego.", "en": "Well, the car is calling. See you later."},
+      {"es": "Voy a por café. ¿Quieres algo? No, da igual, ya me voy.", "en": "Going for coffee. Want anything? No, never mind, I'm going."}
+    ],
+    "positive": [
+      {"es": "Ha sido bueno hablar. Cuídate, ¿eh?", "en": "It was good talking. Take care, okay?"},
+      {"es": "Gracias por escucharme. Significa mucho.", "en": "Thanks for listening. Means a lot."},
+      {"es": "Eres buen tío. No lo olvides.", "en": "You're a good person. Don't forget that."}
+    ],
+    "negative": [
+      {"es": "Como quieras. Estaré en el garaje.", "en": "Whatever. I'll be in the garage."},
+      {"es": "Ya hablaremos. Cuando te calmes.", "en": "We'll talk later. When you calm down."},
+      {"es": "Voy a trabajar. Al menos el coche me escucha.", "en": "I'm going to work. At least the car listens to me."}
+    ]
+  }
+}

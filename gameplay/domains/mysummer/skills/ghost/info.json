@@ -46,7 +46,7 @@
       "unlocks": [
         {
           "type": "unlockCard",
-          "icon": "racingFlag",
+          "icon": "raceFlag",
           "heading": "Race Challenge",
           "description": "Challenge Ghost to a street race."
         },

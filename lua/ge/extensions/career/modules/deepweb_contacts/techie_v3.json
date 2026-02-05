@@ -8,46 +8,46 @@
 
   "contextReactions": {
     "recentPoliceEscape": [
-      "Your escape route was suboptimal. I ran the data. But you made it.",
-      "Interesting driving pattern during that chase. Efficient.",
-      "The police scanners lit up. You caused quite the signal."
+      {"es": "Tu ruta de escape fue subóptima. Ejecuté los datos. Pero lo conseguiste.", "en": "Your escape route was suboptimal. I ran the data. But you made it."},
+      {"es": "Patrón de conducción interesante durante esa persecución. Eficiente.", "en": "Interesting driving pattern during that chase. Efficient."},
+      {"es": "Los escáneres policiales se iluminaron. Causaste toda una señal.", "en": "The police scanners lit up. You caused quite the signal."}
     ],
     "recentPoliceCaught": [
-      "Your arrest record is now in the system. Problematic.",
-      "Getting caught creates data trails. I don't like data trails.",
-      "The police database has your information now. Be more careful."
+      {"es": "Tu registro de arresto está ahora en el sistema. Problemático.", "en": "Your arrest record is now in the system. Problematic."},
+      {"es": "Que te pillen crea rastros de datos. No me gustan los rastros de datos.", "en": "Getting caught creates data trails. I don't like data trails."},
+      {"es": "La base de datos policial tiene tu información ahora. Ten más cuidado.", "en": "The police database has your information now. Be more careful."}
     ],
     "recentPurchase": [
-      "The components I provided - are they performing within expected parameters?",
-      "Those parts should give you a 12-15% improvement. Confirmed?",
-      "Have you logged the dyno results yet?"
+      {"es": "Los componentes que te proporcioné, ¿funcionan dentro de los parámetros esperados?", "en": "The components I provided - are they performing within expected parameters?"},
+      {"es": "Esas piezas deberían darte una mejora del 12-15%. ¿Confirmado?", "en": "Those parts should give you a 12-15% improvement. Confirmed?"},
+      {"es": "¿Has registrado los resultados del dyno ya?", "en": "Have you logged the dyno results yet?"}
     ],
     "recentRaceWin": [
-      "Your telemetry from that race was impressive. Good optimization.",
-      "Win percentage increased. The numbers don't lie.",
-      "Your lap times are improving. The data shows progress."
+      {"es": "Tu telemetría de esa carrera fue impresionante. Buena optimización.", "en": "Your telemetry from that race was impressive. Good optimization."},
+      {"es": "Porcentaje de victorias aumentado. Los números no mienten.", "en": "Win percentage increased. The numbers don't lie."},
+      {"es": "Tus tiempos por vuelta están mejorando. Los datos muestran progreso.", "en": "Your lap times are improving. The data shows progress."}
     ],
     "longAbsence": [
-      "Your absence was noted. 47 days without contact.",
-      "I was starting to think you found a different data source.",
-      "Long time. I hope you weren't wasting time with analog methods."
+      {"es": "Tu ausencia fue notada. 47 días sin contacto.", "en": "Your absence was noted. 47 days without contact."},
+      {"es": "Empezaba a pensar que habías encontrado otra fuente de datos.", "en": "I was starting to think you found a different data source."},
+      {"es": "Mucho tiempo. Espero que no estuvieras perdiendo el tiempo con métodos analógicos.", "en": "Long time. I hope you weren't wasting time with analog methods."}
     ]
   },
 
   "conversations": {
     "level1": {
-      "title": "Initial Analysis",
+      "title": {"es": "Análisis Inicial", "en": "Initial Analysis"},
       "phases": {
         "intro": {
           "exchanges": [
-            { "speaker": "techie", "text": "New contact detected." },
-            { "speaker": "techie", "text": "State your requirements. Be specific." },
+            { "speaker": "techie", "text": {"es": "Nuevo contacto detectado.", "en": "New contact detected."} },
+            { "speaker": "techie", "text": {"es": "Indica tus requisitos. Sé específico.", "en": "State your requirements. Be specific."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "ecu",
-                  "text": "I need ECU tuning. My car's running below potential.",
+                  "text": {"es": "Necesito tuning de ECU. Mi coche está rindiendo por debajo de su potencial.", "en": "I need ECU tuning. My car's running below potential."},
                   "traits": ["technical"],
                   "points": 15,
                   "setsMemory": { "wantsECU": true },
@@ -55,14 +55,14 @@
                 },
                 {
                   "id": "general",
-                  "text": "I heard you know electronics. I need an edge.",
+                  "text": {"es": "He oído que conoces la electrónica. Necesito una ventaja.", "en": "I heard you know electronics. I need an edge."},
                   "traits": ["honest"],
                   "points": 5,
                   "leadsTo": "intro_general"
                 },
                 {
                   "id": "vague",
-                  "text": "I just need parts. Whatever you've got.",
+                  "text": {"es": "Solo necesito piezas. Lo que tengas.", "en": "I just need parts. Whatever you've got."},
                   "traits": ["vague"],
                   "points": -10,
                   "leadsTo": "intro_vague"
@@ -72,14 +72,14 @@
           ],
           "branches": {
             "intro_ecu": [
-              { "speaker": "techie", "text": "ECU tuning. Good." },
-              { "speaker": "techie", "text": "What's your base configuration? Stock maps or aftermarket?" },
+              { "speaker": "techie", "text": {"es": "Tuning de ECU. Bien.", "en": "ECU tuning. Good."} },
+              { "speaker": "techie", "text": {"es": "¿Cuál es tu configuración base? ¿Mapas de serie o aftermarket?", "en": "What's your base configuration? Stock maps or aftermarket?"} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "stock",
-                    "text": "Stock for now. But I want to understand the system first.",
+                    "text": {"es": "De serie por ahora. Pero quiero entender el sistema primero.", "en": "Stock for now. But I want to understand the system first."},
                     "traits": ["patient", "technical"],
                     "points": 15,
                     "setsMemory": { "wantsToLearn": true },
@@ -87,7 +87,7 @@
                   },
                   {
                     "id": "aftermarket",
-                    "text": "Running a standalone already. Need custom maps.",
+                    "text": {"es": "Usando un standalone ya. Necesito mapas personalizados.", "en": "Running a standalone already. Need custom maps."},
                     "traits": ["technical"],
                     "points": 20,
                     "setsMemory": { "hasStandalone": true },
@@ -97,22 +97,22 @@
               }
             ],
             "intro_general": [
-              { "speaker": "techie", "text": "'An edge.' Vague." },
-              { "speaker": "techie", "text": "What are you trying to optimize? Power? Efficiency? Response?" },
-              { "speaker": "techie", "text": "I need data to work with." },
+              { "speaker": "techie", "text": {"es": "'Una ventaja.' Vago.", "en": "'An edge.' Vague."} },
+              { "speaker": "techie", "text": {"es": "¿Qué intentas optimizar? ¿Potencia? ¿Eficiencia? ¿Respuesta?", "en": "What are you trying to optimize? Power? Efficiency? Response?"} },
+              { "speaker": "techie", "text": {"es": "Necesito datos con los que trabajar.", "en": "I need data to work with."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "power",
-                    "text": "Power primarily. But reliable power.",
+                    "text": {"es": "Potencia principalmente. Pero potencia fiable.", "en": "Power primarily. But reliable power."},
                     "traits": ["honest"],
                     "points": 10,
                     "continueToPhase": "nudo"
                   },
                   {
                     "id": "everything",
-                    "text": "Balance. I want the car to be better everywhere.",
+                    "text": {"es": "Equilibrio. Quiero que el coche sea mejor en todos los aspectos.", "en": "Balance. I want the car to be better everywhere."},
                     "traits": ["thoughtful"],
                     "points": 15,
                     "continueToPhase": "nudo"
@@ -121,24 +121,24 @@
               }
             ],
             "intro_vague": [
-              { "speaker": "techie", "text": "..." },
-              { "speaker": "techie", "text": "'Whatever you've got.'" },
-              { "speaker": "techie", "text": "That's not how I work." },
-              { "speaker": "techie", "text": "I deal in precision. Specifications. Data." },
-              { "speaker": "techie", "text": "If you can't be specific, you're wasting both our time." },
+              { "speaker": "techie", "text": {"es": "...", "en": "..."} },
+              { "speaker": "techie", "text": {"es": "'Lo que tengas.'", "en": "'Whatever you've got.'"} },
+              { "speaker": "techie", "text": {"es": "Así no es como trabajo.", "en": "That's not how I work."} },
+              { "speaker": "techie", "text": {"es": "Trabajo con precisión. Especificaciones. Datos.", "en": "I deal in precision. Specifications. Data."} },
+              { "speaker": "techie", "text": {"es": "Si no puedes ser específico, estás perdiendo el tiempo de ambos.", "en": "If you can't be specific, you're wasting both our time."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "apologize",
-                    "text": "You're right. Let me explain what I'm building.",
+                    "text": {"es": "Tienes razón. Déjame explicarte lo que estoy construyendo.", "en": "You're right. Let me explain what I'm building."},
                     "traits": ["humble"],
                     "points": 5,
                     "continueToPhase": "nudo"
                   },
                   {
                     "id": "leave",
-                    "text": "Fine. I'll figure it out myself.",
+                    "text": {"es": "Vale. Lo averiguaré yo solo.", "en": "Fine. I'll figure it out myself."},
                     "traits": ["impatient"],
                     "points": -15,
                     "endConversation": true,
@@ -153,19 +153,19 @@
 
         "nudo": {
           "contextTransition": {
-            "default": "Alright. Let me assess your baseline knowledge.",
-            "hasStandalone": "Standalone ECU. Good starting point. You understand the fundamentals.",
-            "wantsToLearn": "Learning first. Logical approach. Most people skip this step."
+            "default": {"es": "De acuerdo. Déjame evaluar tu conocimiento base.", "en": "Alright. Let me assess your baseline knowledge."},
+            "hasStandalone": {"es": "ECU standalone. Buen punto de partida. Entiendes los fundamentos.", "en": "Standalone ECU. Good starting point. You understand the fundamentals."},
+            "wantsToLearn": {"es": "Aprender primero. Enfoque lógico. La mayoría de la gente se salta este paso.", "en": "Learning first. Logical approach. Most people skip this step."}
           },
           "exchanges": [
             { "speaker": "techie", "text": "{{contextTransition}}" },
-            { "speaker": "techie", "text": "Question: What happens when you advance ignition timing?" },
+            { "speaker": "techie", "text": {"es": "Pregunta: ¿Qué ocurre cuando adelantas el timing de encendido?", "en": "Question: What happens when you advance ignition timing?"} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "correct",
-                  "text": "More power, but risk of detonation. Need to balance with fuel and boost.",
+                  "text": {"es": "Más potencia, pero riesgo de detonación. Hay que balancear con combustible y boost.", "en": "More power, but risk of detonation. Need to balance with fuel and boost."},
                   "traits": ["knowledgeable"],
                   "points": 20,
                   "setsMemory": { "knowsTuning": true },
@@ -173,13 +173,13 @@
                 },
                 {
                   "id": "partial",
-                  "text": "Engine runs better? More responsive?",
+                  "text": {"es": "¿El motor funciona mejor? ¿Más responsive?", "en": "Engine runs better? More responsive?"},
                   "points": 5,
                   "leadsTo": "nudo_partial"
                 },
                 {
                   "id": "wrong",
-                  "text": "No idea. That's why I need you.",
+                  "text": {"es": "Ni idea. Por eso te necesito.", "en": "No idea. That's why I need you."},
                   "traits": ["honest"],
                   "points": 0,
                   "leadsTo": "nudo_wrong"
@@ -189,23 +189,23 @@
           ],
           "branches": {
             "nudo_correct": [
-              { "speaker": "techie", "text": "Correct." },
-              { "speaker": "techie", "text": "You understand the combustion cycle. Good." },
-              { "speaker": "techie", "text": "Most people I deal with don't know the difference between timing and fueling." },
-              { "speaker": "techie", "text": "They just want 'more power' without understanding the trade-offs." },
+              { "speaker": "techie", "text": {"es": "Correcto.", "en": "Correct."} },
+              { "speaker": "techie", "text": {"es": "Entiendes el ciclo de combustión. Bien.", "en": "You understand the combustion cycle. Good."} },
+              { "speaker": "techie", "text": {"es": "La mayoría de la gente con la que trato no conoce la diferencia entre timing y fueling.", "en": "Most people I deal with don't know the difference between timing and fueling."} },
+              { "speaker": "techie", "text": {"es": "Solo quieren 'más potencia' sin entender los compromisos.", "en": "They just want 'more power' without understanding the trade-offs."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "learned",
-                    "text": "I spent a lot of time studying. Theory before practice.",
+                    "text": {"es": "Pasé mucho tiempo estudiando. Teoría antes de práctica.", "en": "I spent a lot of time studying. Theory before practice."},
                     "traits": ["dedicated"],
                     "points": 15,
                     "continueToPhase": "desenlace"
                   },
                   {
                     "id": "experience",
-                    "text": "Blew an engine once. Best lesson I ever had.",
+                    "text": {"es": "Reventé un motor una vez. La mejor lección que tuve.", "en": "Blew an engine once. Best lesson I ever had."},
                     "traits": ["honest"],
                     "points": 20,
                     "setsMemory": { "learnedHardWay": true },
@@ -215,24 +215,24 @@
               }
             ],
             "nudo_partial": [
-              { "speaker": "techie", "text": "Partially correct." },
-              { "speaker": "techie", "text": "Advancing timing moves the spark earlier in the compression stroke." },
-              { "speaker": "techie", "text": "More complete combustion. More power." },
-              { "speaker": "techie", "text": "But too much and you get knock. Engine damage." },
-              { "speaker": "techie", "text": "It's all about finding the edge without going over." },
+              { "speaker": "techie", "text": {"es": "Parcialmente correcto.", "en": "Partially correct."} },
+              { "speaker": "techie", "text": {"es": "Adelantar el timing mueve la chispa antes en la carrera de compresión.", "en": "Advancing timing moves the spark earlier in the compression stroke."} },
+              { "speaker": "techie", "text": {"es": "Combustión más completa. Más potencia.", "en": "More complete combustion. More power."} },
+              { "speaker": "techie", "text": {"es": "Pero demasiado y obtienes picado. Daño al motor.", "en": "But too much and you get knock. Engine damage."} },
+              { "speaker": "techie", "text": {"es": "Se trata de encontrar el límite sin pasarse.", "en": "It's all about finding the edge without going over."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "makes_sense",
-                    "text": "That makes sense. It's about optimization, not maximization.",
+                    "text": {"es": "Tiene sentido. Se trata de optimización, no de maximización.", "en": "That makes sense. It's about optimization, not maximization."},
                     "traits": ["perceptive"],
                     "points": 15,
                     "continueToPhase": "desenlace"
                   },
                   {
                     "id": "teach_more",
-                    "text": "I want to learn more. Can you teach me?",
+                    "text": {"es": "Quiero aprender más. ¿Puedes enseñarme?", "en": "I want to learn more. Can you teach me?"},
                     "traits": ["humble"],
                     "points": 10,
                     "continueToPhase": "desenlace"
@@ -241,24 +241,24 @@
               }
             ],
             "nudo_wrong": [
-              { "speaker": "techie", "text": "Honest. But concerning." },
-              { "speaker": "techie", "text": "I'll explain briefly." },
-              { "speaker": "techie", "text": "The ECU controls when the spark fires. When fuel is injected." },
-              { "speaker": "techie", "text": "Get it wrong, you lose power. Get it very wrong, you destroy the engine." },
-              { "speaker": "techie", "text": "This isn't plug and play. It's precision work." },
+              { "speaker": "techie", "text": {"es": "Honesto. Pero preocupante.", "en": "Honest. But concerning."} },
+              { "speaker": "techie", "text": {"es": "Te lo explicaré brevemente.", "en": "I'll explain briefly."} },
+              { "speaker": "techie", "text": {"es": "La ECU controla cuándo salta la chispa. Cuándo se inyecta el combustible.", "en": "The ECU controls when the spark fires. When fuel is injected."} },
+              { "speaker": "techie", "text": {"es": "Si lo haces mal, pierdes potencia. Si lo haces muy mal, destruyes el motor.", "en": "Get it wrong, you lose power. Get it very wrong, you destroy the engine."} },
+              { "speaker": "techie", "text": {"es": "Esto no es plug and play. Es trabajo de precisión.", "en": "This isn't plug and play. It's precision work."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "understand",
-                    "text": "I understand. I'll study before I touch anything.",
+                    "text": {"es": "Lo entiendo. Estudiaré antes de tocar nada.", "en": "I understand. I'll study before I touch anything."},
                     "traits": ["humble", "patient"],
                     "points": 10,
                     "continueToPhase": "desenlace"
                   },
                   {
                     "id": "guide_me",
-                    "text": "Then guide me. I'm willing to learn.",
+                    "text": {"es": "Entonces guíame. Estoy dispuesto a aprender.", "en": "Then guide me. I'm willing to learn."},
                     "traits": ["dedicated"],
                     "points": 10,
                     "continueToPhase": "desenlace"
@@ -271,31 +271,31 @@
 
         "desenlace": {
           "exchanges": [
-            { "speaker": "techie", "text": "Here's what most people don't understand." },
-            { "speaker": "techie", "text": "A car is a system. Every component affects every other." },
-            { "speaker": "techie", "text": "Change one variable, and the optimal values for everything else shift." },
-            { "speaker": "techie", "text": "That's why I work with data. Numbers don't lie." },
+            { "speaker": "techie", "text": {"es": "Esto es lo que la mayoría de la gente no entiende.", "en": "Here's what most people don't understand."} },
+            { "speaker": "techie", "text": {"es": "Un coche es un sistema. Cada componente afecta a todos los demás.", "en": "A car is a system. Every component affects every other."} },
+            { "speaker": "techie", "text": {"es": "Cambia una variable, y los valores óptimos para todo lo demás se mueven.", "en": "Change one variable, and the optimal values for everything else shift."} },
+            { "speaker": "techie", "text": {"es": "Por eso trabajo con datos. Los números no mienten.", "en": "That's why I work with data. Numbers don't lie."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "data_driven",
-                  "text": "Data-driven approach. I respect that.",
+                  "text": {"es": "Enfoque basado en datos. Lo respeto.", "en": "Data-driven approach. I respect that."},
                   "traits": ["technical"],
                   "points": 15,
                   "setsMemory": { "respectsData": true }
                 },
                 {
                   "id": "intuition",
-                  "text": "What about feel? Experience?",
+                  "text": {"es": "¿Qué pasa con el feeling? ¿La experiencia?", "en": "What about feel? Experience?"},
                   "points": 5
                 }
               ]
             },
-            { "speaker": "techie", "text": "I'll give you access to basic components." },
-            { "speaker": "techie", "text": "Sensors. Wiring. Entry-level tuning equipment." },
-            { "speaker": "techie", "text": "Come back when you have data to show me." },
-            { "speaker": "techie", "text": "And I mean real data. Logs. Numbers. Not feelings." }
+            { "speaker": "techie", "text": {"es": "Te daré acceso a componentes básicos.", "en": "I'll give you access to basic components."} },
+            { "speaker": "techie", "text": {"es": "Sensores. Cableado. Equipo de tuning de nivel inicial.", "en": "Sensors. Wiring. Entry-level tuning equipment."} },
+            { "speaker": "techie", "text": {"es": "Vuelve cuando tengas datos que mostrarme.", "en": "Come back when you have data to show me."} },
+            { "speaker": "techie", "text": {"es": "Y me refiero a datos reales. Logs. Números. No sensaciones.", "en": "And I mean real data. Logs. Numbers. Not feelings."} }
           ],
           "end": {
             "result": "success",
@@ -304,51 +304,51 @@
               "unlocks": ["techie_basic_inventory"]
             },
             "cooldown": 180,
-            "teaser": "Collect some telemetry data. Then we can optimize properly."
+            "teaser": {"es": "Recoge algo de telemetría. Entonces podremos optimizar correctamente.", "en": "Collect some telemetry data. Then we can optimize properly."}
           }
         }
       },
 
       "nexos": {
         "beforeNudo": [
-          "Processing.",
-          "Understood.",
-          "..."
+          {"es": "Procesando.", "en": "Processing."},
+          {"es": "Entendido.", "en": "Understood."},
+          {"es": "...", "en": "..."}
         ],
         "beforeDesenlace": [
-          "Analysis complete.",
-          "Noted.",
-          "..."
+          {"es": "Análisis completo.", "en": "Analysis complete."},
+          {"es": "Anotado.", "en": "Noted."},
+          {"es": "...", "en": "..."}
         ]
       }
     },
 
     "level2": {
-      "title": "Deep Dive",
+      "title": {"es": "Inmersión Profunda", "en": "Deep Dive"},
       "requiredMemory": ["respectsData"],
-      "unlockMessage": "Techie is ready to share more advanced knowledge.",
+      "unlockMessage": {"es": "Techie está listo para compartir conocimiento más avanzado.", "en": "Techie is ready to share more advanced knowledge."},
 
       "phases": {
         "intro": {
           "contextAware": true,
           "exchanges": [
-            { "speaker": "techie", "text": "Contact re-established." },
+            { "speaker": "techie", "text": {"es": "Contacto restablecido.", "en": "Contact re-established."} },
             { "speaker": "techie", "text": "{{contextReaction}}" },
-            { "speaker": "techie", "text": "I've reviewed our previous conversation." },
-            { "speaker": "techie", "text": "Your knowledge base shows potential." },
+            { "speaker": "techie", "text": {"es": "He revisado nuestra conversación anterior.", "en": "I've reviewed our previous conversation."} },
+            { "speaker": "techie", "text": {"es": "Tu base de conocimiento muestra potencial.", "en": "Your knowledge base shows potential."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "ready",
-                  "text": "Ready to learn more. What's next?",
+                  "text": {"es": "Listo para aprender más. ¿Qué sigue?", "en": "Ready to learn more. What's next?"},
                   "traits": ["dedicated"],
                   "points": 10,
                   "continueToPhase": "nudo"
                 },
                 {
                   "id": "results",
-                  "text": "I've been collecting data like you said. Want to see?",
+                  "text": {"es": "He estado recopilando datos como dijiste. ¿Quieres verlos?", "en": "I've been collecting data like you said. Want to see?"},
                   "traits": ["dedicated"],
                   "points": 15,
                   "setsMemory": { "broughtData": true },
@@ -361,24 +361,24 @@
 
         "nudo": {
           "exchanges": [
-            { "speaker": "techie", "text": "Let me tell you how I started in this." },
-            { "speaker": "techie", "text": "I was 14. Couldn't afford a car." },
-            { "speaker": "techie", "text": "But I could build computers. Understand systems." },
-            { "speaker": "techie", "text": "So I started reverse-engineering ECU firmware." },
-            { "speaker": "techie", "text": "Cracking the code that manufacturers didn't want people to see." },
+            { "speaker": "techie", "text": {"es": "Déjame contarte cómo empecé en esto.", "en": "Let me tell you how I started in this."} },
+            { "speaker": "techie", "text": {"es": "Tenía 14 años. No podía permitirme un coche.", "en": "I was 14. Couldn't afford a car."} },
+            { "speaker": "techie", "text": {"es": "Pero podía construir ordenadores. Entender sistemas.", "en": "But I could build computers. Understand systems."} },
+            { "speaker": "techie", "text": {"es": "Así que empecé a hacer ingeniería inversa del firmware de ECUs.", "en": "So I started reverse-engineering ECU firmware."} },
+            { "speaker": "techie", "text": {"es": "Crackeando el código que los fabricantes no querían que la gente viera.", "en": "Cracking the code that manufacturers didn't want people to see."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "impressive",
-                  "text": "At 14? That's impressive.",
+                  "text": {"es": "¿A los 14? Eso es impresionante.", "en": "At 14? That's impressive."},
                   "traits": ["respectful"],
                   "points": 10,
                   "leadsTo": "nudo_story"
                 },
                 {
                   "id": "legal",
-                  "text": "Isn't that... legally complicated?",
+                  "text": {"es": "¿Eso no es... legalmente complicado?", "en": "Isn't that... legally complicated?"},
                   "traits": ["cautious"],
                   "points": 5,
                   "leadsTo": "nudo_legal"
@@ -388,25 +388,25 @@
           ],
           "branches": {
             "nudo_story": [
-              { "speaker": "techie", "text": "Impressive. Also illegal in some jurisdictions." },
-              { "speaker": "techie", "text": "But the knowledge I gained... invaluable." },
-              { "speaker": "techie", "text": "I know things about these systems that dealers don't." },
-              { "speaker": "techie", "text": "Hidden features. Safety limits that can be adjusted." },
-              { "speaker": "techie", "text": "A friend of mine... handles the more sensitive data work now." },
-              { "speaker": "techie", "text": "Different skill set. More... covert." },
+              { "speaker": "techie", "text": {"es": "Impresionante. También ilegal en algunas jurisdicciones.", "en": "Impressive. Also illegal in some jurisdictions."} },
+              { "speaker": "techie", "text": {"es": "Pero el conocimiento que gané... invaluable.", "en": "But the knowledge I gained... invaluable."} },
+              { "speaker": "techie", "text": {"es": "Sé cosas sobre estos sistemas que los concesionarios no saben.", "en": "I know things about these systems that dealers don't."} },
+              { "speaker": "techie", "text": {"es": "Funciones ocultas. Límites de seguridad que pueden ajustarse.", "en": "Hidden features. Safety limits that can be adjusted."} },
+              { "speaker": "techie", "text": {"es": "Un amigo mío... maneja el trabajo de datos más sensible ahora.", "en": "A friend of mine... handles the more sensitive data work now."} },
+              { "speaker": "techie", "text": {"es": "Conjunto de habilidades diferente. Más... encubierto.", "en": "Different skill set. More... covert."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "shadow",
-                    "text": "Sounds like useful connections to have.",
+                    "text": {"es": "Suena como conexiones útiles que tener.", "en": "Sounds like useful connections to have."},
                     "traits": ["cautious"],
                     "points": 10,
                     "continueToPhase": "desenlace"
                   },
                   {
                     "id": "focus",
-                    "text": "I just want to make my car faster. Legally.",
+                    "text": {"es": "Solo quiero hacer mi coche más rápido. Legalmente.", "en": "I just want to make my car faster. Legally."},
                     "traits": ["honest"],
                     "points": 15,
                     "continueToPhase": "desenlace"
@@ -415,23 +415,23 @@
               }
             ],
             "nudo_legal": [
-              { "speaker": "techie", "text": "Legally complicated. Yes." },
-              { "speaker": "techie", "text": "Which is why I stay on the edge now. Mostly." },
-              { "speaker": "techie", "text": "There's someone else who handles the... deeper work." },
-              { "speaker": "techie", "text": "We've worked together for years. Different domains, same network." },
+              { "speaker": "techie", "text": {"es": "Legalmente complicado. Sí.", "en": "Legally complicated. Yes."} },
+              { "speaker": "techie", "text": {"es": "Por eso me mantengo en el límite ahora. Mayormente.", "en": "Which is why I stay on the edge now. Mostly."} },
+              { "speaker": "techie", "text": {"es": "Hay alguien más que maneja el... trabajo más profundo.", "en": "There's someone else who handles the... deeper work."} },
+              { "speaker": "techie", "text": {"es": "Hemos trabajado juntos durante años. Diferentes dominios, misma red.", "en": "We've worked together for years. Different domains, same network."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "understand",
-                    "text": "I understand. Everyone has their specialty.",
+                    "text": {"es": "Lo entiendo. Cada uno tiene su especialidad.", "en": "I understand. Everyone has their specialty."},
                     "traits": ["discrete"],
                     "points": 15,
                     "continueToPhase": "desenlace"
                   },
                   {
                     "id": "not_involved",
-                    "text": "I'd rather not get involved in anything too risky.",
+                    "text": {"es": "Preferiría no involucrarme en nada demasiado arriesgado.", "en": "I'd rather not get involved in anything too risky."},
                     "traits": ["cautious"],
                     "points": 10,
                     "continueToPhase": "desenlace"
@@ -444,32 +444,32 @@
 
         "desenlace": {
           "exchanges": [
-            { "speaker": "techie", "text": "The point is - information is power." },
-            { "speaker": "techie", "text": "The more you understand the system, the more you can optimize it." },
-            { "speaker": "techie", "text": "I'm opening up my advanced inventory for you." },
-            { "speaker": "techie", "text": "Wideband sensors. Datalogging equipment. Custom harnesses." },
+            { "speaker": "techie", "text": {"es": "El punto es - la información es poder.", "en": "The point is - information is power."} },
+            { "speaker": "techie", "text": {"es": "Cuanto más entiendas el sistema, más puedes optimizarlo.", "en": "The more you understand the system, the more you can optimize it."} },
+            { "speaker": "techie", "text": {"es": "Estoy abriendo mi inventario avanzado para ti.", "en": "I'm opening up my advanced inventory for you."} },
+            { "speaker": "techie", "text": {"es": "Sensores wideband. Equipo de datalogging. Harnesses personalizados.", "en": "Wideband sensors. Datalogging equipment. Custom harnesses."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "thanks",
-                  "text": "This will help a lot. Thanks.",
+                  "text": {"es": "Esto ayudará mucho. Gracias.", "en": "This will help a lot. Thanks."},
                   "traits": ["respectful"],
                   "points": 10,
                   "setsMemory": { "receivedAdvanced": true }
                 },
                 {
                   "id": "learn_more",
-                  "text": "I want to keep learning. There's always more to understand.",
+                  "text": {"es": "Quiero seguir aprendiendo. Siempre hay más que entender.", "en": "I want to keep learning. There's always more to understand."},
                   "traits": ["dedicated"],
                   "points": 15
                 }
               ]
             },
-            { "speaker": "techie", "text": "One more thing." },
-            { "speaker": "techie", "text": "If you ever need... unconventional solutions." },
-            { "speaker": "techie", "text": "There are people in this network who can help." },
-            { "speaker": "techie", "text": "But that's a different level of involvement. Your choice." }
+            { "speaker": "techie", "text": {"es": "Una cosa más.", "en": "One more thing."} },
+            { "speaker": "techie", "text": {"es": "Si alguna vez necesitas... soluciones no convencionales.", "en": "If you ever need... unconventional solutions."} },
+            { "speaker": "techie", "text": {"es": "Hay gente en esta red que puede ayudar.", "en": "There are people in this network who can help."} },
+            { "speaker": "techie", "text": {"es": "Pero eso es un nivel diferente de implicación. Tu decisión.", "en": "But that's a different level of involvement. Your choice."} }
           ],
           "end": {
             "result": "success",
@@ -478,35 +478,35 @@
               "unlocks": ["techie_advanced_inventory"]
             },
             "cooldown": 180,
-            "teaser": "The real optimization starts now. Bring me more data."
+            "teaser": {"es": "La verdadera optimización empieza ahora. Tráeme más datos.", "en": "The real optimization starts now. Bring me more data."}
           }
         }
       }
     },
 
     "level3": {
-      "title": "The Network",
+      "title": {"es": "La Red", "en": "The Network"},
       "requiredMemory": ["receivedAdvanced"],
-      "unlockMessage": "Techie wants to discuss something important.",
+      "unlockMessage": {"es": "Techie quiere discutir algo importante.", "en": "Techie wants to discuss something important."},
 
       "phases": {
         "intro": {
           "exchanges": [
-            { "speaker": "techie", "text": "I need to tell you something." },
-            { "speaker": "techie", "text": "About how this all connects." },
+            { "speaker": "techie", "text": {"es": "Necesito contarte algo.", "en": "I need to tell you something."} },
+            { "speaker": "techie", "text": {"es": "Sobre cómo todo esto se conecta.", "en": "About how this all connects."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "listening",
-                  "text": "I'm listening.",
+                  "text": {"es": "Te escucho.", "en": "I'm listening."},
                   "traits": ["patient"],
                   "points": 10,
                   "continueToPhase": "nudo"
                 },
                 {
                   "id": "careful",
-                  "text": "Is this something I should know?",
+                  "text": {"es": "¿Es esto algo que debería saber?", "en": "Is this something I should know?"},
                   "traits": ["cautious"],
                   "points": 10,
                   "continueToPhase": "nudo"
@@ -518,25 +518,25 @@
 
         "nudo": {
           "exchanges": [
-            { "speaker": "techie", "text": "We're all connected. The people in this scene." },
-            { "speaker": "techie", "text": "Ghost. Me. Others you might meet." },
-            { "speaker": "techie", "text": "It's not organized crime. It's more like..." },
-            { "speaker": "techie", "text": "A network of specialists. Each with their domain." },
-            { "speaker": "techie", "text": "I handle data. Electronics. Code." },
-            { "speaker": "techie", "text": "Others handle different things." },
+            { "speaker": "techie", "text": {"es": "Todos estamos conectados. La gente en esta escena.", "en": "We're all connected. The people in this scene."} },
+            { "speaker": "techie", "text": {"es": "Ghost. Yo. Otros que podrías conocer.", "en": "Ghost. Me. Others you might meet."} },
+            { "speaker": "techie", "text": {"es": "No es crimen organizado. Es más como...", "en": "It's not organized crime. It's more like..."} },
+            { "speaker": "techie", "text": {"es": "Una red de especialistas. Cada uno con su dominio.", "en": "A network of specialists. Each with their domain."} },
+            { "speaker": "techie", "text": {"es": "Yo manejo datos. Electrónica. Código.", "en": "I handle data. Electronics. Code."} },
+            { "speaker": "techie", "text": {"es": "Otros manejan cosas diferentes.", "en": "Others handle different things."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "makes_sense",
-                  "text": "Division of expertise. It makes sense.",
+                  "text": {"es": "División de experiencia. Tiene sentido.", "en": "Division of expertise. It makes sense."},
                   "traits": ["perceptive"],
                   "points": 15,
                   "leadsTo": "nudo_network"
                 },
                 {
                   "id": "why_telling",
-                  "text": "Why are you telling me this?",
+                  "text": {"es": "¿Por qué me cuentas esto?", "en": "Why are you telling me this?"},
                   "points": 10,
                   "leadsTo": "nudo_why"
                 }
@@ -545,23 +545,23 @@
           ],
           "branches": {
             "nudo_network": [
-              { "speaker": "techie", "text": "Exactly." },
-              { "speaker": "techie", "text": "We share information. Resources. Contacts." },
-              { "speaker": "techie", "text": "If I can't help you with something, I know who can." },
-              { "speaker": "techie", "text": "And they know me. That matters in this world." },
+              { "speaker": "techie", "text": {"es": "Exacto.", "en": "Exactly."} },
+              { "speaker": "techie", "text": {"es": "Compartimos información. Recursos. Contactos.", "en": "We share information. Resources. Contacts."} },
+              { "speaker": "techie", "text": {"es": "Si no puedo ayudarte con algo, sé quién puede.", "en": "If I can't help you with something, I know who can."} },
+              { "speaker": "techie", "text": {"es": "Y me conocen. Eso importa en este mundo.", "en": "And they know me. That matters in this world."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "part_of_it",
-                    "text": "And now I'm part of it?",
+                    "text": {"es": "¿Y ahora soy parte de ello?", "en": "And now I'm part of it?"},
                     "traits": ["cautious"],
                     "points": 10,
                     "continueToPhase": "desenlace"
                   },
                   {
                     "id": "trust",
-                    "text": "You're trusting me with this information.",
+                    "text": {"es": "Estás confiándome esta información.", "en": "You're trusting me with this information."},
                     "traits": ["perceptive"],
                     "points": 15,
                     "continueToPhase": "desenlace"
@@ -570,23 +570,23 @@
               }
             ],
             "nudo_why": [
-              { "speaker": "techie", "text": "Because you've proven yourself." },
-              { "speaker": "techie", "text": "You learn. You adapt. You respect the process." },
-              { "speaker": "techie", "text": "Those qualities are rare." },
-              { "speaker": "techie", "text": "And they're valuable to people like us." },
+              { "speaker": "techie", "text": {"es": "Porque te has demostrado.", "en": "Because you've proven yourself."} },
+              { "speaker": "techie", "text": {"es": "Aprendes. Te adaptas. Respetas el proceso.", "en": "You learn. You adapt. You respect the process."} },
+              { "speaker": "techie", "text": {"es": "Esas cualidades son raras.", "en": "Those qualities are rare."} },
+              { "speaker": "techie", "text": {"es": "Y son valiosas para gente como nosotros.", "en": "And they're valuable to people like us."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "honored",
-                    "text": "I won't let you down.",
+                    "text": {"es": "No te defraudaré.", "en": "I won't let you down."},
                     "traits": ["loyal"],
                     "points": 15,
                     "continueToPhase": "desenlace"
                   },
                   {
                     "id": "careful",
-                    "text": "I'll be careful with this trust.",
+                    "text": {"es": "Tendré cuidado con esta confianza.", "en": "I'll be careful with this trust."},
                     "traits": ["discrete"],
                     "points": 15,
                     "continueToPhase": "desenlace"
@@ -599,29 +599,29 @@
 
         "desenlace": {
           "exchanges": [
-            { "speaker": "techie", "text": "Full access. Everything I have." },
-            { "speaker": "techie", "text": "Custom firmware. Proprietary maps. Hardware that isn't on any market." },
-            { "speaker": "techie", "text": "Use it wisely." },
+            { "speaker": "techie", "text": {"es": "Acceso completo. Todo lo que tengo.", "en": "Full access. Everything I have."} },
+            { "speaker": "techie", "text": {"es": "Firmware personalizado. Mapas propietarios. Hardware que no está en ningún mercado.", "en": "Custom firmware. Proprietary maps. Hardware that isn't on any market."} },
+            { "speaker": "techie", "text": {"es": "Úsalo sabiamente.", "en": "Use it wisely."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "thanks",
-                  "text": "I will. Thank you.",
+                  "text": {"es": "Lo haré. Gracias.", "en": "I will. Thank you."},
                   "traits": ["respectful"],
                   "points": 10
                 },
                 {
                   "id": "questions",
-                  "text": "If I have questions, can I come to you?",
+                  "text": {"es": "Si tengo preguntas, ¿puedo venir a ti?", "en": "If I have questions, can I come to you?"},
                   "traits": ["humble"],
                   "points": 15,
                   "setsMemory": { "canAskQuestions": true }
                 }
               ]
             },
-            { "speaker": "techie", "text": "Always." },
-            { "speaker": "techie", "text": "Data never sleeps. Neither do I." }
+            { "speaker": "techie", "text": {"es": "Siempre.", "en": "Always."} },
+            { "speaker": "techie", "text": {"es": "Los datos nunca duermen. Yo tampoco.", "en": "Data never sleeps. Neither do I."} }
           ],
           "end": {
             "result": "success",
@@ -631,7 +631,7 @@
             },
             "setsMemory": { "earnedFullTrust": true },
             "cooldown": 180,
-            "teaser": "You're in the network now. Make it count."
+            "teaser": {"es": "Ahora estás en la red. Hazlo valer.", "en": "You're in the network now. Make it count."}
           }
         }
       }
@@ -641,41 +641,41 @@
   "confrontations": {
     "afterPoliceEscape": {
       "chance": 0.3,
-      "text": "I tracked your escape route through traffic cameras. Efficient, but predictable.",
+      "text": {"es": "Rastreé tu ruta de escape a través de las cámaras de tráfico. Eficiente, pero predecible.", "en": "I tracked your escape route through traffic cameras. Efficient, but predictable."},
       "responses": [
-        { "id": "a", "text": "I'll vary my patterns next time.", "traits": ["cautious"], "points": 15 },
-        { "id": "b", "text": "It worked. That's what matters.", "traits": ["confident"], "points": 10 },
-        { "id": "c", "text": "You can track traffic cameras?", "traits": ["curious"], "points": 5 }
+        { "id": "a", "text": {"es": "Variaré mis patrones la próxima vez.", "en": "I'll vary my patterns next time."}, "traits": ["cautious"], "points": 15 },
+        { "id": "b", "text": {"es": "Funcionó. Eso es lo que importa.", "en": "It worked. That's what matters."}, "traits": ["confident"], "points": 10 },
+        { "id": "c", "text": {"es": "¿Puedes rastrear las cámaras de tráfico?", "en": "You can track traffic cameras?"}, "traits": ["curious"], "points": 5 }
       ]
     },
     "randomKnowledgeTest": {
       "chance": 0.15,
       "minLevel": 2,
-      "text": "Quick test: What's the ideal air-fuel ratio for gasoline at full throttle?",
+      "text": {"es": "Test rápido: ¿Cuál es la relación aire-combustible ideal para gasolina a plena carga?", "en": "Quick test: What's the ideal air-fuel ratio for gasoline at full throttle?"},
       "responses": [
-        { "id": "a", "text": "12.5:1 to 13:1. Slightly rich for power and cooling.", "traits": ["knowledgeable"], "points": 25 },
-        { "id": "b", "text": "14.7:1? Stoichiometric?", "traits": ["partial"], "points": 10 },
-        { "id": "c", "text": "I'd have to look that up.", "traits": ["honest"], "points": 0 }
+        { "id": "a", "text": {"es": "12.5:1 a 13:1. Ligeramente rica para potencia y refrigeración.", "en": "12.5:1 to 13:1. Slightly rich for power and cooling."}, "traits": ["knowledgeable"], "points": 25 },
+        { "id": "b", "text": {"es": "¿14.7:1? ¿Estequiométrica?", "en": "14.7:1? Stoichiometric?"}, "traits": ["partial"], "points": 10 },
+        { "id": "c", "text": {"es": "Tendría que buscarlo.", "en": "I'd have to look that up."}, "traits": ["honest"], "points": 0 }
       ]
     }
   },
 
   "exitLines": {
     "normal": [
-      "Connection terminated.",
-      "I have data to process. We'll talk later.",
-      "Logging off.",
-      "End of session."
+      {"es": "Conexión terminada.", "en": "Connection terminated."},
+      {"es": "Tengo datos que procesar. Hablaremos luego.", "en": "I have data to process. We'll talk later."},
+      {"es": "Cerrando sesión.", "en": "Logging off."},
+      {"es": "Fin de sesión.", "en": "End of session."}
     ],
     "positive": [
-      "Productive session. Continue learning.",
-      "Your data analysis is improving.",
-      "Good progress. Keep optimizing."
+      {"es": "Sesión productiva. Continúa aprendiendo.", "en": "Productive session. Continue learning."},
+      {"es": "Tu análisis de datos está mejorando.", "en": "Your data analysis is improving."},
+      {"es": "Buen progreso. Sigue optimizando.", "en": "Good progress. Keep optimizing."}
     ],
     "negative": [
-      "Insufficient data. Come back prepared.",
-      "We're done for now.",
-      "Review the fundamentals before we talk again."
+      {"es": "Datos insuficientes. Vuelve preparado.", "en": "Insufficient data. Come back prepared."},
+      {"es": "Hemos terminado por ahora.", "en": "We're done for now."},
+      {"es": "Repasa los fundamentos antes de que hablemos de nuevo.", "en": "Review the fundamentals before we talk again."}
     ]
   }
 }

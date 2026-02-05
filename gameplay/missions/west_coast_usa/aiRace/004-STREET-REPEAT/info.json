@@ -1,0 +1,150 @@
+{
+  "additionalAttributes": {
+    "difficulty": "hard"
+  },
+  "author": "MySummer Team",
+  "careerSetup": {
+    "defaultStarKeys": [
+      "finishBronze",
+      "finishSilver",
+      "finishGold"
+    ],
+    "showInCareer": false,
+    "showInFreeroam": false,
+    "skill": null,
+    "starOutroTexts": {},
+    "starRewards": {
+      "finishBronze": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 600
+        }
+      ],
+      "finishGold": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 4000
+        }
+      ],
+      "finishSilver": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 2000
+        }
+      ]
+    },
+    "starsActive": {
+      "finishBronze": true,
+      "finishGold": true,
+      "finishSilver": true
+    }
+  },
+  "customAdditionalAttributes": {},
+  "date": 1699022500,
+  "description": "The suburban sprawl. Quiet neighborhoods become a playground when the sun goes down. Tight residential streets, speed bumps, and the occasional mailbox. Respectable by day, racing territory by night. (Repeatable - No skill XP)",
+  "devMission": false,
+  "grouping": {
+    "id": "STREETRACE-REPEAT",
+    "label": "Street Races (Repeat)"
+  },
+  "layers": [
+    {
+      "dir": "/gameplay/missions/west_coast_usa/aiRace/004-STREET-REPEAT/",
+      "fixed": true,
+      "isMissionFolderDir": true,
+      "isMissionTypeDir": false
+    },
+    {
+      "dir": "/gameplay/missionTypes/aiRace/",
+      "fixed": true,
+      "isMissionFolderDir": false,
+      "isMissionTypeDir": true
+    }
+  ],
+  "missionType": "aiRace",
+  "missionTypeData": {
+    "allowFlip": true,
+    "allowRecover": true,
+    "camPathActive": false,
+    "damageFailActive": false,
+    "damageFailText": "missions.aiRace.general.damageFail",
+    "damageLimit": 10000,
+    "flipLimit": -1,
+    "goalCollisionsLimit": 1,
+    "goalCollisionsTarget": 5,
+    "goalLaps": 3,
+    "goalRecoveries": 0,
+    "goalTime": 200,
+    "lapCount": 3,
+    "mapPreviewMode": "navgraph",
+    "maxRacerCount": 9,
+    "minRacerCount": 1,
+    "playerStartIndex": 9,
+    "prefabActive": false,
+    "raceFile": "/gameplay/missions/west_coast_usa/aiRace/004-STREET-REPEAT/race.race.json",
+    "racerAggression": 1,
+    "racerAwareness": true,
+    "racerCount": 9,
+    "racerRandomnessScale": 1,
+    "racerRough": false,
+    "racerRubberbandMode": false,
+    "racerSkill": 1,
+    "recoverLimit": -1,
+    "shuffleGroup": true,
+    "smartStartPlace": false,
+    "startText": "Suburban streets. Watch for parked cars and don't wake the neighbors... too much.",
+    "stoppedLimit": 0,
+    "useGroundmarkers": false,
+    "vehicleGroupActive": true
+  },
+  "name": "Suburban Showdown (Repeat)",
+  "retryBehaviour": "infiniteRetries",
+  "setupModules": {
+    "environment": {
+      "enabled": false
+    },
+    "traffic": {
+      "activeAmount": 0,
+      "amount": 0,
+      "enabled": false,
+      "parkedAmount": 0,
+      "respawnRate": 1,
+      "useCustomGroup": false,
+      "useGameOptions": false,
+      "usePrevTraffic": false,
+      "useSimpleVehs": false,
+      "useTraffic": false
+    },
+    "vehicles": {
+      "enabled": true,
+      "includePlayerVehicle": true,
+      "playerVehicleDiffs": {},
+      "prioritizePlayerVehicle": false,
+      "vehicles": {}
+    }
+  },
+  "startCondition": {
+    "branchId": "mysummer-streetracing",
+    "level": 1,
+    "type": "branchLevel"
+  },
+  "startTrigger": {
+    "level": "west_coast_usa",
+    "pos": [
+      -492.4272156,
+      -20.4514389,
+      99.3661499
+    ],
+    "radius": 5,
+    "rot": {
+      "w": -0.04263888299,
+      "x": 0,
+      "y": 0,
+      "z": 0.9990906119
+    },
+    "type": "coordinates"
+  },
+  "visibleCondition": {
+    "type": "automatic"
+  }
+}

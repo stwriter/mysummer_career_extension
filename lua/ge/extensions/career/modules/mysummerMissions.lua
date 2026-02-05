@@ -8,6 +8,7 @@ M.dependencies = {
   "career_career",
   "career_saveSystem",
   "career_modules_mysummerCareer",
+  "career_modules_mysummerCargo",
 }
 
 local logTag = "mysummerMissions"
@@ -804,12 +805,69 @@ local function buildLocations()
   log("I", logTag, "Built " .. #pickupLocations .. " pickup and " .. #dropoffLocations .. " dropoff locations")
 end
 
+-- Find nearest road point to a given position
+local function findNearestRoadPoint(pos)
+  if not pos then return nil end
+
+  -- Load traffic utils if not loaded
+  if not gameplay_traffic_trafficUtils then
+    extensions.load('gameplay_traffic_trafficUtils')
+  end
+
+  -- Try to find a road spawn point near the target position
+  if gameplay_traffic_trafficUtils and gameplay_traffic_trafficUtils.findSpawnPointRadial then
+    local options = {
+      gap = 10,
+      usePrivateRoads = false,
+      minDrivability = 0.3,
+    }
+
+    -- Try multiple directions to find a nearby road
+    for i = 1, 4 do
+      local randomAngle = math.random() * math.pi * 2
+      local searchDir = vec3(math.cos(randomAngle), math.sin(randomAngle), 0)
+      local minDist = 5
+      local maxDist = 100
+      local targetDist = 20
+
+      local spawnData, isValid = gameplay_traffic_trafficUtils.findSpawnPointRadial(
+        pos, searchDir, minDist, maxDist, targetDist, options)
+
+      if isValid and spawnData and spawnData.pos then
+        return vec3(spawnData.pos)
+      end
+    end
+  end
+
+  -- Fallback: use map.getClosestRoadNode if available
+  if map and map.getClosestRoadNode then
+    local roadNode = map.getClosestRoadNode(pos)
+    if roadNode and roadNode.pos then
+      return vec3(roadNode.pos)
+    end
+  end
+
+  -- No road found, return original position
+  return pos
+end
+
 local function getRandomLocation(locationList)
   if #locationList == 0 then
     buildLocations()
   end
   if #locationList == 0 then return nil end
-  return locationList[math.random(#locationList)]
+
+  local location = locationList[math.random(#locationList)]
+  if not location then return nil end
+
+  -- Copy the location and snap position to nearest road
+  local result = {
+    name = location.name,
+    type = location.type,
+    pos = findNearestRoadPoint(location.pos) or location.pos,
+  }
+
+  return result
 end
 
 -- ============================================================================
@@ -879,7 +937,7 @@ local function setTimeOfDay(time)
       -- Apply the change (this triggers visual update)
       core_environment.setTimeOfDay(newTod)
       success = true
-      log("D", logTag, "Set time via core_environment.setTimeOfDay, time = " .. string.format("%.3f", time))
+      -- Note: Not logging every frame to avoid spam
     else
       log("W", logTag, "core_environment.getTimeOfDay() returned nil")
     end
@@ -1392,6 +1450,12 @@ local function completeMission(success)
 
   log("I", logTag, "Mission " .. (success and "completed" or "failed") .. ": " .. mission.title)
 
+  -- Notify storyRaces if this was a story mission
+  if mission.storyMissionId and career_modules_mysummerStoryRaces then
+    log("I", logTag, "Notifying storyRaces of completion: " .. mission.storyMissionId)
+    career_modules_mysummerStoryRaces.onMissionCompleted(mission.storyMissionId, success)
+  end
+
   -- state.activeMission already cleared at start of function
   saveState()
   return true
@@ -1509,6 +1573,9 @@ local function attemptMissionPickup()
   local mission = state.activeMission
   if not mission or mission.type ~= MISSION_TYPES.DELIVERY then return end
   if mission.pickedUp then return end
+  if mission.pickingUp then return end -- Prevent re-entry during async cargo loading
+
+  mission.pickingUp = true -- Set flag immediately to prevent duplicate calls
 
   -- Check if this mission requires cargo
   if not mission.requiresCargo then
@@ -1546,6 +1613,7 @@ local function attemptMissionPickup()
   local slotsNeeded = mission.cargoSlots or 3
   cargoModule.checkCargoSpace({{ partName = "parcel", slots = slotsNeeded }}, function(result)
     if not result.canLoad then
+      mission.pickingUp = false -- Reset flag so player can retry
       if guihooks then
         guihooks.trigger("toastrMsg", {
           type = "error",
@@ -1596,6 +1664,7 @@ local function attemptMissionPickup()
         log("I", logTag, "Mission cargo loaded, cargoId: " .. tostring(cargoId))
         saveState()
       else
+        mission.pickingUp = false -- Reset flag so player can retry
         if guihooks then
           guihooks.trigger("toastrMsg", {
             type = "error",
@@ -1616,11 +1685,26 @@ local function attemptMissionDelivery()
 
   -- Unload cargo if we have a cargo ID
   if mission.cargoId then
+    log("I", logTag, "Attempting to unload mission cargo: " .. tostring(mission.cargoId))
     local cargoModule = career_modules_mysummerCargo
-    if cargoModule and cargoModule.unloadCargoItem then
-      cargoModule.unloadCargoItem(mission.cargoId)
-      log("I", logTag, "Mission cargo unloaded: " .. tostring(mission.cargoId))
+    if cargoModule then
+      if cargoModule.unloadCargoItem then
+        local success = cargoModule.unloadCargoItem(mission.cargoId)
+        if success then
+          log("I", logTag, "Mission cargo unloaded successfully: " .. tostring(mission.cargoId))
+        else
+          log("W", logTag, "Failed to unload mission cargo: " .. tostring(mission.cargoId))
+        end
+      else
+        log("E", logTag, "unloadCargoItem function not found in mysummerCargo")
+      end
+    else
+      log("E", logTag, "mysummerCargo module not loaded")
     end
+    -- Clear cargo ID regardless to prevent re-attempts
+    mission.cargoId = nil
+  else
+    log("I", logTag, "No cargo ID to unload for delivery mission")
   end
 
   completeMission(true)
@@ -4673,6 +4757,44 @@ M.abandonMission = abandonMission
 M.offerMissionViaEmail = offerMissionViaEmail
 M.isContactOnMissionCooldown = isContactOnMissionCooldown
 M.answerSurveillanceQuiz = answerSurveillanceQuiz
+
+-- Story mission integration
+-- Starts a mission directly from template (used by storyRaces)
+M.startMissionFromTemplate = function(contactId, templateId, storyMissionId)
+  -- Clear any active mission first
+  if state.activeMission then
+    log("W", logTag, "Already have an active mission, cannot start story mission")
+    return false
+  end
+
+  -- Generate and start the mission
+  local mission = generateMission(contactId, templateId)
+  if not mission then
+    log("E", logTag, "Failed to generate mission from template: " .. tostring(templateId))
+    return false
+  end
+
+  -- Tag it as a story mission so we can notify storyRaces on completion
+  mission.storyMissionId = storyMissionId
+
+  -- Add to available and start it
+  table.insert(state.availableMissions, mission)
+  local result = startMission(mission.id)
+
+  if result then
+    log("I", logTag, "Story mission started: " .. mission.title .. " (template: " .. templateId .. ")")
+  end
+
+  return result
+end
+
+-- Check if there's an active story mission
+M.getActiveStoryMissionId = function()
+  if state.activeMission and state.activeMission.storyMissionId then
+    return state.activeMission.storyMissionId
+  end
+  return nil
+end
 
 -- Debug functions
 M.debugOfferMission = debugOfferMission

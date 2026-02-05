@@ -1,21 +1,28 @@
 <template>
   <PhoneWrapper app-name="Home" status-font-color="#FFFFFF" status-blend-mode="">
     <div class="home-screen">
-      <div 
-        v-for="app in apps" 
-        :key="app.name" 
+      <div
+        v-for="app in apps"
+        :key="app.name"
         class="app-item"
       >
-        <button 
+        <button
           class="app-container"
           @click="navigateTo(app.route)"
           :style="{ backgroundColor: app.color }"
         >
-          <BngIcon 
-            class="app-icon" 
-            :type="app.icon" 
+          <BngIcon
+            class="app-icon"
+            :type="app.icon"
             :style="{ color: app.iconColor }"
           />
+          <!-- Notification badge for Messages and Deep Web apps -->
+          <div
+            v-if="(app.name === 'Messages' || app.name === 'Deep Web') && (app.name === 'Deep Web' ? chatUnreadCount : unreadCount) > 0"
+            class="notification-badge"
+          >
+            {{ app.name === 'Deep Web' ? chatUnreadCount : unreadCount }}
+          </div>
         </button>
         <span class="app-name">{{ app.name }}</span>
       </div>
@@ -27,10 +34,12 @@
 import PhoneWrapper from "./PhoneWrapper.vue"
 import { BngIcon, icons } from "@/common/components/base"
 import { useRouter } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { lua } from "@/bridge"
 
 const router = useRouter()
+const unreadCount = ref(0)
+const chatUnreadCount = ref(0)
 
 const apps = ref([
   { name: 'Messages', icon: icons.documentText, route: '/career/phone-chat', color: '#25D366', iconColor: '#ffffff' },
@@ -50,12 +59,37 @@ const navigateTo = (route) => {
   router.push(route)
 }
 
+const updateUnreadCount = async () => {
+  try {
+    const isCareerActive = await lua.career_career.isActive()
+    if (!isCareerActive) return
+
+    // Get unread message count
+    const count = await lua.career_modules_mysummerMessages.getUnreadCount()
+    unreadCount.value = count || 0
+
+    // Get unread chat count (for Deep Web contacts)
+    const chatCounts = await lua.career_modules_mysummerChat.getUnreadCounts()
+    chatUnreadCount.value = chatCounts?.total || 0
+  } catch (e) {
+    console.error("Failed to get unread count", e)
+  }
+}
+
+let unreadUpdateInterval = null
+
 onMounted(async () => {
   try {
     // Check if career is active before calling business manager
     const isCareerActive = await lua.career_career.isActive()
     if (!isCareerActive) return
-    
+
+    // Get initial unread count
+    await updateUnreadCount()
+
+    // Update unread count every 5 seconds
+    unreadUpdateInterval = setInterval(updateUnreadCount, 5000)
+
     const purchased = await lua.career_modules_business_businessManager.getPurchasedBusinesses("tuningShop")
     if (purchased) {
       let hasShopApp = false
@@ -69,7 +103,7 @@ onMounted(async () => {
           }
         }
       }
-      
+
       if (hasShopApp) {
         // Add Tuning Shop app if not already present
         if (!apps.value.find(app => app.name === 'Tuning Shop')) {
@@ -85,6 +119,12 @@ onMounted(async () => {
     }
   } catch (e) {
     console.error("Failed to check tuning shop app availability", e)
+  }
+})
+
+onUnmounted(() => {
+  if (unreadUpdateInterval) {
+    clearInterval(unreadUpdateInterval)
   }
 })
 </script>
@@ -146,6 +186,26 @@ onMounted(async () => {
   &:hover {
     transform: scale(1.05);
   }
+}
+
+.notification-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background-color: #ff3333;
+  color: white;
+  border-radius: 50%;
+  min-width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 0 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  border: 2px solid #000;
 }
 
 .app-icon {

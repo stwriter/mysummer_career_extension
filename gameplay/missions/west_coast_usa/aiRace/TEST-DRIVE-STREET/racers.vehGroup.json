@@ -2,7 +2,7 @@
   "data":[
     {
       "config":"base_race1",
-      "model":"pigeon"
+      "model":"autobello"
     },
     {
       "config":"base_race1",
@@ -10,18 +10,38 @@
     },
     {
       "config":"base_race1",
-      "model":"autobello"
-    },
-    {
-      "config":"base_race1",
       "model":"midsize"
     },
     {
       "config":"base_race1",
+      "model":"pickup"
+    },
+    {
+      "config":"base_race1",
+      "model":"wendover"
+    },
+    {
+      "config":"base_race1",
+      "model":"sunburst2"
+    },
+    {
+      "config":"base_race1",
+      "model":"roamer"
+    },
+    {
+      "config":"base_race1",
+      "model":"van"
+    },
+    {
+      "config":"base_race1",
       "model":"lansdale"
+    },
+    {
+      "config":"base_race1",
+      "model":"pigeon"
     }
   ],
-  "name":"RACE1 SERIES",
+  "name":"STREET RACING",
   "tags":{},
   "type":"custom"
 }

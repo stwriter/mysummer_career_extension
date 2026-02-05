@@ -297,19 +297,85 @@ const handleChoices = (data) => {
   }
 }
 
+// Polling interval as fallback when events don't work
+let pollingInterval = null
+const POLLING_INTERVAL_MS = 400
+
+const refreshState = () => {
+  if (!window.bngApi) return
+
+  // Get conversation state
+  window.bngApi.engineLua(`career_modules_mysummerChat.getConversation("${props.contactId}")`, (result) => {
+    if (result) {
+      const newMessages = result.conversation?.messages || []
+      // Only update if there are new messages
+      if (newMessages.length !== messages.value.length) {
+        messages.value = newMessages
+        scrollToBottom()
+      }
+      contact.value = result.contact
+
+      // Update pending choices if they changed
+      const newChoices = result.pendingChoices || []
+      if (JSON.stringify(newChoices) !== JSON.stringify(pendingChoices.value)) {
+        pendingChoices.value = newChoices
+      }
+    }
+  })
+
+  // Get typing state
+  window.bngApi.engineLua(`career_modules_mysummerChat.isContactTyping("${props.contactId}")`, (result) => {
+    const newTyping = result === true
+    if (newTyping !== isTyping.value) {
+      isTyping.value = newTyping
+      if (newTyping) scrollToBottom()
+    }
+  })
+
+  // Get dialogue state
+  window.bngApi.engineLua(`career_modules_mysummerChat.getDialogueState("${props.contactId}")`, (result) => {
+    if (result) {
+      hasActiveDialogue.value = result.isActive
+      if (result.pendingChoices && result.pendingChoices.length > 0) {
+        pendingChoices.value = result.pendingChoices
+      }
+    }
+  })
+}
+
+const startPolling = () => {
+  if (pollingInterval) return
+  pollingInterval = setInterval(refreshState, POLLING_INTERVAL_MS)
+}
+
+const stopPolling = () => {
+  if (pollingInterval) {
+    clearInterval(pollingInterval)
+    pollingInterval = null
+  }
+}
+
 onMounted(() => {
   loadConversation()
 
+  // Try to use events, but also start polling as fallback
   if (window.bngApi) {
-    window.bngApi.on("mysummerChatConversationUpdated", handleConversationUpdated)
-    window.bngApi.on("mysummerChatNewMessage", handleNewMessage)
-    window.bngApi.on("mysummerChatTyping", handleTyping)
-    window.bngApi.on("mysummerChatChoices", handleChoices)
+    if (typeof window.bngApi.on === 'function') {
+      window.bngApi.on("mysummerChatConversationUpdated", handleConversationUpdated)
+      window.bngApi.on("mysummerChatNewMessage", handleNewMessage)
+      window.bngApi.on("mysummerChatTyping", handleTyping)
+      window.bngApi.on("mysummerChatChoices", handleChoices)
+    }
+
+    // Start polling as fallback (events might not work in all contexts)
+    startPolling()
   }
 })
 
 onUnmounted(() => {
-  if (window.bngApi) {
+  stopPolling()
+
+  if (window.bngApi && typeof window.bngApi.off === 'function') {
     window.bngApi.off("mysummerChatConversationUpdated", handleConversationUpdated)
     window.bngApi.off("mysummerChatNewMessage", handleNewMessage)
     window.bngApi.off("mysummerChatTyping", handleTyping)

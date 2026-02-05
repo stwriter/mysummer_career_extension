@@ -158,13 +158,13 @@ local pickupLocation = {
 -- SAVE/LOAD STATE (defined early so they can be used throughout)
 -- ============================================================================
 
-local saveFile = "mysummerPartShops.json"
+local saveFile = "mysummer_partshops.json"
 
 local function loadState()
   local _, savePath = career_saveSystem.getCurrentSaveSlot()
   if not savePath then return end
 
-  local filePath = savePath .. "/career/rls_career/" .. saveFile
+  local filePath = savePath .. "/career/mysummer/" .. saveFile
   local data = jsonReadFile(filePath)
   if data then
     state.pendingPickup = data.pendingPickup or {}
@@ -192,7 +192,10 @@ local function saveState(currentSavePath)
   savePath = currentSavePath or savePath
   if not savePath then return end
 
-  local filePath = savePath .. "/career/rls_career/" .. saveFile
+  local dirPath = savePath .. "/career/mysummer"
+  FS:directoryCreate(dirPath, true)
+
+  local filePath = dirPath .. "/" .. saveFile
   local data = {
     pendingPickup = state.pendingPickup,
     carryingParts = state.carryingParts,
@@ -1255,67 +1258,76 @@ end
 
 -- Called when POIs need to be refreshed
 local function onGetRawPoiListForLevel(levelIdentifier, elements)
-  if not career_career or not career_career.isActive() then return end
+  -- Wrap in pcall to prevent errors from breaking the bigmap
+  local success, err = pcall(function()
+    if not career_career or not career_career.isActive() then return end
 
-  -- Add shop POIs (kept for reference but not primary access method)
-  for shopId, shop in pairs(shopDefinitions) do
-    local poiData = {
-      id = "mysummerPartShop_" .. shopId,
-      data = {
-        type = "mysummerPartShop",
-        shopId = shopId,
-      },
-      markerInfo = {
-        bigmapMarker = {
-          pos = vec3(shop.pos[1], shop.pos[2], shop.pos[3]),
-          name = shop.name,
-          description = shop.description .. "\n\nPrice markup: " .. string.format("%.0f%%", (shop.priceMultiplier - 1) * 100),
-          icon = "poi_shop_round",
-          label = shop.name,
+    -- Add shop POIs (kept for reference but not primary access method)
+    for shopId, shop in pairs(shopDefinitions) do
+      if shop and shop.pos and shop.name then
+        local poiData = {
+          id = "mysummerPartShop_" .. shopId,
+          data = {
+            type = "mysummerPartShop",
+            shopId = shopId,
+          },
+          markerInfo = {
+            bigmapMarker = {
+              pos = vec3(shop.pos[1], shop.pos[2], shop.pos[3]),
+              name = shop.name,
+              description = (shop.description or "") .. "\n\nPrice markup: " .. string.format("%.0f%%", ((shop.priceMultiplier or 1) - 1) * 100),
+              icon = "poi_shop_round",
+              label = shop.name,
+            }
+          }
+        }
+        table.insert(elements, poiData)
+      end
+    end
+
+    -- Add pickup location POI (when there are parts waiting at port)
+    if state.pendingPickup and #state.pendingPickup > 0 and pickupLocation and pickupLocation.pos then
+      local pickupPoi = {
+        id = "mysummerPartShop_pickup",
+        data = {
+          type = "mysummerPartShopPickup",
+        },
+        markerInfo = {
+          bigmapMarker = {
+            pos = vec3(pickupLocation.pos[1], pickupLocation.pos[2], pickupLocation.pos[3]),
+            name = pickupLocation.name or "Import Warehouse",
+            description = "Pick up your order (" .. #state.pendingPickup .. " parts waiting)",
+            icon = "poi_warehouse_round",
+            label = "Parts Pickup",
+          }
         }
       }
-    }
-    table.insert(elements, poiData)
-  end
+      table.insert(elements, pickupPoi)
+    end
 
-  -- Add pickup location POI (when there are parts waiting at port)
-  if #state.pendingPickup > 0 then
-    local pickupPoi = {
-      id = "mysummerPartShop_pickup",
-      data = {
-        type = "mysummerPartShopPickup",
-      },
-      markerInfo = {
-        bigmapMarker = {
-          pos = vec3(pickupLocation.pos[1], pickupLocation.pos[2], pickupLocation.pos[3]),
-          name = pickupLocation.name,
-          description = "Pick up your order (" .. #state.pendingPickup .. " parts waiting)",
-          icon = "poi_warehouse_round",
-          label = "Parts Pickup",
+    -- Add delivery location POI (when carrying parts to deliver)
+    if state.carryingParts and #state.carryingParts > 0 and state.deliveryLocation then
+      local deliveryPoi = {
+        id = "mysummerPartShop_delivery",
+        data = {
+          type = "mysummerPartShopDelivery",
+        },
+        markerInfo = {
+          bigmapMarker = {
+            pos = vec3(state.deliveryLocation.x, state.deliveryLocation.y, state.deliveryLocation.z),
+            name = "Your Garage",
+            description = "Deliver " .. #state.carryingParts .. " parts",
+            icon = "poi_garage_round",
+            label = "Parts Delivery",
+          }
         }
       }
-    }
-    table.insert(elements, pickupPoi)
-  end
+      table.insert(elements, deliveryPoi)
+    end
+  end)
 
-  -- Add delivery location POI (when carrying parts to deliver)
-  if #state.carryingParts > 0 and state.deliveryLocation then
-    local deliveryPoi = {
-      id = "mysummerPartShop_delivery",
-      data = {
-        type = "mysummerPartShopDelivery",
-      },
-      markerInfo = {
-        bigmapMarker = {
-          pos = vec3(state.deliveryLocation.x, state.deliveryLocation.y, state.deliveryLocation.z),
-          name = "Your Garage",
-          description = "Deliver " .. #state.carryingParts .. " parts",
-          icon = "poi_garage_round",
-          label = "Parts Delivery",
-        }
-      }
-    }
-    table.insert(elements, deliveryPoi)
+  if not success then
+    log("E", logTag, "Error in onGetRawPoiListForLevel: " .. tostring(err))
   end
 end
 

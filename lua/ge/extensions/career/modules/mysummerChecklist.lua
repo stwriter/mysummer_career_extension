@@ -38,53 +38,24 @@ local state = {
 -- SAVE/LOAD
 -- ============================================================================
 
-local function getSaveFilePath()
-  local savePath = career_saveSystem.getSaveRootDirectory()
-  if not savePath then
-    return nil
-  end
-  return savePath .. "/career/rls_career/mysummer/checklist.json"
-end
-
-local function saveState()
-  local saveFile = getSaveFilePath()
-  if not saveFile then
-    log("W", logTag, "Cannot save - no save path available")
-    return
-  end
-
-  -- Create directory if needed
-  local dir = saveFile:match("(.+)/[^/]+$")
-  if dir then
-    FS:directoryCreate(dir, true)
-  end
-
-  local saveData = {
-    targetConfig = state.targetConfig,
-    projectInventoryId = state.projectInventoryId,
-    installedParts = state.installedParts,
-    stats = state.stats,
-  }
-
-  jsonWriteFile(saveFile, saveData, true)
-  log("I", logTag, "State saved to: " .. saveFile)
-end
+local saveFileName = "mysummer_checklist.json"
 
 local function loadState()
-  local saveFile = getSaveFilePath()
-  if not saveFile then
+  local _, savePath = career_saveSystem.getCurrentSaveSlot()
+  if not savePath then
     log("W", logTag, "Cannot load - no save path available")
     return
   end
 
-  if not FS:fileExists(saveFile) then
+  local filePath = savePath .. "/career/mysummer/" .. saveFileName
+  if not FS:fileExists(filePath) then
     log("I", logTag, "No save file found, using defaults")
     return
   end
 
-  local data = jsonReadFile(saveFile)
+  local data = jsonReadFile(filePath)
   if not data then
-    log("E", logTag, "Failed to load save file: " .. saveFile)
+    log("E", logTag, "Failed to load save file: " .. filePath)
     return
   end
 
@@ -93,7 +64,30 @@ local function loadState()
   state.installedParts = data.installedParts or {}
   state.stats = data.stats or state.stats
 
-  log("I", logTag, "State loaded from: " .. saveFile)
+  log("I", logTag, "State loaded from: " .. filePath)
+end
+
+local function saveState(currentSavePath)
+  local _, savePath = career_saveSystem.getCurrentSaveSlot()
+  savePath = currentSavePath or savePath
+  if not savePath then
+    log("W", logTag, "Cannot save - no save path available")
+    return
+  end
+
+  local dirPath = savePath .. "/career/mysummer"
+  FS:directoryCreate(dirPath, true)
+
+  local filePath = dirPath .. "/" .. saveFileName
+  local saveData = {
+    targetConfig = state.targetConfig,
+    projectInventoryId = state.projectInventoryId,
+    installedParts = state.installedParts,
+    stats = state.stats,
+  }
+
+  jsonWriteFile(filePath, saveData, true)
+  log("I", logTag, "State saved to: " .. filePath)
 end
 
 -- ============================================================================

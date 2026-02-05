@@ -1,43 +1,47 @@
 {
   "data":[
     {
-      "config":"IROK Race Series",
+      "config":"base_race1",
       "model":"autobello"
     },
     {
-      "config":"IROK Race Series",
+      "config":"base_race1",
       "model":"legran"
     },
     {
-      "config":"IROK Race Series",
-      "model":"etki"
+      "config":"base_race1",
+      "model":"midsize"
     },
     {
-      "config":"IROK Race Series",
-      "model":"barstow"
+      "config":"base_race1",
+      "model":"pickup"
     },
     {
-      "config":"IROK Race Series",
-      "model":"fullsize"
+      "config":"base_race1",
+      "model":"wendover"
     },
     {
-      "config":"IROK Race Series",
-      "model":"covet"
+      "config":"base_race1",
+      "model":"sunburst2"
     },
     {
-      "config":"IROK Mia Fast",
-      "model":"bx"
+      "config":"base_race1",
+      "model":"roamer"
     },
     {
-      "config":"IROK Race Series",
-      "model":"bluebuck"
+      "config":"base_race1",
+      "model":"van"
     },
     {
-      "config":"IROK Race Series",
-      "model":"burnside"
+      "config":"base_race1",
+      "model":"lansdale"
+    },
+    {
+      "config":"base_race1",
+      "model":"pigeon"
     }
   ],
-  "name":"IROK SERIES",
+  "name":"STREET RACING",
   "tags":{},
   "type":"custom"
 }

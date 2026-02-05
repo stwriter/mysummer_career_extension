@@ -1,0 +1,92 @@
+{
+  "name": "Rook - Loyalty",
+  "description": "Your relationship with Rook, the team mechanic. A loyal friend who keeps the car running.",
+  "order": 2100,
+  "isSkill": true,
+  "icon": "wrench",
+  "parentBranch": "mysummer",
+  "startLocked": false,
+  "levels": [
+    {
+      "requiredValue": 0,
+      "description": {
+        "type": "unlockCard",
+        "icon": "user",
+        "heading": "Teammate",
+        "description": "Rook is part of your crew. He handles the mechanical work."
+      }
+    },
+    {
+      "requiredValue": 50,
+      "description": {
+        "type": "unlockCard",
+        "icon": "handshake",
+        "heading": "Friend",
+        "description": "Rook trusts you more. He shares his concerns openly."
+      },
+      "unlockFlags": ["rook_friend"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "comments",
+          "heading": "Open Conversations",
+          "description": "Rook shares more personal thoughts with you."
+        }
+      ]
+    },
+    {
+      "requiredValue": 150,
+      "description": {
+        "type": "unlockCard",
+        "icon": "users",
+        "heading": "Confidant",
+        "description": "Rook sees you as family. He'll go the extra mile for you."
+      },
+      "unlockFlags": ["rook_confidant", "rook_mechanic_bonus"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "tools",
+          "heading": "Expert Repairs",
+          "description": "Rook works faster and better on your cars."
+        }
+      ]
+    },
+    {
+      "requiredValue": 300,
+      "description": {
+        "type": "unlockCard",
+        "icon": "shield",
+        "heading": "Brother",
+        "description": "Rook would do anything for you. Complete trust."
+      },
+      "unlockFlags": ["rook_brother", "rook_emergency_help"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "lifeRing",
+          "heading": "Emergency Support",
+          "description": "Rook can bail you out of tough situations."
+        }
+      ]
+    },
+    {
+      "requiredValue": 500,
+      "description": {
+        "type": "unlockCard",
+        "icon": "heart",
+        "heading": "Family",
+        "description": "Rook is family. Your bond is unbreakable."
+      },
+      "unlockFlags": ["rook_family"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "crown",
+          "heading": "Unbreakable Bond",
+          "description": "Rook's loyalty unlocks special story paths."
+        }
+      ]
+    }
+  ]
+}

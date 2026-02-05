@@ -28,6 +28,38 @@ local function tr(key, default)
   return translateLanguage(key, default or key)
 end
 
+-- Resolve bilingual text to current language
+-- Accepts: string, or {es="...", en="..."}, or table with .es/.en fields
+-- Returns: string in current language
+local function resolveBilingualText(text)
+  if type(text) ~= "table" then
+    return tostring(text)  -- Already a string
+  end
+
+  -- Check if it's a bilingual object
+  if text.es or text.en then
+    -- Get current language (BeamNG uses locale codes like "en_US", "es_ES")
+    local lang = Steam and Steam.language or "en_US"
+    local langCode = string.sub(lang, 1, 2)  -- Extract "en" from "en_US"
+
+    -- Select language (prefer current, fallback to Spanish, then English, then first available)
+    if langCode == "es" and text.es then
+      return text.es
+    elseif langCode == "en" and text.en then
+      return text.en
+    elseif text.es then
+      return text.es  -- Default to Spanish (primary language)
+    elseif text.en then
+      return text.en
+    else
+      return tostring(text)  -- Fallback
+    end
+  end
+
+  -- Not a bilingual object, return as string
+  return tostring(text)
+end
+
 -- ============================================================================
 -- CONTACT DEFINITIONS
 -- ============================================================================
@@ -1628,19 +1660,34 @@ local function showDialogue(contactId, messages)
   local contact = getContact(contactId)
   local formattedMessages = {}
 
+  -- Handle special case for internal monologues (player thoughts)
+  local isMonologue = (contactId == "player" or not contact)
+  local displayName = isMonologue and "" or (contact and contact.displayName or contactId)
+  local isUnlocked = isMonologue and true or (contact and contact.isUnlocked or false)
+
   for _, msg in ipairs(messages) do
     local content = msg
     local emotion = nil
     if type(msg) == "table" then
-      content = msg.content or msg.text or msg[1] or ""
-      emotion = msg.emotion -- optional emotion state (standard, happy, angry, sad, etc)
+      -- Check if it's a structured message with content/text/emotion
+      if msg.content or msg.text then
+        content = msg.content or msg.text
+        emotion = msg.emotion
+      -- Otherwise, treat the entire table as bilingual text {es="...", en="..."}
+      else
+        content = msg
+        emotion = nil
+      end
     end
+
+    -- Resolve bilingual text to current language
+    content = resolveBilingualText(content)
 
     table.insert(formattedMessages, {
       contactId = contactId,
-      contactName = contact.displayName or contactId,
-      isUnlocked = contact.isUnlocked,
-      content = content,
+      contactName = displayName,
+      isUnlocked = isUnlocked,
+      content = content,  -- Now a resolved string
       emotion = emotion, -- pass emotion to UI (defaults to 'standard' in Vue)
     })
   end
@@ -1679,6 +1726,9 @@ local function queueDialogue(contactId, messages, delay)
       content = msg.content or msg.text or msg[1] or ""
       speaker = msg.speaker or contactId
     end
+
+    -- Resolve bilingual text to current language
+    content = resolveBilingualText(content)
 
     -- Only queue messages from the contact (not player messages)
     if speaker ~= "player" and content and content ~= "" then

@@ -1,52 +1,29 @@
 {
   "additionalAttributes": {
-    "difficulty": "high"
+    "difficulty": "medium"
   },
-  "author": "ToeBee",
+  "author": "MySummer Team",
   "careerSetup": {
     "defaultStarKeys": [
-      "justFinish",
+      "finishBronze",
       "finishSilver",
       "finishGold"
     ],
     "showInCareer": false,
-    "showInFreeroam": true,
-    "skill": "(none)",
-    "starOutroTexts": {
-      "cleanGoldRace": "Way to go!",
-      "noStarUnlocked": "Tough luck. Want to try again?"
-    },
+    "showInFreeroam": false,
+    "skill": "mysummer-streetracing",
+    "starOutroTexts": {},
     "starRewards": {
-      "beatGoalTime": [
-        {
-          "attributeKey": "bonusStars",
-          "rewardAmount": 1
-        }
-      ],
-      "cleanGoldRace": [
-        {
-          "attributeKey": "bonusStars",
-          "rewardAmount": 1
-        }
-      ],
       "finishBronze": [
         {
           "attributeKey": "money",
-          "rewardAmount": 100
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 50
+          "rewardAmount": 500
         }
       ],
       "finishGold": [
         {
           "attributeKey": "money",
           "rewardAmount": 3000
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 15
         },
         {
           "attributeKey": "mysummer-streetracing",
@@ -57,45 +34,23 @@
         {
           "attributeKey": "money",
           "rewardAmount": 1500
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 10
-        },
-        {
-          "attributeKey": "mysummer-streetracing",
-          "rewardAmount": 100
-        }
-      ],
-      "justFinish": [
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 5
-        },
-        {
-          "attributeKey": "mysummer-streetracing",
-          "rewardAmount": 50
         }
       ]
     },
     "starsActive": {
-      "beatGoalTime": true,
-      "cleanGoldRace": true,
-      "finishBronze": false,
+      "finishBronze": true,
       "finishGold": true,
-      "finishSilver": true,
-      "justFinish": true
+      "finishSilver": true
     }
   },
   "customAdditionalAttributes": {},
   "date": 1699020942,
-  "description": "Race Rusty Steele's Kustom Gavril BlueBuck in a street race with up to 9 opponents in completely different vehicles. Rusty inherited the car from his grandfather, who was a famous stock car driver in his time. He dreams of following in his footsteps and becoming a professional racer someday, but for now he enjoys the thrill of the streets.",
+  "description": "The classic downtown circuit where legends are made. Sharp corners, narrow streets, and traffic that doesn't care about your racing dreams. This is where every street racer in West Coast USA cuts their teeth.",
   "devMission": false,
   "grouping": {
     "id": "STREETRACE",
     "label": "Street Races"
   },
-  "isAvailableAsScenario": true,
   "layers": [
     {
       "dir": "/gameplay/missions/west_coast_usa/aiRace/001-STREET/",
@@ -114,9 +69,9 @@
   "missionTypeData": {
     "allowFlip": true,
     "allowRecover": true,
-    "camPathActive": true,
+    "camPathActive": false,
     "damageFailActive": false,
-    "damageFailText": "You got wrecked!",
+    "damageFailText": "missions.aiRace.general.damageFail",
     "damageLimit": 10000,
     "flipLimit": -1,
     "goalCollisionsLimit": 1,
@@ -128,9 +83,10 @@
     "mapPreviewMode": "navgraph",
     "maxRacerCount": 9,
     "minRacerCount": 1,
+    "playerStartIndex": 5,
     "prefabActive": false,
     "raceFile": "/gameplay/missions/west_coast_usa/aiRace/001-STREET/race.race.json",
-    "racerAggression": 1.100000024,
+    "racerAggression": 1,
     "racerAwareness": true,
     "racerCount": 9,
     "racerRandomnessScale": 1,
@@ -139,40 +95,42 @@
     "racerSkill": 1,
     "recoverLimit": -1,
     "shuffleGroup": true,
-    "smartStartPlace": true,
-    "startText": "These races are designed to have a high level of carnage. If you would like less carnage and more racing try turning off traffic. If your FPS gets too low the AI will drive badly. Try lowering the number of AI cars if you need more FPS.",
-    "startTitle": "Street Race #1",
+    "smartStartPlace": false,
+    "startText": "First rule of street racing: there are no rules. Watch out for traffic and don't wreck your ride.",
     "stoppedLimit": 0,
     "useGroundmarkers": false,
     "vehicleGroupActive": true
   },
-  "name": "Street Race #1",
+  "name": "Downtown Dash",
   "retryBehaviour": "infiniteRetries",
   "setupModules": {
     "environment": {
       "enabled": false
     },
     "traffic": {
-      "activeAmount": 1,
-      "amount": 10,
-      "enabled": true,
+      "activeAmount": 0,
+      "amount": 0,
+      "enabled": false,
       "parkedAmount": 0,
-      "respawnRate": 2.999999285,
+      "respawnRate": 1,
       "useCustomGroup": false,
       "useGameOptions": false,
       "usePrevTraffic": false,
-      "useSimpleVehs": true,
-      "useTraffic": true
+      "useSimpleVehs": false,
+      "useTraffic": false
     },
     "vehicles": {
       "enabled": true,
       "includePlayerVehicle": true,
-      "prioritizePlayerVehicle": true,
-      "vehicles": []
+      "playerVehicleDiffs": {},
+      "prioritizePlayerVehicle": false,
+      "vehicles": {}
     }
   },
   "startCondition": {
-    "type": "always"
+    "branchId": "mysummer-streetracing",
+    "level": 0,
+    "type": "branchLevel"
   },
   "startTrigger": {
     "level": "west_coast_usa",
@@ -181,16 +139,16 @@
       -931.6066284,
       144.579834
     ],
-    "radius": 5.390620903,
-    "rot": [
-      0.01859643151,
-      0.006439508396,
-      -0.8194412813,
-      0.5728251845
-    ],
+    "radius": 5,
+    "rot": {
+      "w": 0.5728251845,
+      "x": 0.01859643151,
+      "y": 0.006439508396,
+      "z": -0.8194412813
+    },
     "type": "coordinates"
   },
   "visibleCondition": {
-    "type": "always"
+    "type": "automatic"
   }
 }

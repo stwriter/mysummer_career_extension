@@ -1,95 +1,59 @@
 {
   "additionalAttributes": {
-    "difficulty": "high"
+    "difficulty": "medium"
   },
-  "author": "ToeBee",
+  "author": "MySummer Team",
   "careerSetup": {
     "defaultStarKeys": [
-      "justFinish",
+      "finishBronze",
       "finishSilver",
       "finishGold"
     ],
     "showInCareer": false,
     "showInFreeroam": true,
-    "skill": "(none)",
-    "starOutroTexts": {
-      "cleanGoldRace": "Way to go!",
-      "noStarUnlocked": "Tough luck. Want to try again?"
-    },
+    "skill": "mysummer-streetracing",
+    "starOutroTexts": {},
     "starRewards": {
-      "beatGoalTime": [
-        {
-          "attributeKey": "bonusStars",
-          "rewardAmount": 1
-        }
-      ],
-      "cleanGoldRace": [
-        {
-          "attributeKey": "bonusStars",
-          "rewardAmount": 1
-        }
-      ],
       "finishBronze": [
         {
           "attributeKey": "money",
           "rewardAmount": 100
         },
         {
-          "attributeKey": "beamXP",
-          "rewardAmount": 50
+          "attributeKey": "mysummer-streetracing",
+          "rewardAmount": 10
         }
       ],
       "finishGold": [
         {
           "attributeKey": "money",
-          "rewardAmount": 3000
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 15
-        },
-        {
-          "attributeKey": "mysummer-streetracing",
-          "rewardAmount": 200
-        }
-      ],
-      "finishSilver": [
-        {
-          "attributeKey": "money",
-          "rewardAmount": 1500
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 10
-        },
-        {
-          "attributeKey": "mysummer-streetracing",
-          "rewardAmount": 100
-        }
-      ],
-      "justFinish": [
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 5
+          "rewardAmount": 500
         },
         {
           "attributeKey": "mysummer-streetracing",
           "rewardAmount": 50
         }
+      ],
+      "finishSilver": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 250
+        },
+        {
+          "attributeKey": "mysummer-streetracing",
+          "rewardAmount": 25
+        }
       ]
     },
     "starsActive": {
-      "beatGoalTime": true,
-      "cleanGoldRace": true,
-      "finishBronze": false,
+      "finishBronze": true,
       "finishGold": true,
-      "finishSilver": true,
-      "justFinish": true
+      "finishSilver": true
     }
   },
   "customAdditionalAttributes": {},
   "date": 1699020942,
-  "description": "Test race created with MySummer Race Editor",
+  "description": "Development test race. Use this to test race mechanics and AI behavior before deploying to production races.",
   "devMission": true,
   "grouping": {
     "id": "TESTRACE",
@@ -114,9 +78,9 @@
   "missionTypeData": {
     "allowFlip": true,
     "allowRecover": true,
-    "camPathActive": true,
+    "camPathActive": false,
     "damageFailActive": false,
-    "damageFailText": "You got wrecked!",
+    "damageFailText": "missions.aiRace.general.damageFail",
     "damageLimit": 10000,
     "flipLimit": -1,
     "goalCollisionsLimit": 1,
@@ -128,9 +92,10 @@
     "mapPreviewMode": "navgraph",
     "maxRacerCount": 9,
     "minRacerCount": 1,
+    "playerStartIndex": 9,
     "prefabActive": false,
     "raceFile": "/gameplay/missions/west_coast_usa/aiRace/000-TEST/race.race.json",
-    "racerAggression": 1.100000024,
+    "racerAggression": 1.1,
     "racerAwareness": true,
     "racerCount": 9,
     "racerRandomnessScale": 1,
@@ -140,35 +105,35 @@
     "recoverLimit": -1,
     "shuffleGroup": true,
     "smartStartPlace": true,
-    "startText": "These races are designed to have a high level of carnage. If you would like less carnage and more racing try turning off traffic. If your FPS gets too low the AI will drive badly. Try lowering the number of AI cars if you need more FPS.",
-    "startTitle": "Test Race",
+    "startText": "Test race for development. AI traffic enabled for stress testing.",
     "stoppedLimit": 0,
     "useGroundmarkers": false,
     "vehicleGroupActive": true
   },
-  "name": "Test Race",
+  "name": "Dev Test Race",
   "retryBehaviour": "infiniteRetries",
   "setupModules": {
     "environment": {
       "enabled": false
     },
     "traffic": {
-      "activeAmount": 1,
-      "amount": 10,
-      "enabled": true,
+      "activeAmount": 0,
+      "amount": 0,
+      "enabled": false,
       "parkedAmount": 0,
-      "respawnRate": 2.999999285,
+      "respawnRate": 1,
       "useCustomGroup": false,
       "useGameOptions": false,
       "usePrevTraffic": false,
-      "useSimpleVehs": true,
-      "useTraffic": true
+      "useSimpleVehs": false,
+      "useTraffic": false
     },
     "vehicles": {
       "enabled": true,
       "includePlayerVehicle": true,
+      "playerVehicleDiffs": {},
       "prioritizePlayerVehicle": true,
-      "vehicles": []
+      "vehicles": {}
     }
   },
   "startCondition": {
@@ -181,13 +146,13 @@
       -931.6066284,
       144.579834
     ],
-    "radius": 5.390620903,
-    "rot": [
-      0.01859643151,
-      0.006439508396,
-      -0.8194412813,
-      0.5728251845
-    ],
+    "radius": 5,
+    "rot": {
+      "w": 0.5728251845,
+      "x": 0.01859643151,
+      "y": 0.006439508396,
+      "z": -0.8194412813
+    },
     "type": "coordinates"
   },
   "visibleCondition": {

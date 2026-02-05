@@ -4,6 +4,8 @@ import { useBridge } from "@/bridge"
 import { addPopup } from "@/services/popup"
 import GrandfatherLetter from "../components/mysummer/GrandfatherLetter.vue"
 import PhaseTransition from "../components/mysummer/PhaseTransition.vue"
+import WelcomeTutorial from "../components/mysummer/WelcomeTutorial.vue"
+import StoryScene from "../components/mysummer/StoryScene.vue"
 
 export const useMySummerStoryStore = defineStore("mysummerStory", () => {
   const { events } = useBridge()
@@ -12,6 +14,12 @@ export const useMySummerStoryStore = defineStore("mysummerStory", () => {
   const showingIntro = ref(false)
   const transitionData = ref(null)
   const showingTransition = ref(false)
+
+  const escapeLuaString = (value) => {
+    return String(value ?? "")
+      .replace(/\\/g, "\\\\")
+      .replace(/"/g, '\\"')
+  }
 
   // Handle intro event from Lua (grandfather's letter on first login)
   const handleShowIntro = async (data) => {
@@ -52,6 +60,17 @@ export const useMySummerStoryStore = defineStore("mysummerStory", () => {
         isFinalLevel: false
       })
       await chapterPopup.promise
+
+      // Show welcome tutorial after chapter intro
+      console.log("[mysummerStoryStore] Showing welcome tutorial")
+      await new Promise(resolve => setTimeout(resolve, 500))
+      const tutorialPopup = addPopup(markRaw(WelcomeTutorial), {
+        projectCarName: 'ETK-I',
+        projectCarFullName: 'ETK I-Series',
+        language: data.language || 'en'
+      })
+      await tutorialPopup.promise
+      console.log("[mysummerStoryStore] Tutorial dismissed")
     }
   }
 
@@ -78,14 +97,59 @@ export const useMySummerStoryStore = defineStore("mysummerStory", () => {
     showingTransition.value = false
   }
 
+  const handleShowSceneSequence = async (data) => {
+    if (!data || !data.scenes || data.scenes.length === 0) return
+
+    const sequenceId = data.sequenceId || "scene_sequence"
+    console.log("[mysummerStoryStore] Scene sequence:", sequenceId, data.scenes.length)
+
+    for (const scene of data.scenes) {
+      const popup = addPopup(markRaw(StoryScene), {
+        sceneId: scene.id,
+        contactId: scene.contactId,
+        contactName: scene.contactName,
+        emotion: scene.emotion || "standard",
+        title: scene.title || "",
+        text: scene.text || "",
+        texts: scene.texts || null,
+        choices: scene.choices || null,
+        continueLabel: scene.continueLabel || "",
+        language: data.language || ""
+      })
+
+      const result = await popup.promise
+      if (result && result.choice && window.bngApi) {
+        const choiceValue = escapeLuaString(result.choice)
+        const sceneId = escapeLuaString(scene.id)
+        const seqId = escapeLuaString(sequenceId)
+        window.bngApi.engineLua(
+          `career_modules_mysummerCareer.handleSceneChoice("${seqId}", "${sceneId}", "${choiceValue}")`
+        )
+      }
+    }
+  }
+
+  const handleShowScene = async (data) => {
+    if (!data) return
+    await handleShowSceneSequence({
+      sequenceId: data.sequenceId || "scene_single",
+      scenes: [data],
+      language: data.language || ""
+    })
+  }
+
   const dispose = () => {
     events.off("mysummerShowIntro", handleShowIntro)
     events.off("mysummerPhaseTransition", handlePhaseTransition)
+    events.off("mysummerShowSceneSequence", handleShowSceneSequence)
+    events.off("mysummerShowScene", handleShowScene)
   }
 
   // Register event listeners
   events.on("mysummerShowIntro", handleShowIntro)
   events.on("mysummerPhaseTransition", handlePhaseTransition)
+  events.on("mysummerShowSceneSequence", handleShowSceneSequence)
+  events.on("mysummerShowScene", handleShowScene)
 
   return {
     introData,

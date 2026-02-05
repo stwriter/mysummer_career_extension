@@ -3,7 +3,8 @@
   "description": "Your reputation in the underground racing scene",
   "order": 2100,
   "isSkill": true,
-  "icon": "racingFlag",
+  "icon": "raceFlag",
+  "showProgressAsStars": true,
   "parentBranch": "mysummer",
   "startLocked": false,
   "levels": [
@@ -12,56 +13,85 @@
       "description": {
         "type": "unlockCard",
         "icon": "info",
-        "heading": "Entre Amigos / Among Friends",
+        "heading": "Prologue / Prologo",
+        "description": "The beginning of your journey."
+      },
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "home",
+          "heading": "The Garage",
+          "description": "Your grandfather's legacy awaits."
+        }
+      ],
+      "storyText": {
+        "en": {
+          "name": "Prologue - The Garage",
+          "intro": "The Miramar sits in the garage, faithful as ever.\nBeside it, covered in dust, lies a chassis that once held dreams.\nA letter from your grandfather waits on the workbench.",
+          "completion": "This is where it all begins."
+        },
+        "es": {
+          "name": "Prologo - El Garaje",
+          "intro": "El Miramar descansa en el garaje, fiel como siempre.\nA su lado, cubierto de polvo, yace un chasis que una vez guardo suenos.\nUna carta de tu abuelo espera en el banco de trabajo.",
+          "completion": "Aqui es donde todo comienza."
+        }
+      }
+    },
+    {
+      "requiredValue": 300,
+      "description": {
+        "type": "unlockCard",
+        "icon": "info",
+        "heading": "Entre Conocidos / Among Friends",
         "description": "Racing just for the joy of it."
       },
       "unlocks": [
         {
           "type": "unlockCard",
-          "icon": "racingFlag",
-          "heading": "Basic Street Races",
-          "description": "Access to beginner street races and circuits."
+          "icon": "raceFlag",
+          "heading": "Informal Races",
+          "description": "Access to casual races with friends."
         }
       ],
       "storyText": {
         "en": {
-          "name": "Among Friends",
-          "intro": "It starts without spotlights or applause.\nJust old cars, familiar roads, and people racing for the simple joy of it.\nNo one talks about reputation yet.",
-          "completion": "You're not racing to win. You're racing to learn how not to lose."
+          "name": "Chapter 1 - Racing Among Friends",
+          "intro": "It starts without spotlights or applause.\nJust old cars, familiar roads, and people racing for the simple joy of it.\nA mysterious observer watches from the shadows.",
+          "completion": "Someone is watching. Someone who knows more than they should."
         },
         "es": {
-          "name": "Entre Amigos",
-          "intro": "Todo empieza sin focos ni aplausos.\nSolo coches viejos, carreteras conocidas y gente que corre por el simple placer de hacerlo.\nAquí nadie habla de reputación. Todavía.",
-          "completion": "No corres para ganar. Corres para aprender a no perder."
+          "name": "Capitulo 1 - Carreras entre Conocidos",
+          "intro": "Todo empieza sin focos ni aplausos.\nSolo coches viejos, carreteras conocidas y gente que corre por el simple placer de hacerlo.\nUn observador misterioso mira desde las sombras.",
+          "completion": "Alguien te observa. Alguien que sabe mas de lo que deberia."
         }
       }
     },
     {
-      "requiredValue": 500,
+      "requiredValue": 800,
       "description": {
         "type": "unlockCard",
         "icon": "info",
-        "heading": "Polvo y Asfalto / Dust and Asphalt",
-        "description": "Winning starts to matter."
+        "heading": "Underground Bajo / Low Underground",
+        "description": "First contact with the illegal scene."
       },
       "unlocks": [
         {
           "type": "unlockCard",
-          "icon": "star",
-          "heading": "Rally & Dirt Races",
-          "description": "Access to rally stages and dirt circuits."
+          "icon": "userSecret",
+          "heading": "Ghost Contact",
+          "description": "Access to underground parts and contacts."
         }
       ],
       "storyText": {
         "en": {
-          "name": "Dust and Asphalt",
-          "intro": "Races are no longer improvised.\nThere are rules, there are routes… and people watching.\nWinning starts to matter.",
-          "completion": "Luck runs out. Skill is what remains."
+          "name": "Chapter 2 - Low Underground",
+          "intro": "A message from an unknown number changes everything.\nSmall street races, low stakes, controlled risks.\nBut the first piece for your project car awaits.",
+          "completion": "Ghost has opened a door. What lies beyond is up to you."
         },
         "es": {
-          "name": "Polvo y Asfalto",
-          "intro": "Las carreras ya no son improvisadas.\nHay reglas, hay recorridos… y hay gente mirando.\nGanar empieza a importar.",
-          "completion": "La suerte se acaba. Lo que queda es habilidad."
+          "name": "Capitulo 2 - Underground Bajo",
+          "intro": "Un mensaje de un numero desconocido lo cambia todo.\nCarreras callejeras pequenas, apuestas bajas, riesgos controlados.\nPero la primera pieza para tu proyecto te espera.",
+          "completion": "Ghost ha abierto una puerta. Lo que hay detras depende de ti."
         }
       }
     },
@@ -70,66 +100,102 @@
       "description": {
         "type": "unlockCard",
         "icon": "info",
-        "heading": "Límites Difusos / Blurred Lines",
-        "description": "Not everyone plays fair anymore."
+        "heading": "Rallys Regionales / Regional Rallies",
+        "description": "Public recognition and external pressure."
+      },
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "star",
+          "heading": "Rally Events",
+          "description": "Access to organized rally events."
+        },
+        {
+          "type": "unlockCard",
+          "icon": "wrench",
+          "heading": "New Contacts",
+          "description": "Meet Techie, Muscle, and Import."
+        }
+      ],
+      "storyText": {
+        "en": {
+          "name": "Chapter 3 - Regional Rallies",
+          "intro": "Organized events. Real stakes. Your name in the papers.\nNew faces appear - Techie, Muscle, Import.\nA newspaper clipping about The Big One surfaces.",
+          "completion": "Your grandfather's name is spoken again. The past is catching up."
+        },
+        "es": {
+          "name": "Capitulo 3 - Rallys Regionales",
+          "intro": "Eventos organizados. Apuestas reales. Tu nombre en los periodicos.\nNuevas caras aparecen - Techie, Muscle, Import.\nUn recorte de periodico sobre The Big One resurge.",
+          "completion": "El nombre de tu abuelo vuelve a sonar. El pasado te alcanza."
+        }
+      }
+    },
+    {
+      "requiredValue": 2500,
+      "description": {
+        "type": "unlockCard",
+        "icon": "info",
+        "heading": "Underground Alto / High Underground",
+        "description": "Crossing the line."
+      },
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "eyeSlash",
+          "heading": "Shadow Network",
+          "description": "Access to Shadow and high-risk operations."
+        }
+      ],
+      "storyText": {
+        "en": {
+          "name": "Chapter 4 - High Underground",
+          "intro": "The races are harder. The nights are longer.\nShadow enters the scene. Police heat rises.\nGhost becomes distant. Something is wrong.",
+          "completion": "Lines have been crossed. There's no going back now."
+        },
+        "es": {
+          "name": "Capitulo 4 - Underground Alto",
+          "intro": "Las carreras son mas duras. Las noches mas largas.\nShadow entra en escena. El calor policial aumenta.\nGhost se distancia. Algo no va bien.",
+          "completion": "Se han cruzado lineas. Ya no hay vuelta atras."
+        }
+      }
+    },
+    {
+      "requiredValue": 4000,
+      "description": {
+        "type": "unlockCard",
+        "icon": "info",
+        "heading": "Rallys Oficiales / Official Rallies",
+        "description": "Legitimacy and betrayal."
       },
       "unlocks": [
         {
           "type": "unlockCard",
           "icon": "trophy",
-          "heading": "Track Racing & Drag",
-          "description": "Access to professional tracks and drag strips."
+          "heading": "Federation Events",
+          "description": "Access to official racing federation events."
         }
       ],
+      "requiresProjectCar": true,
       "storyText": {
         "en": {
-          "name": "Blurred Lines",
-          "intro": "As the money grows, the rules start to fade.\nNights get longer, cars get faster, and mistakes become expensive.\nNot everyone plays fair anymore.",
-          "completion": "Not everyone racing wants to finish first."
+          "name": "Chapter 5 - Official Rallies",
+          "intro": "Federated events. Technical inspections. The world is watching.\nGhost reappears with a warning.\nYour project car is ready... but someone has other plans.",
+          "completion": "Your car is stolen. Everything you built, gone in one night."
         },
         "es": {
-          "name": "Límites Difusos",
-          "intro": "Cuando el dinero aumenta, las normas se vuelven borrosas.\nLas noches son más largas, los coches más rápidos, y los errores más caros.\nAquí ya no todos juegan limpio.",
-          "completion": "No todo el que corre quiere llegar primero."
+          "name": "Capitulo 5 - Rallys Oficiales",
+          "intro": "Eventos federados. Inspecciones tecnicas. El mundo mira.\nGhost reaparece con una advertencia.\nTu proyecto esta listo... pero alguien tiene otros planes.",
+          "completion": "Tu coche ha sido robado. Todo lo que construiste, perdido en una noche."
         }
       }
     },
     {
-      "requiredValue": 3500,
-      "description": {
-        "type": "unlockCard",
-        "icon": "info",
-        "heading": "Underground",
-        "description": "Where legends are born… or broken."
-      },
-      "unlocks": [
-        {
-          "type": "unlockCard",
-          "icon": "crown",
-          "heading": "Underground Scene",
-          "description": "Access to drift, touge, and underground events."
-        }
-      ],
-      "storyText": {
-        "en": {
-          "name": "Into the Underground",
-          "intro": "There's a world beneath the surface.\nNo clear rules. No trophies.\nJust headlights in the dark and the rush of risking everything.\nThis is where legends are born… or broken.",
-          "completion": "You earned their respect. But respect doesn't win races. Speed does."
-        },
-        "es": {
-          "name": "Hacia el Underground",
-          "intro": "Hay un mundo bajo el mundo.\nSin reglas claras. Sin trofeos.\nSolo faros en la oscuridad y la adrenalina de arriesgarlo todo.\nAquí es donde nacen las leyendas… o se rompen.",
-          "completion": "Te has ganado su respeto. Pero el respeto no gana carreras. La velocidad sí."
-        }
-      }
-    },
-    {
-      "requiredValue": 7000,
+      "requiredValue": 6000,
       "description": {
         "type": "unlockCard",
         "icon": "info",
         "heading": "The Big One",
-        "description": "There are no second chances."
+        "description": "Revelation and closure."
       },
       "unlocks": [
         {
@@ -139,16 +205,17 @@
           "description": "The legendary race your grandfather dreamed of."
         }
       ],
+      "requiresProjectCar": true,
       "storyText": {
         "en": {
-          "name": "The Big One",
-          "intro": "Everything leads here.\nEvery night, every part, every risk taken.\nThere are no second chances.",
-          "completion": "Do it right. Don't look back."
+          "name": "Chapter 6 - Road to The Big One",
+          "intro": "The truth is revealed. Old wounds are healed.\nQualifying series on circuit.\nThe definitive race awaits: The Big One.",
+          "completion": "Do it for both of you."
         },
         "es": {
-          "name": "The Big One",
-          "intro": "Todo conduce hasta aquí.\nCada noche, cada pieza, cada riesgo asumido.\nNo hay segundas oportunidades.",
-          "completion": "Hazlo bien. No mires atrás."
+          "name": "Capitulo 6 - Camino a The Big One",
+          "intro": "La verdad se revela. Viejas heridas sanan.\nSeries clasificatorias en circuito.\nLa carrera definitiva espera: The Big One.",
+          "completion": "Hazlo por los dos."
         }
       }
     }

@@ -21,9 +21,8 @@ local jbeamIO = require("jbeam/io")
 local freeroam_facilities = require("freeroam/facilities")
 local core_groundMarkers = require("core/groundMarkers")
 
--- Save file is now in mysummer subdirectory
-local saveDir = "/career/rls_career/mysummer"
-local saveFileName = "market.json"
+-- Save file in mysummer subdirectory
+local saveFileName = "mysummer_market.json"
 local modelKey = "etki"
 local targetListings = 6
 local targetLeads = 2
@@ -93,6 +92,7 @@ state = {
   nextListingId = 1,
   nextLeadId = 1,
   activePickup = nil,
+  completingPickup = false,  -- Guard to prevent duplicate pickup during async cargo loading
   pendingPickups = {},  -- Queue of selected pickups for multiple selection
   hasInitialVehicles = false,
   projectInventoryId = nil,
@@ -236,27 +236,15 @@ local function hasMissingInsuranceEntries()
   return false
 end
 
-local function ensureSaveDir(savePath)
-  local dirPath = savePath .. "/career/rls_career"
-  if not FS:directoryExists(dirPath) then
-    FS:directoryCreate(dirPath)
-  end
-  -- Also ensure mysummer subdirectory exists
-  local mysummerDir = dirPath .. saveDir
-  if not FS:directoryExists(mysummerDir) then
-    FS:directoryCreate(mysummerDir, true)
-  end
-  return dirPath
-end
-
 local function getSavePath(currentSavePath)
   local _, savePath = career_saveSystem.getCurrentSaveSlot()
   local effectivePath = currentSavePath or savePath
   if not effectivePath then
     return nil
   end
-  local dirPath = ensureSaveDir(effectivePath)
-  return dirPath .. saveDir .. "/" .. saveFileName
+  local dirPath = effectivePath .. "/career/mysummer"
+  FS:directoryCreate(dirPath, true)
+  return dirPath .. "/" .. saveFileName
 end
 
 local function toVec3(pos)
@@ -297,6 +285,7 @@ local function loadState()
   state.nextListingId = tonumber(data.nextListingId) or 1
   state.nextLeadId = tonumber(data.nextLeadId) or 1
   state.activePickup = data.activePickup or nil
+  state.completingPickup = false  -- Always reset transient flag on load
   state.pendingPickups = data.pendingPickups or {}
   state.hasInitialVehicles = data.hasInitialVehicles or false
   state.projectInventoryId = data.projectInventoryId or nil
@@ -1445,18 +1434,24 @@ local function completePickup()
   if not state.activePickup then
     return
   end
+  if state.completingPickup then
+    return -- Prevent re-entry during async cargo operations
+  end
 
+  state.completingPickup = true -- Set flag immediately to prevent duplicate calls
   local pickup = state.activePickup
 
   -- Check cargo space first (async)
   local cargoModule = career_modules_mysummerCargo
   if not cargoModule then
+    state.completingPickup = false -- Reset flag
     ui_message("Cargo system unavailable.", 4, "Parts Market", "warning")
     return
   end
 
   cargoModule.checkCargoSpace({ pickup.partName }, function(cargoResult)
     if not cargoResult.canLoad then
+      state.completingPickup = false -- Reset flag so player can retry
       if cargoResult.availableSlots == 0 then
         ui_message("No cargo container found! Install a cargo box in your vehicle.", 5, "Parts Market", "warning")
       else
@@ -1471,6 +1466,7 @@ local function completePickup()
     if price > 0 then
       local priceData = { money = { amount = price, canBeNegative = false } }
       if not career_modules_payment.canPay(priceData) then
+        state.completingPickup = false -- Reset flag so player can retry
         ui_message("You cannot afford this pickup yet.", 4, "Parts Market", "warning")
         return
       end
@@ -1491,6 +1487,7 @@ local function completePickup()
 
     cargoModule.loadPartIntoCargo(partData, function(success, cargoIdOrError, container)
       if not success then
+        state.completingPickup = false -- Reset flag so player can retry
         -- Refund payment if cargo loading failed
         if price > 0 then
           career_modules_payment.reward({ money = { amount = price } }, { label = "Parts pickup refund" })
@@ -1523,6 +1520,7 @@ local function completePickup()
       end
 
       state.activePickup = nil
+      state.completingPickup = false -- Reset flag
       clearRoute()
 
       -- Set V3 context for recent purchase (for DeepWeb conversations)

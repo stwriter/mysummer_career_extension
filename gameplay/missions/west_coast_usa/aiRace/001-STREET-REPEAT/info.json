@@ -1,0 +1,150 @@
+{
+  "additionalAttributes": {
+    "difficulty": "medium"
+  },
+  "author": "MySummer Team",
+  "careerSetup": {
+    "defaultStarKeys": [
+      "finishBronze",
+      "finishSilver",
+      "finishGold"
+    ],
+    "showInCareer": false,
+    "showInFreeroam": false,
+    "skill": null,
+    "starOutroTexts": {},
+    "starRewards": {
+      "finishBronze": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 500
+        }
+      ],
+      "finishGold": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 3000
+        }
+      ],
+      "finishSilver": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 1500
+        }
+      ]
+    },
+    "starsActive": {
+      "finishBronze": true,
+      "finishGold": true,
+      "finishSilver": true
+    }
+  },
+  "customAdditionalAttributes": {},
+  "date": 1699020942,
+  "description": "The classic downtown circuit where legends are made. Sharp corners, narrow streets, and traffic that doesn't care about your racing dreams. This is where every street racer in West Coast USA cuts their teeth. (Repeatable - No skill XP)",
+  "devMission": false,
+  "grouping": {
+    "id": "STREETRACE-REPEAT",
+    "label": "Street Races (Repeat)"
+  },
+  "layers": [
+    {
+      "dir": "/gameplay/missions/west_coast_usa/aiRace/001-STREET-REPEAT/",
+      "fixed": true,
+      "isMissionFolderDir": true,
+      "isMissionTypeDir": false
+    },
+    {
+      "dir": "/gameplay/missionTypes/aiRace/",
+      "fixed": true,
+      "isMissionFolderDir": false,
+      "isMissionTypeDir": true
+    }
+  ],
+  "missionType": "aiRace",
+  "missionTypeData": {
+    "allowFlip": true,
+    "allowRecover": true,
+    "camPathActive": false,
+    "damageFailActive": false,
+    "damageFailText": "missions.aiRace.general.damageFail",
+    "damageLimit": 10000,
+    "flipLimit": -1,
+    "goalCollisionsLimit": 1,
+    "goalCollisionsTarget": 5,
+    "goalLaps": 3,
+    "goalRecoveries": 0,
+    "goalTime": 225,
+    "lapCount": 3,
+    "mapPreviewMode": "navgraph",
+    "maxRacerCount": 9,
+    "minRacerCount": 1,
+    "playerStartIndex": 9,
+    "prefabActive": false,
+    "raceFile": "/gameplay/missions/west_coast_usa/aiRace/001-STREET-REPEAT/race.race.json",
+    "racerAggression": 1,
+    "racerAwareness": true,
+    "racerCount": 9,
+    "racerRandomnessScale": 1,
+    "racerRough": false,
+    "racerRubberbandMode": false,
+    "racerSkill": 1,
+    "recoverLimit": -1,
+    "shuffleGroup": true,
+    "smartStartPlace": false,
+    "startText": "First rule of street racing: there are no rules. Watch out for traffic and don't wreck your ride.",
+    "stoppedLimit": 0,
+    "useGroundmarkers": false,
+    "vehicleGroupActive": true
+  },
+  "name": "Downtown Dash (Repeat)",
+  "retryBehaviour": "infiniteRetries",
+  "setupModules": {
+    "environment": {
+      "enabled": false
+    },
+    "traffic": {
+      "activeAmount": 0,
+      "amount": 0,
+      "enabled": false,
+      "parkedAmount": 0,
+      "respawnRate": 1,
+      "useCustomGroup": false,
+      "useGameOptions": false,
+      "usePrevTraffic": false,
+      "useSimpleVehs": false,
+      "useTraffic": false
+    },
+    "vehicles": {
+      "enabled": true,
+      "includePlayerVehicle": true,
+      "playerVehicleDiffs": {},
+      "prioritizePlayerVehicle": false,
+      "vehicles": {}
+    }
+  },
+  "startCondition": {
+    "branchId": "mysummer-streetracing",
+    "level": 0,
+    "type": "branchLevel"
+  },
+  "startTrigger": {
+    "level": "west_coast_usa",
+    "pos": [
+      572.947937,
+      -931.6066284,
+      144.579834
+    ],
+    "radius": 5,
+    "rot": {
+      "w": 0.5728251845,
+      "x": 0.01859643151,
+      "y": 0.006439508396,
+      "z": -0.8194412813
+    },
+    "type": "coordinates"
+  },
+  "visibleCondition": {
+    "type": "automatic"
+  }
+}

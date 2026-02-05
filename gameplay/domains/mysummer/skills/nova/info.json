@@ -1,0 +1,92 @@
+{
+  "name": "Nova - Ambition",
+  "description": "Your relationship with Nova, the team co-driver. Ambitious and impatient, she pushes you to win.",
+  "order": 2150,
+  "isSkill": true,
+  "icon": "bolt",
+  "parentBranch": "mysummer",
+  "startLocked": false,
+  "levels": [
+    {
+      "requiredValue": 0,
+      "description": {
+        "type": "unlockCard",
+        "icon": "user",
+        "heading": "Teammate",
+        "description": "Nova is part of your crew. She handles strategy and motivation."
+      }
+    },
+    {
+      "requiredValue": 50,
+      "description": {
+        "type": "unlockCard",
+        "icon": "handshake",
+        "heading": "Partner",
+        "description": "Nova respects your driving. She shares race insights with you."
+      },
+      "unlockFlags": ["nova_partner"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "chartLine",
+          "heading": "Race Analysis",
+          "description": "Nova provides detailed feedback on your driving."
+        }
+      ]
+    },
+    {
+      "requiredValue": 150,
+      "description": {
+        "type": "unlockCard",
+        "icon": "users",
+        "heading": "Ally",
+        "description": "Nova trusts your judgment. She backs your decisions."
+      },
+      "unlockFlags": ["nova_ally", "nova_contacts"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "addressBook",
+          "heading": "Racing Contacts",
+          "description": "Nova introduces you to her racing connections."
+        }
+      ]
+    },
+    {
+      "requiredValue": 300,
+      "description": {
+        "type": "unlockCard",
+        "icon": "shield",
+        "heading": "Right Hand",
+        "description": "Nova is your right hand. She'll fight alongside you."
+      },
+      "unlockFlags": ["nova_righthand", "nova_race_boost"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "flag",
+          "heading": "Race Edge",
+          "description": "Nova's support gives you an edge in tough races."
+        }
+      ]
+    },
+    {
+      "requiredValue": 500,
+      "description": {
+        "type": "unlockCard",
+        "icon": "heart",
+        "heading": "Soul Partner",
+        "description": "Nova and you share the same dream. Nothing can stop you."
+      },
+      "unlockFlags": ["nova_soulpartner"],
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "crown",
+          "heading": "Shared Destiny",
+          "description": "Nova's ambition unlocks special story paths."
+        }
+      ]
+    }
+  ]
+}

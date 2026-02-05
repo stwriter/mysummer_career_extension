@@ -1,0 +1,150 @@
+{
+  "additionalAttributes": {
+    "difficulty": "hard"
+  },
+  "author": "MySummer Team",
+  "careerSetup": {
+    "defaultStarKeys": [
+      "finishBronze",
+      "finishSilver",
+      "finishGold"
+    ],
+    "showInCareer": false,
+    "showInFreeroam": false,
+    "skill": null,
+    "starOutroTexts": {},
+    "starRewards": {
+      "finishBronze": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 700
+        }
+      ],
+      "finishGold": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 4500
+        }
+      ],
+      "finishSilver": [
+        {
+          "attributeKey": "money",
+          "rewardAmount": 2200
+        }
+      ]
+    },
+    "starsActive": {
+      "finishBronze": true,
+      "finishGold": true,
+      "finishSilver": true
+    }
+  },
+  "customAdditionalAttributes": {},
+  "date": 1699023500,
+  "description": "Night circuit through the city center. Neon lights, busy intersections, and drivers who think they own the road. Show them who really rules these streets after dark. (Repeatable - No skill XP)",
+  "devMission": false,
+  "grouping": {
+    "id": "STREETRACE-REPEAT",
+    "label": "Street Races (Repeat)"
+  },
+  "layers": [
+    {
+      "dir": "/gameplay/missions/west_coast_usa/aiRace/006-STREET-REPEAT/",
+      "fixed": true,
+      "isMissionFolderDir": true,
+      "isMissionTypeDir": false
+    },
+    {
+      "dir": "/gameplay/missionTypes/aiRace/",
+      "fixed": true,
+      "isMissionFolderDir": false,
+      "isMissionTypeDir": true
+    }
+  ],
+  "missionType": "aiRace",
+  "missionTypeData": {
+    "allowFlip": true,
+    "allowRecover": true,
+    "camPathActive": false,
+    "damageFailActive": false,
+    "damageFailText": "missions.aiRace.general.damageFail",
+    "damageLimit": 10000,
+    "flipLimit": -1,
+    "goalCollisionsLimit": 1,
+    "goalCollisionsTarget": 5,
+    "goalLaps": 3,
+    "goalRecoveries": 0,
+    "goalTime": 230,
+    "lapCount": 3,
+    "mapPreviewMode": "navgraph",
+    "maxRacerCount": 9,
+    "minRacerCount": 1,
+    "playerStartIndex": 9,
+    "prefabActive": false,
+    "raceFile": "/gameplay/missions/west_coast_usa/aiRace/006-STREET-REPEAT/race.race.json",
+    "racerAggression": 1,
+    "racerAwareness": true,
+    "racerCount": 9,
+    "racerRandomnessScale": 1,
+    "racerRough": false,
+    "racerRubberbandMode": false,
+    "racerSkill": 1,
+    "recoverLimit": -1,
+    "shuffleGroup": true,
+    "smartStartPlace": false,
+    "startText": "City lights and fast nights. Keep your eyes on the road and your foot on the gas.",
+    "stoppedLimit": 0,
+    "useGroundmarkers": false,
+    "vehicleGroupActive": true
+  },
+  "name": "Neon Nights (Repeat)",
+  "retryBehaviour": "infiniteRetries",
+  "setupModules": {
+    "environment": {
+      "enabled": false
+    },
+    "traffic": {
+      "activeAmount": 0,
+      "amount": 0,
+      "enabled": false,
+      "parkedAmount": 0,
+      "respawnRate": 1,
+      "useCustomGroup": false,
+      "useGameOptions": false,
+      "usePrevTraffic": false,
+      "useSimpleVehs": false,
+      "useTraffic": false
+    },
+    "vehicles": {
+      "enabled": true,
+      "includePlayerVehicle": true,
+      "playerVehicleDiffs": {},
+      "prioritizePlayerVehicle": false,
+      "vehicles": {}
+    }
+  },
+  "startCondition": {
+    "branchId": "mysummer-streetracing",
+    "level": 1,
+    "type": "branchLevel"
+  },
+  "startTrigger": {
+    "level": "west_coast_usa",
+    "pos": [
+      573.1737671,
+      -931.8214722,
+      144.6621704
+    ],
+    "radius": 5,
+    "rot": {
+      "w": 0.5387302637,
+      "x": 0,
+      "y": 0,
+      "z": -0.8424783945
+    },
+    "type": "coordinates"
+  },
+  "visibleCondition": {
+    "type": "automatic"
+  }
+}

@@ -1,52 +1,29 @@
 {
   "additionalAttributes": {
-    "difficulty": "high"
+    "difficulty": "medium"
   },
-  "author": "ToeBee",
+  "author": "MySummer Team",
   "careerSetup": {
     "defaultStarKeys": [
-      "justFinish",
+      "finishBronze",
       "finishSilver",
       "finishGold"
     ],
     "showInCareer": false,
-    "showInFreeroam": true,
-    "skill": "(none)",
-    "starOutroTexts": {
-      "cleanGoldRace": "Way to go!",
-      "noStarUnlocked": "Tough luck. Want to try again?"
-    },
+    "showInFreeroam": false,
+    "skill": "mysummer-streetracing",
+    "starOutroTexts": {},
     "starRewards": {
-      "beatGoalTime": [
-        {
-          "attributeKey": "bonusStars",
-          "rewardAmount": 1
-        }
-      ],
-      "cleanGoldRace": [
-        {
-          "attributeKey": "bonusStars",
-          "rewardAmount": 1
-        }
-      ],
       "finishBronze": [
         {
           "attributeKey": "money",
-          "rewardAmount": 100
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 50
+          "rewardAmount": 500
         }
       ],
       "finishGold": [
         {
           "attributeKey": "money",
           "rewardAmount": 3000
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 15
         },
         {
           "attributeKey": "mysummer-streetracing",
@@ -57,45 +34,23 @@
         {
           "attributeKey": "money",
           "rewardAmount": 1500
-        },
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 10
-        },
-        {
-          "attributeKey": "mysummer-streetracing",
-          "rewardAmount": 100
-        }
-      ],
-      "justFinish": [
-        {
-          "attributeKey": "beamXP",
-          "rewardAmount": 5
-        },
-        {
-          "attributeKey": "mysummer-streetracing",
-          "rewardAmount": 50
         }
       ]
     },
     "starsActive": {
-      "beatGoalTime": true,
-      "cleanGoldRace": true,
-      "finishBronze": false,
+      "finishBronze": true,
       "finishGold": true,
-      "finishSilver": true,
-      "justFinish": true
+      "finishSilver": true
     }
   },
   "customAdditionalAttributes": {},
   "date": 1699021047,
-  "description": "Race Tony Torquellini's Kustom Autobello Piccolina in a street race with up to 9 opponents in completely different vehicles. Tony is a street racer who was born and raised in Italy. He moved to the US to pursue his passion for racing and to prove himself as the best. He loves to win, and he hates to lose.",
+  "description": "Industrial district at dawn. Warehouses, loading docks, and empty parking lots make this a favorite spot for underground meets. The AI opponents know every shortcut through this maze of concrete.",
   "devMission": false,
   "grouping": {
     "id": "STREETRACE",
     "label": "Street Races"
   },
-  "isAvailableAsScenario": true,
   "layers": [
     {
       "dir": "/gameplay/missions/west_coast_usa/aiRace/002-STREET/",
@@ -114,9 +69,9 @@
   "missionTypeData": {
     "allowFlip": true,
     "allowRecover": true,
-    "camPathActive": true,
+    "camPathActive": false,
     "damageFailActive": false,
-    "damageFailText": "You got wrecked!",
+    "damageFailText": "missions.aiRace.general.damageFail",
     "damageLimit": 10000,
     "flipLimit": -1,
     "goalCollisionsLimit": 1,
@@ -128,9 +83,10 @@
     "mapPreviewMode": "navgraph",
     "maxRacerCount": 9,
     "minRacerCount": 1,
+    "playerStartIndex": 5,
     "prefabActive": false,
     "raceFile": "/gameplay/missions/west_coast_usa/aiRace/002-STREET/Race.race.json",
-    "racerAggression": 1.049999952,
+    "racerAggression": 1,
     "racerAwareness": true,
     "racerCount": 9,
     "racerRandomnessScale": 1,
@@ -139,45 +95,42 @@
     "racerSkill": 1,
     "recoverLimit": -1,
     "shuffleGroup": true,
-    "smartStartPlace": true,
-    "startText": "These races are designed to have a high level of carnage. If you would like less carnage and more racing try turning off traffic. If your FPS gets too low the AI will drive badly. Try lowering the number of AI cars if you need more FPS.",
-    "startTitle": "Street Race #2",
+    "smartStartPlace": false,
+    "startText": "The industrial zone. Perfect place to race - no cops, no witnesses, just you and the road.",
     "stoppedLimit": 0,
     "useGroundmarkers": false,
     "vehicleGroupActive": true
   },
-  "name": "Street Race #2",
+  "name": "Industrial Run",
   "retryBehaviour": "infiniteRetries",
   "setupModules": {
     "environment": {
-      "enabled": true,
-      "fogDensity": 0,
-      "time": 0.2083333333,
-      "timeScale": 0,
-      "windDirAngle": 0,
-      "windSpeed": 0
+      "enabled": false
     },
     "traffic": {
-      "activeAmount": 1,
-      "amount": 10,
-      "enabled": true,
+      "activeAmount": 0,
+      "amount": 0,
+      "enabled": false,
       "parkedAmount": 0,
-      "respawnRate": 3,
+      "respawnRate": 1,
       "useCustomGroup": false,
       "useGameOptions": false,
       "usePrevTraffic": false,
-      "useSimpleVehs": true,
-      "useTraffic": true
+      "useSimpleVehs": false,
+      "useTraffic": false
     },
     "vehicles": {
       "enabled": true,
       "includePlayerVehicle": true,
-      "prioritizePlayerVehicle": true,
-      "vehicles": []
+      "playerVehicleDiffs": {},
+      "prioritizePlayerVehicle": false,
+      "vehicles": {}
     }
   },
   "startCondition": {
-    "type": "always"
+    "branchId": "mysummer-streetracing",
+    "level": 0,
+    "type": "branchLevel"
   },
   "startTrigger": {
     "level": "west_coast_usa",
@@ -186,18 +139,16 @@
       -626.3064575,
       105.8412476
     ],
-    "radius": 9.026548862,
-    "rot": [
-      0,
-      0,
-      -0.3356779869,
-      -0.941976985
-    ],
+    "radius": 5,
+    "rot": {
+      "w": -0.941976985,
+      "x": 0,
+      "y": 0,
+      "z": -0.3356779869
+    },
     "type": "coordinates"
   },
   "visibleCondition": {
-    "missionId": "west_coast_usa/aiRace/001-STREET",
-    "progressKey": "default",
-    "type": "always"
+    "type": "automatic"
   }
 }
