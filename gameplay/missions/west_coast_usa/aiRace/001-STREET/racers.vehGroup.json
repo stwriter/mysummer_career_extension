@@ -1,6 +1,14 @@
 {
   "data":[
     {
+      "config":"nova_base",
+      "model":"vivace"
+    },
+    {
+      "config":"rook_base",
+      "model":"etk800"
+    },
+    {
       "config":"base_race1",
       "model":"autobello"
     },
@@ -14,15 +22,7 @@
     },
     {
       "config":"base_race1",
-      "model":"pickup"
-    },
-    {
-      "config":"base_race1",
       "model":"wendover"
-    },
-    {
-      "config":"base_race1",
-      "model":"sunburst2"
     },
     {
       "config":"base_race1",

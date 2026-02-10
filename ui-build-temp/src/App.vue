@@ -44,6 +44,9 @@
   <!-- MySummer Dialogue Overlay (story/narrative) -->
   <DialogueOverlay />
 
+  <!-- MySummer Romance Choice (Phase 5 story decision) -->
+  <RomanceChoice />
+
   <div id="vue-app-container">
     <template v-for="(app, index) of apps" :key="app.appKey">
       <Teleport v-if="appTargets[app.teleport]" :to="app.teleport">
@@ -80,6 +83,8 @@ import StreetRaceResults from "@/modules/apps/mysummerRace/StreetRaceResults.vue
 import SurveillanceHUD from "@/modules/apps/mysummerMissions/SurveillanceHUD.vue"
 // MySummer Dialogue Overlay (for story/narrative)
 import DialogueOverlay from "@/modules/career/components/mysummer/DialogueOverlay.vue"
+// MySummer Romance Choice (Phase 5 story choice)
+import RomanceChoice from "@/modules/career/components/RomanceChoice.vue"
 // MySummer Story System - Initialize store to listen for narrative events
 import { useMySummerStoryStore } from "@/modules/career/stores/mysummerStoryStore"
 

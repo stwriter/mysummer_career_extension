@@ -27,6 +27,9 @@ export const useMySummerStoryStore = defineStore("mysummerStory", () => {
     introData.value = data
     showingIntro.value = true
 
+    // Pause the game during intro sequence
+    pauseGame()
+
     // Use addPopup to show the GrandfatherLetter component
     const popup = addPopup(markRaw(GrandfatherLetter), {
       storyText: data.storyText,
@@ -72,6 +75,9 @@ export const useMySummerStoryStore = defineStore("mysummerStory", () => {
       await tutorialPopup.promise
       console.log("[mysummerStoryStore] Tutorial dismissed")
     }
+
+    // Resume game after intro sequence
+    resumeGame()
   }
 
   // Handle phase/level transition event from Lua (when player levels up)
@@ -79,6 +85,9 @@ export const useMySummerStoryStore = defineStore("mysummerStory", () => {
     console.log("[mysummerStoryStore] Phase transition:", data)
     transitionData.value = data
     showingTransition.value = true
+
+    // Pause the game during phase transition
+    pauseGame()
 
     // Use addPopup to show the PhaseTransition component
     const popup = addPopup(markRaw(PhaseTransition), {
@@ -95,6 +104,24 @@ export const useMySummerStoryStore = defineStore("mysummerStory", () => {
 
     console.log("[mysummerStoryStore] Phase transition dismissed")
     showingTransition.value = false
+
+    // Resume game after phase transition
+    resumeGame()
+  }
+
+  // Pause/resume game simulation for fullscreen scenes
+  const pauseGame = () => {
+    if (window.bngApi) {
+      window.bngApi.engineLua('simTimeAuthority.pause(true)')
+      console.log("[mysummerStoryStore] Game PAUSED for scene")
+    }
+  }
+
+  const resumeGame = () => {
+    if (window.bngApi) {
+      window.bngApi.engineLua('simTimeAuthority.pause(false)')
+      console.log("[mysummerStoryStore] Game RESUMED after scene")
+    }
   }
 
   const handleShowSceneSequence = async (data) => {
@@ -103,29 +130,37 @@ export const useMySummerStoryStore = defineStore("mysummerStory", () => {
     const sequenceId = data.sequenceId || "scene_sequence"
     console.log("[mysummerStoryStore] Scene sequence:", sequenceId, data.scenes.length)
 
-    for (const scene of data.scenes) {
-      const popup = addPopup(markRaw(StoryScene), {
-        sceneId: scene.id,
-        contactId: scene.contactId,
-        contactName: scene.contactName,
-        emotion: scene.emotion || "standard",
-        title: scene.title || "",
-        text: scene.text || "",
-        texts: scene.texts || null,
-        choices: scene.choices || null,
-        continueLabel: scene.continueLabel || "",
-        language: data.language || ""
-      })
+    // Pause the game while showing fullscreen scenes
+    pauseGame()
 
-      const result = await popup.promise
-      if (result && result.choice && window.bngApi) {
-        const choiceValue = escapeLuaString(result.choice)
-        const sceneId = escapeLuaString(scene.id)
-        const seqId = escapeLuaString(sequenceId)
-        window.bngApi.engineLua(
-          `career_modules_mysummerCareer.handleSceneChoice("${seqId}", "${sceneId}", "${choiceValue}")`
-        )
+    try {
+      for (const scene of data.scenes) {
+        const popup = addPopup(markRaw(StoryScene), {
+          sceneId: scene.id,
+          contactId: scene.contactId,
+          contactName: scene.contactName,
+          emotion: scene.emotion || "standard",
+          title: scene.title || "",
+          text: scene.text || "",
+          texts: scene.texts || null,
+          choices: scene.choices || null,
+          continueLabel: scene.continueLabel || "",
+          language: data.language || ""
+        })
+
+        const result = await popup.promise
+        if (result && result.choice && window.bngApi) {
+          const choiceValue = escapeLuaString(result.choice)
+          const sceneId = escapeLuaString(scene.id)
+          const seqId = escapeLuaString(sequenceId)
+          window.bngApi.engineLua(
+            `career_modules_mysummerCareer.handleSceneChoice("${seqId}", "${sceneId}", "${choiceValue}")`
+          )
+        }
       }
+    } finally {
+      // Always resume game, even if an error occurs
+      resumeGame()
     }
   }
 

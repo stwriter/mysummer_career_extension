@@ -482,6 +482,468 @@ local sceneDefinitions = {
       },
     },
   },
+
+  -- ========================================================================
+  -- PHASE 0: Rook & Nova Introduction (after Race 1)
+  -- ========================================================================
+  rook_nova_introduction = {
+    id = "rook_nova_introduction",
+    scenes = {
+      {
+        id = "intro_ghost_presents",
+        contactId = "ghost",
+        name = { en = "Ghost", es = "Ghost" },
+        emotion = "standard",
+        text = {
+          { content = { en = "One more thing, Miller.", es = "Una cosa mas, Miller." }, emotion = "standard" },
+          { content = { en = "There are two racers you should know. They are a couple and they have been racing these circuits for a while.", es = "Hay dos corredores que deberias conocer. Son pareja y llevan tiempo corriendo en estos circuitos." }, emotion = "standard" },
+          { content = { en = "Rook is technical, cautious. Nova is the complete opposite: aggressive, hungry.", es = "Rook es tecnico, prudente. Nova es todo lo contrario: agresiva, hambrienta." }, emotion = "content" },
+          { content = { en = "They both have talent. They will both be watching you.", es = "Los dos tienen talento. Los dos te estaran mirando." }, emotion = "standard" },
+        },
+      },
+      {
+        id = "intro_rook",
+        contactId = "rook",
+        name = { en = "Rook", es = "Rook" },
+        emotion = "content",
+        text = {
+          { content = { en = "Hi, Miller. Ghost told me about you.", es = "Hola, Miller. Ghost me ha hablado de ti." }, emotion = "content" },
+          { content = { en = "Be careful out there. This is not a stroll. The track does not forgive mistakes and old cars are unpredictable.", es = "Ten cuidado ahi fuera. Esto no es un paseo. La pista no perdona errores y los coches viejos son imprevisibles." }, emotion = "standard" },
+          { content = { en = "If you need advice on mechanics, you know where to find me.", es = "Si necesitas consejo sobre mecanica, ya sabes donde encontrarme." }, emotion = "content" },
+        },
+      },
+      {
+        id = "intro_nova",
+        contactId = "nova",
+        name = { en = "Nova", es = "Nova" },
+        emotion = "happy",
+        text = {
+          { content = { en = "So you are Miller's grandson.", es = "Asi que tu eres el nieto de Miller." }, emotion = "happy" },
+          { content = { en = "I like how you handle that junker. You have got potential.", es = "Me gusta como llevas ese cacharro. Tienes potencial." }, emotion = "content" },
+          { content = { en = "Do not let Rook scare you with his safety talks. Races are won by taking risks, not reading manuals.", es = "No dejes que Rook te asuste con sus charlas de seguridad. La carrera se gana arriesgando, no leyendo manuales." }, emotion = "happy" },
+        },
+      },
+    },
+  },
+
+  -- ========================================================================
+  -- PHASE 0: "El Legado del Mecanico" - Ghost Contact Mission
+  -- ========================================================================
+  ghost_legacy_mechanic = {
+    id = "ghost_legacy_mechanic",
+    scenes = {
+      {
+        id = "ghost_legacy",
+        contactId = "ghost",
+        name = { en = "Ghost", es = "Ghost" },
+        emotion = "standard",
+        text = {
+          { content = { en = "I have seen enough.", es = "He visto suficiente." }, emotion = "standard" },
+          { content = { en = "You drive with the same regret as Old Miller, but with more hunger.", es = "Conduces con el mismo arrepentimiento que el Viejo Miller, pero con mas hambre." }, emotion = "content" },
+          { content = { en = "That ETK-I you have in the garage... your grandfather designed it for Viper.", es = "Ese ETK-I que tienes en el garaje... tu abuelo lo diseno para Viper." }, emotion = "standard" },
+          { content = { en = "But when Muscle's father died in that accident, the old man broke. He stopped racing before he even started.", es = "Pero cuando el padre de Muscle murio en aquel accidente, el viejo se rompio. Dejo de correr antes de empezar." }, emotion = "sad" },
+        },
+        choices = {
+          {
+            value = "loyalty",
+            label = { en = "My grandfather built cars for Viper?", es = "Mi abuelo preparaba coches para Viper?" },
+          },
+          {
+            value = "ambition",
+            label = { en = "I am not my grandfather. I will not brake.", es = "No soy mi abuelo. Yo no voy a frenar." },
+          },
+        },
+      },
+      -- Response scene based on choice (shown after choice)
+      {
+        id = "ghost_legacy_response_loyalty",
+        contactId = "ghost",
+        name = { en = "Ghost", es = "Ghost" },
+        emotion = "content",
+        text = {
+          { content = { en = "He was Viper's right hand. The best.", es = "Era su mano derecha. El mejor." }, emotion = "content" },
+          { content = { en = "If you want to finish that car, you are going to need parts they do not sell in normal shops.", es = "Si quieres terminar ese coche, vas a necesitar piezas que no venden en las tiendas normales." }, emotion = "standard" },
+          { content = { en = "I can get them, if you prove you will not chicken out like he did.", es = "Yo puedo conseguirlas, si me demuestras que no te vas a acobardar como el." }, emotion = "standard" },
+        },
+      },
+    },
+  },
+
+  -- ========================================================================
+  -- PHASE 1: "Hardware y Almas" - Techie Contact Mission
+  -- ========================================================================
+  techie_hardware_souls = {
+    id = "techie_hardware_souls",
+    scenes = {
+      {
+        id = "techie_intro",
+        contactId = "techie",
+        name = { en = "Techie", es = "Techie" },
+        emotion = "standard",
+        text = {
+          { content = { en = "Miller. The grandson of the man who tuned engines by ear. How archaic.", es = "Miller. El nieto del hombre que afinaba motores de oido. Que arcaico." }, emotion = "standard" },
+          { content = { en = "I have been monitoring your radio frequencies and the telemetry data from your last races.", es = "He estado monitorizando tus frecuencias de radio y los datos de telemetria de tus ultimas carreras." }, emotion = "standard" },
+          { content = { en = "You have a line efficiency of 84 percent, not bad for someone who still uses manual gears.", es = "Tienes una eficiencia de trazada del 84 por ciento, nada mal para alguien que aun usa cambios manuales." }, emotion = "content" },
+          { content = { en = "Rook says you can be trusted, and Nova... well, Nova says you are the only one here with some ambition.", es = "Rook dice que eres de confianza, y Nova... bueno, Nova dice que eres el unico aqui con algo de ambicion." }, emotion = "standard" },
+        },
+        choices = {
+          {
+            value = "loyalty",
+            label = { en = "Rook is a good racer, he knows what he is doing.", es = "Rook es un buen piloto, sabe lo que hace." },
+          },
+          {
+            value = "ambition",
+            label = { en = "Nova is right, we need to aim higher than this town.", es = "Nova tiene razon, hay que aspirar a mas que a este pueblo." },
+          },
+        },
+      },
+    },
+  },
+
+  -- ========================================================================
+  -- PHASE 2: "Viejas Heridas" - Muscle Contact Mission
+  -- ========================================================================
+  muscle_old_wounds = {
+    id = "muscle_old_wounds",
+    scenes = {
+      {
+        id = "muscle_intro",
+        contactId = "muscle",
+        name = { en = "Muscle", es = "Muscle" },
+        emotion = "standard",
+        text = {
+          { content = { en = "So this is the famous grandson.", es = "Asi que este es el famoso nieto." }, emotion = "standard" },
+          { content = { en = "Ghost says you have talent, but I only see a kid with a surname too big for his shoulders.", es = "Ghost dice que tienes talento, pero yo solo veo a un chico con un apellido demasiado grande para sus hombros." }, emotion = "standard" },
+          { content = { en = "My father died on a night like this, in a car that was not your grandfather's. But he sank with the ship anyway.", es = "Mi padre murio en una noche como esta, en un coche que no era de tu abuelo. Pero el se hundio con el barco de todas formas." }, emotion = "sad" },
+          { content = { en = "Miller was the best mechanic in the world, but a coward behind the wheel.", es = "Miller era el mejor mecanico del mundo, pero un cobarde detras del volante." }, emotion = "angry" },
+        },
+        choices = {
+          {
+            value = "loyalty",
+            label = { en = "My grandfather was not a coward, he just had heart.", es = "Mi abuelo no fue un cobarde, solo tenia corazon." },
+          },
+          {
+            value = "ambition",
+            label = { en = "I did not come to talk about him. I came for parts.", es = "No he venido a hablar de el. He venido a por piezas." },
+          },
+        },
+      },
+    },
+  },
+
+  -- ========================================================================
+  -- PHASE 3: "El Umbral del Mercado Negro" - Shadow Contact Mission
+  -- ========================================================================
+  shadow_black_market = {
+    id = "shadow_black_market",
+    scenes = {
+      {
+        id = "shadow_intro",
+        contactId = "shadow",
+        name = { en = "Shadow", es = "Shadow" },
+        emotion = "standard",
+        text = {
+          { content = { en = "So this is the famous grandson.", es = "Asi que este es el famoso nieto." }, emotion = "standard" },
+          { content = { en = "Nova says you are tired of Muscle's scrapyard parts and Techie's boring graphs.", es = "Nova dice que estas cansado de las piezas de desguace de Muscle y de los graficos aburridos de Techie." }, emotion = "standard" },
+          { content = { en = "My merchandise is not legal, nor pretty, but it will make your ETK-I fly.", es = "Mi mercancia no es legal, ni bonita, pero hara que tu ETK-I vuele." }, emotion = "content" },
+          { content = { en = "Old man Miller hated me because my parts do not understand 'safety', only results.", es = "Miller padre me odiaba porque mis piezas no entienden de 'seguridad', solo de resultados." }, emotion = "standard" },
+          { content = { en = "Will you follow grandfather's rules or will you win?", es = "Vas a seguir las reglas del abuelo o vas a ganar?" }, emotion = "angry" },
+        },
+        choices = {
+          {
+            value = "caution",
+            label = { en = "I do not want trouble with police. Legal parts only.", es = "No quiero problemas con la policia. Solo piezas legales." },
+          },
+          {
+            value = "ambition",
+            label = { en = "Give me the fastest you have. I will handle the consequences.", es = "Dame lo mas rapido que tengas. Yo me encargo de las consecuencias." },
+          },
+        },
+      },
+    },
+  },
+
+  -- ========================================================================
+  -- PHASE 4: "El Precio de la Ambicion" - Debt Mission
+  -- ========================================================================
+  debt_price_of_ambition = {
+    id = "debt_price_of_ambition",
+    scenes = {
+      {
+        id = "ghost_warns_debt",
+        contactId = "ghost",
+        name = { en = "Ghost", es = "Ghost" },
+        emotion = "angry",
+        text = {
+          { content = { en = "I warned you, Miller.", es = "Te lo adverti, Miller." }, emotion = "angry" },
+          { content = { en = "Playing with Shadow is playing with fire.", es = "Jugar con Shadow es jugar con fuego." }, emotion = "angry" },
+          { content = { en = "Now Rook is out of the team and Nova has a debt she cannot pay with neighborhood victories.", es = "Ahora Rook esta fuera del equipo y Nova tiene una deuda que no puede pagar con victorias de barrio." }, emotion = "sad" },
+          { content = { en = "Shadow wants you to do a 'special delivery' to settle the experimental parts account.", es = "Shadow quiere que hagais un 'encargo' especial para saldar la cuenta de las piezas experimentales." }, emotion = "standard" },
+        },
+      },
+      {
+        id = "shadow_debt_offer",
+        contactId = "shadow",
+        name = { en = "Shadow", es = "Shadow" },
+        emotion = "standard",
+        text = {
+          { content = { en = "Do not be dramatic, Ghost. It is just a quick transport.", es = "No seas dramatico, Ghost. Solo es un transporte rapido." }, emotion = "standard" },
+          { content = { en = "Miller, you will drive a solid car and you have the best hands.", es = "Miller, te daremos un coche robusto y tienes las mejores manos." }, emotion = "content" },
+          { content = { en = "Help Nova with this job and your debts will be settled.", es = "Ayuda a Nova con este trabajo y vuestras deudas quedaran saldadas." }, emotion = "standard" },
+          { content = { en = "Or you can refuse and watch your cars 'disappear' from the garage.", es = "O podeis negaros y ver como vuestros coches 'desaparecen' del garaje." }, emotion = "angry" },
+        },
+        choices = {
+          {
+            value = "accept",
+            label = { en = "I will do it, but this is the last time.", es = "Lo hare, pero esta es la ultima vez." },
+          },
+          {
+            value = "refuse",
+            label = { en = "I am not a delivery boy. Find someone else.", es = "No soy un repartidor. Buscate a otro." },
+          },
+        },
+      },
+    },
+  },
+
+  -- ========================================================================
+  -- PHASE 5: "Los Alegatos Finales" - Romance Choice
+  -- ========================================================================
+  romance_choice = {
+    id = "romance_choice",
+    scenes = {
+      {
+        id = "rook_plea",
+        contactId = "rook",
+        name = { en = "Rook", es = "Rook" },
+        emotion = "sad",
+        text = {
+          { content = { en = "Miller, listen to me. This is ending.", es = "Miller, escuchame. Esto se acaba." }, emotion = "sad" },
+          { content = { en = "I can not keep watching how Nova pushes you into Shadow's abyss.", es = "No puedo seguir viendo como Nova te empuja al abismo de Shadow." }, emotion = "sad" },
+          { content = { en = "Stay with me. We will finish the ETK-I with Muscle's parts, with honor.", es = "Quedate conmigo. Terminaremos el ETK-I con las piezas de Muscle, con honor." }, emotion = "content" },
+          { content = { en = "I promise you loyalty, but you have to cut ties with her now.", es = "Te prometo lealtad, pero tienes que cortar con ella ahora." }, emotion = "standard" },
+        },
+      },
+      {
+        id = "nova_plea",
+        contactId = "nova",
+        name = { en = "Nova", es = "Nova" },
+        emotion = "angry",
+        text = {
+          { content = { en = "Do not listen to him, Miller.", es = "No le escuches, Miller." }, emotion = "angry" },
+          { content = { en = "Rook is afraid of his own shadow.", es = "Rook tiene miedo de su propia sombra." }, emotion = "angry" },
+          { content = { en = "With me you will reach the Big One with the best engine Shadow can get.", es = "Conmigo llegaras a la Big One con el mejor motor que Shadow pueda conseguir." }, emotion = "content" },
+          { content = { en = "I offer you the world, not a dusty workshop.", es = "Te ofrezco el mundo, no un taller polvoriento." }, emotion = "happy" },
+          { content = { en = "Choose: the loser's safety or the glory of the fearless?", es = "Elige: la seguridad del perdedor o la gloria de los que no tienen miedo?" }, emotion = "standard" },
+        },
+        choices = {
+          {
+            value = "rook",
+            label = { en = "Nova, I am sorry. Rook is right about the legacy.", es = "Nova, lo siento. Rook tiene razon sobre el legado." },
+          },
+          {
+            value = "nova",
+            label = { en = "Rook, you are too slow for this journey. I am going with her.", es = "Rook, eres demasiado lento para este viaje. Me voy con ella." },
+          },
+        },
+      },
+    },
+  },
+
+  -- ========================================================================
+  -- PHASE 5: "El Golpe" - Car Theft Cutscene
+  -- ========================================================================
+  etki_theft = {
+    id = "etki_theft",
+    scenes = {
+      {
+        id = "theft_scene",
+        contactId = "shadow",
+        name = { en = "???", es = "???" },
+        emotion = "standard",
+        text = {
+          { content = { en = "You are closing the trailer when a reflection in the mirror alerts you.", es = "Estas cerrando el remolque cuando un reflejo en el retrovisor te alerta." }, emotion = "standard" },
+          { content = { en = "You do not have time to turn around.", es = "No tienes tiempo de girarte." }, emotion = "standard" },
+          { content = { en = "A sharp pain in the back of your neck shuts out the lights.", es = "Un dolor punzante en la nuca te apaga las luces." }, emotion = "angry" },
+          { content = { en = "The last thing you hear is the ETK-I engine starting...", es = "Lo ultimo que oyes es el motor del ETK-I arrancando..." }, emotion = "sad" },
+          { content = { en = "...and a voice you do not recognize saying: 'Viper will love the gift.'", es = "...y una voz que no reconoces diciendo: 'Viper estara encantada con el regalo'." }, emotion = "angry" },
+        },
+      },
+    },
+  },
+
+  -- ========================================================================
+  -- PHASE 7: "El Reencuentro" - Partner Returns + Shadow Challenge
+  -- ========================================================================
+  partner_truth_reveal = {
+    id = "partner_truth_reveal",
+    scenes = {
+      -- Note: contactId will be set dynamically based on chosen_partner
+      {
+        id = "partner_returns",
+        contactId = "rook",  -- Default, overridden at runtime
+        name = { en = "???", es = "???" },  -- Set dynamically
+        emotion = "sad",
+        text = {
+          { content = { en = "Miller! Do not listen to Shadow.", es = "Miller! No escuches a Shadow." }, emotion = "sad" },
+          { content = { en = "I never sold the car.", es = "Nunca vendi el coche." }, emotion = "sad" },
+          { content = { en = "They set me up. Shadow locked me away so you would think I betrayed you and stop searching.", es = "Me tendieron una trampa. Shadow me encerro para que creyeras que te habia traicionado y dejaras de buscar." }, emotion = "angry" },
+          { content = { en = "The ETK-I is whole. Shadow has it in his private garage.", es = "El ETK-I esta entero. Lo tiene Shadow en su garaje privado." }, emotion = "standard" },
+          { content = { en = "He is going to use it against you in the Big One!", es = "Lo va a usar contra ti en la Big One!" }, emotion = "angry" },
+        },
+      },
+      {
+        id = "shadow_challenge",
+        contactId = "shadow",
+        name = { en = "Shadow", es = "Shadow" },
+        emotion = "standard",
+        text = {
+          { content = { en = "Enough drama for today.", es = "Suficiente drama por hoy." }, emotion = "standard" },
+          { content = { en = "Miller, you have earned your pass.", es = "Miller, has ganado tu pase." }, emotion = "standard" },
+          { content = { en = "But if you want to see your ETK-I again... and your partner... you will have to beat me in the Big One.", es = "Pero si quieres volver a ver tu ETK-I... y a tu pareja... tendras que ganarme en la Big One." }, emotion = "content" },
+          { content = { en = "I will drive your grandfather's car.", es = "Yo conducire el coche de tu abuelo." }, emotion = "angry" },
+          { content = { en = "If you win, I give you everything back. If you lose... the Miller legacy disappears forever.", es = "Si ganas, te lo devuelvo todo. Si pierdes... el legado de Miller desaparece para siempre." }, emotion = "angry" },
+        },
+        choices = {
+          {
+            value = "confident",
+            label = { en = "Deal. Get ready to lose with a car you do not deserve.", es = "Acepto. Preparate para perder con un coche que no mereces." },
+          },
+          {
+            value = "determined",
+            label = { en = "I am coming for you, Shadow. With or without the ETK.", es = "Voy a por ti, Shadow. Con ETK o sin el." },
+          },
+        },
+      },
+    },
+  },
+
+  -- ========================================================================
+  -- PHASE 8: "Viper Recognition" - Pre Big One
+  -- ========================================================================
+  viper_recognition = {
+    id = "viper_recognition",
+    scenes = {
+      {
+        id = "viper_intro",
+        contactId = "viper",
+        name = { en = "Viper", es = "Viper" },
+        emotion = "standard",
+        text = {
+          { content = { en = "So it is true. Miller's car has come back to life.", es = "Asi que es cierto. El coche de Miller ha vuelto a la vida." }, emotion = "standard" },
+          { content = { en = "I am Viper.", es = "Soy Viper." }, emotion = "standard" },
+          { content = { en = "Your grandfather was the man who made me win everything, but he was also the man who could not look me in the eye after my husband died on that track.", es = "Tu abuelo fue el hombre que me hizo ganar todo, pero tambien fue el hombre que no pudo mirarme a la cara despues de que mi marido muriera en aquella pista." }, emotion = "sad" },
+          { content = { en = "I do not blame him... I blame fear.", es = "No lo culpo a el... culpo al miedo." }, emotion = "standard" },
+          { content = { en = "Today I will see if you are Miller, or just another ghost in an old car.", es = "Hoy vere si tu eres Miller, o solo otro fantasma en un coche viejo." }, emotion = "standard" },
+        },
+        choices = {
+          {
+            value = "ambition",
+            label = { en = "I am not a ghost. I am the man who will beat you.", es = "No soy un fantasma. Soy el hombre que va a ganarte." },
+          },
+          {
+            value = "loyalty",
+            label = { en = "I race for him, but also for myself. Time to close the circle.", es = "Corro por el, pero tambien por mi. Es hora de cerrar el circulo." },
+          },
+        },
+      },
+    },
+  },
+
+  -- ========================================================================
+  -- PHASE 8: Epilogue - "El Garaje en Paz"
+  -- ========================================================================
+  epilogue_garage_peace = {
+    id = "epilogue_garage_peace",
+    scenes = {
+      {
+        id = "epilogue_viper",
+        contactId = "viper",
+        name = { en = "Viper", es = "Viper" },
+        emotion = "content",
+        text = {
+          { content = { en = "Miller would have been proud. Or terrified.", es = "Miller habria estado orgulloso. O aterrorizado." }, emotion = "content" },
+          { content = { en = "But finally that car has done what it should: roar.", es = "Pero por fin ese coche ha hecho lo que debia: rugir." }, emotion = "happy" },
+          { content = { en = "You have done more than him, kid. You have finished the story.", es = "Has hecho mas que el, chico. Has terminado la historia." }, emotion = "happy" },
+        },
+      },
+      {
+        id = "epilogue_muscle",
+        contactId = "muscle",
+        name = { en = "Muscle", es = "Muscle" },
+        emotion = "content",
+        text = {
+          { content = { en = "My father used to say Miller was the best.", es = "Mi padre solia decir que Miller era el mejor." }, emotion = "content" },
+          { content = { en = "Now I know he meant the surname, not just the man.", es = "Ahora se que se referia al apellido, no solo al hombre." }, emotion = "happy" },
+          { content = { en = "Keep the car. Enjoy it. It is no longer a shadow, now it is yours.", es = "Quedate el coche. Disfrutalo. Ya no es una sombra, ahora es tuyo." }, emotion = "content" },
+        },
+      },
+    },
+  },
+
+  -- ========================================================================
+  -- EXTRA DRAMATIC SCENES (not in NARRATIVA_REEDIT but enhance key moments)
+  -- ========================================================================
+
+  -- Phase 4: Public breakup scene (Rook discovers Shadow connection)
+  public_breakup = {
+    id = "public_breakup",
+    scenes = {
+      {
+        id = "breakup_rook",
+        contactId = "rook",
+        name = { en = "Rook", es = "Rook" },
+        emotion = "angry",
+        text = {
+          { content = { en = "I have seen it, Miller! I saw Shadow's name on Nova's phone.", es = "Lo he visto, Miller! He visto el nombre de Shadow en el movil de Nova." }, emotion = "angry" },
+          { content = { en = "Nova, you are an idiot! Do you know what they do to people who can not pay for those parts?", es = "Nova, eres una idiota! Sabes lo que le hacen a los que no pueden pagar esas piezas?" }, emotion = "angry" },
+          { content = { en = "What are you doing?", es = "Que estas haciendo?" }, emotion = "sad" },
+        },
+      },
+      {
+        id = "breakup_nova",
+        contactId = "nova",
+        name = { en = "Nova", es = "Nova" },
+        emotion = "angry",
+        text = {
+          { content = { en = "Whatever I want, Rook!", es = "Lo que me da la gana, Rook!" }, emotion = "angry" },
+          { content = { en = "I am sick of your cheap protectionism!", es = "Estoy harta de tu proteccionismo barato!" }, emotion = "angry" },
+          { content = { en = "Miller and I want to get out of here, we want to be more than gas station legends.", es = "Miller y yo queremos salir de aqui, queremos ser algo mas que leyendas de gasolinera." }, emotion = "standard" },
+          { content = { en = "If you can not follow us, get out of our line!", es = "Si no puedes seguirnos, apartate de nuestra trazada!" }, emotion = "angry" },
+        },
+      },
+      {
+        id = "breakup_rook_final",
+        contactId = "rook",
+        name = { en = "Rook", es = "Rook" },
+        emotion = "sad",
+        text = {
+          { content = { en = "Fine! Do whatever you want!", es = "Bien! Haz lo que quieras!" }, emotion = "angry" },
+          { content = { en = "Miller, if you go with her, forget I ever had your back!", es = "Miller, si te vas con ella, olvida que alguna vez te cubri las espaldas!" }, emotion = "angry" },
+          { content = { en = "From now on, you are just two more cars in my rearview.", es = "A partir de ahora, solo sois dos coches mas en mi retrovisor." }, emotion = "sad" },
+        },
+      },
+    },
+  },
+
+  -- Phase 8: Shadow Duel pre-race taunt
+  shadow_duel = {
+    id = "shadow_duel",
+    scenes = {
+      {
+        id = "shadow_taunts",
+        contactId = "shadow",
+        name = { en = "Shadow", es = "Shadow" },
+        emotion = "content",
+        text = {
+          { content = { en = "Can you feel it, Miller?", es = "Lo sientes, Miller?" }, emotion = "content" },
+          { content = { en = "This car has the soul of a coward but the lungs of a monster.", es = "Este coche tiene el alma de un cobarde pero los pulmones de un monstruo." }, emotion = "standard" },
+          { content = { en = "Your grandfather built it to win, but he did not have the nerve to handle it.", es = "Tu abuelo lo construyo para ganar, pero no tenia el pulso para manejarlo." }, emotion = "standard" },
+          { content = { en = "I do. Try to follow me if you can!", es = "Yo si. Intenta seguirme si puedes!" }, emotion = "angry" },
+        },
+      },
+    },
+  },
 }
 
 local function buildScenePayload(scene)
@@ -827,8 +1289,12 @@ saveState = function(currentSavePath)
   FS:directoryCreate(dirPath, true)
 
   local filePath = dirPath .. "/" .. saveFile
-  jsonWriteFile(filePath, state, true)
+  career_saveSystem.jsonWriteFileSafe(filePath, state, true)
   log("I", logTag, "State saved to " .. filePath)
+end
+
+local function onSaveCurrentSaveSlot(currentSavePath)
+  saveState(currentSavePath)
 end
 
 -- ============================================================================
@@ -963,19 +1429,19 @@ local function recordRaceWin(raceId)
     end
   end
 
-  -- Story scenes for Chapter 1 milestones
+  -- Story scenes for Chapter 1 milestones - DISABLED (now using narrative system)
   -- These are mutually exclusive - either it's the first win OR chapter completion, not both at once
-  if oldChapter == 1 and state.chapterProgress.currentChapter == 2 then
-    -- Chapter completed - show end sequence
-    queueSceneSequence("chapter1_end", 4.0)
-  elseif state.chapterProgress.racesWonTotal == 1 and state.chapterProgress.currentChapter == 1 then
-    -- First win but still in chapter 1 - show first race sequence
-    -- Only show if teammates have been met (narrative progression)
-    local narrative = career_modules_mysummerNarrative
-    if narrative and narrative.getStoryFlag and narrative.getStoryFlag("teammates_met") then
-      queueSceneSequence("chapter1_first_race", 4.0)
-    end
-  end
+  -- if oldChapter == 1 and state.chapterProgress.currentChapter == 2 then
+  --   -- Chapter completed - show end sequence
+  --   queueSceneSequence("chapter1_end", 4.0)
+  -- elseif state.chapterProgress.racesWonTotal == 1 and state.chapterProgress.currentChapter == 1 then
+  --   -- First win but still in chapter 1 - show first race sequence
+  --   -- Only show if teammates have been met (narrative progression)
+  --   local narrative = career_modules_mysummerNarrative
+  --   if narrative and narrative.getStoryFlag and narrative.getStoryFlag("teammates_met") then
+  --     queueSceneSequence("chapter1_first_race", 4.0)
+  --   end
+  -- end
 
   saveState()
   sendCareerUpdate()
@@ -1788,13 +2254,17 @@ local function onSetupInventoryFinished()
     end
   end
 
-  -- Auto-start Phase 1 if not started
+  -- DISABLED: Don't auto-start Phase 1
+  -- Phase 0 (narrative) happens before any formal phase starts
+  -- Phase 1 will start after completing the first 3 races + Ghost's contact mission
+  --[[
   if state.currentPhase == 0 then
     local phaseSuccess, phaseErr = pcall(startPhase, 1)
     if not phaseSuccess then
       log("E", logTag, "Failed to start Phase 1: " .. tostring(phaseErr))
     end
   end
+  ]]--
 
   saveState()
 end
@@ -2517,14 +2987,13 @@ local function onBranchTierReached(branchId, newTier)
     -- Rewards were already given by the branch system
   }
 
-  -- Queue the phase transition to show AFTER BeamNG's native progress UI closes
-  -- The native UI typically shows for ~3-5 seconds
-  state.pendingPhaseTransition = {
-    data = transitionData,
-    delayRemaining = 4.0,  -- Wait 4 seconds for native UI to close
-  }
+  -- DISABLED: Phase transition popup (now using narrative system)
+  -- state.pendingPhaseTransition = {
+  --   data = transitionData,
+  --   delayRemaining = 4.0,
+  -- }
 
-  log("I", logTag, "Queued phase transition for tier " .. newTier .. ": " .. (langData.name or "?") .. " (showing in 4s)")
+  log("I", logTag, "Tier reached: " .. newTier .. " (" .. (langData.name or "?") .. ") - Popup disabled, using narrative")
 end
 
 -- ============================================================================
@@ -2534,6 +3003,7 @@ end
 -- Lifecycle callbacks
 M.onExtensionLoaded = onExtensionLoaded
 M.onCareerActive = onCareerActive
+M.onSaveCurrentSaveSlot = onSaveCurrentSaveSlot
 M.onSetupInventoryFinished = onSetupInventoryFinished
 M.onFreeroamEventCompleted = onFreeroamEventCompleted
 M.onComputerAddFunctions = onComputerAddFunctions
@@ -2563,11 +3033,14 @@ M.endCustomRace = endCustomRace
 -- Chapter progression API (for parts unlock gating)
 M.recordRaceWin = recordRaceWin
 M.getCurrentChapter = getCurrentChapter
+M.getCurrentPhase = function() return state.currentPhase or 0 end
 M.getTotalRacesWon = getTotalRacesWon
 M.getChapterProgress = getChapterProgress
 
 -- Story scene API
 M.handleSceneChoice = handleSceneChoice
+M.showSceneSequence = showSceneSequence
+M.queueSceneSequence = queueSceneSequence
 M.debugShowSceneSequence = debugShowSceneSequence
 M.debugQueueSceneSequence = debugQueueSceneSequence
 M.debugResetSceneFlags = debugResetSceneFlags

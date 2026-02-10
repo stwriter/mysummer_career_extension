@@ -27,25 +27,29 @@ getChat = function()
   return extensions.career_modules_mysummerChat
 end
 
--- Phase thresholds (must match mysummerNarrative)
+-- Phase thresholds (must match mysummerNarrative and streetracing skill)
 local phaseThresholds = {
   [0] = 0,
-  [1] = 300,
-  [2] = 800,
-  [3] = 1500,
-  [4] = 2500,
-  [5] = 4000,
-  [6] = 6000,
+  [1] = 350,
+  [2] = 850,
+  [3] = 1600,
+  [4] = 2400,
+  [5] = 3300,
+  [6] = 4500,
+  [7] = 6000,
+  [8] = 7800,
 }
 
 local phaseNames = {
-  [0] = "Prologo - El Garaje",
-  [1] = "Carreras entre Conocidos",
-  [2] = "Underground Bajo",
-  [3] = "Rallys Regionales",
-  [4] = "Underground Alto",
-  [5] = "Rallys Oficiales",
-  [6] = "The Big One",
+  [0] = "Phase 0 - El Peso del Silencio (Prologue)",
+  [1] = "Phase 1 - Origins",
+  [2] = "Phase 2 - The Split",
+  [3] = "Phase 3 - The Crisis",
+  [4] = "Phase 4 - Ruptura Final",
+  [5] = "Phase 5 - Rally Regional",
+  [6] = "Phase 6 - Copa Covet",
+  [7] = "Phase 7 - Clasificatorias",
+  [8] = "Phase 8 - The Big One",
 }
 
 -- All narrative events in order
@@ -132,9 +136,9 @@ end
 -- ============================================================================
 
 local function debugSetPhase(phase)
-  if not phase or phase < 0 or phase > 6 then
-    print("Usage: debugSetPhase(0-6)")
-    print("Phases: 0=Prologo, 1=Conocidos, 2=Underground Bajo, 3=Rallys, 4=Underground Alto, 5=Oficiales, 6=The Big One")
+  if not phase or phase < 0 or phase > 8 then
+    print("Usage: debugSetPhase(0-8)")
+    print("Phases: 0=Prologue, 1=Origins, 2=The Split, 3=The Crisis, 4=Ruptura Final, 5=Rally, 6=Covet Cup, 7=Clasificatorias, 8=The Big One")
     return
   end
 
@@ -150,7 +154,7 @@ local function debugNextPhase()
   if not narrative then return end
 
   local progress = narrative.getNarrativeProgress()
-  local nextPhase = math.min(progress.phase + 1, 6)
+  local nextPhase = math.min(progress.phase + 1, 8)
   debugSetPhase(nextPhase)
 end
 
@@ -294,7 +298,7 @@ local function debugTheaterMode(speedMultiplier)
     -- Move to next phase
     theaterState.currentPhase = phase + 1
 
-    if theaterState.currentPhase <= 6 then
+    if theaterState.currentPhase <= 8 then
       local delay = 5000 / theaterState.speedMultiplier -- 5 seconds between phases
       if theaterState.speedMultiplier == 0 then
         delay = 100 -- Instant mode
@@ -317,7 +321,7 @@ local function debugTheaterMode(speedMultiplier)
 end
 
 local function theaterNextPhase()
-  if theaterState.currentPhase > 6 then
+  if theaterState.currentPhase > 8 then
     print("Theater mode complete!")
     return
   end
@@ -330,7 +334,7 @@ local function theaterNextPhase()
 
   theaterState.currentPhase = phase + 1
 
-  if theaterState.currentPhase <= 6 then
+  if theaterState.currentPhase <= 8 then
     print(string.format("\nCall theaterNextPhase() for Phase %d", theaterState.currentPhase))
   else
     print("\n========== THEATER MODE COMPLETE ==========")
@@ -338,8 +342,8 @@ local function theaterNextPhase()
 end
 
 local function debugPlayPhase(phase)
-  if not phase or phase < 0 or phase > 6 then
-    print("Usage: debugPlayPhase(0-6)")
+  if not phase or phase < 0 or phase > 8 then
+    print("Usage: debugPlayPhase(0-8)")
     return
   end
 
@@ -348,14 +352,26 @@ local function debugPlayPhase(phase)
   -- Set phase
   debugSetPhase(phase)
 
-  -- Unlock contacts if needed
+  -- Unlock contacts if needed based on phase
   local chat = getChat()
-  if chat and phase >= 1 then
-    chat.unlockContact("rook")
-    chat.unlockContact("nova")
-  end
-  if chat and phase >= 2 then
-    chat.unlockContact("ghost")
+  if chat then
+    if phase >= 0 then
+      chat.unlockContact("ghost")
+    end
+    if phase >= 1 then
+      chat.unlockContact("rook")
+      chat.unlockContact("nova")
+      chat.unlockContact("techie")
+    end
+    if phase >= 2 then
+      chat.unlockContact("muscle")
+    end
+    if phase >= 3 then
+      chat.unlockContact("shadow")
+    end
+    if phase >= 8 then
+      chat.unlockContact("viper")
+    end
   end
 
   -- Trigger all events for this phase
@@ -397,7 +413,7 @@ local function debugQuickTest()
   print("-- STATUS --")
   print("career_modules_mysummerNarrativeDebug.debugStatus()")
   print("")
-  print("-- PHASE CONTROL --")
+  print("-- PHASE CONTROL (0-8) --")
   print("career_modules_mysummerNarrativeDebug.debugSetPhase(3)")
   print("career_modules_mysummerNarrativeDebug.debugNextPhase()")
   print("")
@@ -409,10 +425,17 @@ local function debugQuickTest()
   print("career_modules_mysummerNarrativeDebug.debugUnlockAllContacts()")
   print("career_modules_mysummerNarrativeDebug.debugSetAlignment('rook')")
   print("")
+  print("-- ROMANCE & VEHICLE (8-PHASE SYSTEM) --")
+  print("career_modules_mysummerNarrativeDebug.debugTriggerRomanceChoice()")
+  print("career_modules_mysummerNarrativeDebug.debugSetRomanceChoice('rook')")
+  print("career_modules_mysummerNarrativeDebug.debugTriggerCarTheft()")
+  print("career_modules_mysummerNarrativeDebug.debugRecoverCar()")
+  print("career_modules_mysummerNarrativeDebug.debugCheckVehicle()")
+  print("")
   print("-- THEATER MODE --")
   print("career_modules_mysummerNarrativeDebug.debugTheaterMode(5)  -- 5x speed")
   print("career_modules_mysummerNarrativeDebug.theaterNextPhase()   -- manual next")
-  print("career_modules_mysummerNarrativeDebug.debugPlayPhase(2)    -- play single phase")
+  print("career_modules_mysummerNarrativeDebug.debugPlayPhase(2)    -- play single phase (0-8)")
   print("")
   print("-- RESET --")
   print("career_modules_mysummerNarrativeDebug.debugReset()")
@@ -591,6 +614,120 @@ local function debugAutoPlay()
 end
 
 -- ============================================================================
+-- NEW: ROMANCE & VEHICLE DEBUG COMMANDS (8-PHASE SYSTEM)
+-- ============================================================================
+
+-- Trigger romance choice modal (Phase 5)
+local function debugTriggerRomanceChoice()
+  print("Triggering romance choice modal...")
+
+  -- Show romance choice UI
+  if guihooks and guihooks.trigger then
+    guihooks.trigger("mysummerShowRomanceChoice", {})
+    print("Romance choice modal should appear on screen.")
+    print("Choose between Rook and Nova.")
+  else
+    print("ERROR: guihooks not available")
+  end
+end
+
+-- Set romance choice programmatically
+local function debugSetRomanceChoice(choice)
+  if choice ~= "rook" and choice ~= "nova" then
+    print("Usage: debugSetRomanceChoice('rook' or 'nova')")
+    return
+  end
+
+  local narrative = getNarrative()
+  if not narrative then
+    print("ERROR: Narrative module not loaded")
+    return
+  end
+
+  -- Call the romance choice callback
+  narrative.onRomanceChoice(choice)
+  print(string.format("Romance choice set to: %s", choice))
+  print("Partner affinity updated, flags set.")
+end
+
+-- Trigger car theft cutscene (Phase 5 end)
+local function debugTriggerCarTheft()
+  print("Triggering ETK-I theft event...")
+
+  local narrative = getNarrative()
+  if not narrative then
+    print("ERROR: Narrative module not loaded")
+    return
+  end
+
+  local success = narrative.forceTriggerEvent("etki_stolen_rally")
+  if success then
+    print("Car theft triggered - check for cutscene and Ghost messages")
+  else
+    print("Failed to trigger car theft event (already triggered or not found)")
+  end
+end
+
+-- Instantly recover car (skip to Phase 8)
+local function debugRecoverCar()
+  print("Instantly recovering ETK-I...")
+
+  local narrative = getNarrative()
+  if not narrative then
+    print("ERROR: Narrative module not loaded")
+    return
+  end
+
+  -- Trigger recovery event
+  local success = narrative.forceTriggerEvent("etki_recovered")
+  if success then
+    print("ETK-I recovered - check partner dialogue")
+  else
+    print("Failed to trigger recovery event")
+  end
+end
+
+-- Check current vehicle status
+local function debugCheckVehicle()
+  print("\n========== VEHICLE STATUS ==========")
+
+  -- Get player vehicle
+  local playerVehicle = be:getPlayerVehicle(0)
+  if not playerVehicle then
+    print("No player vehicle found!")
+    return
+  end
+
+  local model = playerVehicle:getJBeamFilename()
+  local vehName = playerVehicle:getName() or "Unknown"
+
+  print(string.format("Current Vehicle: %s", vehName))
+  print(string.format("Model: %s", model))
+
+  -- Check if it's the project car
+  if model == "etki" then
+    print("✓ This is the ETK-I project car")
+  elseif model == "covet" then
+    print("✓ This is an Ibishu Covet")
+  else
+    print("✗ This is neither ETK-I nor Covet")
+  end
+
+  -- Check story flags
+  local narrative = getNarrative()
+  if narrative then
+    local progress = narrative.getNarrativeProgress()
+    print("\n--- Car Story Status ---")
+    print(string.format("Car Stolen: %s", tostring(progress.storyFlags.car_stolen or false)))
+    print(string.format("Car Recovered: %s", tostring(progress.storyFlags.car_recovered or false)))
+    print(string.format("ETK-I Location: %s", progress.storyFlags.etki_location or "unknown"))
+    print(string.format("Covet Fund Received: %s", tostring(progress.storyFlags.covet_fund_received or false)))
+  end
+
+  print("====================================\n")
+end
+
+-- ============================================================================
 -- LIFECYCLE
 -- ============================================================================
 
@@ -644,6 +781,13 @@ M.debugFullStory = debugFullStory
 M.debugNextStep = debugNextStep
 M.debugStopStory = debugStopStory
 M.debugAutoPlay = debugAutoPlay
+
+-- Romance & Vehicle debug (8-phase system)
+M.debugTriggerRomanceChoice = debugTriggerRomanceChoice
+M.debugSetRomanceChoice = debugSetRomanceChoice
+M.debugTriggerCarTheft = debugTriggerCarTheft
+M.debugRecoverCar = debugRecoverCar
+M.debugCheckVehicle = debugCheckVehicle
 
 -- Lifecycle
 M.onExtensionLoaded = onExtensionLoaded

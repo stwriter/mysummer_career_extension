@@ -1,14 +1,21 @@
 -- MySummer Calls System
--- Phone calls during gameplay - more immersive than chat
+-- Walkie-talkie voice calls during races
+-- REBUILT FROM NARRATIVA_REEDIT.md (8-PHASE SYSTEM)
 
 local M = {}
 M.moduleName = "career_modules_mysummerCalls"
 
 M.dependencies = {
   "career_career",
+  "career_saveSystem",
 }
 
 local logTag = "mysummerCalls"
+local saveFile = "mysummer_calls.json"
+
+-- Forward declarations
+local saveState
+local loadState
 
 -- ============================================================================
 -- STATE
@@ -26,6 +33,7 @@ local state = {
 
   -- Call history
   completedCalls = {},
+  triggeredCalls = {},  -- Track which calls have been triggered (for narrative system)
 
   -- Settings
   enabled = true,
@@ -34,11 +42,11 @@ local state = {
 -- Timing
 local RING_DURATION = 15        -- Seconds before missed call
 local LINE_DISPLAY_TIME = 4.0   -- Seconds per dialogue line
-local CALL_DELAY_MIN = 5        -- Min delay before call after trigger (reduced for testing)
-local CALL_DELAY_MAX = 10       -- Max delay (reduced for testing)
+local CALL_DELAY_MIN = 5        -- Min delay before call after trigger
+local CALL_DELAY_MAX = 10       -- Max delay
 
 -- ============================================================================
--- CALL DEFINITIONS
+-- CALL DEFINITIONS (FROM NARRATIVA_REEDIT.md)
 -- ============================================================================
 
 -- Contact display info
@@ -47,776 +55,702 @@ local contactInfo = {
   rook = { name = "Rook", icon = "rook" },
   nova = { name = "Nova", icon = "nova" },
   muscle = { name = "Muscle", icon = "muscle" },
+  techie = { name = "Techie", icon = "techie" },
+  shadow = { name = "Shadow", icon = "shadow" },
   viper = { name = "Viper", icon = "viper" },
+  unknown = { name = "???", icon = "unknown" },
 }
 
--- Calls triggered by narrative events
+-- Calls triggered by narrative events or race events
 local eventCalls = {
   -- ========================================================================
-  -- PHASE 2: CHAPTER II
+  -- PHASE 0: EL PESO DEL SILENCIO
   -- ========================================================================
 
-  -- Phase 2: Ghost's cryptic call after first contact
-  ghost_grandfather_warning = {
-    id = "call_ghost_cryptic",
+  -- phase0_race1_post - MOVED TO SMS (mysummerChat.lua) because it has choices
+
+  phase0_race2_pre = {
+    id = "call_phase0_race2",
     caller = "ghost",
-    priority = "normal",  -- normal = can ignore, urgent = keeps ringing
-    dialogue = {
-      { speaker = "ghost", text = "..." },
-      { speaker = "ghost", text = {es = "Tenemos que hablar.", en = "We need to talk."} },
-      { speaker = "ghost", text = {es = "No por mensaje. Así.", en = "Not by text. Like this."} },
-      {
-        type = "choice",
-        choices = {
-          {
-            id = "listening",
-            text = {es = "Te escucho.", en = "I'm listening."},
-            response = {
-              { speaker = "ghost", text = {es = "Tu abuelo... él nunca corrió.", en = "Your grandfather... he never raced."} },
-              { speaker = "ghost", text = {es = "Pero eso ya lo sabes, ¿no?", en = "But you already know that, don't you?"} },
-              { speaker = "ghost", text = {es = "Lo que no sabes es por qué.", en = "What you don't know is why."} },
-              { speaker = "ghost", text = {es = "Pregúntate quién más perdió esa noche.", en = "Ask yourself who else lost that night."} },
-            },
-            effects = { ghost_trust = 10 }
-          },
-          {
-            id = "busy",
-            text = {es = "Estoy conduciendo. ¿Es urgente?", en = "I'm driving. Is it urgent?"},
-            response = {
-              { speaker = "ghost", text = {es = "Siempre estás conduciendo.", en = "You're always driving."} },
-              { speaker = "ghost", text = {es = "Igual que él.", en = "Just like him."} },
-              { speaker = "ghost", text = {es = "Solo... ten cuidado con quién confías.", en = "Just... be careful who you trust."} },
-            },
-            effects = { ghost_trust = 5 }
-          }
-        }
-      },
-      { speaker = "ghost", text = {es = "Tengo que colgar.", en = "I have to hang up."} },
-    }
-  },
-
-  -- ========================================================================
-  -- PHASE 4: CHAPTER IV
-  -- ========================================================================
-
-  -- Phase 4: Rook's nervous call
-  rook_nova_argument = {
-    id = "call_rook_nervous",
-    caller = "rook",
     priority = "normal",
     dialogue = {
-      { speaker = "rook", text = {es = "Oye... ¿tienes un momento?", en = "Hey... do you have a moment?"} },
-      { speaker = "rook", text = {es = "Es sobre Nova.", en = "It's about Nova."} },
-      {
-        type = "choice",
-        choices = {
-          {
-            id = "whats_wrong",
-            text = {es = "¿Qué pasa con Nova?", en = "What's wrong with Nova?"},
-            response = {
-              { speaker = "rook", text = {es = "Hemos discutido. Fuerte.", en = "We had a fight. A bad one."} },
-              { speaker = "rook", text = {es = "Ella quiere ir a por todas. The Big One.", en = "She wants to go all in. The Big One."} },
-              { speaker = "rook", text = {es = "Y yo... no sé si estoy listo.", en = "And I... don't know if I'm ready."} },
-              { speaker = "rook", text = {es = "¿Crees que me estoy quedando atrás?", en = "Do you think I'm falling behind?"} },
-            },
-            effects = { rook_trust = 10 },
-            followUp = {
-              type = "choice",
-              choices = {
-                {
-                  id = "support_rook",
-                  text = {es = "Cada uno tiene su ritmo. No te presiones.", en = "Everyone has their own pace. Don't pressure yourself."},
-                  response = {
-                    { speaker = "rook", text = "..." },
-                    { speaker = "rook", text = {es = "Gracias. De verdad.", en = "Thanks. Really."} },
-                    { speaker = "rook", text = {es = "A veces siento que soy el único que frena.", en = "Sometimes I feel like I'm the only one holding back."} },
-                  },
-                  effects = { rook_affinity = 15, nova_affinity = -5 }
-                },
-                {
-                  id = "push_rook",
-                  text = {es = "Nova tiene razón. Hay que arriesgar.", en = "Nova's right. We have to take risks."},
-                  response = {
-                    { speaker = "rook", text = "..." },
-                    { speaker = "rook", text = {es = "Ya. Supongo que tienes razón.", en = "Yeah. I guess you're right."} },
-                    { speaker = "rook", text = {es = "Todos tenéis razón menos yo.", en = "Everyone's right except me."} },
-                  },
-                  effects = { rook_affinity = -10, nova_affinity = 10, rook_confidence = -10 }
-                },
-                {
-                  id = "neutral",
-                  text = {es = "Es complicado. No sé qué decirte.", en = "It's complicated. I don't know what to say."},
-                  response = {
-                    { speaker = "rook", text = {es = "Sí... es complicado.", en = "Yeah... it's complicated."} },
-                    { speaker = "rook", text = {es = "Perdona por llamar así.", en = "Sorry for calling like this."} },
-                  },
-                  effects = {}
-                }
-              }
-            }
-          },
-          {
-            id = "bad_timing",
-            text = {es = "Ahora no puedo, Rook.", en = "I can't right now, Rook."},
-            response = {
-              { speaker = "rook", text = {es = "Claro... claro.", en = "Sure... sure."} },
-              { speaker = "rook", text = {es = "Perdona.", en = "Sorry."} },
-            },
-            effects = { rook_trust = -5 }
-          }
-        }
-      }
+      { speaker = "ghost", text = {es = "Hoy corres contra Rook y Nova.", en = "Today you race against Rook and Nova."} },
+      { speaker = "ghost", text = {es = "Él es constante, ella es peligrosa.", en = "He's steady, she's dangerous."} },
+      { speaker = "ghost", text = {es = "No dejes que Nova te coma la moral, suele oler el miedo a un kilómetro.", en = "Don't let Nova eat your morale, she usually smells fear from a kilometer away."} },
     }
   },
 
-  -- Phase 4: Nova's frustrated call
-  nova_frustration = {
-    id = "call_nova_frustrated",
+  phase0_race3_intercept = {
+    id = "call_phase0_race3_intercept",
+    caller = "rook",
+    priority = "urgent",
+    isInterception = true,
+    dialogue = {
+      { speaker = "rook", text = {es = "¡Nova, el chico Miller me ha cerrado el paso!", en = "Nova, the Miller kid cut me off!"} },
+      { speaker = "rook", text = {es = "Casi pierdo el control.", en = "I almost lost control."} },
+      { speaker = "nova", text = {es = "¡Pues acelera, Rook!", en = "Then accelerate, Rook!"} },
+      { speaker = "nova", text = {es = "No me llores por el walkie.", en = "Don't cry to me on the walkie."} },
+      { speaker = "nova", text = {es = "Si te gana un novato, no esperes que te espere en la meta.", en = "If a rookie beats you, don't expect me to wait at the finish."} },
+    }
+  },
+
+  -- ========================================================================
+  -- PHASE 1: ORIGINS
+  -- ========================================================================
+
+  phase1_race1_during = {
+    id = "call_phase1_race1",
     caller = "nova",
     priority = "normal",
     dialogue = {
-      { speaker = "nova", text = {es = "¿Puedes hablar?", en = "Can you talk?"} },
-      { speaker = "nova", text = {es = "Necesito una opinión objetiva.", en = "I need an objective opinion."} },
-      {
-        type = "choice",
-        choices = {
-          {
-            id = "go_ahead",
-            text = {es = "Claro. ¿Qué pasa?", en = "Sure. What's up?"},
-            response = {
-              { speaker = "nova", text = {es = "Es Rook.", en = "It's Rook."} },
-              { speaker = "nova", text = {es = "Tiene miedo. De todo.", en = "He's scared. Of everything."} },
-              { speaker = "nova", text = {es = "The Big One está ahí. AL ALCANCE.", en = "The Big One is right there. WITHIN REACH."} },
-              { speaker = "nova", text = {es = "Y él quiere quedarse donde estamos.", en = "And he wants to stay where we are."} },
-            },
-            effects = { nova_trust = 10 },
-            followUp = {
-              type = "choice",
-              choices = {
-                {
-                  id = "support_nova",
-                  text = {es = "Tienes razón. Hay que ir a por todas.", en = "You're right. We have to go all in."},
-                  response = {
-                    { speaker = "nova", text = {es = "¿Ves? Tú lo entiendes.", en = "See? You get it."} },
-                    { speaker = "nova", text = {es = "No podemos quedarnos aquí para siempre.", en = "We can't stay here forever."} },
-                    { speaker = "nova", text = {es = "Gracias. Necesitaba oír eso.", en = "Thanks. I needed to hear that."} },
-                  },
-                  effects = { nova_affinity = 15, rook_affinity = -5 }
-                },
-                {
-                  id = "defend_rook",
-                  text = {es = "Rook tiene sus razones. No lo presiones tanto.", en = "Rook has his reasons. Don't pressure him so much."},
-                  response = {
-                    { speaker = "nova", text = "..." },
-                    { speaker = "nova", text = {es = "Pensé que lo entenderías.", en = "I thought you'd understand."} },
-                    { speaker = "nova", text = {es = "Da igual.", en = "Whatever."} },
-                  },
-                  effects = { nova_affinity = -10, rook_affinity = 10 }
-                },
-                {
-                  id = "stay_neutral",
-                  text = {es = "Es difícil. Los dos tenéis razón.", en = "It's difficult. You're both right."},
-                  response = {
-                    { speaker = "nova", text = {es = "No se puede tener razón los dos.", en = "We can't both be right."} },
-                    { speaker = "nova", text = {es = "Alguien tiene que ceder.", en = "Someone has to give in."} },
-                    { speaker = "nova", text = {es = "Y no voy a ser yo.", en = "And it's not going to be me."} },
-                  },
-                  effects = {}
-                }
-              }
-            }
-          },
-          {
-            id = "not_now",
-            text = {es = "No es buen momento.", en = "Not a good time."},
-            response = {
-              { speaker = "nova", text = {es = "Nunca es buen momento.", en = "It's never a good time."} },
-              { speaker = "nova", text = {es = "Da igual. Hablamos luego.", en = "Whatever. Talk later."} },
-            },
-            effects = { nova_trust = -5 }
-          }
-        }
-      }
+      { speaker = "nova", text = {es = "¡Mirad ese horizonte!", en = "Look at that horizon!"} },
+      { speaker = "nova", text = {es = "Miller, ¿no sientes que este sitio se nos queda pequeño?", en = "Miller, don't you feel like this place is getting small for us?"} },
+      { speaker = "nova", text = {es = "Llevo meses diciéndole a Rook que tenemos que buscar retos de verdad en la capital...", en = "I've been telling Rook for months that we need to find real challenges in the capital..."} },
+      { speaker = "nova", text = {es = "... pero él se empeña en pulir el mismo coche cada noche en este circuito de pueblo.", en = "... but he insists on polishing the same car every night on this town circuit."} },
+      { speaker = "rook", text = {es = "No es 'pulir el coche', Nova. Se llama conocer tus límites.", en = "It's not 'polishing the car', Nova. It's called knowing your limits."} },
+      { speaker = "rook", text = {es = "Miller sabe de lo que hablo.", en = "Miller knows what I'm talking about."} },
+      { speaker = "rook", text = {es = "Si fuerzas el motor antes de que la temperatura sea la correcta...", en = "If you force the engine before the temperature is right..."} },
+      { speaker = "rook", text = {es = "... solo estás comprando un billete para el desguace.", en = "... you're just buying a ticket to the scrapyard."} },
+      { speaker = "rook", text = {es = "Ganar una carrera no sirve de nada si revientas la transmisión en la meta.", en = "Winning a race is useless if you blow the transmission at the finish."} },
+      { speaker = "nova", text = {es = "Siempre con lo mismo... 'Límites, límites'.", en = "Always the same... 'Limits, limits'."} },
+      { speaker = "nova", text = {es = "El abuelo de Miller no llegó a ser quien fue por ser prudente, Rook.", en = "Miller's grandfather didn't become who he was by being cautious, Rook."} },
+      { speaker = "nova", text = {es = "El éxito está al otro lado del miedo.", en = "Success is on the other side of fear."} },
+      { speaker = "nova", text = {es = "¿Tú qué dices, Miller? ¿Eres de los que cuidan el motor o de los que lo exprimen hasta que grita?", en = "What do you say, Miller? Are you one who takes care of the engine or one who squeezes it until it screams?"} },
     }
   },
 
-  -- ========================================================================
-  -- PHASE 5: CHAPTER V
-  -- ========================================================================
+  phase1_race2_during = {
+    id = "call_phase1_race2",
+    caller = "rook",
+    priority = "normal",
+    dialogue = {
+      { speaker = "rook", text = {es = "Escuchad el motor, no solo el viento.", en = "Listen to the engine, not just the wind."} },
+      { speaker = "rook", text = {es = "Miller, fíjate en cómo reacciona tu chasis en las transiciones de peso.", en = "Miller, notice how your chassis reacts in weight transitions."} },
+      { speaker = "rook", text = {es = "Si aprendes a sentir el momento exacto en el que las gomas muerden el asfalto...", en = "If you learn to feel the exact moment when the tires bite the asphalt..."} },
+      { speaker = "rook", text = {es = "... no necesitarás mil caballos para ser el más rápido.", en = "... you won't need a thousand horses to be the fastest."} },
+      { speaker = "rook", text = {es = "Nova cree que la velocidad es un don, pero yo creo que es un lenguaje.", en = "Nova thinks speed is a gift, but I think it's a language."} },
+      { speaker = "nova", text = {es = "¡Bla, bla, bla!", en = "Blah, blah, blah!"} },
+      { speaker = "nova", text = {es = "Menos clases de yoga y más acción, Rook.", en = "Less yoga classes and more action, Rook."} },
+      { speaker = "nova", text = {es = "Miller, no le hagas caso. Si ves un hueco, métete.", en = "Miller, don't listen to him. If you see a gap, take it."} },
+      { speaker = "nova", text = {es = "El asfalto es de quien lo pisa primero.", en = "The asphalt belongs to who steps on it first."} },
+      { speaker = "nova", text = {es = "Rook analiza tanto la pista que a veces se olvida de que esto es una competición...", en = "Rook analyzes the track so much that sometimes he forgets this is a competition..."} },
+      { speaker = "nova", text = {es = "... no un examen de ingeniería.", en = "... not an engineering exam."} },
+      { speaker = "rook", text = {es = "No me olvido de nada, Nova.", en = "I don't forget anything, Nova."} },
+      { speaker = "rook", text = {es = "Solo intento que todos volvamos a casa en una pieza.", en = "I'm just trying to make sure we all get home in one piece."} },
+      { speaker = "rook", text = {es = "Miller, ignora sus gritos y busca tu ritmo.", en = "Miller, ignore her screaming and find your rhythm."} },
+      { speaker = "rook", text = {es = "El coche te dirá cuándo está listo para dar más.", en = "The car will tell you when it's ready to give more."} },
+    }
+  },
 
-  -- Phase 5: Ghost's urgent warning
-  ghost_final_warning = {
-    id = "call_ghost_warning",
+  phase1_race3_pre = {
+    id = "call_phase1_race3",
     caller = "ghost",
-    priority = "urgent",
+    priority = "normal",
     dialogue = {
-      { speaker = "ghost", text = {es = "Escucha.", en = "Listen."} },
-      { speaker = "ghost", text = {es = "No tengo mucho tiempo.", en = "I don't have much time."} },
-      { speaker = "ghost", text = {es = "Algo va a pasar. Pronto.", en = "Something's going to happen. Soon."} },
-      {
-        type = "choice",
-        choices = {
-          {
-            id = "what_happening",
-            text = {es = "¿Qué va a pasar?", en = "What's going to happen?"},
-            response = {
-              { speaker = "ghost", text = {es = "No puedo decirte más.", en = "I can't tell you more."} },
-              { speaker = "ghost", text = {es = "Solo... vigila tu garaje.", en = "Just... watch your garage."} },
-              { speaker = "ghost", text = {es = "Y a tus amigos.", en = "And your friends."} },
-              { speaker = "ghost", text = {es = "No todo el mundo quiere lo mismo que tú.", en = "Not everyone wants the same thing as you."} },
-            },
-            effects = { ghost_trust = 15 }
-          },
-          {
-            id = "trust_issues",
-            text = {es = "¿Por qué debería creerte?", en = "Why should I believe you?"},
-            response = {
-              { speaker = "ghost", text = {es = "No tienes que creerme.", en = "You don't have to believe me."} },
-              { speaker = "ghost", text = {es = "Solo recuerda esta llamada.", en = "Just remember this call."} },
-              { speaker = "ghost", text = {es = "Cuando pase... recuérdala.", en = "When it happens... remember it."} },
-            },
-            effects = {}
-          }
-        }
-      },
-      { speaker = "ghost", text = {es = "Cuídate.", en = "Take care."} },
-    }
-  },
-
-  -- Phase 5: Betrayal aftermath - Rook or Nova's panicked call after the theft
-  car_stolen = {
-    id = "call_betrayal_aftermath",
-    caller = "rook",  -- Could be either based on who didn't betray
-    priority = "urgent",
-    dialogue = {
-      { speaker = "rook", text = {es = "¿DÓNDE ESTÁS?", en = "WHERE ARE YOU?"} },
-      { speaker = "rook", text = {es = "Tu garaje... alguien entró.", en = "Your garage... someone broke in."} },
-      { speaker = "rook", text = {es = "El ETK-I... NO ESTÁ.", en = "The ETK-I... IT'S GONE."} },
-      {
-        type = "choice",
-        choices = {
-          {
-            id = "what",
-            text = {es = "¿QUÉ?", en = "WHAT?"},
-            response = {
-              { speaker = "rook", text = {es = "Lo siento... estoy aquí. Vine a comprobar el setup.", en = "I'm sorry... I'm here. I came to check the setup."} },
-              { speaker = "rook", text = {es = "Y la puerta... estaba abierta.", en = "And the door... was open."} },
-              { speaker = "rook", text = {es = "Llamé a Nova. No responde.", en = "I called Nova. She's not answering."} },
-              { speaker = "rook", text = {es = "¿Dónde está Nova?", en = "Where is Nova?"} },
-            },
-            effects = { rook_trust = 20 }
-          },
-          {
-            id = "are_you_sure",
-            text = {es = "¿Estás seguro?", en = "Are you sure?"},
-            response = {
-              { speaker = "rook", text = {es = "¡SOY MECÁNICO! ¡SÉ CUANDO NO HAY UN PUTO COCHE!", en = "I'M A MECHANIC! I KNOW WHEN THERE'S NO DAMN CAR!"} },
-              { speaker = "rook", text = {es = "Perdona... perdona. Es que...", en = "Sorry... sorry. It's just..."} },
-              { speaker = "rook", text = {es = "Esto no debería haber pasado.", en = "This shouldn't have happened."} },
-            },
-            effects = { rook_trust = 5 }
-          }
-        }
-      },
-      { speaker = "rook", text = {es = "Voy a seguir buscando. Llamaré si encuentro algo.", en = "I'll keep looking. I'll call if I find anything."} },
+      { speaker = "ghost", text = {es = "Miller, abre bien los oídos.", en = "Miller, open your ears wide."} },
+      { speaker = "ghost", text = {es = "Estoy viendo los tiempos de esa parejita y algo no cuadra.", en = "I'm watching that couple's times and something doesn't add up."} },
+      { speaker = "ghost", text = {es = "Nova está arriesgando demasiado y Rook está empezando a cubrirle las espaldas de forma peligrosa.", en = "Nova is taking too much risk and Rook is starting to cover her back dangerously."} },
+      { speaker = "ghost", text = {es = "Se están volviendo predecibles porque están más pendientes el uno del otro que de la carretera.", en = "They're becoming predictable because they're more aware of each other than the road."} },
+      { speaker = "ghost", text = {es = "Es tu oportunidad de marcar distancia.", en = "It's your chance to mark distance."} },
+      { speaker = "ghost", text = {es = "No te metas en su drama emocional, úsalo.", en = "Don't get into their emotional drama, use it."} },
+      { speaker = "ghost", text = {es = "Si Nova se lanza, deja que se pase de frenada.", en = "If Nova lunges, let her overshoot the braking."} },
+      { speaker = "ghost", text = {es = "Si Rook se cierra, busca el interior.", en = "If Rook closes, look for the inside."} },
+      { speaker = "ghost", text = {es = "Tu abuelo siempre decía: 'En la pista, el único amigo que tienes es el volante'.", en = "Your grandfather always said: 'On the track, the only friend you have is the steering wheel'."} },
     }
   },
 
   -- ========================================================================
-  -- PHASE 6: CHAPTER VI
+  -- PHASE 2: THE SPLIT
   -- ========================================================================
 
-  -- Phase 6: Ghost's revelation call
-  ghost_truth_reveal = {
-    id = "call_ghost_truth",
+  phase2_race1_during = {
+    id = "call_phase2_race1",
+    caller = "nova",
+    priority = "urgent",
+    dialogue = {
+      { speaker = "nova", text = {es = "¡Rook, deja de cerrar el paso!", en = "Rook, stop blocking!"} },
+      { speaker = "nova", text = {es = "Miller tiene mejor línea que tú, déjale espacio si no puedes mantener el ritmo.", en = "Miller has a better line than you, give him space if you can't keep up."} },
+      { speaker = "nova", text = {es = "Esto no es un paseo dominical, estamos aquí para ganar, no para hacernos compañía.", en = "This isn't a Sunday drive, we're here to win, not to keep each other company."} },
+      { speaker = "rook", text = {es = "¡No estoy cerrando el paso, Nova, estoy protegiendo la trazada porque tus frenos están echando humo!", en = "I'm not blocking, Nova, I'm protecting the line because your brakes are smoking!"} },
+      { speaker = "rook", text = {es = "Si sigues entrando así de pasado, te vas a quedar sin pastillas antes de la mitad del tramo.", en = "If you keep entering that late, you'll run out of pads before halfway."} },
+      { speaker = "rook", text = {es = "¡Miller, no le sigas el juego, va a acabar mal!", en = "Miller, don't play her game, it's going to end badly!"} },
+      { speaker = "nova", text = {es = "¡Mis frenos están bien!", en = "My brakes are fine!"} },
+      { speaker = "nova", text = {es = "Lo que pasa es que tú tienes miedo de que Miller vea que te has quedado estancado.", en = "What's happening is you're afraid Miller will see you've stagnated."} },
+      { speaker = "nova", text = {es = "Miller, si tienes lo que hay que tener, sígueme.", en = "Miller, if you have what it takes, follow me."} },
+      { speaker = "nova", text = {es = "Vamos a enseñar de qué es capaz un motor de verdad cuando no lo castran con 'precaución'.", en = "Let's show what a real engine is capable of when it's not castrated with 'caution'."} },
+    }
+  },
+
+  phase2_race2_during = {
+    id = "call_phase2_race2",
     caller = "ghost",
-    priority = "urgent",
+    priority = "normal",
     dialogue = {
-      { speaker = "ghost", text = {es = "Soy yo.", en = "It's me."} },
-      { speaker = "ghost", text = {es = "Sé quién lo hizo.", en = "I know who did it."} },
-      { speaker = "ghost", text = {es = "Y sé por qué.", en = "And I know why."} },
-      {
-        type = "choice",
-        choices = {
-          {
-            id = "tell_me",
-            text = {es = "Dime.", en = "Tell me."},
-            response = {
-              { speaker = "ghost", text = {es = "No fue un robo.", en = "It wasn't a theft."} },
-              { speaker = "ghost", text = {es = "Fue alguien cercano a ti.", en = "It was someone close to you."} },
-              { speaker = "ghost", text = {es = "Alguien que quería tu coche para The Big One.", en = "Someone who wanted your car for The Big One."} },
-              { speaker = "ghost", text = {es = "Sin ti.", en = "Without you."} },
-            },
-            effects = { ghost_trust = 20 },
-            followUp = {
-              type = "choice",
-              choices = {
-                {
-                  id = "who",
-                  text = {es = "¿Quién fue?", en = "Who was it?"},
-                  response = {
-                    { speaker = "ghost", text = {es = "Eso tienes que descubrirlo tú.", en = "You have to figure that out yourself."} },
-                    { speaker = "ghost", text = {es = "Pero piensa... ¿quién tenía más que ganar?", en = "But think... who had the most to gain?"} },
-                    { speaker = "ghost", text = {es = "¿Quién estaba más desesperado?", en = "Who was most desperate?"} },
-                  },
-                  effects = {}
-                },
-                {
-                  id = "why_help",
-                  text = {es = "¿Por qué me ayudas?", en = "Why are you helping me?"},
-                  response = {
-                    { speaker = "ghost", text = {es = "Porque tu abuelo era buena gente.", en = "Because your grandfather was good people."} },
-                    { speaker = "ghost", text = {es = "Y porque Muscle me lo pidió.", en = "And because Muscle asked me to."} },
-                    { speaker = "ghost", text = {es = "Ella no quería que esto terminara así.", en = "She didn't want it to end like this."} },
-                  },
-                  effects = { ghost_trust = 10 }
-                }
-              }
-            }
-          }
-        }
-      },
-      { speaker = "ghost", text = {es = "El coche está a salvo. Yo lo tengo.", en = "The car is safe. I have it."} },
-      { speaker = "ghost", text = {es = "Cuando estés listo... ven a buscarlo.", en = "When you're ready... come get it."} },
+      { speaker = "ghost", text = {es = "Miller, ¿has visto el muscle car que se ha unido a esta carrera?", en = "Miller, did you see the muscle car that joined this race?"} },
+      { speaker = "ghost", text = {es = "Es Muscle.", en = "It's Muscle."} },
+      { speaker = "ghost", text = {es = "Ella no suele salir de su cueva a menos que vea algo que le interese...", en = "She doesn't usually leave her cave unless she sees something that interests her..."} },
+      { speaker = "ghost", text = {es = "... y ha venido con su peor coche.", en = "... and she came with her worst car."} },
+      { speaker = "ghost", text = {es = "Su padre murió en el accidente que hizo que tu abuelo dejara las llaves inglesas.", en = "Her father died in the accident that made your grandfather drop the wrenches."} },
+      { speaker = "ghost", text = {es = "Ella no guarda rencor, pero tampoco regala respeto.", en = "She doesn't hold a grudge, but she doesn't give away respect either."} },
+      { speaker = "ghost", text = {es = "Si quieres que te tome en serio, no hagas ninguna estupidez técnica.", en = "If you want her to take you seriously, don't make any technical mistakes."} },
+      { speaker = "ghost", text = {es = "Conduce limpio, como lo haría Miller si no tuviera el alma rota.", en = "Drive clean, as Miller would if he didn't have a broken soul."} },
     }
   },
 
-  -- Phase 6: Viper's invitation to The Big One
-  viper_contact = {
-    id = "call_viper_invitation",
+  phase2_race3_during = {
+    id = "call_phase2_race3",
+    caller = "rook",
+    priority = "urgent",
+    dialogue = {
+      { speaker = "rook", text = {es = "Miller, escúchame bien.", en = "Miller, listen carefully."} },
+      { speaker = "rook", text = {es = "He intentado hablar con Nova, pero ya no me escucha.", en = "I've tried to talk to Nova, but she doesn't listen to me anymore."} },
+      { speaker = "rook", text = {es = "Cree que puede saltarse las fases de preparación y entrar directa en las grandes ligas de la capital.", en = "She thinks she can skip the preparation phases and go straight to the big leagues in the capital."} },
+      { speaker = "rook", text = {es = "Tú tienes influencia sobre ella ahora... dile que es una locura.", en = "You have influence over her now... tell her it's crazy."} },
+      { speaker = "rook", text = {es = "Los coches de allí no son como los nuestros, son máquinas de matar si no sabes lo que haces.", en = "The cars there aren't like ours, they're killing machines if you don't know what you're doing."} },
+      { speaker = "nova", text = {es = "¡Deja de hablar por él, Rook!", en = "Stop speaking for him, Rook!"} },
+      { speaker = "nova", text = {es = "Miller sabe que tengo razón.", en = "Miller knows I'm right."} },
+      { speaker = "nova", text = {es = "Si nos quedamos aquí, acabaremos siendo como el abuelo de Miller...", en = "If we stay here, we'll end up like Miller's grandfather..."} },
+      { speaker = "nova", text = {es = "... leyendas de un garaje que nadie visita.", en = "... legends of a garage no one visits."} },
+      { speaker = "nova", text = {es = "Yo me voy, con o sin vosotros.", en = "I'm leaving, with or without you."} },
+      { speaker = "nova", text = {es = "Miller, piénsalo. Hay un mundo ahí fuera esperándonos.", en = "Miller, think about it. There's a world out there waiting for us."} },
+      { speaker = "rook", text = {es = "¡No se trata de irse, Nova, se trata de sobrevivir al viaje!", en = "It's not about leaving, Nova, it's about surviving the journey!"} },
+      { speaker = "rook", text = {es = "Miller, por favor, razona con ella antes de que destroce todo lo que hemos construido.", en = "Miller, please, reason with her before she destroys everything we've built."} },
+    }
+  },
+
+  -- ========================================================================
+  -- PHASE 3: THE CRISIS
+  -- ========================================================================
+
+  phase3_race1_during = {
+    id = "call_phase3_race1",
+    caller = "nova",
+    priority = "normal",
+    dialogue = {
+      { speaker = "nova", text = {es = "¡Miller, mira cómo entra Rook en la curva!", en = "Miller, look how Rook enters the corner!"} },
+      { speaker = "nova", text = {es = "Está frenando demasiado pronto, tiene miedo de que las ruedas sufran.", en = "He's braking too early, he's afraid the wheels will suffer."} },
+      { speaker = "nova", text = {es = "¡Así no se gana!", en = "That's not how you win!"} },
+      { speaker = "nova", text = {es = "Si quieres llegar arriba, tienes que confiar en que todo aguantará.", en = "If you want to reach the top, you have to trust that everything will hold."} },
+      { speaker = "nova", text = {es = "¡Sígueme a mí, olvida su manual de seguridad!", en = "Follow me, forget his safety manual!"} },
+      { speaker = "rook", text = {es = "¡No es miedo, Nova, es gestión!", en = "It's not fear, Nova, it's management!"} },
+      { speaker = "rook", text = {es = "Miller, si entras como ella, acabarás con los neumáticos achicharrados en una vuelta.", en = "Miller, if you enter like her, you'll end up with charred tires in one lap."} },
+      { speaker = "rook", text = {es = "Nova cree que la suerte es un componente del coche, pero yo prefiero la mecánica.", en = "Nova thinks luck is a car component, but I prefer mechanics."} },
+      { speaker = "rook", text = {es = "¡Mantén tu trazada y no dejes que su agresividad te desubique!", en = "Keep your line and don't let her aggression unsettle you!"} },
+      { speaker = "nova", text = {es = "¡La suerte es para los que no tienen talento, Rook!", en = "Luck is for those without talent, Rook!"} },
+      { speaker = "nova", text = {es = "Miller, si no arriesgas ahora que somos jóvenes, ¿cuándo lo vas a hacer?", en = "Miller, if you don't take risks now while we're young, when will you?"} },
+      { speaker = "nova", text = {es = "¿Cuando seas un viejo encerrado en un garaje como Miller?", en = "When you're an old man locked in a garage like Miller?"} },
+    }
+  },
+
+  phase3_race2_during = {
+    id = "call_phase3_race2",
+    caller = "ghost",
+    priority = "normal",
+    dialogue = {
+      { speaker = "ghost", text = {es = "Miller, escucha el motor.", en = "Miller, listen to the engine."} },
+      { speaker = "ghost", text = {es = "Tu abuelo y Viper eran el equipo perfecto porque él ponía la lógica y ella ponía la rabia.", en = "Your grandfather and Viper were the perfect team because he provided logic and she provided rage."} },
+      { speaker = "ghost", text = {es = "Pero Rook y Nova... ellos no encajan.", en = "But Rook and Nova... they don't fit."} },
+      { speaker = "ghost", text = {es = "Ella quiere ser Viper sin tener a un Miller detrás...", en = "She wants to be Viper without having a Miller behind her..."} },
+      { speaker = "ghost", text = {es = "... y Rook quiere ser Miller sin tener a una Viper que sepa cuándo frenar.", en = "... and Rook wants to be Miller without having a Viper who knows when to brake."} },
+      { speaker = "ghost", text = {es = "Estás viendo un desastre anunciado.", en = "You're watching a disaster waiting to happen."} },
+      { speaker = "ghost", text = {es = "Asegúrate de no estar demasiado cerca cuando ocurra el impacto.", en = "Make sure you're not too close when the impact happens."} },
+    }
+  },
+
+  phase3_race3_during = {
+    id = "call_phase3_race3_nova",
+    caller = "nova",
+    priority = "normal",
+    dialogue = {
+      { speaker = "nova", text = {es = "Rook se ha quedado atrás gestionando neumáticos... siempre igual.", en = "Rook's fallen behind managing tires... always the same."} },
+      { speaker = "nova", text = {es = "Ahora estamos fuera del alcance de su radio, escucha Miller...", en = "Now we're out of his radio range, listen Miller..."} },
+      { speaker = "nova", text = {es = "He estado hablando con gente de la capital.", en = "I've been talking to people in the capital."} },
+      { speaker = "nova", text = {es = "Dicen que allí buscan pilotos con tu perfil.", en = "They say they're looking for drivers with your profile there."} },
+      { speaker = "nova", text = {es = "Rook no quiere ir, dice que no estamos listos.", en = "Rook doesn't want to go, he says we're not ready."} },
+      { speaker = "nova", text = {es = "Pero yo sé que tú sí lo estás.", en = "But I know you are."} },
+      { speaker = "nova", text = {es = "Piénsalo: tú, yo, y un circuito de verdad.", en = "Think about it: you, me, and a real circuit."} },
+      { speaker = "nova", text = {es = "Sin sermones sobre la temperatura del aceite.", en = "Without sermons about oil temperature."} },
+      { speaker = "rook", text = {es = "¿De qué estáis hablando?", en = "What are you talking about?"} },
+      { speaker = "rook", text = {es = "Os habéis alejado mucho.", en = "You've gone too far."} },
+      { speaker = "rook", text = {es = "Miller, ¿está todo bien con el coche?", en = "Miller, is everything okay with the car?"} },
+      { speaker = "rook", text = {es = "He notado demasiado balanceo en tu culo al salir de la última curva.", en = "I noticed too much sway in your rear coming out of the last corner."} },
+      { speaker = "nova", text = {es = "¡Todo está bien, Rook!", en = "Everything's fine, Rook!"} },
+      { speaker = "nova", text = {es = "Deja de analizarlo todo y conduce.", en = "Stop analyzing everything and drive."} },
+    }
+  },
+
+  -- ========================================================================
+  -- PHASE 4: THE SPLIT (RUPTURA FINAL)
+  -- ========================================================================
+
+  phase4_race1_during = {
+    id = "call_phase4_race1",
+    caller = "nova",
+    priority = "urgent",
+    dialogue = {
+      { speaker = "nova", text = {es = "¡Maldita sea!", en = "Damn it!"} },
+      { speaker = "nova", text = {es = "Miller, algo le pasa al turbo.", en = "Miller, something's wrong with the turbo."} },
+      { speaker = "nova", text = {es = "El coche empuja como un demonio pero suena como si fuera a desintegrarse.", en = "The car pushes like a demon but sounds like it's going to disintegrate."} },
+      { speaker = "nova", text = {es = "¡Rook, no te acerques, voy a intentar una maniobra por el exterior!", en = "Rook, don't get close, I'm going to try a maneuver on the outside!"} },
+      { speaker = "rook", text = {es = "¡Nova, frena!", en = "Nova, brake!"} },
+      { speaker = "rook", text = {es = "Estás echando fuego por el escape.", en = "You're shooting fire from the exhaust."} },
+      { speaker = "rook", text = {es = "Eso no es un ajuste estándar, ¿qué le has hecho al motor?", en = "That's not a standard adjustment, what did you do to the engine?"} },
+      { speaker = "rook", text = {es = "Miller, ¿tú sabes algo de esto?", en = "Miller, do you know anything about this?"} },
+      { speaker = "rook", text = {es = "Lleváis un par de noches actuando de forma rara los dos.", en = "You've both been acting strange for a couple nights."} },
+      { speaker = "nova", text = {es = "¡No le he hecho nada que no fuera necesario, Rook!", en = "I didn't do anything that wasn't necessary, Rook!"} },
+      { speaker = "nova", text = {es = "¡Cállate y conduce!", en = "Shut up and drive!"} },
+      { speaker = "nova", text = {es = "Miller, si me ves perder tracción, no frenes, ¡pásame y gana tú!", en = "Miller, if you see me lose traction, don't brake, pass me and you win!"} },
+      { speaker = "nova", text = {es = "No dejes que él tenga razón sobre 'sus límites'.", en = "Don't let him be right about 'his limits'."} },
+      { speaker = "rook", text = {es = "¡No se trata de tener razón, se trata de que vas a gripar el motor!", en = "It's not about being right, it's about you're going to seize the engine!"} },
+      { speaker = "rook", text = {es = "¡Miller, dile que pare antes de que vaya a peor!", en = "Miller, tell her to stop before it gets worse!"} },
+    }
+  },
+
+  phase4_race2_during = {
+    id = "call_phase4_race2",
+    caller = "rook",
+    priority = "normal",
+    dialogue = {
+      { speaker = "rook", text = {es = "Miller, escúchame bien.", en = "Miller, listen carefully."} },
+      { speaker = "rook", text = {es = "He revisado el registro de telemetría de Nova.", en = "I've reviewed Nova's telemetry log."} },
+      { speaker = "rook", text = {es = "Esos picos de potencia no son de Techie, ni de Muscle.", en = "Those power spikes aren't from Techie or Muscle."} },
+      { speaker = "rook", text = {es = "Son de Shadow, ¿verdad?", en = "They're from Shadow, right?"} },
+      { speaker = "rook", text = {es = "Dime la verdad.", en = "Tell me the truth."} },
+      { speaker = "rook", text = {es = "Ella no me lo dirá, pero a ti te respeta.", en = "She won't tell me, but she respects you."} },
+      { speaker = "rook", text = {es = "Si ella se mete en el mercado negro, no hay vuelta atrás.", en = "If she gets into the black market, there's no going back."} },
+      { speaker = "rook", text = {es = "Ghost me ha dicho que Shadow no solo vende piezas, vende deudas.", en = "Ghost told me Shadow doesn't just sell parts, he sells debts."} },
+      { speaker = "rook", text = {es = "No dejes que ella se hunda sola.", en = "Don't let her sink alone."} },
+      { speaker = "ghost", text = {es = "Rook, deja de llorar.", en = "Rook, stop crying."} },
+      { speaker = "ghost", text = {es = "Miller tiene que elegir su propio camino.", en = "Miller has to choose his own path."} },
+      { speaker = "ghost", text = {es = "El abuelo Miller también tuvo que elegir entre la seguridad de su taller y la ambición de Viper.", en = "Grandfather Miller also had to choose between the safety of his workshop and Viper's ambition."} },
+      { speaker = "ghost", text = {es = "Ya sabemos cómo acabó eso.", en = "We already know how that ended."} },
+      { speaker = "ghost", text = {es = "Miller, el asfalto está frío hoy.", en = "Miller, the asphalt is cold today."} },
+      { speaker = "ghost", text = {es = "Decide si vas a ser el que empuje a Nova al abismo o el que intente sujetarla.", en = "Decide if you're going to be the one who pushes Nova to the abyss or the one who tries to hold her."} },
+    }
+  },
+
+  phase4_race3_explosion = {
+    id = "call_phase4_race3_explosion",
+    caller = "rook",
+    priority = "urgent",
+    dialogue = {
+      { speaker = "rook", text = {es = "¡Lo he visto, Miller!", en = "I saw it, Miller!"} },
+      { speaker = "rook", text = {es = "He visto el nombre de Shadow en el móvil de Nova.", en = "I saw Shadow's name on Nova's phone."} },
+      { speaker = "rook", text = {es = "¡Nova, eres una idiota!", en = "Nova, you're an idiot!"} },
+      { speaker = "rook", text = {es = "¿Sabes lo que le hacen a los que no pueden pagar esas piezas?", en = "Do you know what they do to those who can't pay for those parts?"} },
+      { speaker = "rook", text = {es = "¿Qué estás haciendo?", en = "What are you doing?"} },
+      { speaker = "nova", text = {es = "¡Lo que me da la gana, Rook!", en = "Whatever I want, Rook!"} },
+      { speaker = "nova", text = {es = "¡Estoy harta de tu proteccionismo barato!", en = "I'm sick of your cheap protectionism!"} },
+      { speaker = "nova", text = {es = "Miller y yo queremos salir de aquí, queremos ser algo más que leyendas de gasolinera.", en = "Miller and I want to get out of here, we want to be more than gas station legends."} },
+      { speaker = "nova", text = {es = "¡Si no puedes seguirnos, apártate de nuestra puta trazada!", en = "If you can't follow us, get out of our fucking line!"} },
+      { speaker = "rook", text = {es = "¡Bien!", en = "Fine!"} },
+      { speaker = "rook", text = {es = "¡Haz lo que quieras!", en = "Do whatever you want!"} },
+      { speaker = "rook", text = {es = "¡Miller, si te vas con ella, olvida que alguna vez te cubrí las espaldas!", en = "Miller, if you go with her, forget I ever had your back!"} },
+      { speaker = "rook", text = {es = "¡A partir de ahora, solo sois dos coches más en mi retrovisor!", en = "From now on, you're just two more cars in my rearview!"} },
+    }
+  },
+
+  -- ========================================================================
+  -- PHASE 5: RALLY REGIONAL (POLVO Y TRAICIÓN)
+  -- ========================================================================
+
+  phase5_rally1_during = {
+    id = "call_phase5_rally1",
+    caller = "ghost",
+    priority = "normal",
+    dialogue = {
+      { speaker = "ghost", text = {es = "Miller, el ETK-I suena exactamente como lo planeó tu abuelo hace treinta años.", en = "Miller, the ETK-I sounds exactly as your grandfather planned thirty years ago."} },
+      { speaker = "ghost", text = {es = "Es estremecedor.", en = "It's thrilling."} },
+      { speaker = "ghost", text = {es = "No dejes que el éxito se te suba a la cabeza...", en = "Don't let success go to your head..."} },
+      { speaker = "ghost", text = {es = "... la tierra perdona menos que el asfalto.", en = "... dirt is less forgiving than asphalt."} },
+      { speaker = "ghost", text = {es = "Rook y Nova están en la meta esperándote...", en = "Rook and Nova are at the finish waiting for you..."} },
+      { speaker = "ghost", text = {es = "... aunque no se han mirado a la cara en todo el día.", en = "... though they haven't looked at each other all day."} },
+    }
+  },
+
+  phase5_rally2_during = {
+    id = "call_phase5_rally2",
+    caller = "nova",
+    priority = "normal",
+    dialogue = {
+      { speaker = "nova", text = {es = "¡Ese tiempo ha sido increíble, Miller!", en = "That time was incredible, Miller!"} },
+      { speaker = "nova", text = {es = "Shadow dice que si ganas este rally, el ETK-I valdrá el triple en la capital.", en = "Shadow says if you win this rally, the ETK-I will be worth triple in the capital."} },
+      { speaker = "nova", text = {es = "Podríamos largarnos de aquí mañana mismo.", en = "We could get out of here tomorrow."} },
+      { speaker = "nova", text = {es = "Olvida los circuitos regionales, vamos a por el dinero de verdad.", en = "Forget regional circuits, let's go for the real money."} },
+      { speaker = "rook", text = {es = "¡Para ya, Nova!", en = "Stop it, Nova!"} },
+      { speaker = "rook", text = {es = "Miller no está corriendo por el dinero de Shadow.", en = "Miller isn't racing for Shadow's money."} },
+      { speaker = "rook", text = {es = "Está corriendo por su abuelo.", en = "He's racing for his grandfather."} },
+      { speaker = "rook", text = {es = "Ese coche es una pieza de historia, no una moneda de cambio.", en = "That car is a piece of history, not a bargaining chip."} },
+      { speaker = "rook", text = {es = "Miller, no dejes que te convenza de vender tu alma antes de llegar a la Big One.", en = "Miller, don't let her convince you to sell your soul before reaching the Big One."} },
+    }
+  },
+
+  -- ========================================================================
+  -- PHASE 6: EL FONDO DEL POZO (COPA COVET)
+  -- ========================================================================
+
+  phase6_covet1_post = {
+    id = "call_phase6_covet1",
+    caller = "ghost",
+    priority = "normal",
+    dialogue = {
+      { speaker = "ghost", text = {es = "Deja de mirar el retrovisor buscando culpables, Miller.", en = "Stop looking in the rearview for culprits, Miller."} },
+      { speaker = "ghost", text = {es = "Ahora mismo eres un don nadie en un coche de 80 caballos.", en = "Right now you're a nobody in an 80-horsepower car."} },
+      { speaker = "ghost", text = {es = "Si no ganas esta copa, no habrá Big One, ni ETK-I, ni respuestas.", en = "If you don't win this cup, there will be no Big One, no ETK-I, no answers."} },
+      { speaker = "ghost", text = {es = "Concéntrate en el Covet.", en = "Focus on the Covet."} },
+      { speaker = "ghost", text = {es = "Es un coche honesto, no como la gente con la que te juntas.", en = "It's an honest car, not like the people you hang out with."} },
+    }
+  },
+
+  phase6_covet2_intercept = {
+    id = "call_phase6_covet2_techie",
+    caller = "techie",
+    priority = "urgent",
+    dialogue = {
+      { speaker = "techie", text = {es = "Miller, he estado rastreando la señal del GPS que instalé en el ETK-I antes del rally.", en = "Miller, I've been tracking the GPS signal I installed in the ETK-I before the rally."} },
+      { speaker = "techie", text = {es = "Se apagó justo después del golpe.", en = "It shut off right after the hit."} },
+      { speaker = "techie", text = {es = "Pero he detectado actividad inusual en la cuenta de Shadow vinculada a (Rook/Nova).", en = "But I've detected unusual activity in Shadow's account linked to (Rook/Nova)."} },
+      { speaker = "techie", text = {es = "Alguien ha recibido un pago grande en cripto.", en = "Someone received a large crypto payment."} },
+      { speaker = "techie", text = {es = "No quiero sacar conclusiones, pero los datos son... feos.", en = "I don't want to jump to conclusions, but the data is... ugly."} },
+    }
+  },
+
+  phase6_covet4_during = {
+    id = "call_phase6_covet4_shadow",
+    caller = "shadow",
+    priority = "normal",
+    dialogue = {
+      { speaker = "shadow", text = {es = "Miller, felicidades por el progreso con esa cafetera japonesa.", en = "Miller, congratulations on the progress with that Japanese coffee maker."} },
+      { speaker = "shadow", text = {es = "Me sorprende tu resiliencia.", en = "Your resilience surprises me."} },
+      { speaker = "shadow", text = {es = "(Rook/Nova) me dio algo muy valioso a cambio de tu 'libertad' de deudas...", en = "(Rook/Nova) gave me something very valuable in exchange for your 'freedom' from debts..."} },
+      { speaker = "shadow", text = {es = "... pero parece que no puedes estar lejos del asfalto.", en = "... but it seems you can't stay away from the asphalt."} },
+      { speaker = "shadow", text = {es = "Si ganas esto, te veré en los circuitos oficiales.", en = "If you win this, I'll see you at the official circuits."} },
+      { speaker = "shadow", text = {es = "Tengo un mensaje para ti de parte de tu 'amigo/a': 'No es personal, es supervivencia'.", en = "I have a message for you from your 'friend': 'It's not personal, it's survival'."} },
+    }
+  },
+
+  -- ========================================================================
+  -- PHASE 7: EL RASTRO DEL HIERRO (CLASIFICATORIAS)
+  -- ========================================================================
+
+  phase7_clasif1_post = {
+    id = "call_phase7_clasif1_techie",
+    caller = "techie",
+    priority = "normal",
+    dialogue = {
+      { speaker = "techie", text = {es = "Miller, he analizado la transacción.", en = "Miller, I analyzed the transaction."} },
+      { speaker = "techie", text = {es = "El dinero salió de una cuenta de Shadow y terminó en un fondo a nombre de tu pareja.", en = "The money came from a Shadow account and ended up in a fund under your partner's name."} },
+      { speaker = "techie", text = {es = "No hay duda.", en = "No doubt."} },
+      { speaker = "techie", text = {es = "Lo vendieron por piezas para que fuera imposible de rastrear.", en = "They sold it in parts to make it untraceable."} },
+      { speaker = "techie", text = {es = "Lo siento, de verdad.", en = "I'm truly sorry."} },
+    }
+  },
+
+  phase7_clasif3_intercept = {
+    id = "call_phase7_clasif3_shadow",
+    caller = "shadow",
+    priority = "urgent",
+    dialogue = {
+      { speaker = "shadow", text = {es = "Miller, eres persistente.", en = "Miller, you're persistent."} },
+      { speaker = "shadow", text = {es = "Te di una salida limpia y prefieres seguir rascando la herida.", en = "I gave you a clean exit and you prefer to keep scratching the wound."} },
+      { speaker = "shadow", text = {es = "Tu pareja fue inteligente; aceptó el trato para que tú pudieras seguir respirando.", en = "Your partner was smart; they accepted the deal so you could keep breathing."} },
+      { speaker = "shadow", text = {es = "Si sigues ganando estas clasificatorias, el precio por tu cabeza subirá...", en = "If you keep winning these qualifiers, the price on your head will go up..."} },
+      { speaker = "shadow", text = {es = "... más de lo que ellos pueden pagar.", en = "... more than they can pay."} },
+    }
+  },
+
+  -- ========================================================================
+  -- PHASE 8: RECLAMACIÓN Y GLORIA (THE BIG ONE)
+  -- ========================================================================
+
+  phase8_duelo_during = {
+    id = "call_phase8_duelo_shadow",
+    caller = "shadow",
+    priority = "urgent",
+    dialogue = {
+      { speaker = "shadow", text = {es = "¿Lo sientes, Miller?", en = "Do you feel it, Miller?"} },
+      { speaker = "shadow", text = {es = "Este coche tiene el alma de un cobarde pero los pulmones de un monstruo.", en = "This car has the soul of a coward but the lungs of a monster."} },
+      { speaker = "shadow", text = {es = "Tu abuelo lo construyó para ganar, pero no tenía el pulso para manejarlo.", en = "Your grandfather built it to win, but didn't have the pulse to handle it."} },
+      { speaker = "shadow", text = {es = "Yo sí.", en = "I do."} },
+      { speaker = "shadow", text = {es = "No es personal, es que este coche merece un piloto que no se detenga ante nada.", en = "It's not personal, it's that this car deserves a driver who won't stop at anything."} },
+      { speaker = "shadow", text = {es = "¡Intenta seguirme si puedes!", en = "Try to follow me if you can!"} },
+    }
+  },
+
+  phase8_bigone_during = {
+    id = "call_phase8_bigone",
     caller = "viper",
     priority = "urgent",
     dialogue = {
-      { speaker = "viper", text = "..." },
-      { speaker = "viper", text = {es = "Ese ETK-I.", en = "That ETK-I."} },
-      { speaker = "viper", text = {es = "Lo reconocería en cualquier sitio.", en = "I'd recognize it anywhere."} },
-      {
-        type = "choice",
-        choices = {
-          {
-            id = "you_knew_him",
-            text = {es = "¿Conocías a mi abuelo?", en = "Did you know my grandfather?"},
-            response = {
-              { speaker = "viper", text = {es = "Él construyó ese coche para mi pareja.", en = "He built that car for my partner."} },
-              { speaker = "viper", text = {es = "Para la carrera que nunca corrió.", en = "For the race he never ran."} },
-              { speaker = "viper", text = "..." },
-              { speaker = "viper", text = {es = "Murió la noche antes.", en = "He died the night before."} },
-              { speaker = "viper", text = {es = "Y tu abuelo... nunca lo terminó.", en = "And your grandfather... never finished it."} },
-            },
-            effects = { viper_trust = 15 }
-          },
-          {
-            id = "the_car",
-            text = {es = "¿El coche?", en = "The car?"},
-            response = {
-              { speaker = "viper", text = {es = "Ese coche debería haber corrido hace 20 años.", en = "That car should have raced 20 years ago."} },
-              { speaker = "viper", text = {es = "Pero tú lo terminaste.", en = "But you finished it."} },
-              { speaker = "viper", text = {es = "Hiciste lo que él no pudo.", en = "You did what he couldn't."} },
-            },
-            effects = { viper_trust = 10 }
-          }
-        }
-      },
-      { speaker = "viper", text = {es = "The Big One. Este sábado.", en = "The Big One. This Saturday."} },
-      { speaker = "viper", text = {es = "Llega más lejos de lo que él llegó.", en = "Go further than he ever did."} },
-      { speaker = "viper", text = {es = "Conduce por los que ya no pueden.", en = "Drive for those who no longer can."} },
+      { speaker = "viper", text = {es = "¡Muéstrame esa rabia, Miller!", en = "Show me that rage, Miller!"} },
+      { speaker = "viper", text = {es = "El ETK-I fue diseñado para este momento.", en = "The ETK-I was designed for this moment."} },
+      { speaker = "viper", text = {es = "Tu abuelo nunca tuvo el valor de meter la quinta marcha en esta recta.", en = "Your grandfather never had the courage to shift into fifth on this straight."} },
+      { speaker = "viper", text = {es = "¡No frenes ahora!", en = "Don't brake now!"} },
+      { speaker = "viper", text = {es = "¡Si quieres respeto, tienes que quitármelo de las manos!", en = "If you want respect, you have to take it from my hands!"} },
+      { speaker = "(chosen_partner)", text = {es = "¡Vamos, Miller!", en = "Come on, Miller!"} },
+      { speaker = "(chosen_partner)", text = {es = "Todo este camino... el robo, la traición, el Covet... todo era para llegar aquí.", en = "All this way... the theft, the betrayal, the Covet... it was all to get here."} },
+      { speaker = "(chosen_partner)", text = {es = "¡Demuéstrales a todos que tenías razón!", en = "Show them all you were right!"} },
     }
   },
 }
 
 -- ============================================================================
--- HELPER FUNCTIONS
+-- SYSTEM FUNCTIONS (KEEP EXISTING ARCHITECTURE)
 -- ============================================================================
 
-local function getChat()
-  return extensions.career_modules_mysummerChat
-end
-
-local function applyEffects(effects)
-  if not effects then return end
-
-  local chat = getChat()
-  if chat and chat.applyEffects then
-    chat.applyEffects(effects)
+-- Helper to get chosen partner ID
+local function getChosenPartner()
+  local narrative = extensions.career_modules_mysummerNarrative
+  if narrative and narrative.getNarrativeProgress then
+    local progress = narrative.getNarrativeProgress()
+    return progress.storyFlags.chosen_partner or "rook"
   end
+  return "rook"
 end
 
--- ============================================================================
--- CALL FLOW (Simplified - uses existing dialogue system)
--- ============================================================================
+-- Replace dynamic placeholders in dialogue
+local function replaceDialoguePlaceholders(dialogue)
+  local chosenPartner = getChosenPartner()
+  local result = {}
 
--- Forward declaration
-local processNextExchange
-
-local function startRinging(callDef)
-  state.incomingCall = callDef
-  state.incomingTimer = RING_DURATION
-
-  local contact = contactInfo[callDef.caller] or { name = callDef.caller, icon = "unknown" }
-
-  -- Show toast notification for incoming call
-  guihooks.trigger("toastrMsg", {
-    type = "info",
-    title = "Incoming Call",
-    msg = contact.name .. " is calling...",
-    config = { timeOut = RING_DURATION * 1000 }
-  })
-
-  log("I", logTag, "Incoming call from " .. callDef.caller)
-end
-
-local function answerCall()
-  if not state.incomingCall then return end
-
-  state.activeCall = state.incomingCall
-  state.incomingCall = nil
-  state.incomingTimer = 0
-  state.currentExchangeIndex = 1
-  state.waitingForChoice = false
-
-  local contact = contactInfo[state.activeCall.caller] or { name = state.activeCall.caller }
-
-  log("I", logTag, "Call answered: " .. state.activeCall.id)
-
-  -- Start dialogue using existing system
-  processNextExchange()
-end
-
-local function declineCall()
-  if not state.incomingCall then return end
-
-  local callId = state.incomingCall.id
-  state.incomingCall = nil
-  state.incomingTimer = 0
-
-  log("I", logTag, "Call declined: " .. callId)
-end
-
-local function missedCall()
-  if not state.incomingCall then return end
-
-  local callDef = state.incomingCall
-  local contact = contactInfo[callDef.caller] or { name = callDef.caller }
-
-  state.incomingCall = nil
-  state.incomingTimer = 0
-
-  log("I", logTag, "Missed call from " .. callDef.caller)
-
-  -- Send a follow-up message via chat
-  local chat = getChat()
-  if chat then
-    chat.queueMessage(callDef.caller, {
-      content = "(Missed call)",
-      sender = callDef.caller,
-      senderType = "contact",
-    }, 2000)
-  end
-end
-
-local function endCall()
-  if not state.activeCall then return end
-
-  local callId = state.activeCall.id
-  state.completedCalls[callId] = os.time()
-
-  state.activeCall = nil
-  state.currentExchangeIndex = 0
-  state.waitingForChoice = false
-
-  log("I", logTag, "Call ended: " .. callId)
-end
-
--- ============================================================================
--- DIALOGUE PROCESSING (Simplified - uses existing showDialogue system)
--- ============================================================================
-
-local currentDialogueQueue = {}
-local currentFollowUp = nil
-
-processNextExchange = function()
-  if not state.activeCall then return end
-
-  local dialogue = state.activeCall.dialogue
-  if not dialogue then
-    endCall()
-    return
-  end
-
-  -- Check follow-up first
-  if currentFollowUp then
-    local followUp = currentFollowUp
-    currentFollowUp = nil
-
-    if followUp.type == "choice" then
-      -- For now, skip choices and continue (UI not ready for interactive choices)
-      state.waitingForChoice = false
-      processNextExchange()
-      return
-    end
-  end
-
-  -- Process normal dialogue
-  if state.currentExchangeIndex > #dialogue then
-    endCall()
-    return
-  end
-
-  local exchange = dialogue[state.currentExchangeIndex]
-  state.currentExchangeIndex = state.currentExchangeIndex + 1
-
-  if exchange.type == "choice" then
-    -- For calls, auto-select first choice (simplified for now)
-    -- Full interactive choices would require more UI work
-    local firstChoice = exchange.choices[1]
-    if firstChoice then
-      log("I", logTag, "Auto-selecting choice: " .. firstChoice.id)
-
-      -- Apply effects
-      applyEffects(firstChoice.effects)
-
-      -- Queue response lines using existing dialogue system
-      if firstChoice.response then
-        local chat = getChat()
-        if chat and chat.showDialogue then
-          local messages = {}
-          for _, line in ipairs(firstChoice.response) do
-            table.insert(messages, line.text)
-          end
-          chat.showDialogue(state.activeCall.caller, messages)
+  for _, line in ipairs(dialogue) do
+    local newLine = {}
+    for k, v in pairs(line) do
+      if k == "speaker" and v == "(chosen_partner)" then
+        newLine[k] = chosenPartner
+      elseif k == "text" and type(v) == "table" then
+        newLine[k] = {}
+        for lang, text in pairs(v) do
+          -- Replace (Rook/Nova) with actual chosen partner
+          local replaced = text:gsub("%(Rook/Nova%)", chosenPartner == "rook" and "Rook" or "Nova")
+          newLine[k][lang] = replaced
         end
-      end
-
-      -- Check for follow-up
-      if firstChoice.followUp then
-        currentFollowUp = firstChoice.followUp
+      else
+        newLine[k] = v
       end
     end
+    table.insert(result, newLine)
+  end
 
-    -- Continue after a delay
-    state.waitingForChoice = false
+  return result
+end
+
+-- Show incoming call
+local function showIncomingCall(call)
+  local contact = contactInfo[call.caller] or { name = "Unknown", icon = "unknown" }
+
+  if guihooks and guihooks.trigger then
+    guihooks.trigger("mysummerIncomingCall", {
+      caller = call.caller,
+      callerName = contact.name,
+      icon = contact.icon,
+      priority = call.priority or "normal",
+    })
+  end
+
+  log("I", logTag, "Incoming call from: " .. call.caller)
+end
+
+-- Answer call
+local function answerCall(call)
+  -- Replace placeholders before showing
+  local processedDialogue = replaceDialoguePlaceholders(call.dialogue)
+
+  state.activeCall = {
+    id = call.id,
+    caller = call.caller,
+    dialogue = processedDialogue,
+    currentIndex = 1,
+  }
+
+  -- Detect language
+  local lang = Steam and Steam.language or "en"
+
+  -- Prepare messages for DialogueOverlay
+  local messages = {}
+  for i, line in ipairs(processedDialogue) do
+    -- Skip choice lines - DialogueOverlay doesn't support decisions
+    -- Calls with choices should use StoryScene instead (TODO: future improvement)
+    if line.type ~= "choice" then
+      local text = type(line.text) == "table" and (lang:find("es") and line.text.es or line.text.en) or line.text
+
+      -- Get speaker info
+      local speakerName = contactInfo[line.speaker] and contactInfo[line.speaker].name or "Unknown"
+
+      table.insert(messages, {
+        contactId = line.speaker,
+        contactName = speakerName,
+        content = text,
+        emotion = "standard",
+        isUnlocked = true
+      })
+    end
+  end
+
+  -- Send as dialogue sequence to DialogueOverlay
+  if guihooks and guihooks.trigger and #messages > 0 then
+    guihooks.trigger("mysummerDialogueShow", {
+      messages = messages
+    })
+  end
+
+  log("I", logTag, "Call answered: " .. call.id .. " (" .. #messages .. " lines sent to DialogueOverlay)")
+end
+
+-- Queue a call with delay
+local function queueCall(call, delay)
+  delay = delay or math.random(CALL_DELAY_MIN, CALL_DELAY_MAX)
+
+  state.incomingCall = call
+  state.incomingTimer = delay
+
+  log("D", logTag, "Queued call: " .. tostring(call.id) .. " (delay: " .. delay .. "s)")
+end
+
+-- ============================================================================
+-- PUBLIC API
+-- ============================================================================
+
+-- Called by narrative system when events occur
+function M.onNarrativeEvent(eventId)
+  if not state.enabled then
+    log("D", logTag, "Call system disabled, skipping: " .. tostring(eventId))
+    return false
+  end
+
+  local call = eventCalls[eventId]
+  if not call then
+    log("D", logTag, "No call for event: " .. tostring(eventId))
+    return false
+  end
+
+  -- Check if already triggered (unique calls only)
+  if call.id and state.triggeredCalls[call.id] then
+    log("D", logTag, "Call already triggered: " .. call.id)
+    return false
+  end
+
+  -- Mark as triggered before queuing
+  if call.id then
+    state.triggeredCalls[call.id] = true
+    saveState()
+  end
+
+  -- Queue with delay
+  log("I", logTag, "Queuing call for event: " .. tostring(eventId))
+  queueCall(call)
+  return true
+end
+
+-- Force trigger call (for debugging)
+function M.debugForceCall(eventId)
+  local call = eventCalls[eventId]
+  if not call then
+    print("ERROR: Call not found: " .. tostring(eventId))
+    return
+  end
+
+  showIncomingCall(call)
+  answerCall(call)
+end
+
+-- Get list of all call IDs
+function M.getAllCallIds()
+  local ids = {}
+  for eventId, call in pairs(eventCalls) do
+    table.insert(ids, eventId)
+  end
+  return ids
+end
+
+-- Reset triggered state for a specific event (for race replay)
+function M.resetTriggered(eventId)
+  local call = eventCalls[eventId]
+  if call and call.id then
+    state.triggeredCalls[call.id] = nil
+    log("D", logTag, "Reset triggered state for call: " .. call.id)
+  end
+end
+
+-- ============================================================================
+-- SAVE/LOAD
+-- ============================================================================
+
+loadState = function()
+  local _, savePath = career_saveSystem.getCurrentSaveSlot()
+  if not savePath then return end
+
+  local filePath = savePath .. "/career/mysummer/" .. saveFile
+  local data = jsonReadFile(filePath)
+
+  if data then
+    state.completedCalls = data.completedCalls or {}
+    state.triggeredCalls = data.triggeredCalls or {}
+    log("I", logTag, "Loaded call state")
   else
-    -- Regular line - show using existing dialogue system
-    local chat = getChat()
-    if chat and chat.showDialogueMessage then
-      chat.showDialogueMessage(state.activeCall.caller, exchange.text)
-    end
+    log("D", logTag, "No saved call state found")
   end
 end
 
--- Called by UI when a choice is made (kept for future use)
-local function onChoiceSelected(choiceId)
-  if not state.activeCall or not state.waitingForChoice then return end
+saveState = function(currentSavePath)
+  local _, savePath = career_saveSystem.getCurrentSaveSlot()
+  savePath = currentSavePath or savePath
+  if not savePath then return end
 
-  state.waitingForChoice = false
-
-  -- Find the choice in current context
-  local dialogue = state.activeCall.dialogue
-  local currentExchange = dialogue[state.currentExchangeIndex - 1]
-
-  local selectedChoice = nil
-
-  -- Check if it's a regular choice or followUp
-  if currentExchange and currentExchange.type == "choice" then
-    for _, choice in ipairs(currentExchange.choices) do
-      if choice.id == choiceId then
-        selectedChoice = choice
-        break
-      end
-    end
+  local dirPath = savePath .. "/career/mysummer"
+  if not FS:directoryExists(dirPath) then
+    FS:directoryCreate(dirPath, true)
   end
 
-  if not selectedChoice then
-    log("W", logTag, "Choice not found: " .. choiceId)
-    processNextExchange()
-    return
-  end
+  local filePath = dirPath .. "/" .. saveFile
+  local data = {
+    completedCalls = state.completedCalls,
+    triggeredCalls = state.triggeredCalls,
+  }
 
-  log("I", logTag, "Choice selected: " .. choiceId)
-
-  -- Apply effects
-  applyEffects(selectedChoice.effects)
-
-  -- Queue response lines using existing dialogue system
-  if selectedChoice.response then
-    local chat = getChat()
-    if chat and chat.showDialogue then
-      local messages = {}
-      for _, line in ipairs(selectedChoice.response) do
-        table.insert(messages, line.text)
-      end
-      chat.showDialogue(state.activeCall.caller, messages)
-    end
-  end
-
-  -- Check for follow-up
-  if selectedChoice.followUp then
-    currentFollowUp = selectedChoice.followUp
-  end
-
-  -- Continue after response
-  processNextExchange()
-end
-
--- Called by UI when a line finishes displaying
-local function onLineComplete()
-  if state.waitingForChoice then return end
-  if not state.activeCall then return end
-
-  processNextExchange()
-end
-
--- ============================================================================
--- TRIGGER SYSTEM
--- ============================================================================
-
-local pendingCall = nil
-local pendingTimer = 0
-
-local function onNarrativeEvent(eventId)
-  if not state.enabled then return end
-
-  local callDef = eventCalls[eventId]
-  if not callDef then return end
-
-  -- Check if already completed
-  if state.completedCalls[callDef.id] then
-    log("D", logTag, "Call already completed: " .. callDef.id)
-    return
-  end
-
-  -- Queue call (replaces any pending call - most recent event takes priority)
-  -- Calls will wait until no other call is active
-  pendingCall = callDef
-  pendingTimer = CALL_DELAY_MIN + math.random() * (CALL_DELAY_MAX - CALL_DELAY_MIN)
-
-  log("I", logTag, "Call queued: " .. callDef.id .. " in " .. string.format("%.1f", pendingTimer) .. "s")
-end
-
--- ============================================================================
--- DEBUG
--- ============================================================================
-
-local function debugForceCall(eventId)
-  local callDef = eventCalls[eventId]
-  if callDef then
-    startRinging(callDef)
-    return true
-  end
-  log("W", logTag, "Call not found for event: " .. eventId)
-  return false
-end
-
-local function debugListCalls()
-  print("\n========== AVAILABLE CALLS ==========")
-  for eventId, callDef in pairs(eventCalls) do
-    local completed = state.completedCalls[callDef.id] and "[X]" or "[ ]"
-    print(string.format("  %s %s (event: %s, caller: %s)",
-      completed, callDef.id, eventId, callDef.caller))
-  end
-  print("======================================\n")
-end
-
-local function debugStatus()
-  print("\n========== CALL STATUS ==========")
-  print(string.format("Enabled: %s", state.enabled and "yes" or "no"))
-  print(string.format("Incoming: %s (%.1fs)",
-    state.incomingCall and state.incomingCall.id or "none",
-    state.incomingTimer))
-  print(string.format("Active: %s (exchange %d, waiting: %s)",
-    state.activeCall and state.activeCall.id or "none",
-    state.currentExchangeIndex,
-    state.waitingForChoice and "yes" or "no"))
-  print(string.format("Pending: %s (%.1fs)",
-    pendingCall and pendingCall.id or "none",
-    pendingTimer))
-  print("\nCompleted calls:")
-  for id, time in pairs(state.completedCalls) do
-    print(string.format("  - %s (at %s)", id, os.date("%H:%M:%S", time)))
-  end
-  print("=================================\n")
-end
-
-local function debugAnswerCall()
-  answerCall()
-end
-
-local function debugSelectChoice(choiceId)
-  onChoiceSelected(choiceId)
+  career_saveSystem.jsonWriteFileSafe(filePath, data, true)
+  log("D", logTag, "Saved call state")
 end
 
 -- ============================================================================
 -- LIFECYCLE
 -- ============================================================================
 
-local AUTO_ANSWER_DELAY = 3  -- Auto-answer after 3 seconds
-
 local function onUpdate(dtReal, dtSim, dtRaw)
-  if not career_career or not career_career.isActive() then
-    return
-  end
-
-  -- Process pending call
-  if pendingCall and not state.incomingCall and not state.activeCall then
-    pendingTimer = pendingTimer - dtReal
-    if pendingTimer <= 0 then
-      startRinging(pendingCall)
-      pendingCall = nil
-      pendingTimer = 0
-    end
-  end
-
-  -- Auto-answer incoming call after delay (simplified UX - no manual answer needed)
+  -- Update incoming call timer
   if state.incomingCall then
     state.incomingTimer = state.incomingTimer - dtReal
-    if state.incomingTimer <= (RING_DURATION - AUTO_ANSWER_DELAY) then
-      -- Auto-answer the call
-      answerCall()
+
+    if state.incomingTimer <= 0 then
+      showIncomingCall(state.incomingCall)
+      state.incomingCall = nil
+      state.incomingTimer = 0
     end
   end
 end
 
 local function onExtensionLoaded()
-  log("I", logTag, "Calls system loaded")
+  log("I", logTag, "Call system loaded (8-phase narrative)")
 end
 
 local function onCareerActive()
-  state.incomingCall = nil
-  state.activeCall = nil
-  state.currentExchangeIndex = 0
-  state.waitingForChoice = false
-  pendingCall = nil
-  pendingTimer = 0
-  log("I", logTag, "Calls system active")
+  loadState()
+end
+
+local function onSaveCurrentSaveSlot(currentSavePath)
+  saveState(currentSavePath)
 end
 
 -- ============================================================================
 -- EXPORTS
 -- ============================================================================
 
--- Trigger (called by mysummerNarrative)
-M.onNarrativeEvent = onNarrativeEvent
-
--- UI callbacks
-M.answerCall = answerCall
-M.declineCall = declineCall
-M.onChoiceSelected = onChoiceSelected
-M.onLineComplete = onLineComplete
-
--- Settings
-M.setEnabled = function(enabled) state.enabled = enabled end
-M.isEnabled = function() return state.enabled end
-
--- Debug
-M.debugForceCall = debugForceCall
-M.debugListCalls = debugListCalls
-M.debugStatus = debugStatus
-M.debugAnswerCall = debugAnswerCall
-M.debugSelectChoice = debugSelectChoice
-
--- Lifecycle
 M.onUpdate = onUpdate
 M.onExtensionLoaded = onExtensionLoaded
 M.onCareerActive = onCareerActive
+M.onSaveCurrentSaveSlot = onSaveCurrentSaveSlot
+-- M.onNarrativeEvent is already defined above as function M.onNarrativeEvent()
+-- M.debugForceCall is already defined above as function M.debugForceCall()
+-- M.getAllCallIds is already defined above as function M.getAllCallIds()
 
 return M

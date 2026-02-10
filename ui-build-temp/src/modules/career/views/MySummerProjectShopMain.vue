@@ -43,6 +43,18 @@
         <div class="cart-side">
           <h3>Cart ({{ cartItems.length }})</h3>
 
+          <!-- Missing parts error banner -->
+          <div v-if="missingError" class="missing-parts-alert">
+            <strong>Cannot install {{ missingError.partName }}</strong>
+            <p>Missing required parts:</p>
+            <ul>
+              <li v-for="m in missingError.missing" :key="m.slotName">
+                {{ m.defaultPartNiceName }} ({{ m.slotName }})
+              </li>
+            </ul>
+            <p class="hint">Buy these parts in Parts Bay or Speed Parts first.</p>
+          </div>
+
           <div class="cart-items">
             <div v-if="cartItems.length === 0" class="cart-empty">Select parts to install</div>
             <div v-for="item in cartItems" :key="item.id" class="cart-row">
@@ -213,6 +225,8 @@ const playerMoney = ref(0)
 const expanded = ref({})
 const search = ref("")
 const collapsedCategories = ref(new Set(['wheels']))  // Wheels collapsed by default
+const missingError = ref(null)
+let missingErrorTimer = null
 
 // Helpers
 const toArray = (v) => Array.isArray(v) ? v : []
@@ -304,6 +318,15 @@ const close = () => {
   }
 }
 
+// Error handler for missing mandatory parts
+const onError = (data) => {
+  if (data && data.type === 'missingParts') {
+    missingError.value = data
+    if (missingErrorTimer) clearTimeout(missingErrorTimer)
+    missingErrorTimer = setTimeout(() => { missingError.value = null }, 8000)
+  }
+}
+
 // Event handler
 const onData = (data) => {
   console.log("[ProjectShop] Received data:", data)
@@ -326,6 +349,7 @@ const onData = (data) => {
 onMounted(() => {
   console.log("[ProjectShop] Component MOUNTED")
   events.on("mysummerProjectShopData", onData)
+  events.on("mysummerProjectShopError", onError)
 
   const requestDataFromLua = () => {
     if (window.bngApi) {
@@ -356,6 +380,8 @@ onMounted(() => {
 
 onUnmounted(() => {
   events.off("mysummerProjectShopData", onData)
+  events.off("mysummerProjectShopError", onError)
+  if (missingErrorTimer) clearTimeout(missingErrorTimer)
 })
 </script>
 
@@ -536,4 +562,19 @@ onUnmounted(() => {
   padding: 2rem;
   font-size: 1rem;
 }
+
+.missing-parts-alert {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid #ef4444;
+  border-radius: 4px;
+  padding: 0.6rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+  color: #fca5a5;
+}
+.missing-parts-alert strong { color: #fca5a5; display: block; margin-bottom: 0.3rem; }
+.missing-parts-alert p { margin: 0.2rem 0; }
+.missing-parts-alert ul { margin: 0.2rem 0; padding-left: 1.2rem; }
+.missing-parts-alert li { margin-bottom: 0.1rem; }
+.missing-parts-alert .hint { color: #fbbf24; font-style: italic; font-size: 0.75rem; margin-top: 0.3rem; }
 </style>

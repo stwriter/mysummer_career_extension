@@ -37,6 +37,7 @@
   "conversations": {
     "level1": {
       "title": {"es": "Análisis Inicial", "en": "Initial Analysis"},
+      "requiredPhase": 1,
       "phases": {
         "intro": {
           "exchanges": [

@@ -461,6 +461,7 @@ local function applyRaceRewards(position, raceName)
   end
 
   -- Apply mysummer-streetracing XP
+  -- (BeamNG natively handles rewards from info.json, only gives them first time unlocking stars)
   if rewards["mysummer-streetracing"] and rewards["mysummer-streetracing"] > 0 then
     if career_modules_playerAttributes then
       career_modules_playerAttributes.addAttributes({["mysummer-streetracing"] = rewards["mysummer-streetracing"]}, {tags = {"gameplay", "reward", "mission"}, label = "Street Racing XP"})
@@ -677,13 +678,13 @@ local function onAnyMissionChanged(missionState, mission)
     -- Native BeamNG career system should handle rewards and post-race screen
     -- If stars are configured correctly in info.json
 
-    -- Record race win for chapter progression (first place = win)
-    if position == 1 then
-      if career_modules_mysummerCareer and career_modules_mysummerCareer.recordRaceWin then
-        career_modules_mysummerCareer.recordRaceWin(mission.id)
-        log("I", "mysummerRaceManager", "Race win recorded for chapter progression")
-      end
-    end
+    -- Record race win for chapter progression - DISABLED (now using XP-based progression)
+    -- if position == 1 then
+    --   if career_modules_mysummerCareer and career_modules_mysummerCareer.recordRaceWin then
+    --     career_modules_mysummerCareer.recordRaceWin(mission.id)
+    --     log("I", "mysummerRaceManager", "Race win recorded for chapter progression")
+    --   end
+    -- end
 
     -- Notify story races system of race completion
     if career_modules_mysummerStoryRaces then

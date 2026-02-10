@@ -1,7 +1,5 @@
 {
-  "additionalAttributes": {
-    "difficulty": "extreme"
-  },
+  "additionalAttributes": {},
   "author": "MySummer Team",
   "careerSetup": {
     "defaultStarKeys": [
@@ -9,7 +7,7 @@
       "finishSilver",
       "finishGold"
     ],
-    "showInCareer": false,
+    "showInCareer": true,
     "showInFreeroam": false,
     "skill": "mysummer-streetracing",
     "starOutroTexts": {},
@@ -23,7 +21,7 @@
       "finishGold": [
         {
           "attributeKey": "money",
-          "rewardAmount": 7500
+          "rewardAmount": 3500
         },
         {
           "attributeKey": "mysummer-streetracing",
@@ -129,7 +127,7 @@
   },
   "startCondition": {
     "branchId": "mysummer-streetracing",
-    "level": 4,
+    "level": 3,
     "type": "branchLevel"
   },
   "startTrigger": {

@@ -11,7 +11,7 @@ M.dependencies = {
   "career_modules_vehicleShopping",
   "career_modules_mysummerCore",
   "career_modules_mysummerProjectPartShop",
-  "career_modules_mysummerCargo",  -- Cargo system for part pickup
+  -- Note: career_modules_mysummerCargo is optional - depends on base game delivery modules that may not load
   -- Note: mysummerCareer is optional to avoid circular deps - checked at runtime
   -- Note: insurance_insurance is optional - we check for it but don't require it
   -- "gameplay_police" is also optional
@@ -24,7 +24,7 @@ local core_groundMarkers = require("core/groundMarkers")
 -- Save file in mysummer subdirectory
 local saveFileName = "mysummer_market.json"
 local modelKey = "etki"
-local targetListings = 6
+local targetListings = 40  -- Was 6; expanded for larger PartsBay catalog
 local targetLeads = 2
 
 local partCache = {}
@@ -100,6 +100,7 @@ state = {
   pendingIllegalCargoId = nil,  -- Cargo ID in vehicle (before unloading)
   pendingInsuranceSync = false,
   pendingPartSeeds = {},
+  carryingParts = {},  -- Parts loaded in cargo, tracked locally (like SpeedParts pattern)
   -- Heat system: 0-100, affects police pursuit probability
   playerHeat = 0,
   lastHeatDecayTime = 0,  -- Track when heat last decayed
@@ -291,6 +292,7 @@ local function loadState()
   state.projectInventoryId = data.projectInventoryId or nil
   state.pendingIllegalPartId = data.pendingIllegalPartId or nil
   state.pendingIllegalCargoId = data.pendingIllegalCargoId or nil
+  state.carryingParts = data.carryingParts or {}
   state.playerHeat = tonumber(data.playerHeat) or 0
   state.lastHeatDecayTime = tonumber(data.lastHeatDecayTime) or os.time()
   state.firstPurchaseMade = data.firstPurchaseMade or false
@@ -313,6 +315,7 @@ local function saveState(currentSavePath)
     projectInventoryId = state.projectInventoryId,
     pendingIllegalPartId = state.pendingIllegalPartId,
     pendingIllegalCargoId = state.pendingIllegalCargoId,
+    carryingParts = state.carryingParts,
     playerHeat = state.playerHeat,
     lastHeatDecayTime = state.lastHeatDecayTime,
     firstPurchaseMade = state.firstPurchaseMade,
@@ -354,50 +357,69 @@ local function buildPartsCache(model)
       niceName = niceName or partName
 
       if value > 0 then
-        -- MySummer: Exclude wheels, tires, paints, and hubcaps from second-hand/illegal market
-        local rawSlotType = partData.slotType or partInfo.slotType
-        local slotTypeStr = ""
-        if type(rawSlotType) == "string" then
-          slotTypeStr = rawSlotType
-        elseif type(rawSlotType) == "table" then
-          -- slotType can be an array of slot names, use the first one
-          slotTypeStr = rawSlotType[1] or ""
-        end
-
-        local lowerSlot = string.lower(slotTypeStr)
-        local lowerName = string.lower(partName)
-        -- MySummer: Exclude cosmetic/wheels/tires/cargo from second-hand market (PartsBay) and illegal market (SilkRoad)
-        -- These should only be available from the official shop (SpeedParts) or not at all
-        local excludePatterns = {
-          "wheel", "tire", "hubcap",           -- Wheels & Tires
-          "paint", "skin", "lettering", "logo", "sunstrip",  -- Cosmetics
-          "licenseplate",                       -- License plates
-          "glass", "windshield",                -- Glass/windows
-          "cargo", "toolbox", "bed_", "tonneau", "canopy",  -- Cargo/bed parts (NOT fuel tank)
-          "fluidtank", "watertank",             -- Cargo fluid tanks (specific, not fuel)
+        -- MySummer: Exclude parts from other vehicles (only ETK-I and generic parts allowed)
+        local lowerPartName = string.lower(partName)
+        local otherVehiclePrefixes = {
+          "pickup_", "pigeon_", "fullsize_", "van_", "covet_", "legran_",
+          "roamer_", "d_series_", "semi_", "sunburst_", "pessima_", "midsize_",
+          "hopper_", "moonhawk_", "bluebuck_", "bolide_", "barstow_", "burnside_",
+          "wendover_", "vivace_", "sbr_", "scintilla_", "autobello_", "miramar_",
+          "bastion_", "lansdale_", "alder_", "bogie_", "trailer_",
         }
-        local shouldExclude = false
-        for _, pattern in ipairs(excludePatterns) do
-          if string.find(lowerSlot, pattern) or string.find(lowerName, pattern) then
-            shouldExclude = true
+        local isOtherVehicle = false
+        for _, prefix in ipairs(otherVehiclePrefixes) do
+          if lowerPartName:find("^" .. prefix) then
+            isOtherVehicle = true
             break
           end
         end
 
-        if not shouldExclude then
-          table.insert(parts, {
-            name = partName,
-            niceName = niceName,
-            value = value,
-            slotType = slotTypeStr,
-          })
-        end
+        if not isOtherVehicle then
+          -- MySummer: Exclude wheels, tires, paints, and hubcaps from second-hand/illegal market
+          local rawSlotType = partData.slotType or partInfo.slotType
+          local slotTypeStr = ""
+          if type(rawSlotType) == "string" then
+            slotTypeStr = rawSlotType
+          elseif type(rawSlotType) == "table" then
+            -- slotType can be an array of slot names, use the first one
+            slotTypeStr = rawSlotType[1] or ""
+          end
+
+          local lowerSlot = string.lower(slotTypeStr)
+          local lowerName = string.lower(partName)
+          -- MySummer: Exclude cosmetic/wheels/tires/cargo from second-hand market (PartsBay) and illegal market (SilkRoad)
+          -- These should only be available from the official shop (SpeedParts) or not at all
+          local excludePatterns = {
+            "wheel", "tire", "hubcap",           -- Wheels & Tires (available in SpeedParts)
+            "paint", "skin", "lettering", "logo", "sunstrip",  -- Cosmetics
+            "licenseplate",                       -- License plates
+            -- "glass", "windshield",             -- Glass/windows - now allowed in PartsBay
+            "toolbox", "tonneau", "canopy",       -- Cargo accessories (specific items only)
+            "fluidtank", "watertank",             -- Cargo fluid tanks (specific, not fuel)
+          }
+          local shouldExclude = false
+          for _, pattern in ipairs(excludePatterns) do
+            if string.find(lowerSlot, pattern) or string.find(lowerName, pattern) then
+              shouldExclude = true
+              break
+            end
+          end
+
+          if not shouldExclude then
+            table.insert(parts, {
+              name = partName,
+              niceName = niceName,
+              value = value,
+              slotType = slotTypeStr,
+            })
+          end
+        end -- not isOtherVehicle
       end
     end
   end
 
   table.sort(parts, function(a, b) return a.value < b.value end)
-  local legalCut = math.max(1, math.floor(#parts * 0.7))
+  local legalCut = math.max(1, math.floor(#parts * 0.9))  -- Was 0.7; expanded to include more parts in PartsBay
   local illegalCut = math.max(1, math.floor(#parts * 0.8))
   local legal = {}
   local illegal = {}
@@ -773,13 +795,381 @@ local function pickLocation()
 end
 
 local function buildCondition(isIllegal)
-  local odometer = isIllegal and math.random(0, 8000) or math.random(5000, 120000)
+  -- NOTE: BeamNG odometer is in METERS, not km. Multiply by 1000 to get realistic km values.
+  -- Legal parts: 5,000 - 200,000 km  |  Illegal/stolen: 0 - 8,000 km
+  local odometerKm = isIllegal and math.random(0, 8000) or math.random(5000, 200000)
   return {
     integrityValue = 1,
-    odometer = odometer,
+    odometer = odometerKm * 1000,  -- Convert km to meters for BeamNG
     visualValue = 1,
   }
 end
+
+-- ============================================================================
+-- LISTING DESCRIPTIONS (Humorous second-hand ad style, bilingual)
+-- Organized by specific part type so descriptions reference the actual part.
+-- ============================================================================
+
+-- Generic descriptions that work for ANY part (no part-specific references)
+local genericDescriptions = {
+  {es = "Bendo por no usar. Nunca circuito, solo garaje.", en = "Selling bc not using. Never raced, garage only."},
+  {es = "Urge bender por mudanza. No hago envios.", en = "Urgent sale, moving. No shipping."},
+  {es = "Funciona perfectamente. La cambio porque quiero una mejor.", en = "Works perfectly. Changing bc I want a better one."},
+  {es = "Original de fabrica, no replica. Casi seguro.", en = "Factory original, not replica. Pretty sure."},
+  {es = "Mi mecanico dice que esta bien. Yo no entiendo de coches.", en = "My mechanic says its fine. I dont know about cars."},
+  {es = "Regalo por dejar el hobby. Mi mujer me ha dado un ultimatum.", en = "Giving away, quitting the hobby. Wife gave me an ultimatum."},
+  {es = "La compre nueva pero nunca la monte. Perdi las ganas.", en = "Bought it new but never installed it. Lost motivation."},
+  {es = "Esta como nueva. Bueno, casi. Bueno, funciona.", en = "Like new. Well, almost. Well, it works."},
+  {es = "Vendo por necesidad economica. No acepto cambios.", en = "Selling out of financial need. No trades."},
+  {es = "La tenia de repuesto y nunca la necesite. Su ganancia.", en = "Had it as a spare and never needed it. Your gain."},
+  {es = "Precio de ganga. Si la quieres ven hoy, manyana no estara.", en = "Bargain price. If you want it come today, tomorrow its gone."},
+  {es = "Solo 3 duenyos anteriores. Todos mecanicos de confianza.", en = "Only 3 previous owners. All trusted mechanics."},
+  {es = "Se la quite al coche antes de venderlo. Lastima desperdiciarla.", en = "Took it off the car before selling. Shame to waste it."},
+  {es = "Garantia: si se rompe me llamas y hablamos.", en = "Warranty: if it breaks call me and we'll talk."},
+  {es = "No tengo factura pero te doy mi palabra.", en = "No receipt but you have my word."},
+  {es = "Ideal para el que sepa. Yo no se pero me han dicho que vale.", en = "Ideal for someone who knows. I dont but was told its good."},
+  {es = "Mi hijo la compro y resulta que era para otro coche. Juventud...", en = "My son bought it and turns out it was for another car. Kids..."},
+  {es = "Desmontada con carinio y herramientas profesionales (un martillo).", en = "Removed with care and professional tools (a hammer)."},
+  {es = "La tuve guardada 5 anyos. Ahora necesito el espacio.", en = "Stored it for 5 years. Now I need the space."},
+  {es = "Acepto ofertas razonables. Y tambien las que no.", en = "Accepting reasonable offers. And unreasonable ones too."},
+  {es = "No me llamen antes de las 12, curro de noche.", en = "Dont call before noon, I work nights."},
+  {es = "Pieza verificada por mi vecino que sabe mucho de coches.", en = "Part verified by my neighbor who knows a lot about cars."},
+  {es = "La vendo mas barata que nueva. Logico, no es nueva.", en = "Selling cheaper than new. Obviously, its not new."},
+  {es = "Compatible con ETK-I. Creo. Mejor que lo verifiques tu.", en = "Compatible with ETK-I. I think. Better verify yourself."},
+  {es = "La saque del coche de mi cunyao. El dice que funciona.", en = "Took it from my brother-in-law's car. He says it works."},
+  {es = "Tiene un poquito de oxido pero pa eso esta el papel de lija.", en = "Has a lil rust but thats what sandpaper is for."},
+  {es = "El envoltorio original se perdio en la mudanza. La pieza esta 10/10.", en = "Lost the original packaging in the move. Part is 10/10."},
+  {es = "En perfecto estado, solo tiene 180.000km. Precio no negociable.", en = "Perfect condition, only 180,000km. Price firm."},
+  {es = "Solo un aranhazo estetico. No afecta al funcionamiento. Creo.", en = "Just a cosmetic scratch. Doesnt affect function. I think."},
+  {es = "Solo usada los domingos para ir a misa. 200.000km.", en = "Only used Sundays for church. 200,000km."},
+}
+
+-- Part-specific descriptions: each key is a pattern matched against slotType+partName
+-- Descriptions MUST reference that specific part type
+local partSpecificDescriptions = {
+  -- === ENGINE BLOCK ===
+  engine = {
+    {es = "Bloque motor sacado de un ETK con 50.000km. Arrancaba a la primera.", en = "Engine block from an ETK with 50,000km. Started first try."},
+    {es = "Motor completo. Suena como un gatito... un gatito con asma.", en = "Complete engine. Sounds like a kitten... a kitten with asthma."},
+    {es = "Motor reconstruido. Bueno, le cambie las bujias y lo limpie.", en = "Rebuilt engine. Well, I changed the spark plugs and cleaned it."},
+    {es = "Motor con mucha vida. Eso o el ruido que hace es normal.", en = "Engine with lots of life. That or the noise it makes is normal."},
+    {es = "El motor perfecto para tu proyecto. O para un ancla muy cara.", en = "The perfect engine for your project. Or for a very expensive anchor."},
+  },
+  -- === TURBO ===
+  turbo = {
+    {es = "Turbo en buen estado. Solo echa un poquito de humo azul al arrancar.", en = "Turbo in good condition. Only a little blue smoke on startup."},
+    {es = "Turbo sin holgura en el eje. Lo comprobe girandolo con el dedo.", en = "Turbo with no shaft play. Checked by spinning it with my finger."},
+    {es = "Turbo stage 1. Transforma tu coche en un cohete. O en una bomba.", en = "Stage 1 turbo. Turns your car into a rocket. Or a bomb."},
+    {es = "Turbo funcional. La caracola tiene un arayanzo pero le da caracter.", en = "Working turbo. Housing has a scratch but it adds character."},
+  },
+  -- === RADIATOR ===
+  radiator = {
+    {es = "Radiador sin fugas. Lo probe llenandolo de agua del grifo.", en = "Radiator no leaks. Tested by filling it with tap water."},
+    {es = "Radiador de aluminio. Enfria mejor que el de serie. En teoria.", en = "Aluminum radiator. Cools better than stock. In theory."},
+    {es = "Radiador con todas las aletas intactas. Bueno, casi todas.", en = "Radiator with all fins intact. Well, almost all of them."},
+  },
+  -- === EXHAUST ===
+  exhaust = {
+    {es = "Escape deportivo. Los vecinos te odiaran. Merece la pena.", en = "Sport exhaust. Neighbors will hate you. Worth it."},
+    {es = "Escape de acero inoxidable. Solo tiene un poquito de oxido.", en = "Stainless steel exhaust. Only has a tiny bit of rust."},
+    {es = "Escape con sonido grave. Ideal para despertar al barrio a las 6am.", en = "Exhaust with deep sound. Ideal for waking the neighborhood at 6am."},
+    {es = "Colector de escape en buen estado. Sin fisuras visibles.", en = "Exhaust manifold in good shape. No visible cracks."},
+  },
+  -- === INTAKE / AIR FILTER ===
+  intake = {
+    {es = "Admision directa. +5cv asegurados. Bueno, eso dice la caja.", en = "Cold air intake. +5hp guaranteed. Well, thats what the box says."},
+    {es = "Filtro de aire reutilizable. Lo limpie con el secador de mi mujer.", en = "Reusable air filter. Cleaned it with my wifes hair dryer."},
+    {es = "Kit de admision completo. Tu motor respirara mejor que tu.", en = "Full intake kit. Your engine will breathe better than you."},
+  },
+  -- === ECU / ELECTRONICS ===
+  ecu = {
+    {es = "ECU original. No hackeada. Bueno, solo un poquito.", en = "Original ECU. Not hacked. Well, just a little."},
+    {es = "Centralita con mapeo de serie. O eso quiero creer.", en = "ECU with stock mapping. Or so I want to believe."},
+    {es = "ECU en perfecto estado. La guarde en una bolsa de arroz por si acaso.", en = "ECU in perfect condition. Stored it in a bag of rice just in case."},
+  },
+  -- === TRANSMISSION ===
+  transmission = {
+    {es = "Caja de cambios manual. 5 marchas. Todas entran. Casi todas.", en = "Manual gearbox. 5 gears. All engage. Most of them."},
+    {es = "Transmision con 60.000km. La tercera cruje un poquito, es normal.", en = "Transmission with 60,000km. Third gear crunches a bit, its normal."},
+    {es = "Caja de cambios racing. Ideal para circuito. No para ir al super.", en = "Racing gearbox. Ideal for track. Not for grocery shopping."},
+  },
+  -- === CLUTCH ===
+  clutch = {
+    {es = "Embrague con vida util restante. Cuanta? No se, alguna.", en = "Clutch with remaining life. How much? Dunno, some."},
+    {es = "Kit de embrague completo. El disco tiene buen grosor todavia.", en = "Full clutch kit. The disc still has good thickness."},
+    {es = "Embrague reforzado. Ideal para mas de 200cv. O para atascos.", en = "Reinforced clutch. Ideal for 200+hp. Or for traffic jams."},
+  },
+  -- === DIFFERENTIAL ===
+  differential = {
+    {es = "Diferencial trasero. Hace un ruidito pero dicen que es normal.", en = "Rear diff. Makes a little noise but they say its normal."},
+    {es = "Diferencial autoblocante. Tus ruedas traseras te lo agradeceran.", en = "LSD differential. Your rear tires will thank you."},
+    {es = "Diferencial con aceite recien cambiado. Bueno, hace 2 anyos.", en = "Diff with freshly changed oil. Well, 2 years ago."},
+  },
+  -- === FLYWHEEL ===
+  flywheel = {
+    {es = "Volante motor aligerado. Ideal para subir de vueltas rapido.", en = "Lightened flywheel. Ideal for quick revving."},
+    {es = "Volante motor bimasa. Todavia no cascabelea. Todavia.", en = "Dual-mass flywheel. Doesnt rattle yet. Yet."},
+  },
+  -- === DRIVESHAFT ===
+  driveshaft = {
+    {es = "Arbol de transmision equilibrado. No vibra. Casi no vibra.", en = "Balanced driveshaft. No vibrations. Almost no vibrations."},
+    {es = "Palier en buen estado. Las gomas estan blanditas pero aguantan.", en = "CV axle in good shape. Boots are soft but holding up."},
+  },
+  -- === OIL PAN / OIL COOLER ===
+  oilpan = {
+    {es = "Carter de aceite sin abolladuras. Milagrosamente.", en = "Oil pan with no dents. Miraculously."},
+    {es = "Carter reforzado. Ideal si te gustan los bordillos.", en = "Reinforced oil pan. Ideal if you like curbs."},
+  },
+  oilcooler = {
+    {es = "Radiador de aceite. Tu motor se mantendra fresquito.", en = "Oil cooler. Your engine will stay nice and cool."},
+    {es = "Radiador de aceite con latiguillos incluidos. Ganga.", en = "Oil cooler with lines included. Bargain."},
+  },
+  -- === INTERCOOLER ===
+  intercooler = {
+    {es = "Intercooler grande. Tu motor lo agradecera. Tu cartera no.", en = "Big intercooler. Your engine will thank you. Your wallet wont."},
+    {es = "Intercooler frontal. Aire frio = mas potencia. Ciencia basica.", en = "Front mount intercooler. Cold air = more power. Basic science."},
+  },
+  -- === FUEL ===
+  fuel = {
+    {es = "Bomba de gasolina. Bombea. Que mas quieres.", en = "Fuel pump. It pumps. What more do you want."},
+    {es = "Deposito de combustible sin fugas. Lo llene de agua para probarlo.", en = "Fuel tank no leaks. Filled it with water to test."},
+    {es = "Inyectores limpios. Los lave con limpiacristales.", en = "Clean injectors. Washed them with window cleaner."},
+  },
+  -- === N2O ===
+  n2o = {
+    {es = "Kit de nitro. Rapido y furioso edition. Pegatina incluida.", en = "Nitro kit. Fast and Furious edition. Sticker included."},
+    {es = "Sistema NOS. Nunca usado en via publica. Eso digo yo.", en = "NOS system. Never used on public roads. Thats my story."},
+  },
+  -- === SUSPENSION (generic) ===
+  suspension = {
+    {es = "Amortiguadores con 40.000km. Solo chillan un poco en frio.", en = "Shocks with 40,000km. Only squeak a bit when cold."},
+    {es = "Muelles deportivos. Tu espalda te odiara pero tu coche volara.", en = "Sport springs. Your back will hate you but your car will fly."},
+    {es = "Suspension de segunda mano. El coche que la tenia iba muy fino.", en = "Used suspension. The car it was on rode very smooth."},
+  },
+  -- === COILOVERS ===
+  coilover = {
+    {es = "Coilovers ajustables. Los puse duro y me dolio la espalda.", en = "Adjustable coilovers. Set them stiff and my back hurt."},
+    {es = "Coilovers regulables en altura. Baja el coche sin poner tacos de madera.", en = "Height-adjustable coilovers. Lower the car without wooden blocks."},
+    {es = "Coilovers con 20.000km. Todavia tienen la pegatina del fabricante.", en = "Coilovers with 20,000km. Still have the manufacturer sticker."},
+  },
+  -- === STRUT ===
+  strut = {
+    {es = "Torretas reforzadas. Ideales si tu coche vibra como una lavadora.", en = "Reinforced strut towers. Ideal if your car shakes like a washing machine."},
+    {es = "Barra de torretas. Le da rigidez al chasis. Y a tu vida.", en = "Strut bar. Adds rigidity to the chassis. And to your life."},
+  },
+  -- === SWAY BAR ===
+  swaybar = {
+    {es = "Barra estabilizadora. Estabiliza. No se que mas decir.", en = "Sway bar. It stabilizes. Dunno what else to say."},
+    {es = "Barra estabilizadora mas gruesa. Menos balanceo, mas control.", en = "Thicker sway bar. Less body roll, more control."},
+  },
+  -- === BRAKES ===
+  brake = {
+    {es = "Discos de freno. Aun les queda material. Algo.", en = "Brake discs. Still have material left. Some."},
+    {es = "Pastillas de freno semi-racing. Frenan bien cuando calientan.", en = "Semi-racing brake pads. Brake well when warmed up."},
+    {es = "Kit de frenos delantero. Paran el coche. Que es lo importante.", en = "Front brake kit. They stop the car. Which is whats important."},
+    {es = "Pinzas de freno reconstruidas. Les cambie el liquido y listo.", en = "Rebuilt brake calipers. Changed the fluid and done."},
+    {es = "Frenos en buen estado. Testados en situacion real de panico.", en = "Brakes in good condition. Tested in a real panic situation."},
+  },
+  -- === STEERING ===
+  steering = {
+    {es = "Caja de direccion. Gira para los dos lados, que no es poco.", en = "Steering box. Turns both ways, which is something."},
+    {es = "Direccion asistida. Asiste bastante. A veces demasiado.", en = "Power steering. Assists plenty. Sometimes too much."},
+    {es = "Cremallera de direccion sin juego. Bueno, con juego minimo.", en = "Steering rack with no play. Well, minimal play."},
+  },
+  -- === BUMPER ===
+  bumper = {
+    {es = "Paragolpes sin golpes. Ironico, lo se.", en = "Bumper without bumps. Ironic, I know."},
+    {es = "Paragolpes original ETK-I. Ningun arbol fue danyado en su uso.", en = "Original ETK-I bumper. No trees were harmed during its use."},
+    {es = "Paragolpes con soporte incluido. Listo para montar y chocar.", en = "Bumper with bracket included. Ready to mount and crash."},
+  },
+  -- === HOOD ===
+  hood = {
+    {es = "Capo en buen estado. Solo una pequenya abolladura de granizo.", en = "Hood in good shape. Just a small hail dent."},
+    {es = "Capo con toma de aire. +15cv visuales garantizados.", en = "Hood with air scoop. +15 visual hp guaranteed."},
+    {es = "Capo original. Abre, cierra, y tiene bisagras. Completo.", en = "Original hood. Opens, closes, and has hinges. Complete."},
+  },
+  -- === TRUNK ===
+  trunk = {
+    {es = "Tapa del maletero. Cierra bien. Hay que dar un golpecito.", en = "Trunk lid. Closes well. Just needs a little bump."},
+    {es = "Maletero con llave original. Bueno, con una llave que encaja.", en = "Trunk with original key. Well, with a key that fits."},
+  },
+  -- === DOOR ===
+  door = {
+    {es = "Puerta completa con cristal. El cristal tiene un arayanzo.", en = "Complete door with glass. Glass has a scratch."},
+    {es = "Puerta con mecanismo electrico. Sube y baja. A veces sola.", en = "Door with electric mechanism. Goes up and down. Sometimes by itself."},
+    {es = "Puerta en buen color. Bueno, parecido al tuyo. Con sol.", en = "Door in good color. Well, similar to yours. In sunlight."},
+  },
+  -- === FENDER ===
+  fender = {
+    {es = "Aleta delantera sin oxido. Color original. Creo.", en = "Front fender no rust. Original color. I think."},
+    {es = "Aleta ancha tipo rally. Tu coche parecera un WRC. De lejos.", en = "Wide fender flare, rally style. Your car will look like a WRC. From far away."},
+    {es = "Guardabarros sin golpes. La quite antes de que le pasara algo.", en = "Fender with no dents. Removed it before anything could happen."},
+  },
+  -- === MIRROR ===
+  mirror = {
+    {es = "Espejo retrovisor completo. Te veras guapo mientras conduces.", en = "Complete side mirror. Youll look handsome while driving."},
+    {es = "Retrovisor electrico. Se pliega solo. Cuando quiere.", en = "Electric mirror. Folds by itself. When it wants to."},
+  },
+  -- === SPOILER / WING ===
+  spoiler = {
+    {es = "Aleron trasero. +10 caballos garantizados. Fuente: creeme.", en = "Rear spoiler. +10hp guaranteed. Source: trust me."},
+    {es = "Aleron racing. Downforce real a partir de 200km/h. O eso dicen.", en = "Racing wing. Real downforce above 200km/h. Or so they say."},
+    {es = "Aleron original ETK-I. Discreto pero funcional. Dice el fabricante.", en = "Original ETK-I spoiler. Subtle but functional. Says the manufacturer."},
+  },
+  -- === SIDESKIRT ===
+  sideskirt = {
+    {es = "Faldones laterales. Le dan un look deportivo al coche.", en = "Side skirts. Give the car a sporty look."},
+    {es = "Taloneras sin rozaduras. Nunca entre en un parking bajo.", en = "Side skirts with no scrapes. I never went into a low parking garage."},
+  },
+  -- === GRILLE ===
+  grille = {
+    {es = "Parrilla delantera. Faltan 2 listones pero no se nota.", en = "Front grille. Missing 2 slats but you cant tell."},
+    {es = "Calandra en buen estado. Solo tiene un mosquito incrustado.", en = "Grille in good shape. Only has one embedded bug."},
+  },
+  -- === GLASS / WINDSHIELD ===
+  glass = {
+    {es = "Cristal sin tinte. O sea, legal.", en = "Glass, no tint. Meaning, legal."},
+    {es = "Cristal original ETK-I. Sin aranyazos. Visible.", en = "Original ETK-I glass. No scratches. Visible ones."},
+  },
+  windshield = {
+    {es = "Parabrisas con una estrellita de piedra abajo a la derecha.", en = "Windshield with one small stone chip, bottom right."},
+    {es = "Parabrisas original. Sin grietas. Las micro-fisuras no cuentan.", en = "Original windshield. No cracks. Micro-cracks dont count."},
+  },
+  -- === HEADLIGHT / TAILLIGHT ===
+  headlight = {
+    {es = "Faros delanteros. Iluminan. Eso es lo importante.", en = "Headlights. They light up. Thats whats important."},
+    {es = "Opticas delanteras cristalinas. Las puli con pasta de dientes.", en = "Clear headlights. Polished them with toothpaste."},
+  },
+  taillight = {
+    {es = "Pilotos traseros. Un poco amarillentos pero funcionales.", en = "Tail lights. A bit yellowed but functional."},
+    {es = "Pilotos originales. Se encienden los dos. A la vez incluso.", en = "Original tail lights. Both light up. Even at the same time."},
+  },
+  -- === SEAT ===
+  seat = {
+    {es = "Asiento deportivo. Muy comodo para sprints. No para viajes largos.", en = "Sport seat. Very comfy for sprints. Not for road trips."},
+    {es = "Asiento con arneses de 4 puntos. Tu copiloto te odiara.", en = "Seat with 4-point harness. Your copilot will hate you."},
+    {es = "Bucket seat. Te mantiene en sitio. Literalmente no te puedes mover.", en = "Bucket seat. Keeps you in place. Literally cant move."},
+  },
+  -- === ROLLCAGE ===
+  rollcage = {
+    {es = "Jaula antivuelco. Esperemos que no la necesites.", en = "Roll cage. Lets hope you wont need it."},
+    {es = "Barra antivuelco homologada. Para que ITV no te mire mal.", en = "Approved roll bar. So inspection wont give you the look."},
+  },
+  -- === BATTERY / ALTERNATOR ===
+  battery = {
+    {es = "Bateria nueva. Del anyo pasado. Carga bien.", en = "New battery. From last year. Charges fine."},
+    {es = "Bateria con terminal limpio. La cargue antes de venderla.", en = "Battery with clean terminals. Charged it before selling."},
+  },
+  alternator = {
+    {es = "Alternador funcional. Alterna. No se mucho mas.", en = "Working alternator. It alternates. Dont know much more."},
+    {es = "Alternador reconstruido. Los escobillos son nuevos al menos.", en = "Rebuilt alternator. The brushes are new at least."},
+  },
+  -- === GPS ===
+  gps = {
+    {es = "GPS original. Los mapas son del 2015 pero las calles no cambian tanto.", en = "Original GPS. Maps from 2015 but streets dont change much."},
+    {es = "Navegador con voz. Te grita las direcciones. Como mi ex.", en = "GPS with voice. Yells directions at you. Like my ex."},
+  },
+}
+
+-- Bundle-specific descriptions
+local bundleDescriptions = {
+  {es = "Despiece de ETK-I accidentado. Lo que no se rompio, aqui esta.", en = "Salvage from crashed ETK-I. What didnt break is here."},
+  {es = "Lote de piezas de un ETK-I que se jubila. Buen precio.", en = "Parts lot from a retiring ETK-I. Good price."},
+  {es = "Me sobran estas piezas del proyecto que no acabe.", en = "Leftover parts from the project I never finished."},
+  {es = "ETK-I de desguace, seleccion de piezas aprovechables.", en = "Junkyard ETK-I, selection of usable parts."},
+  {es = "Compra a ciegas. Buen precio, sin devoluciones.", en = "Blind buy. Good price, no returns."},
+  {es = "Lote sorpresa. Puede salir algo bueno. O no. Suerte!", en = "Surprise lot. Might get something good. Or not. Good luck!"},
+  {es = "Mi mecanico dijo: esto vale, esto no. Aqui esta lo que vale.", en = "My mechanic said: this is good, this isnt. Heres the good stuff."},
+  {es = "Todo original ETK-I. Sin garantia pero con carinho.", en = "All original ETK-I. No warranty but with love."},
+  {es = "Estas piezas cuentan historias. Sobre todo la del accidente.", en = "These parts tell stories. Especially the one about the crash."},
+  {es = "Vendo lote porque necesito sitio para el siguiente proyecto.", en = "Selling lot because I need space for the next project."},
+}
+
+-- Match slotType+partName against specific description keys.
+-- Returns the most specific match, or nil if no match found.
+-- Checks partName first (more specific), then slotType patterns.
+local descriptionMatchOrder = {
+  -- Specific part types (checked against both partName and slotType)
+  { key = "turbo",        patterns = {"turbo"} },
+  { key = "intercooler",  patterns = {"intercooler"} },
+  { key = "radiator",     patterns = {"radiator"} },
+  { key = "exhaust",      patterns = {"exhaust"} },
+  { key = "intake",       patterns = {"intake", "airfilter"} },
+  { key = "ecu",          patterns = {"ecu"} },
+  { key = "transmission", patterns = {"transmission", "gearbox"} },
+  { key = "clutch",       patterns = {"clutch"} },
+  { key = "differential", patterns = {"differential"} },
+  { key = "flywheel",     patterns = {"flywheel"} },
+  { key = "driveshaft",   patterns = {"driveshaft", "halfshaft", "axle_"} },
+  { key = "oilpan",       patterns = {"oilpan"} },
+  { key = "oilcooler",    patterns = {"oilcooler"} },
+  { key = "n2o",          patterns = {"n2o", "nos", "nitro"} },
+  { key = "fuel",         patterns = {"fuel", "injector"} },
+  { key = "engine",       patterns = {"engine"} },
+  -- Suspension / brakes
+  { key = "coilover",     patterns = {"coilover"} },
+  { key = "strut",        patterns = {"strut"} },
+  { key = "swaybar",      patterns = {"swaybar", "stabilizer"} },
+  { key = "brake",        patterns = {"brake", "brakepad"} },
+  { key = "steering",     patterns = {"steering", "steeringbox"} },
+  { key = "suspension",   patterns = {"suspension", "spring", "shock"} },
+  -- Body
+  { key = "bumper",       patterns = {"bumper"} },
+  { key = "hood",         patterns = {"hood"} },
+  { key = "trunk",        patterns = {"trunk", "tailgate"} },
+  { key = "door",         patterns = {"door"} },
+  { key = "fender",       patterns = {"fender", "fenderflare"} },
+  { key = "mirror",       patterns = {"mirror"} },
+  { key = "spoiler",      patterns = {"spoiler", "wing"} },
+  { key = "sideskirt",    patterns = {"sideskirt", "skirt"} },
+  { key = "grille",       patterns = {"grille"} },
+  { key = "windshield",   patterns = {"windshield"} },
+  { key = "glass",        patterns = {"glass"} },
+  { key = "headlight",    patterns = {"headlight", "signal_"} },
+  { key = "taillight",    patterns = {"taillight", "reverselight"} },
+  { key = "seat",         patterns = {"seat"} },
+  { key = "rollcage",     patterns = {"rollcage", "rollbar"} },
+  -- Electrical
+  { key = "battery",      patterns = {"battery"} },
+  { key = "alternator",   patterns = {"alternator"} },
+  { key = "gps",          patterns = {"gps"} },
+}
+
+-- Pick a random description for a listing based on slotType AND partName
+local function pickDescription(slotType, partName)
+  local sLower = slotType and string.lower(slotType) or ""
+  local pLower = partName and string.lower(partName) or ""
+  local combined = sLower .. " " .. pLower
+
+  -- Try to find a specific match
+  for _, entry in ipairs(descriptionMatchOrder) do
+    for _, pattern in ipairs(entry.patterns) do
+      if combined:find(pattern, 1, true) then
+        local pool = partSpecificDescriptions[entry.key]
+        if pool and #pool > 0 then
+          -- 70% specific, 30% generic
+          if math.random() < 0.7 then
+            return pool[math.random(#pool)]
+          else
+            return genericDescriptions[math.random(#genericDescriptions)]
+          end
+        end
+      end
+    end
+  end
+
+  -- No specific match: use generic
+  return genericDescriptions[math.random(#genericDescriptions)]
+end
+
+-- Pick a random description for a bundle
+local function pickBundleDescription()
+  return bundleDescriptions[math.random(#bundleDescriptions)]
+end
+
+-- ============================================================================
+-- LISTING GENERATION
+-- ============================================================================
 
 local function generateListing()
   local part = pickPart("legal")
@@ -790,7 +1180,8 @@ local function generateListing()
   local condition = buildCondition(false)
 
   -- Price based on km: more km = lower price (up to 40% discount)
-  local kmFactor = 1 - (condition.odometer / 200000) * 0.4
+  -- odometer is in meters; 200,000 km = 200,000,000 meters
+  local kmFactor = 1 - (condition.odometer / 200000000) * 0.4
   kmFactor = math.max(0.6, math.min(1, kmFactor))  -- Clamp between 0.6 and 1
   local baseModifier = 0.55 + math.random() * 0.45  -- 55-100% of value
   local price = math.max(50, math.floor(part.value * baseModifier * kmFactor))
@@ -808,6 +1199,7 @@ local function generateListing()
     createdAt = os.time(),
     expiresAt = os.time() + math.random(1800, 7200),  -- 30min to 2h rotation
     isIllegal = false,
+    description = pickDescription(part.slotType, part.name),
   }
 
   -- COLOR GENERATION: Add random paint for body parts
@@ -879,14 +1271,94 @@ local function generateLead()
   return lead
 end
 
+-- Bundle configs for "despiece" (random source configurations)
+local bundleConfigs = {
+  {es = "ETK-I 2400ti Sport", en = "ETK-I 2400ti Sport"},
+  {es = "ETK-I 2400 Turbo", en = "ETK-I 2400 Turbo"},
+  {es = "ETK-I 2000 Base", en = "ETK-I 2000 Base"},
+  {es = "ETK-I 2400ti Rally", en = "ETK-I 2400ti Rally"},
+  {es = "ETK-I 1800 Economico", en = "ETK-I 1800 Economy"},
+  {es = "ETK-I 2400ti GT", en = "ETK-I 2400ti GT"},
+}
+
+local function generateBundle()
+  local cache = buildPartsCache(modelKey)
+  if not cache or not cache.legal or #cache.legal < 5 then return nil end
+
+  local bundleSize = math.random(4, 5)
+  local parts = {}
+  local usedIndices = {}
+
+  for i = 1, bundleSize do
+    local idx
+    local attempts = 0
+    repeat
+      idx = math.random(#cache.legal)
+      attempts = attempts + 1
+    until not usedIndices[idx] or attempts > 50
+    if attempts > 50 then break end
+    usedIndices[idx] = true
+    table.insert(parts, cache.legal[idx])
+  end
+
+  if #parts < 3 then return nil end -- Need at least 3 parts for a bundle
+
+  -- Shared condition for all parts in the lot
+  local sharedCondition = buildCondition(false)
+
+  -- Total value + discount (30-50% of real value)
+  local totalValue = 0
+  for _, p in ipairs(parts) do totalValue = totalValue + p.value end
+  local discount = 0.3 + math.random() * 0.2
+  local bundlePrice = math.max(100, math.floor(totalValue * discount))
+
+  -- Source configuration (cosmetic/informative)
+  local sourceConfig = bundleConfigs[math.random(#bundleConfigs)]
+
+  local bundle = {
+    id = state.nextListingId,
+    isBundle = true,
+    bundleParts = parts,          -- HIDDEN from player until pickup
+    bundleSize = #parts,
+    sourceConfig = sourceConfig,  -- Which config the parts came from
+    sharedCondition = sharedCondition,
+    partName = "bundle_etki_" .. state.nextListingId,
+    partNiceName = "Despiece ETK-I (" .. #parts .. " piezas)",
+    vehicleModel = modelKey,
+    slotType = "bundle",
+    baseValue = totalValue,
+    price = bundlePrice,
+    condition = sharedCondition,
+    location = pickLocation(),
+    createdAt = os.time(),
+    expiresAt = os.time() + math.random(3600, 10800),  -- 1-3h
+    isIllegal = false,
+    description = pickBundleDescription(),
+  }
+
+  state.nextListingId = state.nextListingId + 1
+  log("I", "mysummer", string.format("generateBundle: %d parts, total value %d, price %d (%.0f%% discount)",
+    #parts, totalValue, bundlePrice, (1 - discount) * 100))
+  return bundle
+end
+
 local function ensureMarketStock()
   while #state.listings < targetListings do
+    -- 25% chance to generate a bundle instead of a regular listing
+    if math.random() < 0.25 then
+      local bundle = generateBundle()
+      if bundle then
+        table.insert(state.listings, bundle)
+        goto continue
+      end
+    end
     local listing = generateListing()
     if not listing then
       log("W", "mysummer", "ensureMarketStock: generateListing returned nil")
       break
     end
     table.insert(state.listings, listing)
+    ::continue::
   end
 
   local cache = buildPartsCache(modelKey)
@@ -986,7 +1458,7 @@ local function clearRoute()
 end
 
 local function addPartToInventory(partData)
-  if not career_modules_partInventory or not partData then
+  if not partData then
     return nil
   end
 
@@ -1004,35 +1476,39 @@ local function addPartToInventory(partData)
     partData.value = partData.baseValue
   end
 
-  local inventory = career_modules_partInventory.getInventory and career_modules_partInventory.getInventory() or nil
-  if not inventory then
+  -- Add to base game partInventory
+  if not career_modules_partInventory then
+    log("E", "mysummer", "addPartToInventory: partInventory not available")
     return nil
   end
 
-  local idCounter = 1
-  while inventory[idCounter] do
-    idCounter = idCounter + 1
-  end
-  inventory[idCounter] = partData
+  local slotType = partData.slot or partData.slotType or partData.containingSlot or ""
+  local entry = {
+    name = partData.name,
+    vehicleModel = partData.vehicleModel or modelKey or "etki",
+    partCondition = partData.partCondition or { integrityValue = 1, odometer = 0, visualValue = 1 },
+    containingSlot = slotType,
+    partPath = slotType .. (partData.name or ""),
+    location = 0,
+    tags = partData.tags or {},
+    mainPart = false,
+    value = partData.value or partData.baseValue or 100,
+    description = partData.description or { description = partData.name },
+  }
 
-  local slotToPartIdMap = career_modules_partInventory.getSlotToPartIdMap and career_modules_partInventory.getSlotToPartIdMap() or nil
-  local partPathToPartIdMap = career_modules_partInventory.getPartPathToPartIdMap and career_modules_partInventory.getPartPathToPartIdMap() or nil
-  if slotToPartIdMap and partPathToPartIdMap and partData.location and partData.location > 0 then
-    slotToPartIdMap[partData.location] = slotToPartIdMap[partData.location] or {}
-    partPathToPartIdMap[partData.location] = partPathToPartIdMap[partData.location] or {}
-    if partData.containingSlot then
-      slotToPartIdMap[partData.location][partData.containingSlot] = idCounter
+  career_modules_partInventory.addPartToInventory(entry)
+
+  -- Find the ID that was just assigned (addPartToInventory doesn't return it)
+  local newId = nil
+  local inv = career_modules_partInventory.getInventory()
+  for id, p in pairs(inv) do
+    if p.name == entry.name and p.containingSlot == entry.containingSlot and p.location == 0 then
+      newId = id
     end
-    if partData.partPath then
-      partPathToPartIdMap[partData.location][partData.partPath] = idCounter
-    end
   end
 
-  if career_modules_partInventory.updatePartConditionsInInventory then
-    career_modules_partInventory.updatePartConditionsInInventory()
-  end
-
-  return idCounter
+  log("I", "mysummer", "Added part '" .. (partData.name or "unknown") .. "' to partInventory (id=" .. tostring(newId) .. ", slot=" .. slotType .. ")")
+  return newId
 end
 
 local function seedPartInventoryForVehicle(inventoryId)
@@ -1103,11 +1579,12 @@ local function removePartFromInventory(partId)
   if not partId or not career_modules_partInventory then
     return false
   end
-  if career_modules_partInventory.removePart then
-    return career_modules_partInventory.removePart(partId)
-  end
-  if career_modules_partInventory.removePartById then
-    return career_modules_partInventory.removePartById(partId)
+  -- For parts in storage (location=0), directly remove from inventory table
+  -- Base game removePart() is for uninstalling from vehicles, not for deleting stored parts
+  local inv = career_modules_partInventory.getInventory()
+  if inv and inv[partId] then
+    inv[partId] = nil
+    return true
   end
   return false
 end
@@ -1430,6 +1907,114 @@ local function startCriminalChase(heatLevel)
   end
 end
 
+-- Helper: finish pickup after cargo is loaded (shared by normal and bundle pickups)
+local function finishPickupAfterLoad(pickup, price)
+  state.activePickup = nil
+  state.completingPickup = false
+  clearRoute()
+
+  -- Set V3 context for recent purchase (for DeepWeb conversations)
+  if career_modules_mysummerDeepWeb and career_modules_mysummerDeepWeb.setPlayerContext then
+    career_modules_mysummerDeepWeb.setPlayerContext("recentPurchase", true)
+  end
+
+  -- Detect first purchase -> unlock Ghost contact
+  if not state.firstPurchaseMade then
+    state.firstPurchaseMade = true
+    log("I", "mysummer", "First purchase made! Unlocking Ghost contact.")
+    if career_modules_mysummerDeepWeb and career_modules_mysummerDeepWeb.onFirstPurchase then
+      career_modules_mysummerDeepWeb.onFirstPurchase()
+    end
+  end
+
+  -- Check if there are more pickups in the queue (multiple selection)
+  if state.pendingPickups and #state.pendingPickups > 0 then
+    state.activePickup = table.remove(state.pendingPickups, 1)
+    setRouteToPickup(state.activePickup)
+    local remaining = #state.pendingPickups
+    if remaining > 0 then
+      ui_message(string.format("Next pickup set. %d more after this.", remaining), 3, "Parts Market")
+    else
+      ui_message("Last pickup. Head there now.", 3, "Parts Market")
+    end
+  end
+
+  ensureMarketStock()
+  saveState()
+  sendMarketUpdate()
+end
+
+-- Complete a bundle pickup: load each part sequentially into cargo, reveal names
+local function completeBundlePickup(pickup, cargoModule, price)
+  local bundleParts = pickup.bundleParts or {}
+  local sharedCondition = pickup.sharedCondition or buildCondition(false)
+  local loadedParts = {}
+  local failedCount = 0
+
+  local function loadNextBundlePart(index)
+    if index > #bundleParts then
+      -- All parts processed - show reveal message
+      if #loadedParts > 0 then
+        local partNames = {}
+        for _, p in ipairs(loadedParts) do
+          table.insert(partNames, p.niceName or p.name)
+        end
+        local revealMsg = "Bundle opened! You got: " .. table.concat(partNames, ", ")
+        ui_message(revealMsg, 8, "Parts Market", "success")
+        log("I", "mysummer", "Bundle revealed: " .. #loadedParts .. " parts loaded, " .. failedCount .. " failed")
+
+        -- Send bundle reveal data to UI
+        guihooks.trigger("mysummerBundleRevealed", {
+          parts = loadedParts,
+          sourceConfig = pickup.sourceConfig,
+          totalLoaded = #loadedParts,
+          totalFailed = failedCount,
+        })
+      end
+      finishPickupAfterLoad(pickup, price)
+      return
+    end
+
+    local bundlePart = bundleParts[index]
+    local partData = {
+      partName = bundlePart.name,
+      partNiceName = bundlePart.niceName,
+      vehicleModel = pickup.vehicleModel or modelKey,
+      slotType = bundlePart.slotType,
+      condition = deepcopy(sharedCondition),
+      baseValue = bundlePart.value,
+      isIllegal = false,
+    }
+
+    cargoModule.loadPartIntoCargo(partData, function(success, cargoIdOrError, container)
+      if success then
+        table.insert(loadedParts, {
+          name = bundlePart.name,
+          niceName = bundlePart.niceName,
+          slotType = bundlePart.slotType,
+          value = bundlePart.value,
+        })
+        -- Track in state.carryingParts (SpeedParts pattern - survives save/load)
+        table.insert(state.carryingParts, {
+          name = bundlePart.name,
+          niceName = bundlePart.niceName,
+          slotType = bundlePart.slotType,
+          price = bundlePart.value,
+          vehicleModel = pickup.vehicleModel or modelKey,
+          condition = deepcopy(sharedCondition),
+          cargoId = cargoIdOrError,
+        })
+      else
+        failedCount = failedCount + 1
+        log("W", "mysummer", "Failed to load bundle part: " .. (bundlePart.niceName or bundlePart.name) .. " - " .. tostring(cargoIdOrError))
+      end
+      loadNextBundlePart(index + 1)
+    end)
+  end
+
+  loadNextBundlePart(1)
+end
+
 local function completePickup()
   if not state.activePickup then
     return
@@ -1440,23 +2025,83 @@ local function completePickup()
 
   state.completingPickup = true -- Set flag immediately to prevent duplicate calls
   local pickup = state.activePickup
+  log("I", "mysummer", "completePickup: starting for " .. (pickup.partNiceName or pickup.partName or "unknown"))
 
-  -- Check cargo space first (async)
+  -- Check cargo module availability
   local cargoModule = career_modules_mysummerCargo
   if not cargoModule then
-    state.completingPickup = false -- Reset flag
-    ui_message("Cargo system unavailable.", 4, "Parts Market", "warning")
+    -- Fallback: add part directly to inventory when cargo system is unavailable
+    log("W", "mysummer", "completePickup: cargo module unavailable, adding part directly to inventory")
+
+    local price = tonumber(pickup.price) or 0
+    if price > 0 then
+      local priceData = { money = { amount = price, canBeNegative = false } }
+      if not career_modules_payment.canPay(priceData) then
+        state.completingPickup = false
+        ui_message("You cannot afford this pickup yet.", 4, "Parts Market", "warning")
+        return
+      end
+      career_modules_payment.pay(priceData, { label = "Parts pickup", tags = { "buying", "parts" } })
+    end
+
+    if pickup.isBundle and pickup.bundleParts then
+      for _, bp in ipairs(pickup.bundleParts) do
+        local partData = {
+          name = bp.name,
+          vehicleModel = pickup.vehicleModel or modelKey,
+          partCondition = pickup.sharedCondition and deepcopy(pickup.sharedCondition) or { integrityValue = 1, odometer = 0, visualValue = 1 },
+          slot = bp.slotType,
+          location = 0,
+          value = bp.value,
+          description = { description = bp.niceName or bp.name },
+        }
+        addPartToInventory(partData)
+      end
+      local names = {}
+      for _, bp in ipairs(pickup.bundleParts) do table.insert(names, bp.niceName or bp.name) end
+      ui_message("Bundle opened! You got: " .. table.concat(names, ", "), 8, "Parts Market", "success")
+    else
+      local partData = {
+        name = pickup.partName,
+        vehicleModel = pickup.vehicleModel or modelKey,
+        partCondition = pickup.condition and deepcopy(pickup.condition) or { integrityValue = 1, odometer = 0, visualValue = 1 },
+        slot = pickup.slotType,
+        location = 0,
+        value = pickup.baseValue,
+        description = { description = pickup.partNiceName or pickup.partName },
+      }
+      addPartToInventory(partData)
+      ui_message("Part picked up: " .. (pickup.partNiceName or pickup.partName), 4, "Parts Market", "success")
+    end
+
+    if pickup.isIllegal then
+      local heatIncrease = HEAT_CONFIG.pickupHeatIncrease[pickup.heat or "normal"] or 10
+      addPlayerHeat(heatIncrease)
+      local chaseRoll = math.random()
+      if chaseRoll < 0.4 then
+        startCriminalChase(pickup.heat or "normal")
+      else
+        startPolicePursuit(pickup.heat or "hot")
+      end
+    end
+
+    finishPickupAfterLoad(pickup, price)
     return
   end
 
-  cargoModule.checkCargoSpace({ pickup.partName }, function(cargoResult)
+  -- For bundles, check space for first part (best effort - may not fit all)
+  local checkPartName = pickup.partName
+  if pickup.isBundle and pickup.bundleParts and #pickup.bundleParts > 0 then
+    checkPartName = pickup.bundleParts[1].name
+  end
+
+  cargoModule.checkCargoSpace({ checkPartName }, function(cargoResult)
     if not cargoResult.canLoad then
       state.completingPickup = false -- Reset flag so player can retry
       if cargoResult.availableSlots == 0 then
         ui_message("No cargo container found! Install a cargo box in your vehicle.", 5, "Parts Market", "warning")
       else
-        local cargoInfo = cargoModule.getPartCargoInfo(pickup.partName)
-        ui_message(string.format("Not enough cargo space! Need %d slots, have %d.", cargoInfo.slots, cargoResult.availableSlots), 5, "Parts Market", "warning")
+        ui_message(string.format("Not enough cargo space! Need %d slots, have %d.", cargoResult.totalSlotsNeeded or 0, cargoResult.availableSlots), 5, "Parts Market", "warning")
       end
       return
     end
@@ -1473,7 +2118,13 @@ local function completePickup()
       career_modules_payment.pay(priceData, { label = "Parts pickup", tags = { "buying", "parts" } })
     end
 
-    -- Load part into native cargo system (affects vehicle weight, shows in cargo UI)
+    -- BUNDLE PICKUP: Load each part individually and reveal
+    if pickup.isBundle and pickup.bundleParts then
+      completeBundlePickup(pickup, cargoModule, price)
+      return
+    end
+
+    -- NORMAL PICKUP: Load single part into native cargo system
     local partData = {
       partName = pickup.partName,
       partNiceName = pickup.partNiceName,
@@ -1495,6 +2146,19 @@ local function completePickup()
         ui_message("Failed to load cargo: " .. tostring(cargoIdOrError), 4, "Parts Market", "warning")
         return
       end
+
+      -- Track in state.carryingParts (SpeedParts pattern - survives save/load)
+      table.insert(state.carryingParts, {
+        name = pickup.partName,
+        niceName = pickup.partNiceName,
+        slotType = pickup.slotType,
+        price = pickup.baseValue,
+        vehicleModel = pickup.vehicleModel,
+        condition = deepcopy(pickup.condition),
+        cargoId = cargoIdOrError,
+        isIllegal = pickup.isIllegal,
+        heat = pickup.heat,
+      })
 
       local cargoInfo = cargoModule.getPartCargoInfo(pickup.partName)
 
@@ -1519,39 +2183,7 @@ local function completePickup()
         ui_message(string.format("Part loaded into cargo. (%dkg, %d slots)", cargoInfo.weight, cargoInfo.slots), 3, "Parts Market")
       end
 
-      state.activePickup = nil
-      state.completingPickup = false -- Reset flag
-      clearRoute()
-
-      -- Set V3 context for recent purchase (for DeepWeb conversations)
-      if career_modules_mysummerDeepWeb and career_modules_mysummerDeepWeb.setPlayerContext then
-        career_modules_mysummerDeepWeb.setPlayerContext("recentPurchase", true)
-      end
-
-      -- Detect first purchase -> unlock Ghost contact
-      if not state.firstPurchaseMade then
-        state.firstPurchaseMade = true
-        log("I", "mysummer", "First purchase made! Unlocking Ghost contact.")
-        if career_modules_mysummerDeepWeb and career_modules_mysummerDeepWeb.onFirstPurchase then
-          career_modules_mysummerDeepWeb.onFirstPurchase()
-        end
-      end
-
-      -- Check if there are more pickups in the queue (multiple selection)
-      if state.pendingPickups and #state.pendingPickups > 0 then
-        state.activePickup = table.remove(state.pendingPickups, 1)
-        setRouteToPickup(state.activePickup)
-        local remaining = #state.pendingPickups
-        if remaining > 0 then
-          ui_message(string.format("Next pickup set. %d more after this.", remaining), 3, "Parts Market")
-        else
-          ui_message("Last pickup. Head there now.", 3, "Parts Market")
-        end
-      end
-
-      ensureMarketStock()
-      saveState()
-      sendMarketUpdate()
+      finishPickupAfterLoad(pickup, price)
     end)
   end)
 end
@@ -1560,10 +2192,6 @@ local function acceptListing(listingId)
   if not isFullyInitialized then
     log("W", "mysummer", "acceptListing called before initialization complete")
     return { success = false, message = "System not ready. Please wait." }
-  end
-
-  if state.activePickup then
-    return { success = false, message = "Finish your current pickup first." }
   end
 
   for idx, listing in ipairs(state.listings) do
@@ -1576,12 +2204,25 @@ local function acceptListing(listingId)
         end
       end
 
-      state.activePickup = deepcopy(listing)
+      local listingCopy = deepcopy(listing)
       table.remove(state.listings, idx)
-      setRouteToPickup(state.activePickup)
+
+      local partName = listingCopy.partNiceName or listingCopy.partName or "Part"
+      if state.activePickup then
+        -- Queue behind active pickup
+        table.insert(state.pendingPickups, listingCopy)
+        log("I", "mysummer", "Queued pickup: " .. partName .. " (pending: " .. #state.pendingPickups .. ")")
+        ui_message("Purchased! " .. partName .. " queued for pickup (" .. #state.pendingPickups .. " in queue)", 5, "PartsBay", "info")
+      else
+        -- Set as active pickup
+        state.activePickup = listingCopy
+        setRouteToPickup(state.activePickup)
+        ui_message("Purchased! Go pick up " .. partName .. " - follow the waypoint", 5, "PartsBay", "info")
+      end
+
       saveState()
       sendMarketUpdate()
-      return { success = true }
+      return { success = true, message = "Purchased! " .. partName }
     end
   end
 
@@ -1623,11 +2264,6 @@ local function acceptMultipleListings(listingIds)
     return { success = false, message = "No listings selected." }
   end
 
-  -- Check if already have active pickup
-  if state.activePickup then
-    return { success = false, message = "Finish your current pickup first." }
-  end
-
   -- Calculate total price and verify funds
   local totalPrice = 0
   local validListings = {}
@@ -1663,8 +2299,8 @@ local function acceptMultipleListings(listingIds)
     table.remove(state.listings, item.idx)
   end
 
-  -- Start with the first pickup
-  if #state.pendingPickups > 0 then
+  -- Start with the first pickup if none active
+  if not state.activePickup and #state.pendingPickups > 0 then
     state.activePickup = table.remove(state.pendingPickups, 1)
     setRouteToPickup(state.activePickup)
   end
@@ -1695,11 +2331,53 @@ local function cancelActivePickup()
   end
 
   if state.activePickup then
+    -- Move active pickup back to pending queue (at the beginning)
+    if not state.pendingPickups then state.pendingPickups = {} end
+    table.insert(state.pendingPickups, 1, state.activePickup)
     state.activePickup = nil
     clearRoute()
     saveState()
     sendMarketUpdate()
   end
+  return getMarketData()
+end
+
+local function setWaypointToActivePickup()
+  if state.activePickup then
+    setRouteToPickup(state.activePickup)
+    return { success = true }
+  end
+  return { success = false, message = "No active pickup" }
+end
+
+local function cancelPendingPickup(index)
+  if not state.pendingPickups or not state.pendingPickups[index] then
+    return { success = false, message = "Invalid pickup index" }
+  end
+  table.remove(state.pendingPickups, index)
+  saveState()
+  sendMarketUpdate()
+  return getMarketData()
+end
+
+local function activatePendingPickup(index)
+  if not state.pendingPickups or not state.pendingPickups[index] then
+    return { success = false, message = "Invalid pickup index" }
+  end
+
+  -- If there's already an active pickup, move it back to pending
+  if state.activePickup then
+    table.insert(state.pendingPickups, 1, state.activePickup)
+    -- Adjust index since we just inserted at position 1
+    index = index + 1
+  end
+
+  -- Pull the selected pickup out of pending and make it active
+  state.activePickup = table.remove(state.pendingPickups, index)
+  setRouteToPickup(state.activePickup)
+  ui_message("Navigating to: " .. (state.activePickup.partNiceName or state.activePickup.partName), 4, "PartsBay")
+  saveState()
+  sendMarketUpdate()
   return getMarketData()
 end
 
@@ -2052,39 +2730,80 @@ local function onComputerAddFunctions(menuData, computerFunctions)
 end
 
 local function onReachedTargetPos()
+  log("D", "mysummer", "onReachedTargetPos called, initialized=" .. tostring(isFullyInitialized) .. ", activePickup=" .. tostring(state.activePickup ~= nil))
   if not isFullyInitialized or not state.activePickup then
     return
   end
 
   local targetPos = core_groundMarkers.getTargetPos()
   local pickupPos = toVec3(state.activePickup.location and state.activePickup.location.pos)
-  if targetPos and pickupPos and targetPos:distance(pickupPos) < 6 then
-    completePickup()
+  log("D", "mysummer", "onReachedTargetPos: targetPos=" .. tostring(targetPos) .. ", pickupPos=" .. tostring(pickupPos))
+  if targetPos and pickupPos then
+    local dist = targetPos:distance(pickupPos)
+    log("D", "mysummer", "onReachedTargetPos: distance=" .. tostring(dist))
+    if dist < 5 then
+      completePickup()
+    end
+  else
+    -- Fallback: if no target pos but we have an active pickup, check player distance directly
+    local playerPos = getPlayerPos()
+    if playerPos and pickupPos then
+      local playerDist = playerPos:distance(pickupPos)
+      log("D", "mysummer", "onReachedTargetPos fallback: playerDist=" .. tostring(playerDist))
+      if playerDist < 15 then
+        completePickup()
+      end
+    end
   end
 end
 
 -- Cargo transfer to inventory functions
+-- Check if player is near any purchased garage (matches SpeedParts pattern)
 local function isPlayerNearGarage()
-  if not career_modules_garageManager then
+  local playerVeh = be:getPlayerVehicle(0)
+  if not playerVeh then return false, nil end
+
+  local playerPos = playerVeh:getPosition()
+  if not playerPos then return false, nil end
+
+  local garageManager = career_modules_garageManager
+  if not garageManager or not garageManager.getPurchasedGarages then
     return false, nil
   end
 
-  local playerPos = getPlayerPos()
-  if not playerPos then
-    return false, nil
+  local purchasedGarageIds = garageManager.getPurchasedGarages()
+  if not purchasedGarageIds then return false, nil end
+
+  -- Convert to lookup (getPurchasedGarages may return array or map)
+  local purchasedLookup = {}
+  if type(purchasedGarageIds) == "table" then
+    if purchasedGarageIds[1] then
+      for _, gid in ipairs(purchasedGarageIds) do
+        purchasedLookup[gid] = true
+      end
+    else
+      purchasedLookup = purchasedGarageIds
+    end
   end
 
-  local garages = freeroam_facilities.getFacilitiesByType("garage")
-  if not garages then
-    return false, nil
-  end
-
-  for garageId, garage in pairs(garages) do
-    -- Check if garage is owned
-    if career_modules_garageManager.isPurchasedGarage and career_modules_garageManager.isPurchasedGarage(garageId) then
-      local garagePos = garage.pos and toVec3(garage.pos)
-      if garagePos and playerPos:distance(garagePos) < 50 then
-        return true, garageId
+  -- Check each purchased garage using accurate door position
+  if freeroam_facilities and freeroam_facilities.getFacility then
+    for garageId, _ in pairs(purchasedLookup) do
+      local garage = freeroam_facilities.getFacility("garage", garageId)
+      if garage then
+        local garagePos = nil
+        if freeroam_facilities.getAverageDoorPositionForFacility then
+          garagePos = freeroam_facilities.getAverageDoorPositionForFacility(garage)
+        end
+        if not garagePos and garage.pos then
+          garagePos = toVec3(garage.pos)
+        end
+        if garagePos then
+          local distance = (playerPos - garagePos):length()
+          if distance <= 15 then
+            return true, garageId
+          end
+        end
       end
     end
   end
@@ -2094,20 +2813,12 @@ end
 
 -- Transfer a cargo part from vehicle cargo to part inventory
 local function transferCargoPartToInventory(cargoPart)
-  -- Build proper part path for inventory system
-  local slotPath = "/" .. cargoPart.slotType .. "/"
-  local partPath = slotPath .. cargoPart.partName
-
   local partData = {
     name = cargoPart.partName,
-    vehicleModel = cargoPart.vehicleModel,
+    vehicleModel = cargoPart.vehicleModel or "etki",
     partCondition = cargoPart.condition and deepcopy(cargoPart.condition) or { integrityValue = 1, odometer = 0, visualValue = 1 },
     slot = cargoPart.slotType,
-    slotType = cargoPart.slotType,
-    containingSlot = slotPath,
-    partPath = partPath,
     location = 0,
-    baseValue = cargoPart.baseValue,
     value = cargoPart.baseValue,
     description = { description = cargoPart.partNiceName or cargoPart.partName },
   }
@@ -2116,77 +2827,96 @@ local function transferCargoPartToInventory(cargoPart)
   return partId
 end
 
--- Unload all MySummer parts from cargo to inventory (must be at garage)
-local function unloadAllCargo()
+-- Deliver parts at garage (only from OUR state.carryingParts)
+local function deliverPartsAtGarage()
   local cargoModule = career_modules_mysummerCargo
-  if not cargoModule then
-    return { success = false, message = "Cargo system unavailable." }
+
+  -- Only deliver from OUR state.carryingParts (not native cargo, which may belong to SpeedParts)
+  if #state.carryingParts == 0 then
+    log("W", "mysummer", "deliverPartsAtGarage: no parts to deliver")
+    return { success = false, message = "No parts to deliver" }
   end
 
-  local nearGarage, garageId = isPlayerNearGarage()
-  if not nearGarage then
-    return { success = false, message = "Must be at a garage to unload cargo." }
+  -- Early exit if partInventory not available (e.g. during quickTravel/recovery)
+  if not career_modules_partInventory then
+    log("W", "mysummer", "deliverPartsAtGarage: partInventory not available yet, will retry")
+    return { success = false, message = "Inventory system not ready" }
   end
 
-  -- Get all MySummer parts from native cargo system
-  local cargoParts = cargoModule.getMysummerCargoInVehicles()
-  if #cargoParts == 0 then
-    return { success = false, message = "No parts in cargo to unload." }
-  end
+  local partsToDeliver = state.carryingParts
 
   local transferred = 0
-  local failed = 0
 
-  for _, cargoPart in ipairs(cargoParts) do
-    local partId = transferCargoPartToInventory(cargoPart)
-    if partId then
-      -- Remove from native cargo
-      cargoModule.unloadCargoItem(cargoPart.cargoId)
+  for _, partInfo in ipairs(partsToDeliver) do
+    -- Handle both state.carryingParts format and native cargo format
+    local partName = partInfo.name or partInfo.partName
+    local partNiceName = partInfo.niceName or partInfo.partNiceName or partName
+    local partSlot = partInfo.slotType or partInfo.slot
+    local partValue = partInfo.price or partInfo.baseValue or 0
+    local partCondition = partInfo.condition or { integrityValue = 1, odometer = 0, visualValue = 1 }
+    local cargoId = partInfo.cargoId
+    local isIllegal = partInfo.isIllegal
 
-      -- If this was the illegal cargo we were tracking, set it for pursuit tracking
-      if state.pendingIllegalCargoId and cargoPart.cargoId == state.pendingIllegalCargoId then
-        state.pendingIllegalPartId = partId
-        state.pendingIllegalCargoId = nil
+    local partData = {
+      name = partName,
+      vehicleModel = partInfo.vehicleModel or modelKey or "etki",
+      partCondition = deepcopy(partCondition),
+      slot = partSlot,
+      location = 0,
+      value = partValue,
+      description = { description = partNiceName },
+    }
+
+    local newPartId = addPartToInventory(partData)
+    if newPartId then
+      transferred = transferred + 1
+      log("I", "mysummer", string.format("Delivered part '%s' to inventory (id=%s)", partName, tostring(newPartId)))
+
+      -- Unload from native cargo if we have a cargoId
+      if cargoModule and cargoId then
+        cargoModule.unloadCargoItem(cargoId)
       end
 
-      transferred = transferred + 1
-      log("I", "mysummer", string.format("Transferred part '%s' from cargo to inventory (partId=%s)", cargoPart.partName, tostring(partId)))
+      -- Track illegal part for pursuit system
+      if isIllegal and state.pendingIllegalCargoId and cargoId == state.pendingIllegalCargoId then
+        state.pendingIllegalPartId = newPartId
+        state.pendingIllegalCargoId = nil
+      end
     else
-      failed = failed + 1
-      log("W", "mysummer", string.format("Failed to transfer part '%s' to inventory", cargoPart.partName))
+      log("W", "mysummer", "Failed to add part to inventory: " .. partName)
     end
   end
 
-  saveState()
+  -- Clear carrying state
+  state.carryingParts = {}
 
-  if failed > 0 then
-    return { success = true, transferred = transferred, failed = failed, message = string.format("Unloaded %d parts. %d failed.", transferred, failed) }
-  else
-    return { success = true, transferred = transferred, message = string.format("Unloaded %d parts to inventory.", transferred) }
+  -- Clear waypoint
+  if core_groundMarkers then
+    core_groundMarkers.setFocus(nil)
   end
+
+  if transferred > 0 then
+    ui_message("Delivered " .. transferred .. " part(s) to inventory!", 5, "PartsBay", "success")
+  end
+
+  saveState()
+  return { success = true, transferred = transferred }
 end
 
--- Get loaded cargo info using native cargo system
+-- Get loaded cargo info (only OUR state.carryingParts)
 getLoadedCargoInfo = function()
-  local cargoModule = career_modules_mysummerCargo
-  local cargoParts = cargoModule and cargoModule.getMysummerCargoInVehicles() or {}
-
   local result = {
-    count = #cargoParts,
+    count = #state.carryingParts,
     totalSlots = 0,
     totalWeight = 0,
     items = {},
     nearGarage = false,
   }
 
-  for _, part in ipairs(cargoParts) do
-    result.totalSlots = result.totalSlots + (part.slots or 0)
-    result.totalWeight = result.totalWeight + (part.weight or 0)
+  for _, part in ipairs(state.carryingParts) do
     table.insert(result.items, {
-      partName = part.partNiceName or part.partName,
-      vehicleModel = part.vehicleModel,
-      slots = part.slots,
-      weight = part.weight,
+      partName = part.niceName or part.partNiceName or part.name or part.partName,
+      vehicleModel = part.vehicleModel or modelKey,
       isIllegal = part.isIllegal,
       cargoId = part.cargoId,
     })
@@ -2202,6 +2932,11 @@ local marketCheckInterval = 30  -- Check every 30 seconds
 -- Heat check timer (don't check every frame)
 local heatCheckTimer = 0
 local HEAT_CHECK_INTERVAL = 5  -- Check every 5 seconds
+
+-- Garage auto-unload state (matches SpeedParts delivery pattern)
+local wasNearGarage = false
+local deliveryRetryTime = nil
+local cargoReminderTimer = 0
 
 local function onUpdate(dt)
   if not isFullyInitialized then
@@ -2273,14 +3008,57 @@ local function onUpdate(dt)
     end
   end
 
+  -- Auto-deliver at garage (only from OUR state.carryingParts)
+  local hasCargoToDeliver = #state.carryingParts > 0
+
+  if hasCargoToDeliver then
+    local nearGarage, garageId = isPlayerNearGarage()
+
+    -- Retry delivery while at garage with cargo (handles quickTravel/recovery where partInventory may be temporarily nil)
+    if nearGarage then
+      if not deliveryRetryTime then deliveryRetryTime = 0 end
+      deliveryRetryTime = deliveryRetryTime + dt
+      if not wasNearGarage or deliveryRetryTime >= 2 then
+        deliveryRetryTime = 0
+        log("I", "mysummer", "Attempting delivery of " .. #state.carryingParts .. " PartsBay parts" .. (wasNearGarage and " (retry)" or ""))
+        local result = deliverPartsAtGarage()
+        if result and result.transferred and result.transferred > 0 then
+          sendMarketUpdate()
+        end
+      end
+    else
+      deliveryRetryTime = nil
+    end
+
+    wasNearGarage = nearGarage
+
+    -- Periodic reminder while carrying parts
+    local totalParts = #state.carryingParts
+    cargoReminderTimer = cargoReminderTimer + dt
+    if cargoReminderTimer >= 30 then
+      cargoReminderTimer = 0
+      ui_message("Carrying " .. totalParts .. " part(s) - deliver to your garage", 5, "PartsBay")
+    end
+  else
+    wasNearGarage = false
+    cargoReminderTimer = 0
+  end
+
   if not state.activePickup then
     return
   end
 
-  local playerPos = getPlayerPos()
-  local pickupPos = toVec3(state.activePickup.location and state.activePickup.location.pos)
-  if playerPos and pickupPos and playerPos:distance(pickupPos) < 2 then
-    completePickup()
+  -- Proximity check for active pickup completion
+  if not state.completingPickup then
+    local playerPos = getPlayerPos()
+    local pickupPos = toVec3(state.activePickup.location and state.activePickup.location.pos)
+    if playerPos and pickupPos then
+      local dist = playerPos:distance(pickupPos)
+      if dist < 5 then
+        log("I", "mysummer", "Player near pickup location (dist=" .. string.format("%.1f", dist) .. "m), completing pickup")
+        completePickup()
+      end
+    end
   end
 end
 
@@ -2343,6 +3121,13 @@ local function initializeMySummer()
   ensureMarketStock()
 
   isFullyInitialized = true
+
+  -- Restore waypoint for active pickup if one exists from saved state
+  if state.activePickup then
+    log("I", "mysummer", "Restoring waypoint for active pickup: " .. (state.activePickup.partNiceName or state.activePickup.partName or "unknown"))
+    setRouteToPickup(state.activePickup)
+  end
+
   sendMarketUpdate()
   log("I", "mysummer", "MySummer Career Extension initialized successfully")
   return true
@@ -2354,8 +3139,20 @@ local function onCareerActive()
 end
 
 local function onExtensionLoaded()
-  -- Don't initialize here - wait for onCareerActive
-  -- Just log that extension is loaded
+  -- Force-load base game partInventory module
+  -- RLS career override doesn't include it in its module discovery, so it never gets loaded.
+  -- RLS modules (enforcement, valueCalculator, insurance) also reference it without declaring dependency.
+  if not career_modules_partInventory then
+    log("I", "mysummer", "career_modules_partInventory not loaded, forcing load via extensions.load()")
+    extensions.load("career_modules_partInventory")
+  end
+
+  if career_modules_partInventory then
+    log("I", "mysummer", "career_modules_partInventory loaded successfully — API: getInventory=" .. tostring(career_modules_partInventory.getInventory ~= nil) .. ", addPartToInventory=" .. tostring(career_modules_partInventory.addPartToInventory ~= nil) .. ", removePart=" .. tostring(career_modules_partInventory.removePart ~= nil) .. ", sellParts=" .. tostring(career_modules_partInventory.sellParts ~= nil))
+  else
+    log("E", "mysummer", "FAILED to load career_modules_partInventory — base game module not found")
+  end
+
   log("I", "mysummer", "MySummer extension loaded, waiting for career activation...")
 end
 
@@ -2513,13 +3310,14 @@ getProjectPartsData = function()
     for partId, part in pairs(allParts) do
       -- Only show parts for ETK-I that are in storage (location = 0 or nil) and not on a vehicle
       if part.vehicleModel == "etki" and (part.location == 0 or part.location == nil) then
-        local category = getCategoryForSlot(part.slot)
+        local slotType = part.containingSlot or part.slot or ""
+        local category = getCategoryForSlot(slotType)
         table.insert(categories[category].inventoryParts, {
           id = partId,
           name = part.name,
           niceName = part.description and part.description.description or part.name,
-          slotType = part.slot,
-          slotNiceName = part.slotNiceName or part.slot,
+          slotType = slotType,
+          slotNiceName = part.slotNiceName or slotType,
           condition = part.partCondition,
           value = part.value or 0,
           fromInventory = true
@@ -2579,12 +3377,11 @@ local function installProjectPart(partId)
   log("I", "mysummer", "Installing part " .. tostring(partId) .. " on project vehicle " .. tostring(state.projectInventoryId))
 
   -- Get the part from inventory
-  local partInventory = career_modules_partInventory
-  if not partInventory then
+  if not career_modules_partInventory then
     return { success = false, error = "Part inventory not available" }
   end
 
-  local allParts = partInventory.getInventory() or {}
+  local allParts = career_modules_partInventory.getInventory() or {}
   local part = allParts[partId]
 
   if not part then
@@ -2715,13 +3512,17 @@ M.acceptListing = acceptListing
 M.acceptMultipleListings = acceptMultipleListings
 M.acceptLead = acceptLead
 M.cancelActivePickup = cancelActivePickup
+M.setWaypointToActivePickup = setWaypointToActivePickup
+M.cancelPendingPickup = cancelPendingPickup
+M.activatePendingPickup = activatePendingPickup
 M.openMenuFromComputer = openMenuFromComputer
 M.closeMenu = closeMenu
 M.closeAllMenus = closeAllMenus
 M.addVendorParts = addVendorParts
 
 -- Cargo functions
-M.unloadAllCargo = unloadAllCargo
+M.unloadAllCargo = deliverPartsAtGarage  -- Legacy alias
+M.deliverPartsAtGarage = deliverPartsAtGarage
 M.getLoadedCargoInfo = getLoadedCargoInfo
 M.isPlayerNearGarage = isPlayerNearGarage
 

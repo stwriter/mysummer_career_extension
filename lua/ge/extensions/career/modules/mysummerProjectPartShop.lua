@@ -8,7 +8,7 @@ M.dependencies = {
   "career_career",
   "career_modules_inventory",
   "career_modules_payment",
-  "career_modules_business_businessPartInventory",
+  "career_modules_partInventory",
 }
 
 local jbeamIO = require("jbeam/io")
@@ -40,6 +40,13 @@ local shopState = {
 
 -- Tax rate
 local TAX_RATE = 0.07
+
+-- Extract slot name from containingSlot (handles both path format "/engine/etki_longblock/" and plain "etki_longblock")
+local function extractSlotName(containingSlot)
+  if not containingSlot then return nil end
+  local cleaned = containingSlot:gsub("/$", ""):gsub("^/", "")
+  return cleaned:match("([^/]+)$") or containingSlot
+end
 
 -- Wheel/tire patterns (purchasable from shop)
 local wheelTirePatterns = { "wheel", "tire", "rim", "hubcap" }
@@ -107,9 +114,9 @@ end
 -- Build inventory lookup by part name
 local function buildOwnedPartsLookup(vehicleModel)
   local lookup = {}
-  if not career_modules_business_businessPartInventory then return lookup end
+  if not career_modules_partInventory then return lookup end
 
-  local allParts = career_modules_business_businessPartInventory.getInventory() or {}
+  local allParts = career_modules_partInventory.getInventory() or {}
   for partId, part in pairs(allParts) do
     -- Only parts for this model that are in storage (not on a vehicle)
     if part.vehicleModel == vehicleModel and (part.location == 0 or part.location == nil) then
@@ -128,7 +135,7 @@ local function buildOwnedPartsLookup(vehicleModel)
         name = partName,
         niceName = niceName,
         condition = part.partCondition or { integrityValue = 1, visualValue = 1, odometer = 0 },
-        slot = part.slot or part.slotType,
+        slot = extractSlotName(part.containingSlot) or part.slot or part.slotType,
       })
     end
   end
@@ -191,19 +198,22 @@ local function processPartsTree(node, path, availableParts, ownedLookup, ioCtx, 
           local ownedVariants = ownedLookup[partName]
           local hasOwned = ownedVariants and #ownedVariants > 0
 
-          -- Only add if it's a wheel/tire slot OR if we have it in inventory
-          local isWheelTire = isWheelTireSlot(slotName)
+          -- Only show parts the player actually owns in inventory (storage)
+          -- Don't show parts that are just installed by default on the vehicle
+          -- Also exclude flywheel parts
+          local lowerPartName = string.lower(partName)
+          local isFlywheel = string.find(lowerPartName, "flywheel") ~= nil
 
-          if isWheelTire or hasOwned or isInstalled then
+          if not isFlywheel and hasOwned then
             table.insert(slotParts, {
-              id = hasOwned and ("inv_" .. ownedVariants[1].partId) or ("shop_" .. partName),
-              partId = hasOwned and ownedVariants[1].partId or nil,
+              id = "inv_" .. ownedVariants[1].partId,
+              partId = ownedVariants[1].partId,
               name = partName,
               niceName = niceName,
-              price = hasOwned and 0 or value,  -- Free if owned, otherwise shop price
-              source = hasOwned and "inventory" or "shop",
+              price = 0,  -- No purchases from project shop
+              source = "inventory",
               installed = isInstalled,
-              hasOwned = hasOwned,
+              hasOwned = true,
               ownedVariants = ownedVariants,
             })
           end
@@ -608,20 +618,33 @@ end
 
 -- Helper: Get all child parts that would be installed with a parent part
 -- This checks the jbeam structure (slots2) to find required/default child parts
-local function getChildPartsForPart(partName, ioCtx, availableParts, ownedLookup)
+local function getChildPartsForPart(partName, ioCtx, availableParts, ownedLookup, skipSlots)
   local childParts = {}
-  
+
   if not partName or not ioCtx or not availableParts then
     return childParts
   end
-  
+
+  -- Build slot-based ownership lookup: check if player owns ANY part for a given slot type
+  -- (not just the exact default part name)
+  local ownedSlots = {}
+  if ownedLookup then
+    for _, parts in pairs(ownedLookup) do
+      for _, p in ipairs(parts) do
+        if p.slot then
+          ownedSlots[p.slot] = true
+        end
+      end
+    end
+  end
+
   -- Get jbeam data for this part
   local jbeamData = jbeamIO.getPart(ioCtx, partName)
   if not jbeamData then
     log("D", "mysummerProjectPartShop", "No jbeam data for part: " .. partName)
     return childParts
   end
-  
+
   -- BeamNG uses slots2 for slot definitions with default parts
   if jbeamData.slots2 then
     log("D", "mysummerProjectPartShop", "Checking slots2 for part: " .. partName .. " (" .. #jbeamData.slots2 .. " slots)")
@@ -629,17 +652,21 @@ local function getChildPartsForPart(partName, ioCtx, availableParts, ownedLookup
       if type(slotDef) == "table" then
         local slotName = slotDef.name or slotDef.type
         local defaultPart = slotDef.default
-        
+
         -- If there's a default part for this slot, it will be auto-installed
         if defaultPart and defaultPart ~= "" then
-          -- Check if player owns this part
-          local isOwned = ownedLookup and ownedLookup[defaultPart] and #ownedLookup[defaultPart] > 0
-          
+          -- Check if player owns this exact default part OR any part for this slot
+          local isOwned = (ownedLookup and ownedLookup[defaultPart] and #ownedLookup[defaultPart] > 0)
+            or ownedSlots[slotName]
+
+          -- Check if this slot is already covered (by cart or other source)
+          local isSkipped = skipSlots and skipSlots[slotName]
+
           -- Get part info
           local childPartInfo = availableParts[defaultPart]
           local childValue = 0
           local childNiceName = defaultPart
-          
+
           if childPartInfo then
             if childPartInfo.information and childPartInfo.information.value then
               childValue = tonumber(childPartInfo.information.value) or 0
@@ -647,9 +674,9 @@ local function getChildPartsForPart(partName, ioCtx, availableParts, ownedLookup
             local desc = childPartInfo.description
             childNiceName = type(desc) == "table" and desc.description or desc or defaultPart
           end
-          
-          -- Only charge if not owned and has value
-          if not isOwned and childValue > 0 then
+
+          -- Only charge if not owned, not already in cart, and has value
+          if not isOwned and not isSkipped and childValue > 0 then
             table.insert(childParts, {
               name = defaultPart,
               niceName = childNiceName,
@@ -658,13 +685,15 @@ local function getChildPartsForPart(partName, ioCtx, availableParts, ownedLookup
               source = "shop",
               isChildPart = true,
             })
-            log("I", "mysummerProjectPartShop", "Found child part: " .. childNiceName .. " (price: " .. childValue .. ")")
+            log("I", "mysummerProjectPartShop", "Found child part: " .. childNiceName .. " (price: " .. childValue .. ", slot: " .. slotName .. ")")
           elseif isOwned then
-            log("D", "mysummerProjectPartShop", "Child part owned, skipping: " .. defaultPart)
+            log("D", "mysummerProjectPartShop", "Slot already owned, skipping child: " .. defaultPart .. " (slot: " .. slotName .. ")")
+          elseif isSkipped then
+            log("D", "mysummerProjectPartShop", "Slot already in cart, skipping child: " .. defaultPart .. " (slot: " .. slotName .. ")")
           end
-          
+
           -- Recursively check this child part's children
-          local grandChildren = getChildPartsForPart(defaultPart, ioCtx, availableParts, ownedLookup)
+          local grandChildren = getChildPartsForPart(defaultPart, ioCtx, availableParts, ownedLookup, skipSlots)
           for _, grandChild in ipairs(grandChildren) do
             table.insert(childParts, grandChild)
           end
@@ -672,18 +701,95 @@ local function getChildPartsForPart(partName, ioCtx, availableParts, ownedLookup
       end
     end
   end
-  
-  -- Also check slotInfoUi for slots this part provides
-  if jbeamData.slotInfoUi then
-    log("D", "mysummerProjectPartShop", "Checking slotInfoUi for part: " .. partName)
-    for slotName, slotInfo in pairs(jbeamData.slotInfoUi) do
-      -- slotInfoUi doesn't have default parts info, but we can check if any of our
-      -- available parts are set as default via slots2 or the part descriptions
-      -- This is handled by the slots2 check above
+
+  return childParts
+end
+
+-- Check if a parent part is missing mandatory child parts (coreSlot)
+-- Returns array of { slotName, defaultPartName, defaultPartNiceName } for missing parts (empty if all OK)
+local function getMissingMandatoryParts(partName, ioCtx, availableParts, ownedLookup, cartSlots)
+  local missing = {}
+
+  if not partName or not ioCtx or not availableParts then
+    return missing
+  end
+
+  -- Build slot-based ownership lookup
+  local ownedSlots = {}
+  if ownedLookup then
+    for _, parts in pairs(ownedLookup) do
+      for _, p in ipairs(parts) do
+        if p.slot then
+          ownedSlots[p.slot] = true
+        end
+      end
     end
   end
-  
-  return childParts
+
+  -- Get jbeam data for this part
+  local jbeamData = jbeamIO.getPart(ioCtx, partName)
+  if not jbeamData then
+    return missing
+  end
+
+  if not jbeamData.slots2 then
+    return missing
+  end
+
+  for _, slotDef in ipairs(jbeamData.slots2) do
+    if type(slotDef) == "table" then
+      local slotName = slotDef.name or slotDef.type
+      local defaultPart = slotDef.default
+
+      if defaultPart and defaultPart ~= "" and slotName then
+        -- Check if this slot is mandatory
+        local isMandatory = false
+
+        -- Check coreSlot flag from slotInfoUi
+        if jbeamData.slotInfoUi and jbeamData.slotInfoUi[slotName] then
+          local slotInfo = jbeamData.slotInfoUi[slotName]
+          if type(slotInfo) == "table" and slotInfo.coreSlot then
+            isMandatory = true
+          end
+        end
+
+        -- Fallback: check via mysummerCore (engine/transmission/differential)
+        if not isMandatory then
+          local coreModule = career_modules_mysummerCore
+          if coreModule and coreModule.isSlotMandatory then
+            isMandatory = coreModule.isSlotMandatory(slotName)
+          end
+        end
+
+        if isMandatory then
+          -- Check if player owns a part for this slot
+          local isOwned = (ownedLookup and ownedLookup[defaultPart] and #ownedLookup[defaultPart] > 0)
+            or ownedSlots[slotName]
+
+          -- Check if already covered by cart
+          local isInCart = cartSlots and cartSlots[slotName]
+
+          if not isOwned and not isInCart then
+            local childNiceName = defaultPart
+            local childPartInfo = availableParts[defaultPart]
+            if childPartInfo then
+              local desc = childPartInfo.description
+              childNiceName = type(desc) == "table" and desc.description or desc or defaultPart
+            end
+
+            table.insert(missing, {
+              slotName = slotName,
+              defaultPartName = defaultPart,
+              defaultPartNiceName = childNiceName,
+            })
+            log("I", "mysummerProjectPartShop", "Missing mandatory child: " .. childNiceName .. " (slot: " .. slotName .. ")")
+          end
+        end
+      end
+    end
+  end
+
+  return missing
 end
 
 -- Add item to cart
@@ -753,49 +859,42 @@ local function addToCart(partId)
 
   log("I", "mysummerProjectPartShop", "Added to cart: " .. foundPart.niceName)
 
-  -- If this is a shop purchase (not from inventory), check for child parts that need to be purchased too
-  if foundPart.source == "shop" then
+  -- Check mandatory child parts before allowing install
+  if foundPart.source == "shop" or foundPart.source == "inventory" then
     local vehicleData = extensions.core_vehicle_manager.getVehicleData(shopState.vehicleId)
     if vehicleData and vehicleData.ioCtx then
       local ioCtx = vehicleData.ioCtx
       local availableParts = jbeamIO.getAvailableParts(ioCtx) or {}
-      
-      -- Build owned lookup
+
       local vehObj = be:getObjectByID(shopState.vehicleId)
       local vehicleModel = vehObj and vehObj:getJBeamFilename() or "etki"
       local ownedLookup = buildOwnedPartsLookup(vehicleModel)
-      
-      -- Get child parts that would be auto-installed
-      local childParts = getChildPartsForPart(foundPart.name, ioCtx, availableParts, ownedLookup)
-      
-      if #childParts > 0 then
-        log("I", "mysummerProjectPartShop", "Adding " .. #childParts .. " child parts to cart")
-        
-        for _, childPart in ipairs(childParts) do
-          -- Check if this child part is already in cart
-          local alreadyInCart = false
-          for _, item in ipairs(shopState.cart.items) do
-            if item.name == childPart.name then
-              alreadyInCart = true
-              break
-            end
-          end
-          
-          if not alreadyInCart then
-            table.insert(shopState.cart.items, {
-              id = "child_" .. foundPart.id .. "_" .. childPart.name,
-              name = childPart.name,
-              niceName = childPart.niceName .. " (required)",
-              slotType = childPart.slotType,
-              slotPath = foundSlotPath,  -- Same slot path as parent
-              price = childPart.price,
-              source = "shop",
-              isChildPart = true,
-              parentPartId = foundPart.id,
-            })
-            log("I", "mysummerProjectPartShop", "Added child part: " .. childPart.niceName .. " ($" .. childPart.price .. ")")
+
+      local cartSlots = {}
+      for _, item in ipairs(shopState.cart.items) do
+        if item.slotType then
+          cartSlots[item.slotType] = true
+        end
+      end
+
+      local missing = getMissingMandatoryParts(foundPart.name, ioCtx, availableParts, ownedLookup, cartSlots)
+      if #missing > 0 then
+        -- Remove the part we just added (it was inserted above)
+        for i = #shopState.cart.items, 1, -1 do
+          if shopState.cart.items[i].id == foundPart.id and shopState.cart.items[i].slotPath == foundSlotPath then
+            table.remove(shopState.cart.items, i)
+            break
           end
         end
+
+        log("W", "mysummerProjectPartShop", "Blocked addToCart: " .. foundPart.niceName .. " missing " .. #missing .. " mandatory child parts")
+
+        guihooks.trigger("mysummerProjectShopError", {
+          type = "missingParts",
+          partName = foundPart.niceName,
+          missing = missing,
+        })
+        return false
       end
     end
   end
@@ -1021,54 +1120,53 @@ local function checkout()
     end
   end
 
-  -- Helper: Add a part to player inventory (uses business part inventory)
+  -- Helper: Add a part to player inventory
   local function addPartToInventory(partName, slotName, partValue)
     log("I", "mysummerProjectPartShop", "addPartToInventory called: " .. tostring(partName) .. " slot: " .. tostring(slotName) .. " value: " .. tostring(partValue))
 
-    -- Use business part inventory module (correct module name)
-    local partInventory = career_modules_business_businessPartInventory
-
-    if not partInventory then
-      log("W", "mysummerProjectPartShop", "career_modules_business_businessPartInventory not available")
+    if not career_modules_partInventory then
+      log("W", "mysummerProjectPartShop", "career_modules_partInventory not available")
       return false
     end
 
-    if not partInventory.addPart then
-      log("W", "mysummerProjectPartShop", "businessPartInventory.addPart not available")
+    if not career_modules_partInventory.addPartToInventory then
+      log("W", "mysummerProjectPartShop", "partInventory.addPartToInventory not available")
       return false
     end
 
-    -- Try to get nice name from available parts
+    -- Try to get nice name and jbeam description from available parts
     local niceName = partName
+    local jbeamDesc = nil
     local vehicleData = core_vehicle_manager.getVehicleData(shopState.vehicleId)
     if vehicleData and vehicleData.vdata and vehicleData.vdata.availableParts then
       local partInfo = vehicleData.vdata.availableParts[partName]
-      if partInfo and partInfo.description then
-        local desc = partInfo.description
-        niceName = type(desc) == "table" and desc.description or desc or partName
+      if partInfo then
+        jbeamDesc = partInfo
+        if partInfo.description then
+          local desc = partInfo.description
+          niceName = type(desc) == "table" and desc.description or desc or partName
+        end
       end
     end
 
+    local slotPath = slotName or ""
     local partData = {
       name = partName,
       vehicleModel = modelKey,
       partCondition = { integrityValue = 1, odometer = 0, visualValue = 1 },
-      slot = slotName,
-      location = 0, -- 0 = in storage
+      containingSlot = slotPath,
+      partPath = slotPath .. partName,
+      location = 0,
+      tags = {},
+      mainPart = false,
       value = partValue or 0,
-      description = { description = niceName }
+      description = jbeamDesc or { description = niceName }
     }
 
-    log("I", "mysummerProjectPartShop", "Calling addPart with data: " .. tostring(partData.name))
-    local newPartId = partInventory.addPart(partData)
-    log("I", "mysummerProjectPartShop", "addPart returned: " .. tostring(newPartId))
-    if newPartId then
-      log("I", "mysummerProjectPartShop", "Added to inventory: " .. niceName .. " (ID: " .. tostring(newPartId) .. ")")
-      return true
-    else
-      log("W", "mysummerProjectPartShop", "addPart returned nil/false for: " .. tostring(partName))
-    end
-    return false
+    log("I", "mysummerProjectPartShop", "Calling addPartToInventory with data: " .. tostring(partData.name))
+    career_modules_partInventory.addPartToInventory(partData)
+    log("I", "mysummerProjectPartShop", "Added to inventory: " .. niceName)
+    return true
   end
 
   -- Apply each part to the config
@@ -1118,6 +1216,63 @@ local function checkout()
       if item.slotPath and currentConfig.partsTree then
         if createOrUpdatePartsTreeNode(currentConfig.partsTree, item.name, item.slotPath) then
           installedCount = installedCount + 1
+
+          -- Populate child slots with player's owned parts instead of jbeam defaults
+          local ioCtx = vehicleData.ioCtx
+          if ioCtx then
+            local ownedLookup = buildOwnedPartsLookup(modelKey)
+
+            -- Build reverse lookup: slot name → best owned part name
+            local ownedBySlot = {}
+            for ownedPartName, variants in pairs(ownedLookup) do
+              for _, v in ipairs(variants) do
+                if v.slot then
+                  -- Keep first match per slot (could improve with condition-based priority)
+                  if not ownedBySlot[v.slot] then
+                    ownedBySlot[v.slot] = ownedPartName
+                  end
+                end
+              end
+            end
+
+            -- Recursively assign owned parts to child slots
+            local function populateChildSlots(parentPath, parentPartName, depth)
+              if depth > 10 then return end  -- Safety limit
+              local jbeamData = jbeamIO.getPart(ioCtx, parentPartName)
+              if not jbeamData or not jbeamData.slots2 then return end
+
+              local parentNode = getNodeFromSlotPath(currentConfig.partsTree, parentPath)
+              if not parentNode then return end
+
+              -- Ensure children table exists
+              if not parentNode.children then
+                parentNode.children = {}
+              end
+
+              for _, slotDef in ipairs(jbeamData.slots2) do
+                if type(slotDef) == "table" then
+                  local slotName = slotDef.name or slotDef.type
+                  if slotName and ownedBySlot[slotName] then
+                    local ownedPartName = ownedBySlot[slotName]
+
+                    -- Ensure child node exists
+                    if not parentNode.children[slotName] then
+                      parentNode.children[slotName] = {}
+                    end
+
+                    parentNode.children[slotName].chosenPartName = ownedPartName
+                    log("I", "mysummerProjectPartShop", "Auto-assigned owned part '" .. ownedPartName .. "' to child slot '" .. slotName .. "'")
+
+                    -- Recurse for this owned part's children
+                    local childPath = parentPath .. slotName .. "/"
+                    populateChildSlots(childPath, ownedPartName, depth + 1)
+                  end
+                end
+              end
+            end
+
+            populateChildSlots(item.slotPath, item.name, 0)
+          end
         end
       end
     end
@@ -1127,10 +1282,9 @@ local function checkout()
 
   -- Save the part inventory if parts were removed
   if uninstalledCount > 0 then
-    local partInventory = career_modules_business_businessPartInventory
-    if partInventory and partInventory.saveInventory then
-      partInventory.saveInventory()
-      log("I", "mysummerProjectPartShop", "Saved part inventory with " .. uninstalledCount .. " new parts")
+    -- Base game partInventory saves automatically via onVehicleSaveFinished
+    if career_modules_partInventory then
+      log("I", "mysummerProjectPartShop", "Part inventory updated with " .. uninstalledCount .. " uninstalled parts")
     end
   end
 
@@ -1168,8 +1322,8 @@ local function checkout()
   end
 
   -- Update inventory tracking
-  if career_modules_business_businessPartInventory and career_modules_business_businessPartInventory.updatePartConditionsInInventory then
-    career_modules_business_businessPartInventory.updatePartConditionsInInventory()
+  if career_modules_partInventory and career_modules_partInventory.updatePartConditionsInInventory then
+    career_modules_partInventory.updatePartConditionsInInventory()
   end
 
   log("I", "mysummerProjectPartShop", string.format(

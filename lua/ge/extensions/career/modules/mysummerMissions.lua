@@ -29,6 +29,22 @@ local function tableSize(t)
   return count
 end
 
+local function resolveBilingualText(text)
+  if type(text) ~= "table" then
+    return tostring(text)
+  end
+  if text.es or text.en then
+    local lang = Steam and Steam.language or "en_US"
+    local langCode = string.sub(lang, 1, 2)
+    if langCode == "es" and text.es then return text.es
+    elseif langCode == "en" and text.en then return text.en
+    elseif text.es then return text.es
+    elseif text.en then return text.en
+    end
+  end
+  return tostring(text)
+end
+
 -- Convert position to vec3 (handles tables and vec3)
 local function toVec3(pos)
   if not pos then return nil end
@@ -409,6 +425,50 @@ local missionTemplates = {
       requiresCargo = false,
       timeCondition = "night",
     },
+
+    -- STORY MISSION: Phase 0 - "El Legado del Mecánico"
+    {
+      type = MISSION_TYPES.DELIVERY,
+      id = "ghost_legacy_mechanic",
+      title = {es = "El Legado del Mecánico", en = "The Mechanic's Legacy"},
+      description = {
+        es = "He visto suficiente. Conduces con el mismo arrepentimiento que el Viejo Miller, pero con más hambre. Ese ETK-I que tienes en el garaje... tu abuelo lo diseñó para Viper. Necesitas piezas que no están en catálogos. Yo puedo conseguirlas, si me demuestras que no te vas a acobardar como él.",
+        en = "I've seen enough. You drive with the same regret as Old Miller, but with more hunger. That ETK-I you have in the garage... your grandfather designed it for Viper. You need parts that aren't in catalogs. I can get them, if you prove to me you won't chicken out like he did."
+      },
+      pickupHint = {es = "Punto de encuentro en los muelles", en = "Meeting point at the docks"},
+      dropoffHint = {es = "Tu garaje", en = "Your garage"},
+      timeLimit = 600, -- 10 minutes (generous for story mission)
+      reward = { money = 1000, xp = 50 },
+      requiredLevel = 0, -- Story missions available regardless of level
+      heat = 0, -- No police heat for first story mission
+      requiresCargo = true,
+      cargoSlots = 8, -- Deep Web parts package
+      isStoryMission = true,
+      storyPhase = 0,
+      unlocksDeepWeb = true, -- Flag to unlock Deep Web shop
+    },
+
+    -- STORY MISSION: Phase 4 - "El Precio de la Ambición" (Debt Payment)
+    {
+      type = MISSION_TYPES.DELIVERY,
+      id = "ghost_shadow_debt_payment",
+      title = {es = "El Precio de la Ambición", en = "The Price of Ambition"},
+      description = {
+        es = "Te lo advertí, Miller. Jugar con Shadow es jugar con fuego. Ahora Rook está fuera del equipo y Nova tiene una deuda que no puede pagar con victorias de barrio. Shadow quiere un transporte rápido. Hazlo y vuestras deudas quedarán saldadas... por ahora.",
+        en = "I warned you, Miller. Playing with Shadow is playing with fire. Now Rook is out of the team and Nova has a debt she can't pay with neighborhood victories. Shadow wants a fast transport. Do it and your debts will be settled... for now."
+      },
+      pickupHint = {es = "Almacén de Shadow en zona industrial", en = "Shadow's warehouse in industrial area"},
+      dropoffHint = {es = "Contenedor en el puerto", en = "Container at the port"},
+      timeLimit = 300, -- 5 minutes (tight deadline)
+      reward = { money = 500, xp = 100 },
+      requiredLevel = 0,
+      heat = 3, -- HIGH HEAT - very risky
+      requiresCargo = true,
+      cargoSlots = 12, -- Large illegal cargo
+      isStoryMission = true,
+      storyPhase = 4,
+      timeCondition = "night", -- Must be done at night
+    },
   },
 
   techie = {
@@ -474,6 +534,27 @@ local missionTemplates = {
       reward = { money = 1300, xp = 65 },
       requiredLevel = 3,
       requiresCargo = false,
+    },
+
+    -- STORY MISSION: Phase 1 - "Hardware y Almas"
+    {
+      type = MISSION_TYPES.SURVEILLANCE,
+      id = "techie_hardware_souls",
+      title = {es = "Hardware y Almas", en = "Hardware and Souls"},
+      description = {
+        es = "Miller. El nieto del hombre que afinaba motores de oído. Qué arcaico. He estado monitorizando tus frecuencias de radio y los datos de telemetría de tus últimas carreras. Tienes una eficiencia de trazada del 84%, nada mal para alguien que aún usa cambios manuales. Necesito que sigas a un vehículo sospechoso y me digas dónde va. No lo pierdas.",
+        en = "Miller. The grandson of the man who tuned engines by ear. How archaic. I've been monitoring your radio frequencies and telemetry data from your last races. You have 84% cornering efficiency, not bad for someone still using manual shifting. I need you to follow a suspicious vehicle and tell me where it goes. Don't lose it."
+      },
+      targetDescription = {es = "Vehículo sospechoso", en = "Suspicious vehicle"},
+      followTime = 120, -- 2 minutes (shorter for story mission)
+      maxDistance = 150,
+      minDistance = 30,
+      reward = { money = 800, xp = 120 },
+      requiredLevel = 0,
+      requiresCargo = false,
+      isStoryMission = true,
+      storyPhase = 1,
+      unlocksECUShop = true, -- Flag to unlock Techie's ECU shop
     },
   },
 
@@ -554,6 +635,26 @@ local missionTemplates = {
       requiredLevel = 3,
       heat = 1,
       requiresCargo = false,
+    },
+
+    -- STORY MISSION: Phase 2 - "Viejas Heridas"
+    {
+      type = MISSION_TYPES.ESCORT,
+      id = "muscle_old_wounds",
+      title = {es = "Viejas Heridas", en = "Old Wounds"},
+      description = {
+        es = "Así que este es el famoso nieto. Ghost dice que tienes talento, pero yo solo veo a un chico con un apellido demasiado grande para sus hombros. Mi padre murió en una noche como esta, en un coche que no era de tu abuelo, pero él se hundió con el barco de todas formas. Miller era el mejor mecánico del mundo, pero un piloto cobarde. Conduce mi camión a través de territorio hostil. Si sobrevives, te daré acceso a mi stock privado.",
+        en = "So this is the famous grandson. Ghost says you have talent, but I only see a kid with a surname too big for his shoulders. My father died on a night like this, in a car that wasn't your grandfather's, but he sank with the ship anyway. Miller was the best mechanic in the world, but a coward driver. Drive my truck through hostile territory. If you survive, I'll give you access to my private stock."
+      },
+      maxWaves = 3,
+      enemiesPerWave = { 2, 3, 3 }, -- Moderate difficulty for story mission
+      waveInterval = 25,
+      reward = { money = 1000, xp = 150 },
+      requiredLevel = 0,
+      requiresCargo = false,
+      isStoryMission = true,
+      storyPhase = 2,
+      unlocksV8Parts = true, -- Flag to unlock Muscle's V8 parts shop
     },
   },
 
@@ -693,6 +794,27 @@ local missionTemplates = {
       reward = { money = 800, xp = 45 },
       requiredLevel = 3,
       requiresCargo = false,
+    },
+
+    -- STORY MISSION: Phase 3 - "El Umbral del Mercado Negro"
+    {
+      type = MISSION_TYPES.CHASE,
+      id = "shadow_black_market_threshold",
+      title = {es = "El Umbral del Mercado Negro", en = "The Black Market Threshold"},
+      description = {
+        es = "Así que este es el famoso nieto. Nova dice que estás cansado de las piezas de desguace de Muscle y de los gráficos aburridos de Techie. Mi mercancía no es legal, ni bonita, pero hará que tu ETK-I vuele. Miller padre me odiaba porque mis piezas no entienden de 'seguridad', solo de resultados. Hay alguien que me debe algo y está huyendo. Demuéstrame que no eres un purista como tu abuelo. Detenlo.",
+        en = "So this is the famous grandson. Nova says you're tired of Muscle's junkyard parts and Techie's boring charts. My merchandise isn't legal or pretty, but it will make your ETK-I fly. Father Miller hated me because my parts don't understand 'safety,' only results. Someone owes me something and is running. Prove to me you're not a purist like your grandfather. Stop them."
+      },
+      targetHint = {es = "Vehículo huyendo de Shadow", en = "Vehicle fleeing from Shadow"},
+      difficulty = "medium",
+      timeLimit = 300,
+      reward = { money = 1200, xp = 150 },
+      requiredLevel = 0,
+      heat = 1, -- Some police attention
+      requiresCargo = false,
+      isStoryMission = true,
+      storyPhase = 3,
+      unlocksBlackMarket = true, -- Flag to unlock Shadow's black market shop
     },
   },
 }
@@ -1203,10 +1325,17 @@ local function getAvailableMissionsForContact(contactId)
   for _, template in ipairs(templates) do
     -- Check level requirement
     if level >= (template.requiredLevel or 1) then
-      -- Check if not completed recently (or at all for unique missions)
       local completed = state.completedMissions[template.id]
-      if not completed or (os.time() - (completed.completedAt or 0)) > 86400 then -- 24 hour cooldown per mission
-        table.insert(available, template)
+      if template.isStoryMission then
+        -- Story missions: only filter if already completed successfully
+        if not completed or not completed.success then
+          table.insert(available, template)
+        end
+      else
+        -- Regular missions: 24 hour cooldown
+        if not completed or (os.time() - (completed.completedAt or 0)) > 86400 then
+          table.insert(available, template)
+        end
       end
     end
   end
@@ -1241,28 +1370,32 @@ local function generateMission(contactId, templateId)
 
   buildLocations()
 
-  -- Generate mission instance
+  -- Generate mission instance (resolve bilingual fields early so downstream code gets strings)
   local mission = {
     id = template.id .. "_" .. os.time(),
     templateId = template.id,
     contactId = contactId,
     type = template.type,
-    title = template.title,
-    description = template.description,
+    title = resolveBilingualText(template.title),
+    description = resolveBilingualText(template.description),
     reward = deepcopy(template.reward),
     timeLimit = template.timeLimit,
     heat = template.heat or 0,
     status = "offered", -- offered, active, completed, failed
     createdAt = os.time(),
     timeCondition = template.timeCondition, -- Optional: night, dawn, dusk, etc.
+    -- Story mission fields
+    isStoryMission = template.isStoryMission or false,
+    storyPhase = template.storyPhase,
+    unlocksDeepWeb = template.unlocksDeepWeb or false,
   }
 
   -- Type-specific setup
   if template.type == MISSION_TYPES.DELIVERY then
     mission.pickupLocation = getRandomLocation(pickupLocations)
     mission.dropoffLocation = getRandomLocation(dropoffLocations)
-    mission.pickupHint = template.pickupHint
-    mission.dropoffHint = template.dropoffHint
+    mission.pickupHint = resolveBilingualText(template.pickupHint)
+    mission.dropoffHint = resolveBilingualText(template.dropoffHint)
     mission.noDamage = template.noDamage
     mission.pickedUp = false
     mission.requiresCargo = template.requiresCargo ~= false -- default true for delivery
@@ -1331,6 +1464,26 @@ startMission = function(missionId)
     end
   end
 
+  -- Check cargo space for delivery missions
+  if mission.requiresCargo and mission.cargoSlots then
+    local cargo = extensions.career_modules_mysummerCargo
+    if cargo and cargo.getAvailableSlots then
+      local available = cargo.getAvailableSlots()
+      if available < mission.cargoSlots then
+        if guihooks then
+          guihooks.trigger("toastrMsg", {
+            type = "warning",
+            title = "Not Enough Space",
+            msg = "You need " .. mission.cargoSlots .. " cargo slots. Free up space first.",
+          })
+        end
+        return false
+      end
+    else
+      log("W", logTag, "Cargo module or getAvailableSlots not available, skipping space check")
+    end
+  end
+
   -- Activate mission
   mission.status = "active"
   mission.startedAt = os.time()
@@ -1362,11 +1515,20 @@ startMission = function(missionId)
       type = mission.type,
       timeLimit = mission.timeLimit,
     })
+    guihooks.trigger("mysummerMissionStatusChanged", {
+      missionId = mission.id,
+      status = "active",
+    })
     guihooks.trigger("toastrMsg", {
       type = "info",
       title = "Mission Started",
       msg = mission.title,
     })
+  end
+
+  -- Update chat message status
+  if career_modules_mysummerChat and career_modules_mysummerChat.onMissionStatusChanged then
+    career_modules_mysummerChat.onMissionStatusChanged({ missionId = mission.id, status = "active" })
   end
 
   log("I", logTag, "Mission started: " .. mission.title)
@@ -1391,14 +1553,18 @@ local function completeMission(success)
   mission.status = success and "completed" or "failed"
   mission.completedAt = os.time()
 
-  -- Record completion
-  state.completedMissions[mission.templateId] = {
-    completedAt = mission.completedAt,
-    success = success,
-  }
+  -- Record completion (story missions only record on success)
+  if not mission.isStoryMission or success then
+    state.completedMissions[mission.templateId] = {
+      completedAt = mission.completedAt,
+      success = success,
+    }
+  end
 
-  -- Set cooldown for contact
-  state.missionCooldowns[mission.contactId] = os.time()
+  -- Set cooldown for contact (skip for story missions on failure)
+  if not mission.isStoryMission or success then
+    state.missionCooldowns[mission.contactId] = os.time()
+  end
 
   -- Award rewards if successful
   if success and mission.reward then
@@ -1441,6 +1607,10 @@ local function completeMission(success)
       success = success,
       reward = success and mission.reward or nil,
     })
+    guihooks.trigger("mysummerMissionStatusChanged", {
+      missionId = mission.id,
+      status = success and "completed" or "failed",
+    })
     guihooks.trigger("toastrMsg", {
       type = success and "success" or "error",
       title = success and "Mission Complete" or "Mission Failed",
@@ -1448,12 +1618,80 @@ local function completeMission(success)
     })
   end
 
+  -- Update chat message status
+  if career_modules_mysummerChat and career_modules_mysummerChat.onMissionStatusChanged then
+    career_modules_mysummerChat.onMissionStatusChanged({
+      missionId = mission.id,
+      status = success and "completed" or "failed",
+    })
+  end
+
   log("I", logTag, "Mission " .. (success and "completed" or "failed") .. ": " .. mission.title)
 
-  -- Notify storyRaces if this was a story mission
+  -- Notify storyRaces if this was a story mission (via startMissionFromTemplate path)
   if mission.storyMissionId and career_modules_mysummerStoryRaces then
     log("I", logTag, "Notifying storyRaces of completion: " .. mission.storyMissionId)
     career_modules_mysummerStoryRaces.onMissionCompleted(mission.storyMissionId, success)
+  end
+
+  -- Handle story mission completion (via offerMissionViaEmail path)
+  if success and mission.isStoryMission then
+    log("I", logTag, "Story mission completed: " .. mission.templateId .. " (phase " .. tostring(mission.storyPhase) .. ")")
+
+    -- Set narrative flags
+    local narrative = extensions.career_modules_mysummerNarrative
+    if narrative then
+      narrative.setStoryFlag("mission_" .. mission.templateId .. "_completed", true)
+
+      if mission.unlocksDeepWeb then
+        narrative.setStoryFlag("deep_web_unlocked", true)
+        log("I", logTag, "Deep Web unlocked!")
+        if guihooks then
+          guihooks.trigger("toastrMsg", {
+            type = "info",
+            title = "Deep Web",
+            msg = resolveBilingualText({
+              es = "Ghost ha desbloqueado tu acceso a la Deep Web. Nuevas piezas disponibles.",
+              en = "Ghost has unlocked your Deep Web access. New parts available."
+            }),
+          })
+        end
+      end
+    end
+
+    -- Award streetracing XP so the player can level up
+    local xpReward = mission.reward and mission.reward.xp or 0
+    if xpReward > 0 and career_modules_playerAttributes and career_modules_playerAttributes.addAttributes then
+      career_modules_playerAttributes.addAttributes(
+        { ["mysummer-streetracing"] = xpReward },
+        { label = "Story Mission: " .. mission.title, tags = {"mission", "story"} }
+      )
+      log("I", logTag, "Awarded " .. xpReward .. " mysummer-streetracing XP for story mission")
+    end
+
+    -- Advance to next phase via mysummerCareer
+    if mission.storyPhase ~= nil then
+      local career = extensions.career_modules_mysummerCareer
+      if career and career.startPhase then
+        local nextPhase = mission.storyPhase + 1
+        log("I", logTag, "Advancing to phase " .. nextPhase)
+        career.startPhase(nextPhase)
+      end
+    end
+  end
+
+  -- If story mission FAILED or ABANDONED, queue a re-offer so the player can retry
+  if not success and mission.isStoryMission then
+    log("I", logTag, "Story mission failed, will re-offer: " .. mission.templateId)
+    -- Clear cooldown so mission can be re-offered
+    state.completedMissions[mission.templateId] = nil
+    state.missionCooldowns[mission.contactId] = nil
+    -- Queue re-offer (processed in onUpdate after a short delay)
+    state.pendingStoryReoffer = {
+      contactId = mission.contactId,
+      templateId = mission.templateId,
+      delay = 3, -- seconds before re-sending the offer
+    }
   end
 
   -- state.activeMission already cleared at start of function
@@ -1492,11 +1730,32 @@ local function abandonMission()
   -- Notify UI
   if guihooks then
     guihooks.trigger("mysummerMissionAbandoned", { id = mission.id })
+    guihooks.trigger("mysummerMissionStatusChanged", {
+      missionId = mission.id,
+      status = "abandoned",
+    })
     guihooks.trigger("toastrMsg", {
       type = "warning",
       title = "Mission Abandoned",
       msg = mission.title,
     })
+  end
+
+  -- Update chat message status
+  if career_modules_mysummerChat and career_modules_mysummerChat.onMissionStatusChanged then
+    career_modules_mysummerChat.onMissionStatusChanged({ missionId = mission.id, status = "abandoned" })
+  end
+
+  -- Re-offer story missions so they can be retried
+  if mission.isStoryMission then
+    log("I", logTag, "Story mission abandoned, will re-offer: " .. mission.templateId)
+    state.completedMissions[mission.templateId] = nil
+    state.missionCooldowns[mission.contactId] = nil
+    state.pendingStoryReoffer = {
+      contactId = mission.contactId,
+      templateId = mission.templateId,
+      delay = 3,
+    }
   end
 
   -- state.activeMission already cleared at start of function
@@ -3892,6 +4151,17 @@ end
 local function onUpdate(dtReal, dtSim, dtRaw)
   if not career_career or not career_career.isActive() then return end
 
+  -- Process pending story mission re-offer
+  if state.pendingStoryReoffer then
+    state.pendingStoryReoffer.delay = state.pendingStoryReoffer.delay - dtReal
+    if state.pendingStoryReoffer.delay <= 0 then
+      local reoffer = state.pendingStoryReoffer
+      state.pendingStoryReoffer = nil
+      log("I", logTag, "Re-offering failed story mission: " .. reoffer.templateId)
+      offerMissionViaEmail(reoffer.contactId, reoffer.templateId)
+    end
+  end
+
   -- Process pending escort vehicle deletion (to avoid quickAccess errors)
   if escortState.pendingVehicleDelete then
     escortState.pendingDeleteTimer = escortState.pendingDeleteTimer - dtReal
@@ -3946,15 +4216,29 @@ end
 -- MISSION OFFERS (via email)
 -- ============================================================================
 
-local function offerMissionViaEmail(contactId)
+local function offerMissionViaEmail(contactId, missionId)
   local available = getAvailableMissionsForContact(contactId)
   if #available == 0 then
     log("I", logTag, "No missions available for " .. contactId)
     return false
   end
 
-  -- Pick a random mission
-  local template = available[math.random(#available)]
+  -- Pick specific mission if missionId provided, otherwise random
+  local template = nil
+  if missionId then
+    for _, t in ipairs(available) do
+      if t.id == missionId then
+        template = t
+        break
+      end
+    end
+    if not template then
+      log("W", logTag, "Requested mission '" .. tostring(missionId) .. "' not available for " .. contactId .. ", falling back to random")
+      template = available[math.random(#available)]
+    end
+  else
+    template = available[math.random(#available)]
+  end
   local mission = generateMission(contactId, template.id)
 
   if not mission then return false end
@@ -3984,6 +4268,8 @@ local function offerMissionViaEmail(contactId)
       priority = "high",
       missionId = mission.id,
       actionType = "mission_offer",
+      isStoryMission = mission.isStoryMission or false,
+      templateId = mission.templateId,
     })
 
     log("I", logTag, "Mission offer sent via email: " .. mission.title)

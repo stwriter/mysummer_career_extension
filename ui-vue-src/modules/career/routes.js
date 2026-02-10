@@ -50,6 +50,7 @@ import PhoneEmail from "./views/PhoneEmail.vue"
 import PhoneChat from "./views/PhoneChat.vue"
 import PhoneChatConversation from "./views/PhoneChatConversation.vue"
 import PhoneMySummerMarket from "./views/PhoneMySummerMarket.vue"
+import PhonePartsBay from "./views/PhonePartsBay.vue"
 import MySummerMarketMain from "./views/MySummerMarketMain.vue"
 import MySummerChecklistMain from "./views/MySummerChecklistMain.vue"
 import MySummerCareerMain from "./views/MySummerCareerMain.vue"
@@ -496,6 +497,12 @@ export default [
         path: "phone-parts-market",
         name: "phone-parts-market",
         component: PhoneMySummerMarket
+      },
+
+      {
+        path: "phone-parts-bay",
+        name: "phone-parts-bay",
+        component: PhonePartsBay
       },
 
       {

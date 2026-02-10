@@ -295,15 +295,14 @@
 
         <div v-else class="cart-content">
           <div class="cart-items">
-            <div v-for="(item, idx) in cart" :key="idx" class="cart-item" :class="{ 'child-part': item.isChildPart }">
-              <div class="item-image">{{ item.isChildPart ? '[+]' : '[P]' }}</div>
+            <div v-for="(item, idx) in cart" :key="idx" class="cart-item">
+              <div class="item-image">[P]</div>
               <div class="item-details">
                 <span class="item-name">{{ item.niceName }}</span>
                 <span class="item-qty">Qty: {{ item.quantity }}</span>
-                <span v-if="item.isChildPart" class="item-required">(Required)</span>
               </div>
               <div class="item-price">${{ formatPrice(item.shopPrice * item.quantity) }}</div>
-              <button v-if="!item.isChildPart" class="item-remove" @click="removeFromCart(item.name)">X</button>
+              <button class="item-remove" @click="removeFromCart(item.name)">X</button>
             </div>
           </div>
 
@@ -1177,32 +1176,9 @@ const isInCart = (partName) => cart.value.some(item => item.name === partName)
 const addToCart = (part) => {
   // Don't add if out of stock, locked, or already in cart
   if (!part.inStock || part.locked || isInCart(part.name)) return
-  
+
   // Stock is 1, so quantity is always 1
   cart.value.push({ ...part, quantity: 1 })
-
-  // Check for required child parts and add them to cart
-  if (window.bngApi) {
-    window.bngApi.engineLua(`career_modules_mysummerPartShops.getRequiredChildParts("${part.name}", 2.0)`, (childParts) => {
-      if (childParts && Array.isArray(childParts) && childParts.length > 0) {
-        for (const childPart of childParts) {
-          // Check if child part is already in cart
-          const childExists = cart.value.find(item => item.name === childPart.name)
-          if (!childExists) {
-            cart.value.push({
-              name: childPart.name,
-              niceName: childPart.niceName,
-              slotType: childPart.slotType,
-              shopPrice: childPart.price,
-              quantity: 1,
-              isChildPart: true,
-              parentPart: part.name
-            })
-          }
-        }
-      }
-    })
-  }
 
   showCart.value = true
 }
@@ -1213,10 +1189,7 @@ const removeFromCart = (partName) => {
     if (cart.value[index].quantity > 1) {
       cart.value[index].quantity--
     } else {
-      // Remove the item
       cart.value.splice(index, 1)
-      // Also remove any child parts that depend on this item
-      cart.value = cart.value.filter(item => item.parentPart !== partName)
     }
   }
 }

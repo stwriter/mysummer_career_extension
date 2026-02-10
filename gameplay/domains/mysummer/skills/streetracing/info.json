@@ -13,7 +13,7 @@
       "description": {
         "type": "unlockCard",
         "icon": "info",
-        "heading": "Prologue / Prologo",
+        "heading": "Prologue / Prólogo",
         "description": "The beginning of your journey."
       },
       "unlocks": [
@@ -26,166 +26,188 @@
       ],
       "storyText": {
         "en": {
-          "name": "Prologue - The Garage",
+          "name": "Phase 0 - The Weight of Silence",
           "intro": "The Miramar sits in the garage, faithful as ever.\nBeside it, covered in dust, lies a chassis that once held dreams.\nA letter from your grandfather waits on the workbench.",
-          "completion": "This is where it all begins."
+          "completion": "Ghost reaches out. A cryptic message. The legacy calls."
         },
         "es": {
-          "name": "Prologo - El Garaje",
-          "intro": "El Miramar descansa en el garaje, fiel como siempre.\nA su lado, cubierto de polvo, yace un chasis que una vez guardo suenos.\nUna carta de tu abuelo espera en el banco de trabajo.",
-          "completion": "Aqui es donde todo comienza."
+          "name": "Fase 0 - El Peso del Silencio",
+          "intro": "El Miramar descansa en el garaje, fiel como siempre.\nA su lado, cubierto de polvo, yace un chasis que una vez guardó sueños.\nUna carta de tu abuelo espera en el banco de trabajo.",
+          "completion": "Ghost se comunica. Un mensaje críptico. El legado llama."
         }
       }
     },
     {
-      "requiredValue": 300,
+      "requiredValue": 350,
       "description": {
         "type": "unlockCard",
         "icon": "info",
-        "heading": "Entre Conocidos / Among Friends",
-        "description": "Racing just for the joy of it."
+        "heading": "Origins / Orígenes",
+        "description": "Racing among friends, but tensions rise."
       },
       "unlocks": [
         {
           "type": "unlockCard",
-          "icon": "raceFlag",
-          "heading": "Informal Races",
-          "description": "Access to casual races with friends."
-        }
-      ],
-      "storyText": {
-        "en": {
-          "name": "Chapter 1 - Racing Among Friends",
-          "intro": "It starts without spotlights or applause.\nJust old cars, familiar roads, and people racing for the simple joy of it.\nA mysterious observer watches from the shadows.",
-          "completion": "Someone is watching. Someone who knows more than they should."
-        },
-        "es": {
-          "name": "Capitulo 1 - Carreras entre Conocidos",
-          "intro": "Todo empieza sin focos ni aplausos.\nSolo coches viejos, carreteras conocidas y gente que corre por el simple placer de hacerlo.\nUn observador misterioso mira desde las sombras.",
-          "completion": "Alguien te observa. Alguien que sabe mas de lo que deberia."
-        }
-      }
-    },
-    {
-      "requiredValue": 800,
-      "description": {
-        "type": "unlockCard",
-        "icon": "info",
-        "heading": "Underground Bajo / Low Underground",
-        "description": "First contact with the illegal scene."
-      },
-      "unlocks": [
-        {
-          "type": "unlockCard",
-          "icon": "userSecret",
-          "heading": "Ghost Contact",
-          "description": "Access to underground parts and contacts."
-        }
-      ],
-      "storyText": {
-        "en": {
-          "name": "Chapter 2 - Low Underground",
-          "intro": "A message from an unknown number changes everything.\nSmall street races, low stakes, controlled risks.\nBut the first piece for your project car awaits.",
-          "completion": "Ghost has opened a door. What lies beyond is up to you."
-        },
-        "es": {
-          "name": "Capitulo 2 - Underground Bajo",
-          "intro": "Un mensaje de un numero desconocido lo cambia todo.\nCarreras callejeras pequenas, apuestas bajas, riesgos controlados.\nPero la primera pieza para tu proyecto te espera.",
-          "completion": "Ghost ha abierto una puerta. Lo que hay detras depende de ti."
-        }
-      }
-    },
-    {
-      "requiredValue": 1500,
-      "description": {
-        "type": "unlockCard",
-        "icon": "info",
-        "heading": "Rallys Regionales / Regional Rallies",
-        "description": "Public recognition and external pressure."
-      },
-      "unlocks": [
-        {
-          "type": "unlockCard",
-          "icon": "star",
-          "heading": "Rally Events",
-          "description": "Access to organized rally events."
+          "icon": "users",
+          "heading": "Meet Rook and Nova",
+          "description": "Two racers, two philosophies."
         },
         {
           "type": "unlockCard",
           "icon": "wrench",
-          "heading": "New Contacts",
-          "description": "Meet Techie, Muscle, and Import."
+          "heading": "Techie Contact",
+          "description": "Access to ECU and electronics shop."
         }
       ],
       "storyText": {
         "en": {
-          "name": "Chapter 3 - Regional Rallies",
-          "intro": "Organized events. Real stakes. Your name in the papers.\nNew faces appear - Techie, Muscle, Import.\nA newspaper clipping about The Big One surfaces.",
-          "completion": "Your grandfather's name is spoken again. The past is catching up."
+          "name": "Phase 1 - Origins",
+          "intro": "Rook drives with precision, respecting every component.\nNova pushes limits, seeking adrenaline.\nYou are the third vertex of a complicated triangle.",
+          "completion": "Techie unlocked. The philosophy clash deepens. Who will you follow?"
         },
         "es": {
-          "name": "Capitulo 3 - Rallys Regionales",
-          "intro": "Eventos organizados. Apuestas reales. Tu nombre en los periodicos.\nNuevas caras aparecen - Techie, Muscle, Import.\nUn recorte de periodico sobre The Big One resurge.",
-          "completion": "El nombre de tu abuelo vuelve a sonar. El pasado te alcanza."
+          "name": "Fase 1 - Orígenes",
+          "intro": "Rook conduce con precisión, respetando cada componente.\nNova empuja límites, buscando adrenalina.\nTú eres el tercer vértice de un triángulo complicado.",
+          "completion": "Techie desbloqueado. El choque filosófico se profundiza. ¿A quién seguirás?"
         }
       }
     },
     {
-      "requiredValue": 2500,
+      "requiredValue": 850,
       "description": {
         "type": "unlockCard",
         "icon": "info",
-        "heading": "Underground Alto / High Underground",
-        "description": "Crossing the line."
+        "heading": "The Split / La Grieta",
+        "description": "Tension escalates. The team starts cracking."
+      },
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "engine",
+          "heading": "Muscle Contact",
+          "description": "Viper's daughter. Old-school V8 parts."
+        }
+      ],
+      "storyText": {
+        "en": {
+          "name": "Phase 2 - The Split",
+          "intro": "Nova wants to risk everything on underground races.\nRook desperately tries to maintain control.\nA newspaper clipping reveals your grandfather's past.",
+          "completion": "Muscle recognizes the ETK-I. The accident that broke your grandfather is no longer a secret."
+        },
+        "es": {
+          "name": "Fase 2 - La Grieta",
+          "intro": "Nova quiere arriesgar todo en carreras underground.\nRook intenta desesperadamente mantener el control.\nUn recorte de periódico revela el pasado de tu abuelo.",
+          "completion": "Muscle reconoce el ETK-I. El accidente que rompió a tu abuelo ya no es secreto."
+        }
+      }
+    },
+    {
+      "requiredValue": 1600,
+      "description": {
+        "type": "unlockCard",
+        "icon": "info",
+        "heading": "The Crisis / La Crisis",
+        "description": "You become the tiebreaker."
       },
       "unlocks": [
         {
           "type": "unlockCard",
           "icon": "eyeSlash",
           "heading": "Shadow Network",
-          "description": "Access to Shadow and high-risk operations."
+          "description": "Access to black market parts."
         }
       ],
       "storyText": {
         "en": {
-          "name": "Chapter 4 - High Underground",
-          "intro": "The races are harder. The nights are longer.\nShadow enters the scene. Police heat rises.\nGhost becomes distant. Something is wrong.",
-          "completion": "Lines have been crossed. There's no going back now."
+          "name": "Phase 3 - The Crisis",
+          "intro": "Nova and Rook's relationship is unstable.\nEach race is a battlefield of philosophies.\nShadow enters the scene with forbidden offers.",
+          "completion": "Nova approaches you in private. She wants to leave this town. Shadow has what you need... for a price."
         },
         "es": {
-          "name": "Capitulo 4 - Underground Alto",
-          "intro": "Las carreras son mas duras. Las noches mas largas.\nShadow entra en escena. El calor policial aumenta.\nGhost se distancia. Algo no va bien.",
-          "completion": "Se han cruzado lineas. Ya no hay vuelta atras."
+          "name": "Fase 3 - La Crisis",
+          "intro": "La relación de Nova y Rook es inestable.\nCada carrera es un campo de batalla de filosofías.\nShadow entra en escena con ofertas prohibidas.",
+          "completion": "Nova te aborda en privado. Quiere dejar este pueblo. Shadow tiene lo que necesitas... por un precio."
         }
       }
     },
     {
-      "requiredValue": 4000,
+      "requiredValue": 2400,
       "description": {
         "type": "unlockCard",
         "icon": "info",
-        "heading": "Rallys Oficiales / Official Rallies",
-        "description": "Legitimacy and betrayal."
+        "heading": "The Split (Final) / Ruptura Final",
+        "description": "The team breaks. You must choose."
+      },
+      "unlocks": [],
+      "storyText": {
+        "en": {
+          "name": "Phase 4 - The Split (Final Rupture)",
+          "intro": "The tension explodes mid-race.\nRook and Nova publicly break up over the radio.\nYou are forced to take a side through your words.",
+          "completion": "The team is shattered. Shadow offers a way out... through debt."
+        },
+        "es": {
+          "name": "Fase 4 - La Ruptura Final",
+          "intro": "La tensión explota en plena carrera.\nRook y Nova rompen públicamente por la radio.\nTe ves forzado a elegir un bando con tus palabras.",
+          "completion": "El equipo está destrozado. Shadow ofrece una salida... a través de deudas."
+        }
+      }
+    },
+    {
+      "requiredValue": 3300,
+      "description": {
+        "type": "unlockCard",
+        "icon": "info",
+        "heading": "Rally Regional / Rally Regional",
+        "description": "Professional competition. Then, betrayal."
       },
       "unlocks": [
         {
           "type": "unlockCard",
           "icon": "trophy",
-          "heading": "Federation Events",
-          "description": "Access to official racing federation events."
+          "heading": "Rally Events",
+          "description": "Regional rally championship."
         }
       ],
       "requiresProjectCar": true,
       "storyText": {
         "en": {
-          "name": "Chapter 5 - Official Rallies",
-          "intro": "Federated events. Technical inspections. The world is watching.\nGhost reappears with a warning.\nYour project car is ready... but someone has other plans.",
-          "completion": "Your car is stolen. Everything you built, gone in one night."
+          "name": "Phase 5 - Dust and Betrayal",
+          "intro": "The ETK-I is complete. Ghost warns you to watch your back.\nThe rally is your stage. The world sees the Miller name again.\nBut after your victory, everything goes dark.",
+          "completion": "You wake up. The car is gone. A voice echoes: 'Viper will love the gift.'"
         },
         "es": {
-          "name": "Capitulo 5 - Rallys Oficiales",
-          "intro": "Eventos federados. Inspecciones tecnicas. El mundo mira.\nGhost reaparece con una advertencia.\nTu proyecto esta listo... pero alguien tiene otros planes.",
-          "completion": "Tu coche ha sido robado. Todo lo que construiste, perdido en una noche."
+          "name": "Fase 5 - Polvo y Traición",
+          "intro": "El ETK-I está completo. Ghost te advierte que cuides tu espalda.\nEl rally es tu escenario. El mundo ve el nombre Miller de nuevo.\nPero tras tu victoria, todo se oscurece.",
+          "completion": "Despiertas. El coche ha desaparecido. Una voz resuena: 'Viper estará encantada con el regalo.'"
+        }
+      }
+    },
+    {
+      "requiredValue": 4500,
+      "description": {
+        "type": "unlockCard",
+        "icon": "info",
+        "heading": "Copa Covet / Covet Cup",
+        "description": "Humiliated. Suspected betrayal."
+      },
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "car",
+          "heading": "Covet Cup",
+          "description": "Low-tier competition for redemption."
+        }
+      ],
+      "storyText": {
+        "en": {
+          "name": "Phase 6 - Rock Bottom",
+          "intro": "Without the ETK-I, you're nobody.\nGhost gives you money for a junkyard Covet.\nTechie shows you 'evidence': your partner sold you out to Shadow.",
+          "completion": "You win the Covet Cup, but your heart is broken. The one you trusted betrayed you... or did they?"
+        },
+        "es": {
+          "name": "Fase 6 - El Fondo del Pozo",
+          "intro": "Sin el ETK-I, no eres nadie.\nGhost te da dinero para un Covet de desguace.\nTechie te muestra 'evidencia': tu pareja te vendió a Shadow.",
+          "completion": "Ganas la Copa Covet, pero tu corazón está roto. Quien confiabas te traicionó... ¿o no?"
         }
       }
     },
@@ -194,8 +216,37 @@
       "description": {
         "type": "unlockCard",
         "icon": "info",
+        "heading": "Clasificatorias / Qualifiers",
+        "description": "The truth emerges. Shadow's web unravels."
+      },
+      "unlocks": [
+        {
+          "type": "unlockCard",
+          "icon": "star",
+          "heading": "Big One Qualifiers",
+          "description": "Qualifying series for The Big One."
+        }
+      ],
+      "storyText": {
+        "en": {
+          "name": "Phase 7 - The Iron Trail",
+          "intro": "You see ETK-I parts on rival cars. Shadow is selling it piecemeal.\nAnonymous messages hint: 'Shadow is a master of digital mirages.'\nYour partner returns, injured but alive. The truth is revealed.",
+          "completion": "It was all a lie. Shadow orchestrated everything. Now he challenges you: 'Beat me for your car.'"
+        },
+        "es": {
+          "name": "Fase 7 - El Rastro del Hierro",
+          "intro": "Ves piezas del ETK-I en coches rivales. Shadow lo está vendiendo por partes.\nMensajes anónimos insinúan: 'Shadow es un maestro de los espejismos digitales.'\nTu pareja regresa, herida pero viva. La verdad se revela.",
+          "completion": "Todo era mentira. Shadow lo orquestó todo. Ahora te desafía: 'Gáname por tu coche.'"
+        }
+      }
+    },
+    {
+      "requiredValue": 7800,
+      "description": {
+        "type": "unlockCard",
+        "icon": "info",
         "heading": "The Big One",
-        "description": "Revelation and closure."
+        "description": "Reclamation and glory."
       },
       "unlocks": [
         {
@@ -208,14 +259,14 @@
       "requiresProjectCar": true,
       "storyText": {
         "en": {
-          "name": "Chapter 6 - Road to The Big One",
-          "intro": "The truth is revealed. Old wounds are healed.\nQualifying series on circuit.\nThe definitive race awaits: The Big One.",
-          "completion": "Do it for both of you."
+          "name": "Phase 8 - Reclamation and Glory",
+          "intro": "You duel Shadow. He drives YOUR ETK-I.\nYou win. The keys return to your hands.\nViper watches from the paddock. She recognizes the car... and you.",
+          "completion": "The Big One. Grandfather's unfinished dream.\nYou race not just for yourself, but for both of you.\nThe garage is finally at peace."
         },
         "es": {
-          "name": "Capitulo 6 - Camino a The Big One",
-          "intro": "La verdad se revela. Viejas heridas sanan.\nSeries clasificatorias en circuito.\nLa carrera definitiva espera: The Big One.",
-          "completion": "Hazlo por los dos."
+          "name": "Fase 8 - Reclamación y Gloria",
+          "intro": "Te bates con Shadow. Él conduce TU ETK-I.\nGanas. Las llaves vuelven a tus manos.\nViper observa desde el paddock. Reconoce el coche... y a ti.",
+          "completion": "The Big One. El sueño inacabado del abuelo.\nCorres no solo por ti, sino por ambos.\nEl garaje finalmente está en paz."
         }
       }
     }

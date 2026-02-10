@@ -37,6 +37,7 @@
   "conversations": {
     "level1": {
       "title": {"es": "La Prueba", "en": "The Test"},
+      "requiredPhase": 7,
       "phases": {
         "intro": {
           "exchanges": [

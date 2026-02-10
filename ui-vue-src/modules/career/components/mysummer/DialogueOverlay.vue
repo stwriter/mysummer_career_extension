@@ -4,8 +4,8 @@
       <div v-if="visible && currentMessage" class="dialogue-overlay">
         <div class="dialogue-box">
           <!-- Character portrait area (left side) -->
-          <div class="portrait-area" :class="[currentMessage.contactId, { 'unknown': !currentMessage.isUnlocked }]">
-            <div class="portrait-frame">
+          <div class="portrait-area" :class="[currentMessage.contactId, { 'unknown': !currentMessage.isUnlocked, 'monologue': currentMessage.contactId === 'monologue' }]">
+            <div class="portrait-frame" v-if="currentMessage.contactId !== 'monologue'">
               <div class="portrait-image" v-if="currentMessage.isUnlocked">
                 <!-- Character image if available, fallback to initial -->
                 <img
@@ -20,7 +20,11 @@
                 <span class="portrait-letter">?</span>
               </div>
             </div>
-            <div class="portrait-name">{{ currentMessage.isUnlocked ? currentMessage.contactName : '???' }}</div>
+            <!-- Monologue indicator (thought bubble icon) -->
+            <div class="monologue-icon" v-else>
+              <span class="thought-bubble">💭</span>
+            </div>
+            <div class="portrait-name">{{ getDisplayName(currentMessage) }}</div>
           </div>
 
           <!-- Message content area -->
@@ -83,6 +87,20 @@ const getContactAvatar = (contactId, emotion) => {
   // Default to standard emotion if not provided
   const emotionState = emotion || EMOTIONS.STANDARD
   return getContactImage(contactId, emotionState)
+}
+
+const getDisplayName = (message) => {
+  if (!message) return '?'
+
+  // For monologues, show "You" in appropriate language
+  if (message.contactId === 'monologue') {
+    // Detect browser language
+    const lang = navigator.language || navigator.userLanguage || 'en'
+    return lang.startsWith('es') ? 'Tú' : 'You'
+  }
+
+  // For other contacts, show name or ??? if locked
+  return message.isUnlocked ? message.contactName : '???'
 }
 
 let typingInterval = null
@@ -168,12 +186,17 @@ const closeDialogue = () => {
 }
 
 const showMessage = (message) => {
+  console.log('[DialogueOverlay] showMessage called with:', message)
+  console.log('[DialogueOverlay] Current visible state:', visible.value)
   messageQueue.value.push(message)
 
   if (!visible.value) {
     visible.value = true
     currentIndex.value = messageQueue.value.length - 1
+    console.log('[DialogueOverlay] Starting to type text:', message.content)
     typeText(message.content)
+  } else {
+    console.log('[DialogueOverlay] Already visible, message queued')
   }
 }
 
@@ -199,6 +222,30 @@ const handleHideDialogue = () => {
   closeDialogue()
 }
 
+// Handle monologue events (internal thoughts)
+const handleShowMonologue = (data) => {
+  console.log('[DialogueOverlay] handleShowMonologue called with data:', data)
+  if (data.text) {
+    console.log('[DialogueOverlay] Showing monologue text:', data.text)
+    showMessage({
+      contactId: 'monologue', // Special ID for internal thoughts
+      contactName: 'You', // Will be translated in template
+      content: data.text,
+      isUnlocked: true,
+      emotion: 'standard'
+    })
+  } else {
+    console.warn('[DialogueOverlay] handleShowMonologue: No text in data')
+  }
+}
+
+const handleHideMonologue = () => {
+  closeDialogue()
+}
+
+// NOTE: Call events (mysummerIncomingCall, mysummerShowCallLine) are now handled
+// by ContactSceneManager.vue for fullscreen dialogue experience
+
 // Keyboard support (only Escape to dismiss)
 const handleKeydown = (e) => {
   if (!visible.value) return
@@ -211,9 +258,19 @@ const handleKeydown = (e) => {
 
 // Lifecycle
 onMounted(() => {
+  console.log('[DialogueOverlay] Component mounted, registering event listeners')
+
   // Register event listeners for Lua guihooks
   events.on('mysummerDialogueShow', handleShowDialogue)
   events.on('mysummerDialogueHide', handleHideDialogue)
+
+  // Monologue events (internal thoughts)
+  events.on('mysummerShowMonologue', handleShowMonologue)
+  events.on('mysummerHideMonologue', handleHideMonologue)
+
+  console.log('[DialogueOverlay] Event listeners registered: mysummerDialogueShow, mysummerShowMonologue')
+
+  // NOTE: Call events are handled by ContactSceneManager.vue
 
   // Keyboard support
   document.addEventListener('keydown', handleKeydown)
@@ -222,6 +279,8 @@ onMounted(() => {
 onUnmounted(() => {
   events.off('mysummerDialogueShow', handleShowDialogue)
   events.off('mysummerDialogueHide', handleHideDialogue)
+  events.off('mysummerShowMonologue', handleShowMonologue)
+  events.off('mysummerHideMonologue', handleHideMonologue)
   document.removeEventListener('keydown', handleKeydown)
 
   if (typingInterval) clearInterval(typingInterval)
@@ -346,6 +405,31 @@ $unknown-color: #555;
     .portrait-frame { border-color: rgba($unknown-color, 0.7); }
     .portrait-image { background: $unknown-color; }
   }
+
+  // Monologue style (internal thoughts)
+  &.monologue {
+    background: linear-gradient(135deg, rgba(100, 100, 150, 0.15) 0%, $bg-darker 100%);
+  }
+}
+
+.monologue-icon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+
+  .thought-bubble {
+    font-size: 2rem;
+    opacity: 0.7;
+    animation: pulse-thought 2s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse-thought {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.1); }
 }
 
 .portrait-frame {

@@ -37,7 +37,7 @@
   "conversations": {
     "level1": {
       "title": {"es": "El Primer Mensaje", "en": "The First Message"},
-      "requiredPhase": 2,
+      "requiredPhase": 0,
       "phases": {
         "intro": {
           "exchanges": [
@@ -215,8 +215,8 @@
             ],
             "nudo_connection": [
               { "speaker": "ghost", "text": {"es": "Muscle me lo contó.", "en": "Muscle told me."} },
-              { "speaker": "ghost", "text": {"es": "Estuvimos juntos durante años. Ella es la hija de Viper.", "en": "We were together for years. She's Viper's daughter."} },
-              { "speaker": "ghost", "text": {"es": "Creció en ese mundo. Sabe cosas que la mayoría no sabe.", "en": "She grew up in that world. Knows things most people don't."} },
+              { "speaker": "ghost", "text": {"es": "Nos conocemos desde hace años. Ella creció en el mundillo.", "en": "We've known each other for years. She grew up in the scene."} },
+              { "speaker": "ghost", "text": {"es": "Su familia estaba metida hasta el fondo. Sabe cosas que la mayoría no sabe.", "en": "Her family was deep in it. Knows things most people don't."} },
               { "speaker": "ghost", "text": "..." },
               { "speaker": "ghost", "text": {"es": "Las historias sobre tu abuelo... no son solo leyendas.", "en": "The stories about your grandfather... they're not just legends."} },
               {
@@ -872,66 +872,66 @@
     },
 
     "level5": {
-      "title": {"es": "El Robo", "en": "The Theft"},
-      "requiredPhase": 5,
+      "title": {"es": "Después del Golpe", "en": "After the Hit"},
+      "requiredPhase": 6,
       "requiredMemory": ["ghostWarnedAboutTeam"],
-      "unlockMessage": {"es": "Ghost tiene noticias urgentes. Algo ha pasado con tu coche.", "en": "Ghost has urgent news. Something happened with your car."},
+      "unlockMessage": {"es": "Ghost tiene noticias. Sabe algo sobre el robo del ETK-I.", "en": "Ghost has news. He knows something about the ETK-I theft."},
 
       "phases": {
         "intro": {
           "exchanges": [
-            { "speaker": "ghost", "text": {"es": "No preguntes cómo lo supe.", "en": "Don't ask how I knew."} },
-            { "speaker": "ghost", "text": {"es": "Pero tu coche... lo tengo yo.", "en": "But your car... I have it."} },
-            { "speaker": "ghost", "text": {"es": "Está a salvo.", "en": "It's safe."} },
+            { "speaker": "ghost", "text": "..." },
+            { "speaker": "ghost", "text": {"es": "Lo sé.", "en": "I know."} },
+            { "speaker": "ghost", "text": {"es": "El ETK-I. Se lo han llevado.", "en": "The ETK-I. They took it."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "what_happened",
-                  "text": {"es": "¿Qué demonios ha pasado?", "en": "What the hell happened?"},
-                  "traits": ["concerned"],
-                  "points": 10,
-                  "leadsTo": "intro_explanation"
-                },
-                {
-                  "id": "who_took_it",
-                  "text": {"es": "¿Quién intentó robarlo?", "en": "Who tried to steal it?"},
+                  "id": "who_did_it",
+                  "text": {"es": "¿Quién fue? Dime que lo sabes.", "en": "Who did it? Tell me you know."},
                   "traits": ["angry"],
-                  "points": 15,
+                  "points": 10,
                   "setsMemory": { "demandedName": true },
-                  "leadsTo": "intro_explanation"
+                  "leadsTo": "intro_investigation"
                 },
                 {
-                  "id": "thank_you",
-                  "text": {"es": "Gracias. Gracias por salvarlo.", "en": "Thank you. Thank you for saving it."},
-                  "traits": ["grateful"],
-                  "points": 20,
-                  "setsMemory": { "expressedGratitude": true },
-                  "leadsTo": "intro_explanation"
+                  "id": "how_know",
+                  "text": {"es": "¿Cómo lo sabes? ¿Estabas vigilando?", "en": "How do you know? Were you watching?"},
+                  "traits": ["suspicious"],
+                  "points": 15,
+                  "leadsTo": "intro_investigation"
+                },
+                {
+                  "id": "devastated",
+                  "text": {"es": "El coche del abuelo... Se acabó todo.", "en": "Grandpa's car... It's all over."},
+                  "traits": ["defeated"],
+                  "points": 5,
+                  "leadsTo": "intro_investigation"
                 }
               ]
             }
           ],
           "branches": {
-            "intro_explanation": [
-              { "speaker": "ghost", "text": {"es": "Anoche. Alguien intentó moverlo.", "en": "Last night. Someone tried to move it."} },
-              { "speaker": "ghost", "text": {"es": "Tenía sensores en el garaje. Los configuré después de nuestra última conversación.", "en": "I had sensors on the garage. Set them up after our last talk."} },
-              { "speaker": "ghost", "text": {"es": "Cuando saltó la alarma, llegué antes de que pudieran sacarlo.", "en": "When the alarm went off, I got there before they could get it out."} },
+            "intro_investigation": [
+              { "speaker": "ghost", "text": {"es": "Sabía que Shadow planeaba algo. Pero no llegué a tiempo.", "en": "I knew Shadow was planning something. But I didn't get there in time."} },
+              { "speaker": "ghost", "text": {"es": "Tenía gente vigilando el circuito, pero usaron una distracción.", "en": "I had people watching the circuit, but they used a distraction."} },
+              { "speaker": "ghost", "text": {"es": "Profesionales. Esto no fue improvisado.", "en": "Professionals. This wasn't improvised."} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "saw_them",
-                    "text": {"es": "¿Los viste? ¿Quiénes eran?", "en": "Did you see them? Who were they?"},
-                    "traits": ["determined"],
+                    "id": "shadow",
+                    "text": {"es": "Shadow... Ese hijo de perra lo orquestó todo.", "en": "Shadow... That bastard orchestrated everything."},
+                    "traits": ["angry"],
                     "points": 15,
                     "continueToPhase": "nudo"
                   },
                   {
-                    "id": "why_watching",
-                    "text": {"es": "¿Por qué estabas vigilando mi garaje?", "en": "Why were you watching my garage?"},
-                    "traits": ["suspicious"],
-                    "points": 5,
+                    "id": "inside_job",
+                    "text": {"es": "¿Alguien del equipo les ayudó?", "en": "Did someone from the team help them?"},
+                    "traits": ["perceptive"],
+                    "points": 20,
+                    "setsMemory": { "suspectedInsideJob": true },
                     "continueToPhase": "nudo"
                   }
                 ]
@@ -942,95 +942,63 @@
 
         "nudo": {
           "exchanges": [
+            { "speaker": "ghost", "text": {"es": "Shadow tiene el coche. Eso lo sé con certeza.", "en": "Shadow has the car. I know that for sure."} },
+            { "speaker": "ghost", "text": {"es": "Pero no actuó solo.", "en": "But he didn't act alone."} },
             { "speaker": "ghost", "text": "..." },
-            { "speaker": "ghost", "text": {"es": "No puedo decirte quién era. Todavía.", "en": "I can't tell you who it was. Not yet."} },
-            { "speaker": "ghost", "text": {"es": "Pero era alguien que conoces. Alguien cercano.", "en": "But it was someone you know. Someone close."} },
-            { "speaker": "ghost", "text": {"es": "Alguien del equipo.", "en": "Someone from the team."} },
+            { "speaker": "ghost", "text": {"es": "Alguien de tu círculo le dio la ubicación exacta. Los horarios. Todo.", "en": "Someone in your circle gave him the exact location. The schedule. Everything."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "rook",
-                  "text": {"es": "¿Rook? ¿Fue Rook?", "en": "Rook? Was it Rook?"},
+                  "id": "suspect_rook",
+                  "text": {"es": "¿Rook? ¿Fue Rook por despecho?", "en": "Rook? Was it Rook out of spite?"},
                   "traits": ["suspicious"],
                   "points": 5,
                   "setsMemory": { "suspectsRook": true },
-                  "leadsTo": "nudo_reveal"
+                  "leadsTo": "nudo_suspicion"
                 },
                 {
-                  "id": "nova",
-                  "text": {"es": "¿Nova? No... ella no haría eso.", "en": "Nova? No... she wouldn't do that."},
-                  "traits": ["defensive"],
+                  "id": "suspect_nova",
+                  "text": {"es": "¿Nova? ¿Lo hizo para pagar a Shadow?", "en": "Nova? Did she do it to pay Shadow?"},
+                  "traits": ["suspicious"],
                   "points": 5,
-                  "setsMemory": { "defendedNova": true },
-                  "leadsTo": "nudo_reveal"
+                  "setsMemory": { "suspectsNova": true },
+                  "leadsTo": "nudo_suspicion"
                 },
                 {
-                  "id": "tell_me",
-                  "text": {"es": "Necesito saber. Dímelo ahora.", "en": "I need to know. Tell me now."},
+                  "id": "who_ghost",
+                  "text": {"es": "Dímelo tú. ¿Quién fue?", "en": "You tell me. Who was it?"},
                   "traits": ["determined"],
                   "points": 15,
                   "setsMemory": { "demandedAnswer": true },
-                  "leadsTo": "nudo_reveal"
-                },
-                {
-                  "id": "doesnt_matter",
-                  "text": {"es": "No importa quién fue. El coche está a salvo.", "en": "It doesn't matter who it was. The car is safe."},
-                  "traits": ["pragmatic"],
-                  "points": 10,
-                  "leadsTo": "nudo_pragmatic"
+                  "leadsTo": "nudo_suspicion"
                 }
               ]
             }
           ],
           "branches": {
-            "nudo_reveal": [
-              { "speaker": "ghost", "text": {"es": "No voy a darte un nombre.", "en": "I'm not giving you a name."} },
-              { "speaker": "ghost", "text": {"es": "Porque si lo hago, irás a por ellos. Lo sé.", "en": "Because if I do, you'll go after them. I know you will."} },
-              { "speaker": "ghost", "text": {"es": "Y eso arruinará todo el plan.", "en": "And that will ruin the whole plan."} },
+            "nudo_suspicion": [
+              { "speaker": "ghost", "text": {"es": "Todavía no puedo confirmarlo.", "en": "I can't confirm it yet."} },
+              { "speaker": "ghost", "text": {"es": "Pero las pruebas apuntan a alguien cercano. Alguien que sabía exactamente dónde guardabas el coche.", "en": "But the evidence points to someone close. Someone who knew exactly where you kept the car."} },
+              { "speaker": "ghost", "text": {"es": "Shadow es listo. Fabricó las pruebas para incriminar a quien más te doliera.", "en": "Shadow is clever. He manufactured evidence to implicate whoever would hurt you most."} },
               { "speaker": "ghost", "text": "..." },
-              { "speaker": "ghost", "text": {"es": "Confía en mí. Estoy manejando esto.", "en": "Trust me. I'm handling this."} },
+              { "speaker": "ghost", "text": {"es": "No dejes que la rabia te ciegue. Eso es lo que Shadow quiere.", "en": "Don't let anger blind you. That's what Shadow wants."} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "what_plan",
-                    "text": {"es": "¿Qué plan? ¿De qué estás hablando?", "en": "What plan? What are you talking about?"},
-                    "traits": ["confused"],
-                    "points": 10,
-                    "continueToPhase": "desenlace"
-                  },
-                  {
-                    "id": "trust_you",
-                    "text": {"es": "Está bien. Confío en ti.", "en": "Okay. I trust you."},
-                    "traits": ["loyal"],
-                    "points": 20,
-                    "setsMemory": { "trustedGhost": true },
-                    "continueToPhase": "desenlace"
-                  }
-                ]
-              }
-            ],
-            "nudo_pragmatic": [
-              { "speaker": "ghost", "text": {"es": "Inteligente.", "en": "Smart."} },
-              { "speaker": "ghost", "text": {"es": "Sí, el coche está a salvo. Eso es lo que importa.", "en": "Yeah, the car is safe. That's what matters."} },
-              { "speaker": "ghost", "text": {"es": "Pero esto no ha terminado.", "en": "But this isn't over."} },
-              { "speaker": "ghost", "text": {"es": "Quien lo intentó... lo intentará de nuevo.", "en": "Whoever tried this... they'll try again."} },
-              {
-                "type": "choice",
-                "choices": [
-                  {
-                    "id": "what_do_we_do",
-                    "text": {"es": "¿Qué hacemos entonces?", "en": "What do we do then?"},
-                    "traits": ["pragmatic"],
+                    "id": "get_it_back",
+                    "text": {"es": "Me da igual quién fue. Quiero recuperar mi coche.", "en": "I don't care who did it. I want my car back."},
+                    "traits": ["determined"],
                     "points": 15,
                     "continueToPhase": "desenlace"
                   },
                   {
-                    "id": "keep_it_safe",
-                    "text": {"es": "Mantenlo a salvo. Haré lo que tenga que hacer.", "en": "Keep it safe. I'll do what I need to do."},
-                    "traits": ["determined"],
-                    "points": 10,
+                    "id": "trust_ghost",
+                    "text": {"es": "Confío en ti, Ghost. Dime qué tengo que hacer.", "en": "I trust you, Ghost. Tell me what I need to do."},
+                    "traits": ["loyal"],
+                    "points": 20,
+                    "setsMemory": { "trustedGhost": true },
                     "continueToPhase": "desenlace"
                   }
                 ]
@@ -1041,42 +1009,42 @@
 
         "desenlace": {
           "exchanges": [
-            { "speaker": "ghost", "text": {"es": "Voy a guardar el coche en un sitio seguro.", "en": "I'm keeping the car somewhere safe."} },
-            { "speaker": "ghost", "text": {"es": "Un lugar que solo yo conozco.", "en": "A place only I know about."} },
-            { "speaker": "ghost", "text": {"es": "Cuando esto termine... te lo devolveré.", "en": "When this is over... I'll give it back."} },
+            { "speaker": "ghost", "text": {"es": "Ahora mismo no puedes ir a por Shadow directamente.", "en": "Right now you can't go after Shadow directly."} },
+            { "speaker": "ghost", "text": {"es": "Pero puedes hacer algo mejor. Puedes seguir compitiendo.", "en": "But you can do something better. You can keep racing."} },
+            { "speaker": "ghost", "text": {"es": "La Copa Covet. Es tu camino de vuelta a la Big One.", "en": "The Covet Cup. It's your way back to the Big One."} },
+            { "speaker": "ghost", "text": {"es": "Gana eso, y tendrás tu oportunidad de enfrentarte a Shadow en la pista.", "en": "Win that, and you'll have your chance to face Shadow on the track."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "when_over",
-                  "text": {"es": "¿Cuándo terminará esto?", "en": "When will this be over?"},
-                  "traits": ["impatient"],
-                  "points": 5
+                  "id": "covet_accept",
+                  "text": {"es": "¿Un Covet? De ganar un rally con el ETK-I a un Covet de desguace...", "en": "A Covet? From winning a rally with the ETK-I to a junkyard Covet..."},
+                  "traits": ["honest"],
+                  "points": 10
                 },
                 {
-                  "id": "do_what_necessary",
-                  "text": {"es": "Haz lo que sea necesario. Protégelo.", "en": "Do whatever is necessary. Protect it."},
-                  "traits": ["trusting"],
+                  "id": "whatever_it_takes",
+                  "text": {"es": "Me da igual el coche. Haré lo que haga falta para recuperar el ETK-I.", "en": "I don't care about the car. I'll do whatever it takes to get the ETK-I back."},
+                  "traits": ["determined"],
                   "points": 20,
-                  "setsMemory": { "fullTrustInGhost": true }
+                  "setsMemory": { "determinedToRecover": true }
                 }
               ]
             },
-            { "speaker": "ghost", "text": {"es": "Pronto.", "en": "Soon."} },
+            { "speaker": "ghost", "text": {"es": "Sé que duele. Pero tu abuelo perdió mucho más que un coche y siguió adelante.", "en": "I know it hurts. But your grandfather lost much more than a car and he kept going."} },
             { "speaker": "ghost", "text": "..." },
-            { "speaker": "ghost", "text": {"es": "Hay más en esta historia de lo que sabes.", "en": "There's more to this story than you know."} },
-            { "speaker": "ghost", "text": {"es": "Sobre tu abuelo. Sobre Viper. Sobre todo.", "en": "About your grandfather. About Viper. About everything."} },
-            { "speaker": "ghost", "text": {"es": "La próxima vez que hablemos... te lo contaré todo.", "en": "Next time we talk... I'll tell you everything."} }
+            { "speaker": "ghost", "text": {"es": "Hay más en esta historia de lo que sabes. Sobre tu abuelo y Viper.", "en": "There's more to this story than you know. About your grandfather and Viper."} },
+            { "speaker": "ghost", "text": {"es": "Cuando estés listo... te lo contaré todo.", "en": "When you're ready... I'll tell you everything."} }
           ],
           "end": {
             "result": "success",
             "rewards": {
               "xp": 150,
-              "unlocks": ["ghost_safehouse_access"]
+              "unlocks": ["ghost_covet_guidance"]
             },
-            "setsMemory": { "ghostSavedCar": true, "knowsAboutBetrayal": true },
+            "setsMemory": { "knowsAboutBetrayal": true, "carStolen": true },
             "cooldown": 120,
-            "teaser": {"es": "La verdad completa está cerca. Prepárate para lo que viene.", "en": "The full truth is close. Prepare yourself for what's coming."}
+            "teaser": {"es": "El ETK-I está en manos de Shadow. La Copa Covet es tu único camino de vuelta.", "en": "The ETK-I is in Shadow's hands. The Covet Cup is your only way back."}
           }
         }
       },
@@ -1084,20 +1052,20 @@
       "nexos": {
         "beforeNudo": [
           "...",
-          {"es": "Necesitas entender algo.", "en": "You need to understand something."},
-          {"es": "Esto es más grande de lo que piensas.", "en": "This is bigger than you think."}
+          {"es": "Escucha con atención.", "en": "Listen carefully."},
+          {"es": "Esto es peor de lo que piensas.", "en": "This is worse than you think."}
         ],
         "beforeDesenlace": [
           "...",
-          {"es": "Casi estamos.", "en": "We're almost there."},
-          {"es": "Solo un poco más.", "en": "Just a little longer."}
+          {"es": "Pero hay un camino.", "en": "But there's a way."},
+          {"es": "No todo está perdido.", "en": "Not all is lost."}
         ]
       }
     },
 
     "level6": {
       "title": {"es": "La Verdad Completa", "en": "The Full Truth"},
-      "requiredPhase": 6,
+      "requiredPhase": 7,
       "requiredMemory": ["knowsAboutBetrayal"],
       "unlockMessage": {"es": "Ghost está listo para contarte todo. La historia completa de tu abuelo.", "en": "Ghost is ready to tell you everything. The full story of your grandfather."},
 
@@ -1132,18 +1100,18 @@
         "nudo": {
           "exchanges": [
             { "speaker": "ghost", "text": {"es": "Tu abuelo no era solo un mecánico.", "en": "Your grandfather wasn't just a mechanic."} },
-            { "speaker": "ghost", "text": {"es": "Era el ingeniero jefe de Viper.", "en": "He was Viper's chief engineer."} },
+            { "speaker": "ghost", "text": {"es": "Era la mano derecha de Viper. Su ingeniero jefe.", "en": "He was Viper's right hand. Her chief engineer."} },
             { "speaker": "ghost", "text": {"es": "Cada coche que ella condujo a la victoria... él lo construyó.", "en": "Every car she drove to victory... he built it."} },
-            { "speaker": "ghost", "text": {"es": "Eran un equipo. El mejor equipo del underground.", "en": "They were a team. The best team in the underground."} },
+            { "speaker": "ghost", "text": {"es": "Eran el equipo perfecto. Él ponía la lógica, ella ponía la rabia.", "en": "They were the perfect team. He brought the logic, she brought the rage."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "what_happened_then",
-                  "text": {"es": "¿Entonces qué pasó?", "en": "So what happened?"},
+                  "text": {"es": "¿Entonces qué pasó? ¿Por qué dejó de correr?", "en": "So what happened? Why did he stop racing?"},
                   "traits": ["curious"],
                   "points": 15,
-                  "leadsTo": "nudo_betrayal"
+                  "leadsTo": "nudo_accident"
                 },
                 {
                   "id": "viper_knew",
@@ -1151,90 +1119,93 @@
                   "traits": ["perceptive"],
                   "points": 20,
                   "setsMemory": { "askedAboutViperKnowledge": true },
-                  "leadsTo": "nudo_viper"
+                  "leadsTo": "nudo_viper_knew"
                 }
               ]
             }
           ],
           "branches": {
-            "nudo_betrayal": [
-              { "speaker": "ghost", "text": {"es": "Los patrocinadores llegaron.", "en": "The sponsors came."} },
-              { "speaker": "ghost", "text": {"es": "Grandes marcas. Dinero real. Fama.", "en": "Big brands. Real money. Fame."} },
-              { "speaker": "ghost", "text": {"es": "Pero tenían condiciones. Querían que Viper trabajara con sus ingenieros.", "en": "But they had conditions. They wanted Viper to work with their engineers."} },
-              { "speaker": "ghost", "text": {"es": "Viper eligió el dinero.", "en": "Viper chose the money."} },
+            "nudo_accident": [
+              { "speaker": "ghost", "text": {"es": "El marido de Viper.", "en": "Viper's husband."} },
+              { "speaker": "ghost", "text": {"es": "El padre de Muscle.", "en": "Muscle's father."} },
+              { "speaker": "ghost", "text": {"es": "Murió en un accidente. Una noche. En la pista.", "en": "Died in a crash. One night. On the track."} },
               { "speaker": "ghost", "text": "..." },
-              { "speaker": "ghost", "text": {"es": "Dejó a tu abuelo atrás.", "en": "Left your grandfather behind."} },
+              { "speaker": "ghost", "text": {"es": "No fue en un coche de tu abuelo. Eso es lo irónico.", "en": "It wasn't in one of your grandfather's cars. That's the irony."} },
+              { "speaker": "ghost", "text": {"es": "Pero Miller se culpó de todas formas. Dijo que debería haber revisado aquel coche. Que debería haber insistido.", "en": "But Miller blamed himself anyway. Said he should have checked that car. Should have insisted."} },
+              { "speaker": "ghost", "text": {"es": "Se hundió. Dejó las llaves inglesas. Dejó todo.", "en": "He sank. Put down the wrenches. Quit everything."} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "she_abandoned_him",
-                    "text": {"es": "Lo abandonó. Después de todo lo que hicieron juntos.", "en": "She abandoned him. After everything they did together."},
+                    "id": "not_his_fault",
+                    "text": {"es": "No fue culpa suya. No era su coche.", "en": "It wasn't his fault. It wasn't his car."},
                     "traits": ["empathetic"],
                     "points": 15,
-                    "setsMemory": { "understandsAbandonment": true },
-                    "continueToPhase": "desenlace"
+                    "setsMemory": { "defendedGrandfather": true },
+                    "leadsTo": "nudo_muscle_connection"
                   },
                   {
-                    "id": "cant_blame_her",
-                    "text": {"es": "No puedo culparla del todo. Esa es una decisión difícil.", "en": "I can't blame her entirely. That's a tough choice."},
-                    "traits": ["pragmatic"],
-                    "points": 10,
-                    "continueToPhase": "desenlace"
+                    "id": "guilt_broke_him",
+                    "text": {"es": "La culpa lo destrozó. Como un motor sin aceite.", "en": "The guilt destroyed him. Like an engine without oil."},
+                    "traits": ["perceptive"],
+                    "points": 20,
+                    "setsMemory": { "understandsGuilt": true },
+                    "leadsTo": "nudo_muscle_connection"
                   }
                 ]
               }
             ],
-            "nudo_viper": [
+            "nudo_viper_knew": [
               { "speaker": "ghost", "text": {"es": "Desde el principio.", "en": "From the beginning."} },
-              { "speaker": "ghost", "text": {"es": "Por eso aceptó entrenarte. Por eso fue tan dura contigo.", "en": "That's why she agreed to train you. That's why she was so hard on you."} },
-              { "speaker": "ghost", "text": {"es": "Culpa.", "en": "Guilt."} },
+              { "speaker": "ghost", "text": {"es": "Por eso Muscle te ayuda. Es la hija de Viper.", "en": "That's why Muscle helps you. She's Viper's daughter."} },
+              { "speaker": "ghost", "text": {"es": "Su padre murió en un accidente de pista. Una noche.", "en": "Her father died in a track accident. One night."} },
+              { "speaker": "ghost", "text": {"es": "No fue en un coche de tu abuelo, pero Miller se culpó de todas formas.", "en": "It wasn't in your grandfather's car, but Miller blamed himself anyway."} },
               { "speaker": "ghost", "text": "..." },
-              { "speaker": "ghost", "text": {"es": "Dejó a tu abuelo cuando los patrocinadores llegaron.", "en": "She left your grandfather when the sponsors came."} },
-              { "speaker": "ghost", "text": {"es": "Eligió la fama sobre la lealtad.", "en": "Chose fame over loyalty."} },
+              { "speaker": "ghost", "text": {"es": "Viper no le guarda rencor. Pero quiere el ETK-I. Dice que es el coche que Miller le 'debía'.", "en": "Viper doesn't hold a grudge. But she wants the ETK-I. Says it's the car Miller 'owed' her."} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "muscle_too",
-                    "text": {"es": "¿Y Muscle? ¿También lo sabe?", "en": "And Muscle? Does she know too?"},
+                    "id": "muscle_knows",
+                    "text": {"es": "¿Muscle sabe todo esto? ¿Que Viper está detrás del robo?", "en": "Does Muscle know all this? That Viper is behind the theft?"},
                     "traits": ["perceptive"],
                     "points": 20,
                     "setsMemory": { "connectedTheDots": true },
-                    "leadsTo": "nudo_muscle"
+                    "leadsTo": "nudo_muscle_connection"
                   },
                   {
-                    "id": "all_lies",
-                    "text": {"es": "Así que todo ha sido mentira. Desde el principio.", "en": "So it's all been a lie. From the start."},
-                    "traits": ["angry"],
-                    "points": 10,
+                    "id": "viper_wanted_car",
+                    "text": {"es": "Así que Shadow robó el coche para Viper...", "en": "So Shadow stole the car for Viper..."},
+                    "traits": ["perceptive"],
+                    "points": 15,
                     "continueToPhase": "desenlace"
                   }
                 ]
               }
             ],
-            "nudo_muscle": [
-              { "speaker": "ghost", "text": {"es": "Muscle lo vio todo.", "en": "Muscle saw it all."} },
-              { "speaker": "ghost", "text": {"es": "Era una niña entonces, pero lo recuerda.", "en": "She was a kid then, but she remembers."} },
-              { "speaker": "ghost", "text": {"es": "Vio a su madre abandonar al hombre que la hizo campeona.", "en": "Saw her mother abandon the man who made her a champion."} },
-              { "speaker": "ghost", "text": {"es": "Por eso te ayuda. Por eso se arriesga por ti.", "en": "That's why she helps you. That's why she risks for you."} },
-              { "speaker": "ghost", "text": {"es": "Está intentando arreglar lo que su madre rompió.", "en": "She's trying to fix what her mother broke."} },
+            "nudo_muscle_connection": [
+              { "speaker": "ghost", "text": {"es": "Muscle lo vio todo de niña. La muerte de su padre. La caída de Miller.", "en": "Muscle saw it all as a child. Her father's death. Miller's fall."} },
+              { "speaker": "ghost", "text": {"es": "Vio a su madre perder a su marido y al mejor mecánico del mundo en la misma noche.", "en": "She watched her mother lose her husband and the best mechanic in the world on the same night."} },
+              { "speaker": "ghost", "text": {"es": "Por eso te ayuda. Está intentando arreglar lo que aquella noche rompió.", "en": "That's why she helps you. She's trying to fix what that night broke."} },
+              { "speaker": "ghost", "text": "..." },
+              { "speaker": "ghost", "text": {"es": "Y Viper... Viper quiere recuperar el ETK-I porque cree que Miller se lo debía.", "en": "And Viper... Viper wants the ETK-I back because she believes Miller owed it to her."} },
+              { "speaker": "ghost", "text": {"es": "Por eso Shadow lo robó. No por dinero. Por encargo de Viper.", "en": "That's why Shadow stole it. Not for money. On Viper's orders."} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "they_all_knew",
-                    "text": {"es": "Todos lo sabían. Y nadie me dijo nada.", "en": "They all knew. And nobody told me."},
-                    "traits": ["hurt"],
-                    "points": 15,
+                    "id": "all_connected",
+                    "text": {"es": "Todo está conectado. Shadow, Viper, el abuelo... Todo.", "en": "It's all connected. Shadow, Viper, grandpa... Everything."},
+                    "traits": ["perceptive"],
+                    "points": 20,
+                    "setsMemory": { "understandsFullPicture": true },
                     "continueToPhase": "desenlace"
                   },
                   {
-                    "id": "understand_now",
-                    "text": {"es": "Ahora lo entiendo todo. Por qué Muscle ha estado ahí.", "en": "I understand now. Why Muscle has been there."},
-                    "traits": ["empathetic"],
-                    "points": 20,
-                    "setsMemory": { "understandsMuscleMotivation": true },
+                    "id": "too_much",
+                    "text": {"es": "Es demasiado. Necesito un momento.", "en": "It's too much. I need a moment."},
+                    "traits": ["honest"],
+                    "points": 10,
                     "continueToPhase": "desenlace"
                   }
                 ]
@@ -1252,51 +1223,44 @@
               "choices": [
                 {
                   "id": "honor_him",
-                  "text": {"es": "Voy a honrar su memoria. Terminaré lo que él empezó.", "en": "I'm going to honor his memory. Finish what he started."},
+                  "text": {"es": "Voy a honrar su memoria. Recuperaré el ETK-I y terminaré lo que él empezó.", "en": "I'm going to honor his memory. I'll get the ETK-I back and finish what he started."},
                   "traits": ["determined", "loyal"],
                   "points": 25,
                   "setsMemory": { "choosesHonor": true }
                 },
                 {
                   "id": "forgive_viper",
-                  "text": {"es": "Voy a perdonar a Viper. Todos cometemos errores.", "en": "I'm going to forgive Viper. We all make mistakes."},
+                  "text": {"es": "Voy a enfrentarme a Viper. Pero no con odio. Con la verdad.", "en": "I'm going to face Viper. But not with hate. With the truth."},
                   "traits": ["empathetic", "mature"],
                   "points": 25,
                   "setsMemory": { "choosesForgiveness": true }
                 },
                 {
                   "id": "my_own_path",
-                  "text": {"es": "Voy a seguir mi propio camino. No el suyo, no el de ella.", "en": "I'm going to follow my own path. Not his, not hers."},
+                  "text": {"es": "Voy a recuperar MI coche. No el del abuelo, no el de Viper. El mío.", "en": "I'm going to get MY car back. Not grandpa's, not Viper's. Mine."},
                   "traits": ["independent"],
                   "points": 20,
                   "setsMemory": { "choosesIndependence": true }
-                },
-                {
-                  "id": "need_time",
-                  "text": {"es": "Necesito tiempo para procesar todo esto.", "en": "I need time to process all of this."},
-                  "traits": ["thoughtful"],
-                  "points": 15
                 }
               ]
             },
             { "speaker": "ghost", "text": "..." },
-            { "speaker": "ghost", "text": {"es": "Tu coche está en el almacén del viejo muelle. Coordenadas enviadas.", "en": "Your car is at the old dock warehouse. Coordinates sent."} },
-            { "speaker": "ghost", "text": {"es": "Está intacto. Mejor que intacto, de hecho.", "en": "It's untouched. Better than untouched, actually."} },
-            { "speaker": "ghost", "text": {"es": "Le hice algunas mejoras mientras lo tenía.", "en": "Made some improvements while I had it."} },
+            { "speaker": "ghost", "text": {"es": "Shadow va a correr la Big One con tu ETK-I.", "en": "Shadow is going to race the Big One with your ETK-I."} },
+            { "speaker": "ghost", "text": {"es": "Si quieres recuperarlo, tendrás que ganárselo en la pista.", "en": "If you want it back, you'll have to win it on the track."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "thank_you_everything",
-                  "text": {"es": "Gracias. Por todo. Por salvar el coche, por la verdad.", "en": "Thank you. For everything. For saving the car, for the truth."},
-                  "traits": ["grateful"],
+                  "id": "accept_challenge",
+                  "text": {"es": "Que conduzca mi coche. Lo recuperaré con mis manos en el volante.", "en": "Let him drive my car. I'll get it back with my hands on the wheel."},
+                  "traits": ["determined"],
                   "points": 25
                 },
                 {
-                  "id": "why_help_me",
-                  "text": {"es": "¿Por qué me has ayudado tanto? ¿Qué ganas tú con esto?", "en": "Why have you helped me so much? What do you get out of this?"},
+                  "id": "why_help",
+                  "text": {"es": "¿Por qué me has ayudado tanto, Ghost? ¿Qué ganas tú?", "en": "Why have you helped me so much, Ghost? What do you get out of this?"},
                   "traits": ["cautious"],
-                  "points": 10
+                  "points": 15
                 }
               ]
             },
@@ -1305,8 +1269,7 @@
             { "speaker": "ghost", "text": {"es": "Él me sacó. Me dio una segunda oportunidad.", "en": "He pulled me out. Gave me a second chance."} },
             { "speaker": "ghost", "text": "..." },
             { "speaker": "ghost", "text": {"es": "Esta es mi forma de devolverle el favor.", "en": "This is my way of returning the favor."} },
-            { "speaker": "ghost", "text": {"es": "Ahora ve. Construye algo grande.", "en": "Now go. Build something great."} },
-            { "speaker": "ghost", "text": {"es": "Hazlo orgulloso.", "en": "Make him proud."} }
+            { "speaker": "ghost", "text": {"es": "Ahora ve. Gana la Big One. Recupera lo que es tuyo.", "en": "Now go. Win the Big One. Take back what's yours."} }
           ],
           "end": {
             "result": "success",
@@ -1316,7 +1279,7 @@
             },
             "setsMemory": { "knowsGrandfatherTruth": true, "knowsViperConnection": true, "ghostStoryComplete": true },
             "cooldown": 300,
-            "teaser": {"es": "La historia completa revelada. Ahora el futuro está en tus manos.", "en": "The full story revealed. Now the future is in your hands."}
+            "teaser": {"es": "La verdad completa revelada. Shadow conduce tu coche en la Big One. Es hora de recuperarlo.", "en": "The full truth revealed. Shadow drives your car in the Big One. It's time to take it back."}
           }
         }
       },

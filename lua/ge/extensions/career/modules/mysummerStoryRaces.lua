@@ -8,9 +8,10 @@ M.moduleName = "career_modules_mysummerStoryRaces"
 M.dependencies = {
   "career_career",
   "career_saveSystem",
-  "career_modules_mysummerRaceManager",
-  "career_modules_mysummerMissions",
-  "career_modules_mysummerChat",
+  "career_branches",
+  "career_modules_playerAttributes",
+  -- Note: mysummerRaceManager, mysummerMissions, and mysummerChat are checked at runtime
+  -- to avoid circular dependencies
 }
 
 local logTag = "mysummerStoryRaces"
@@ -274,13 +275,15 @@ local storyMissions = {
 }
 
 -- Story races organized by chapter, matching branch level requirements from info.json
+-- 8-Phase System (Phase 0-8)
 local storyRaces = {
-  -- Prologue (Level 0): 3 races - Street Racing Begins
+  -- Phase 0 (Level 0): 3 races - Prologue (The Weight of Silence)
   {
     chapter = 0,
     chapterName = "prologue",
-    requiredLevel = 0, -- Available from start
+    requiredLevel = 0, -- Available from start (0 XP)
     requiresProjectCar = false,
+    requiresCovet = false,
     races = {
       {
         id = "prologue_race1",
@@ -311,195 +314,317 @@ local storyRaces = {
       },
     },
   },
-  -- Chapter 1 (Level 1): 3 races - Racing Among Friends
+  -- Phase 1 (Level 1): 3 races - Origins
   {
     chapter = 1,
     chapterName = "chapter1",
-    requiredLevel = 1, -- Requires 300 XP
+    requiredLevel = 1, -- Requires 350 XP
     requiresProjectCar = false,
+    requiresCovet = false,
     races = {
       {
         id = "ch1_race1",
         missionId = "west_coast_usa/aiRace/004-STREET/info.json",
-        name = { en = "Parking Night", es = "Noche en el Parking" },
-        description = { en = "Informal race at the old parking lot", es = "Carrera informal en el viejo parking" },
-        contact = "ghost",
+        name = { en = "The Dance of Three", es = "La Danza de los Tres" },
+        description = { en = "Racing with Rook and Nova - two philosophies clash", es = "Corriendo con Rook y Nova - dos filosofias chocan" },
+        contact = "rook",
         xpReward = 250,
         moneyReward = 1000,
       },
       {
         id = "ch1_race2",
         missionId = "west_coast_usa/aiRace/005-STREET/info.json",
-        name = { en = "Backroad Sprint", es = "Sprint Rural" },
-        description = { en = "Country roads with friends", es = "Carreteras rurales con amigos" },
-        contact = "ghost",
+        name = { en = "The Rhythm of Asphalt", es = "El Ritmo del Asfalto" },
+        description = { en = "Rook's technical challenge - precision over power", es = "Desafio tecnico de Rook - precision sobre potencia" },
+        contact = "rook",
         xpReward = 250,
         moneyReward = 1200,
       },
       {
         id = "ch1_race3",
         missionId = "west_coast_usa/aiRace/006-STREET/info.json",
-        name = { en = "Highway Challenge", es = "Desafio en Autopista" },
-        description = { en = "Late night highway race", es = "Carrera nocturna en autopista" },
+        name = { en = "The Crack", es = "La Grieta" },
+        description = { en = "Tensions rise as Ghost warns of danger ahead", es = "Las tensiones aumentan mientras Ghost advierte del peligro" },
         contact = "ghost",
         xpReward = 280,
         moneyReward = 1500,
       },
     },
   },
-  -- Chapter 2 (Level 2): 2 races - Low Underground
+  -- Phase 2 (Level 2): 3 races - The Split
   {
     chapter = 2,
     chapterName = "chapter2",
-    requiredLevel = 2, -- Requires 800 XP
+    requiredLevel = 2, -- Requires 850 XP
     requiresProjectCar = false,
+    requiresCovet = false,
     races = {
       {
         id = "ch2_race1",
         missionId = "west_coast_usa/aiRace/007-STREET/info.json",
-        name = { en = "Midnight Street", es = "Calle de Medianoche" },
-        description = { en = "First taste of the underground", es = "Primer contacto con el underground" },
-        contact = "ghost",
+        name = { en = "Point of Friction", es = "Punto de Friccion" },
+        description = { en = "Nova vs Rook argument intensifies mid-race", es = "La discusion Nova vs Rook se intensifica en plena carrera" },
+        contact = "nova",
         xpReward = 300,
         moneyReward = 2000,
       },
       {
         id = "ch2_race2",
         missionId = "west_coast_usa/aiRace/008-STREET/info.json",
-        name = { en = "Industrial Gauntlet", es = "Reto Industrial" },
-        description = { en = "High stakes in the industrial zone", es = "Grandes apuestas en la zona industrial" },
-        contact = "ghost",
+        name = { en = "The Weight of Steel", es = "El Peso del Acero" },
+        description = { en = "Muscle appears, watching your ETK-I with interest", es = "Muscle aparece, observando tu ETK-I con interes" },
+        contact = "muscle",
         xpReward = 320,
         moneyReward = 2500,
       },
+      {
+        id = "ch2_race3",
+        missionId = "west_coast_usa/aiRace/009-STREET/info.json",
+        name = { en = "Ultimatum", es = "Ultimatum" },
+        description = { en = "Rook begs you to talk sense into Nova", es = "Rook te suplica que hagas entrar en razon a Nova" },
+        contact = "rook",
+        xpReward = 350,
+        moneyReward = 3000,
+      },
     },
   },
-  -- Chapter 3 (Level 3): Rally content - Regional Rallies (PLACEHOLDER - to be added)
+  -- Phase 3 (Level 3): 3 races - The Crisis
   {
     chapter = 3,
     chapterName = "chapter3",
-    requiredLevel = 3, -- Requires 1500 XP
+    requiredLevel = 3, -- Requires 1600 XP
     requiresProjectCar = false,
+    requiresCovet = false,
     races = {
-      -- PLACEHOLDER RACES - Repeat early races until rally content is added
       {
-        id = "ch3_placeholder1",
+        id = "ch3_race1",
+        missionId = "west_coast_usa/aiRace/010-STREET/info.json",
+        name = { en = "Material Tension", es = "Tension de Materiales" },
+        description = { en = "Rook and Nova teach opposite lessons during the race", es = "Rook y Nova enseñan lecciones opuestas durante la carrera" },
+        contact = "rook",
+        xpReward = 400,
+        moneyReward = 3500,
+      },
+      {
+        id = "ch3_race2",
         missionId = "west_coast_usa/aiRace/001-STREET/info.json",
-        name = { en = "[PLACEHOLDER] Downtown Dash", es = "[PLACEHOLDER] Carrera Centro" },
-        description = { en = "Placeholder - Rally content coming soon", es = "Placeholder - Contenido rally proximamente" },
+        name = { en = "Viper's Whisper", es = "El Murmullo de Viper" },
+        description = { en = "Ghost reminds you of the past - your grandfather and Viper", es = "Ghost te recuerda el pasado - tu abuelo y Viper" },
         contact = "ghost",
-        xpReward = 200,
-        moneyReward = 500,
+        xpReward = 420,
+        moneyReward = 3800,
       },
       {
-        id = "ch3_placeholder2",
+        id = "ch3_race3",
         missionId = "west_coast_usa/aiRace/002-STREET/info.json",
-        name = { en = "[PLACEHOLDER] Industrial Loop", es = "[PLACEHOLDER] Circuito Industrial" },
-        description = { en = "Placeholder - Rally content coming soon", es = "Placeholder - Contenido rally proximamente" },
-        contact = "ghost",
-        xpReward = 200,
-        moneyReward = 500,
-      },
-      {
-        id = "ch3_placeholder3",
-        missionId = "west_coast_usa/aiRace/003-STREET/info.json",
-        name = { en = "[PLACEHOLDER] Harbor Run", es = "[PLACEHOLDER] Carrera del Puerto" },
-        description = { en = "Placeholder - Rally content coming soon", es = "Placeholder - Contenido rally proximamente" },
-        contact = "ghost",
-        xpReward = 220,
-        moneyReward = 700,
+        name = { en = "Nova's Proposal", es = "La Propuesta de Nova" },
+        description = { en = "Nova approaches you privately about leaving this town", es = "Nova te aborda en privado sobre dejar este pueblo" },
+        contact = "nova",
+        xpReward = 450,
+        moneyReward = 4000,
       },
     },
   },
-  -- Chapter 4 (Level 4): 2 races - High Underground
+  -- Phase 4 (Level 4): 3 races - The Split (Final Rupture)
   {
     chapter = 4,
     chapterName = "chapter4",
-    requiredLevel = 4, -- Requires 2500 XP
+    requiredLevel = 4, -- Requires 2400 XP
     requiresProjectCar = false,
+    requiresCovet = false,
     races = {
       {
         id = "ch4_race1",
-        missionId = "west_coast_usa/aiRace/009-STREET/info.json",
-        name = { en = "Night Kings", es = "Reyes de la Noche" },
-        description = { en = "Only the best race here", es = "Solo los mejores corren aqui" },
-        contact = "shadow",
-        xpReward = 350,
-        moneyReward = 5000,
+        missionId = "west_coast_usa/aiRace/003-STREET/info.json",
+        name = { en = "Ignition Failure", es = "Fallo de Encendido" },
+        description = { en = "Nova's car malfunctions - Shadow's parts are risky", es = "El coche de Nova falla - las piezas de Shadow son arriesgadas" },
+        contact = "nova",
+        xpReward = 480,
+        moneyReward = 4500,
       },
       {
         id = "ch4_race2",
-        missionId = "west_coast_usa/aiRace/010-STREET/info.json",
-        name = { en = "Shadow's Test", es = "Prueba de Shadow" },
-        description = { en = "High heat, high stakes", es = "Mucho calor, grandes apuestas" },
+        missionId = "west_coast_usa/aiRace/004-STREET/info.json",
+        name = { en = "The Interrogation", es = "El Interrogatorio" },
+        description = { en = "Rook asks you about Nova's connection to Shadow", es = "Rook te pregunta sobre la conexion de Nova con Shadow" },
+        contact = "rook",
+        xpReward = 500,
+        moneyReward = 5000,
+      },
+      {
+        id = "ch4_race3",
+        missionId = "west_coast_usa/aiRace/005-STREET/info.json",
+        name = { en = "The Explosion", es = "La Explosion" },
+        description = { en = "Public breakup over the radio - the team shatters", es = "Ruptura publica por la radio - el equipo se destruye" },
+        contact = "ghost",
+        xpReward = 520,
+        moneyReward = 5500,
+      },
+    },
+  },
+  -- Phase 5 (Level 5): 4 races - Rally Regional (Dust and Betrayal)
+  {
+    chapter = 5,
+    chapterName = "chapter5",
+    requiredLevel = 5, -- Requires 3300 XP
+    requiresProjectCar = true, -- MUST use ETK-I
+    requiresCovet = false,
+    races = {
+      {
+        id = "ch5_rally1",
+        missionId = "west_coast_usa/aiRace/007-STREET/info.json",
+        name = { en = "Gravel Baptism", es = "Bautismo de Grava" },
+        description = { en = "First rally stage - the ETK-I sounds perfect", es = "Primera etapa rally - el ETK-I suena perfecto" },
+        contact = "ghost",
+        xpReward = 550,
+        moneyReward = 6000,
+      },
+      {
+        id = "ch5_rally2",
+        missionId = "west_coast_usa/aiRace/008-STREET/info.json",
+        name = { en = "Forest Fire", es = "Fuego en el Bosque" },
+        description = { en = "Shadow sees profit in your success", es = "Shadow ve ganancia en tu exito" },
         contact = "shadow",
-        xpReward = 400,
+        xpReward = 580,
+        moneyReward = 6500,
+      },
+      {
+        id = "ch5_rally3",
+        missionId = "west_coast_usa/aiRace/009-STREET/info.json",
+        name = { en = "Final Plea", es = "Los Alegatos Finales" },
+        description = { en = "CRITICAL: Choose Rook or Nova - this choice is permanent", es = "CRITICO: Elige Rook o Nova - esta eleccion es permanente" },
+        contact = "rook",
+        xpReward = 600,
+        moneyReward = 7000,
+      },
+      {
+        id = "ch5_rally4",
+        missionId = "west_coast_usa/aiRace/010-STREET/info.json",
+        name = { en = "Last Victory", es = "La Ultima Victoria" },
+        description = { en = "You win the rally. Then... darkness. The car is stolen.", es = "Ganas el rally. Luego... oscuridad. El coche es robado." },
+        contact = "ghost",
+        xpReward = 650,
+        moneyReward = 8000,
+      },
+    },
+  },
+  -- Phase 6 (Level 6): 4 races - Copa Covet (Rock Bottom)
+  {
+    chapter = 6,
+    chapterName = "chapter6",
+    requiredLevel = 6, -- Requires 4500 XP
+    requiresProjectCar = false,
+    requiresCovet = true, -- MUST use Covet
+    races = {
+      {
+        id = "ch6_covet1",
+        missionId = "west_coast_usa/aiRace/001-STREET/info.json",
+        name = { en = "Scrap and Humiliation", es = "Chatarra y Humillacion" },
+        description = { en = "From rally winner to junkyard Covet driver", es = "De ganador de rally a conductor de Covet de desguace" },
+        contact = "ghost",
+        xpReward = 150,
+        moneyReward = 300,
+      },
+      {
+        id = "ch6_covet2",
+        missionId = "west_coast_usa/aiRace/002-STREET/info.json",
+        name = { en = "Traitor's Silence", es = "El Silencio del Traidor" },
+        description = { en = "Your partner has vanished. Techie shows 'evidence' of betrayal", es = "Tu pareja ha desaparecido. Techie muestra 'evidencia' de traicion" },
+        contact = "techie",
+        xpReward = 150,
+        moneyReward = 300,
+      },
+      {
+        id = "ch6_covet3",
+        missionId = "west_coast_usa/aiRace/003-STREET/info.json",
+        name = { en = "Other Side of the Coin", es = "La Otra Cara de la Moneda" },
+        description = { en = "The one you didn't choose mocks your misfortune", es = "Quien no elegiste se burla de tu desgracia" },
+        contact = "nova",
+        xpReward = 180,
+        moneyReward = 400,
+      },
+      {
+        id = "ch6_covet4",
+        missionId = "west_coast_usa/aiRace/004-STREET/info.json",
+        name = { en = "End of Covet Cup", es = "Final de la Copa Covet" },
+        description = { en = "You win the pass, but the ETK-I is still gone", es = "Ganas el pase, pero el ETK-I sigue perdido" },
+        contact = "shadow",
+        xpReward = 200,
+        moneyReward = 500,
+      },
+    },
+  },
+  -- Phase 7 (Level 7): 4 races - Clasificatorias (The Iron Trail)
+  {
+    chapter = 7,
+    chapterName = "chapter7",
+    requiredLevel = 7, -- Requires 6000 XP
+    requiresProjectCar = false,
+    requiresCovet = false,
+    races = {
+      {
+        id = "ch7_qualifier1",
+        missionId = "west_coast_usa/aiRace/005-STREET/info.json",
+        name = { en = "Puzzle Pieces", es = "Piezas del Puzzle" },
+        description = { en = "You see your ETK-I's parts on rival cars", es = "Ves piezas de tu ETK-I en coches rivales" },
+        contact = "ghost",
+        xpReward = 500,
+        moneyReward = 4000,
+      },
+      {
+        id = "ch7_qualifier2",
+        missionId = "west_coast_usa/aiRace/006-STREET/info.json",
+        name = { en = "Ghost in the Paddock", es = "El Fantasma en el Paddock" },
+        description = { en = "Anonymous messages hint Shadow manipulated everything", es = "Mensajes anonimos insinuan que Shadow manipulo todo" },
+        contact = "system",
+        xpReward = 520,
+        moneyReward = 4500,
+      },
+      {
+        id = "ch7_qualifier3",
+        missionId = "west_coast_usa/aiRace/007-STREET/info.json",
+        name = { en = "The Ambush", es = "La Emboscada" },
+        description = { en = "Someone tries to take you out of the race violently", es = "Alguien intenta sacarte de la carrera violentamente" },
+        contact = "shadow",
+        xpReward = 550,
+        moneyReward = 5000,
+      },
+      {
+        id = "ch7_qualifier4",
+        missionId = "west_coast_usa/aiRace/008-STREET/info.json",
+        name = { en = "The Reunion", es = "El Reencuentro" },
+        description = { en = "Your partner returns. The truth is revealed. Shadow challenges you.", es = "Tu pareja regresa. La verdad se revela. Shadow te desafia." },
+        contact = "rook",
+        xpReward = 600,
         moneyReward = 6000,
       },
     },
   },
-  -- Chapter 5 (Level 5): Circuit/Rally content - Official Rallies (PLACEHOLDER - to be added)
+  -- Phase 8 (Level 8): 2 races - The Big One (Reclamation and Glory)
   {
-    chapter = 5,
-    chapterName = "chapter5",
-    requiredLevel = 5, -- Requires 4000 XP
-    requiresProjectCar = true,
+    chapter = 8,
+    chapterName = "chapter8",
+    requiredLevel = 8, -- Requires 7800 XP
+    requiresProjectCar = true, -- ETK-I recovered and used
+    requiresCovet = false,
     races = {
-      -- PLACEHOLDER RACES - Repeat races until circuit/rally content is added
       {
-        id = "ch5_placeholder1",
-        missionId = "west_coast_usa/aiRace/004-STREET/info.json",
-        name = { en = "[PLACEHOLDER] Parking Night", es = "[PLACEHOLDER] Noche en el Parking" },
-        description = { en = "Placeholder - Circuit content coming soon", es = "Placeholder - Contenido circuito proximamente" },
-        contact = "ghost",
-        xpReward = 250,
-        moneyReward = 1000,
+        id = "ch8_duel_shadow",
+        missionId = "west_coast_usa/aiRace/009-STREET/info.json",
+        name = { en = "Justice at 200 km/h", es = "Justicia a 200 km/h" },
+        description = { en = "1vs1 duel against Shadow - he drives YOUR ETK-I", es = "Duelo 1vs1 contra Shadow - el conduce TU ETK-I" },
+        contact = "shadow",
+        xpReward = 800,
+        moneyReward = 15000,
       },
       {
-        id = "ch5_placeholder2",
-        missionId = "west_coast_usa/aiRace/005-STREET/info.json",
-        name = { en = "[PLACEHOLDER] Backroad Sprint", es = "[PLACEHOLDER] Sprint Rural" },
-        description = { en = "Placeholder - Circuit content coming soon", es = "Placeholder - Contenido circuito proximamente" },
-        contact = "ghost",
-        xpReward = 250,
-        moneyReward = 1200,
-      },
-      {
-        id = "ch5_placeholder3",
-        missionId = "west_coast_usa/aiRace/006-STREET/info.json",
-        name = { en = "[PLACEHOLDER] Highway Challenge", es = "[PLACEHOLDER] Desafio en Autopista" },
-        description = { en = "Placeholder - Circuit content coming soon", es = "Placeholder - Contenido circuito proximamente" },
-        contact = "ghost",
-        xpReward = 280,
-        moneyReward = 1500,
-      },
-    },
-  },
-  -- Chapter 6 (Level 6): The Big One (PLACEHOLDER - to be added)
-  {
-    chapter = 6,
-    chapterName = "chapter6",
-    requiredLevel = 6, -- Requires 6000 XP
-    requiresProjectCar = true,
-    races = {
-      -- PLACEHOLDER RACES - Repeat races until The Big One is created
-      {
-        id = "ch6_placeholder1",
-        missionId = "west_coast_usa/aiRace/007-STREET/info.json",
-        name = { en = "[PLACEHOLDER] Midnight Street", es = "[PLACEHOLDER] Calle de Medianoche" },
-        description = { en = "Placeholder - The Big One coming soon", es = "Placeholder - La Gran Carrera proximamente" },
-        contact = "ghost",
-        xpReward = 300,
-        moneyReward = 2000,
-      },
-      {
-        id = "ch6_placeholder2",
-        missionId = "west_coast_usa/aiRace/008-STREET/info.json",
-        name = { en = "[PLACEHOLDER] Industrial Gauntlet", es = "[PLACEHOLDER] Reto Industrial" },
-        description = { en = "Placeholder - The Big One coming soon", es = "Placeholder - La Gran Carrera proximamente" },
-        contact = "ghost",
-        xpReward = 320,
-        moneyReward = 2500,
+        id = "ch8_bigone",
+        missionId = "west_coast_usa/aiRace/010-STREET/info.json",
+        name = { en = "Grandfather's Dream", es = "El Sueno del Abuelo" },
+        description = { en = "The Big One. Against Viper. For both of you.", es = "The Big One. Contra Viper. Por ambos." },
+        contact = "viper",
+        xpReward = 1000,
+        moneyReward = 50000,
       },
     },
   },
@@ -518,7 +643,95 @@ local state = {
   -- Story dialogue state
   drivingDialogueTriggered = {}, -- Which dialogues have been shown
   missionElapsedTime = 0, -- Time elapsed since story mission started (for timed dialogues)
+  -- Narrative event tracking (per race instance)
+  narrativeEvents = {
+    raceStartTriggered = false,  -- Has race_start event been triggered?
+    raceMidTriggered = false,    -- Has race_mid event been triggered?
+    raceEndTriggered = false,    -- Has race_end event been triggered?
+    raceStartTime = 0,           -- When did the player start moving?
+    playerMovedInRace = false,   -- Has player started moving? (for race_start detection)
+    missionEnded = false,        -- Has the race mission ended? (for race_end detection)
+  },
+  -- Progression tracking (per phase)
+  phaseRaceCount = {
+    [0] = 0,  -- Prologue: 0 races completed
+    [1] = 0,  -- Phase 1: 0 races completed
+    [2] = 0,  -- Phase 2: 0 races completed
+    [3] = 0,  -- Phase 3: 0 races completed
+    [4] = 0,  -- Phase 4: 0 races completed
+    [5] = 0,  -- Phase 5: 0 races completed
+    [6] = 0,  -- Phase 6: 0 races completed
+    [7] = 0,  -- Phase 7: 0 races completed
+    [8] = 0,  -- Phase 8: 0 races completed
+  },
 }
+
+-- ============================================================================
+-- NARRATIVE EVENT SYSTEM
+-- ============================================================================
+
+local RACE_MID_DELAY = 60  -- Seconds after race_start to trigger race_mid
+local PLAYER_SPEED_THRESHOLD = 5.0  -- m/s to consider "moving"
+
+-- Reset narrative events (called when starting/restarting a race)
+-- Parameters are optional - if not provided, will try to get from state
+local function resetNarrativeEvents(phase, raceCount)
+  state.narrativeEvents = {
+    raceStartTriggered = false,
+    raceMidTriggered = false,
+    raceEndTriggered = false,
+    raceStartTime = 0,
+    playerMovedInRace = false,
+    missionEnded = false,
+    missionEndTime = 0,
+    waitingForResult = false,  -- Waiting for completeRace after mission ended
+  }
+
+  -- Also reset narrative content (monologues/calls/SMS) so they can be seen again
+  if extensions.career_modules_mysummerNarrative and phase and raceCount then
+    extensions.career_modules_mysummerNarrative.resetRaceNarrative(phase, raceCount)
+    log("I", logTag, string.format("Narrative events and content reset for Phase %d, Race #%d", phase, raceCount))
+  else
+    log("I", logTag, "Narrative events reset (no phase/race info)")
+  end
+end
+
+-- Get player speed
+local function getPlayerSpeed()
+  local playerVehicle = be:getPlayerVehicle(0)
+  if not playerVehicle then return 0 end
+
+  local vel = playerVehicle:getVelocity()
+  if not vel then return 0 end
+
+  return vel:length()
+end
+
+-- Get current phase based on player level
+local function getCurrentPhase()
+  if not career_branches or not career_modules_playerAttributes then
+    return 0
+  end
+
+  local skillId = "mysummer-streetracing"
+  local totalXP = career_modules_playerAttributes.getAttributeValue(skillId) or 0
+  local level = career_branches.calcBranchLevelFromValue(totalXP, skillId)
+
+  return level or 0
+end
+
+-- Trigger narrative event based on phase and race count
+local function triggerNarrativeEventByCount(phase, raceCount, eventType)
+  if not extensions.career_modules_mysummerNarrative then return end
+
+  -- Build event key: "phase0_race1_start", "phase1_race2_mid", etc.
+  local eventKey = string.format("phase%d_race%d_%s", phase, raceCount, eventType)
+
+  log("I", logTag, string.format("Triggering narrative event '%s' (Phase %d, Race #%d, Type: %s)",
+    eventKey, phase, raceCount, eventType))
+
+  extensions.career_modules_mysummerNarrative.queueEvent(eventKey, 2)  -- 2 second delay
+end
 
 -- ============================================================================
 -- HELPER FUNCTIONS
@@ -529,14 +742,16 @@ local function getPlayerLevel()
   if career_modules_playerAttributes then
     local attr = career_modules_playerAttributes.getAttributeValue("mysummer-streetracing")
     if attr then
-      -- Convert XP to level
+      -- Convert XP to level (8-phase system)
       local xp = attr or 0
-      if xp >= 6000 then return 6
-      elseif xp >= 4000 then return 5
-      elseif xp >= 2500 then return 4
-      elseif xp >= 1500 then return 3
-      elseif xp >= 800 then return 2
-      elseif xp >= 300 then return 1
+      if xp >= 7800 then return 8
+      elseif xp >= 6000 then return 7
+      elseif xp >= 4500 then return 6
+      elseif xp >= 3300 then return 5
+      elseif xp >= 2400 then return 4
+      elseif xp >= 1600 then return 3
+      elseif xp >= 850 then return 2
+      elseif xp >= 350 then return 1
       else return 0
       end
     end
@@ -551,6 +766,15 @@ local function isPlayerInProjectCar()
 
   local model = playerVehicle:getJBeamFilename()
   return model == "etki"
+end
+
+-- Check if player is driving a Covet
+local function isPlayerInCovet()
+  local playerVehicle = be:getPlayerVehicle(0)
+  if not playerVehicle then return false end
+
+  local model = playerVehicle:getJBeamFilename()
+  return model == "covet"
 end
 
 -- Get localized text
@@ -612,14 +836,14 @@ local function findRaceIdByMission(beamngMissionId)
   end
 
   -- Otherwise search through all races to find matching missionId
-  -- BeamNG mission IDs are formatted like "west_coast_usa-aiRace-001-STREET"
+  -- BeamNG mission IDs are formatted like "west_coast_usa/aiRace/001-STREET"
   -- Our missionId is like "west_coast_usa/aiRace/001-STREET/info.json"
   for _, chapterData in ipairs(storyRaces) do
     for _, race in ipairs(chapterData.races) do
-      -- Convert our path format to BeamNG format for comparison
-      local ourPath = race.missionId:gsub("/info%.json$", ""):gsub("/", "-")
+      -- Remove "/info.json" from our path
+      local ourPath = race.missionId:gsub("/info%.json$", "")
       -- Also try with REPEAT suffix
-      local ourPathRepeat = ourPath:gsub("%-STREET$", "-STREET-REPEAT")
+      local ourPathRepeat = ourPath .. "-REPEAT"
 
       if beamngMissionId == ourPath or beamngMissionId == ourPathRepeat then
         return race.id
@@ -650,6 +874,10 @@ local function isRaceAccessible(raceId)
         -- Check project car requirement
         if chapterData.requiresProjectCar and not isPlayerInProjectCar() then
           return false, "projectcar", nil
+        end
+        -- Check Covet requirement
+        if chapterData.requiresCovet and not isPlayerInCovet() then
+          return false, "requirescovet", nil
         end
         return true, nil, nil
       end
@@ -753,6 +981,23 @@ local function selectMission(missionId)
   local accessible, reason, value = isMissionAccessible(missionId)
   if not accessible then
     log("W", logTag, "Mission not accessible: " .. missionId .. " reason: " .. tostring(reason))
+
+    -- Show UI feedback based on failure reason
+    if reason == "projectcar" then
+      local message = {
+        en = "This mission requires the ETK-I project car. Switch vehicles and try again.",
+        es = "Esta mision requiere el ETK-I del proyecto. Cambia de vehiculo e intenta de nuevo."
+      }
+      ui_message.addMessage("mysummer_vehicle_requirement", getLocalizedText(message), 5, "warning", "warning")
+
+    elseif reason == "level" then
+      local message = {
+        en = "You need more reputation to unlock this mission. (Required Level: " .. tostring(value) .. ")",
+        es = "Necesitas mas reputacion para desbloquear esta mision. (Nivel Requerido: " .. tostring(value) .. ")"
+      }
+      ui_message.addMessage("mysummer_level_requirement", getLocalizedText(message), 5, "warning", "info")
+    end
+
     return { success = false, reason = reason, value = value }
   end
 
@@ -832,6 +1077,13 @@ local function selectMission(missionId)
     })
   end
 
+  -- Trigger narrative event for mission selection (uses mission ID directly)
+  if extensions.career_modules_mysummerNarrative then
+    local eventId = missionId .. "_selected"
+    extensions.career_modules_mysummerNarrative.queueEvent(eventId, 2)
+    log("I", logTag, string.format("Triggering narrative event '%s' for mission selection", eventId))
+  end
+
   return { success = true }
 end
 
@@ -867,6 +1119,14 @@ local function onMissionCompleted(storyMissionId, success)
     -- Mark as completed
     state.completedMissions[storyMissionId] = true
 
+    -- Mark phase as completed in narrative system
+    local phase = mission.chapter
+    if phase and extensions.career_modules_mysummerNarrative then
+      local flagName = "phase" .. phase .. "_completed"
+      extensions.career_modules_mysummerNarrative.setStoryFlag(flagName, true)
+      log("I", logTag, string.format("Phase %d completed (mission: %s)", phase, storyMissionId))
+    end
+
     -- Award story XP (additional to mission rewards)
     local xpGained = mission.xpReward or 0
 
@@ -877,7 +1137,12 @@ local function onMissionCompleted(storyMissionId, success)
       )
     end
 
-    log("I", logTag, "Story mission completed: " .. storyMissionId .. " XP: " .. xpGained)
+    log("I", logTag, "Story contact work completed: " .. storyMissionId .. " XP: " .. xpGained)
+
+    -- Notify narrative system (contact works, not to be confused with BeamNG missions/races)
+    if extensions.career_modules_mysummerNarrative then
+      extensions.career_modules_mysummerNarrative.onContactWorkCompleted(storyMissionId)
+    end
 
     -- Show completion dialogue (after a short delay to let mission toast show first)
     if mission.completionDialogue and career_modules_mysummerChat then
@@ -940,6 +1205,30 @@ local function selectRace(raceId)
   local accessible, reason, value = isRaceAccessible(raceId)
   if not accessible then
     log("W", logTag, "Race not accessible: " .. raceId .. " reason: " .. tostring(reason))
+
+    -- Show UI feedback based on failure reason
+    if reason == "projectcar" then
+      local message = {
+        en = "Rally Regional races require the ETK-I project car. Switch vehicles and try again.",
+        es = "Las carreras del Rally Regional requieren el ETK-I del proyecto. Cambia de vehiculo e intenta de nuevo."
+      }
+      ui_message.addMessage("mysummer_vehicle_requirement", getLocalizedText(message), 5, "warning", "warning")
+
+    elseif reason == "requirescovet" then
+      local message = {
+        en = "Copa Covet races require an Ibishu Covet. You must purchase one from the dealership.",
+        es = "Las carreras de la Copa Covet requieren un Ibishu Covet. Debes comprar uno en el concesionario."
+      }
+      ui_message.addMessage("mysummer_vehicle_requirement", getLocalizedText(message), 5, "warning", "warning")
+
+    elseif reason == "level" then
+      local message = {
+        en = "You need more reputation to unlock this race. (Required Level: " .. tostring(value) .. ")",
+        es = "Necesitas mas reputacion para desbloquear esta carrera. (Nivel Requerido: " .. tostring(value) .. ")"
+      }
+      ui_message.addMessage("mysummer_level_requirement", getLocalizedText(message), 5, "warning", "info")
+    end
+
     return { success = false, reason = reason, value = value }
   end
 
@@ -983,6 +1272,17 @@ local function selectRace(raceId)
     return { success = false, reason = "noposition" }
   end
 
+  -- Determine phase and race count for this race
+  -- Use the race's chapter, NOT the player's current level
+  local currentPhase = chapterData.chapter
+
+  -- raceCount is based on how many you've COMPLETED, not the race's position
+  -- This allows any race to be completed in any order
+  local nextRaceCount = (state.phaseRaceCount[currentPhase] or 0) + 1
+
+  log("I", logTag, string.format("selectRace: %s (Phase %d, will be race #%d, completed so far: %d)",
+    raceId, currentPhase, nextRaceCount, state.phaseRaceCount[currentPhase] or 0))
+
   -- Track which race is selected (for controlling mission start and completion tracking)
   state.activeRace = {
     raceId = raceId,
@@ -993,6 +1293,8 @@ local function selectRace(raceId)
     xpReward = race.xpReward,
     moneyReward = race.moneyReward,
     chapter = chapterData.chapter,
+    phase = currentPhase,  -- Store phase for narrative reset
+    raceCount = nextRaceCount,  -- Will be the Nth race when completed (based on progress)
     startPos = { x = startPos.x, y = startPos.y, z = startPos.z },
     waitingForArrival = true, -- Player needs to drive there, then we'll start the correct mission
   }
@@ -1023,6 +1325,11 @@ local function selectRace(raceId)
     })
   end
 
+  -- Trigger narrative event for race selection using stored phase/raceCount
+  if state.activeRace.phase and state.activeRace.raceCount then
+    triggerNarrativeEventByCount(state.activeRace.phase, state.activeRace.raceCount, "selected")
+  end
+
   return { success = true }
 end
 
@@ -1031,7 +1338,36 @@ local function cancelRace()
   if not state.activeRace then return end
 
   log("I", logTag, "Race cancelled: " .. state.activeRace.raceId)
+
+  -- Get phase info before clearing activeRace
+  -- Handle legacy saves where phase/raceCount might not be stored
+  local racePhase = state.activeRace.phase or state.activeRace.chapter
+  local raceCount = state.activeRace.raceCount
+
+  if not raceCount and racePhase then
+    -- Fallback: calculate based on completion count
+    raceCount = (state.phaseRaceCount[racePhase] or 0) + 1
+    log("W", logTag, string.format("Legacy save: calculated raceCount=%d from phaseRaceCount", raceCount))
+  end
+
+  if not racePhase or not raceCount then
+    log("W", logTag, string.format("Cannot determine phase/count for race %s, skipping narrative reset",
+      state.activeRace.raceId))
+    state.activeRace = nil
+    saveState()
+    if core_groundMarkers then
+      core_groundMarkers.setPath(nil)
+    end
+    return
+  end
+
+  log("I", logTag, string.format("cancelRace: Resetting Phase %d, Race #%d", racePhase, raceCount))
+
   state.activeRace = nil
+
+  -- Reset narrative events so they can trigger again
+  resetNarrativeEvents(racePhase, raceCount)
+
   saveState()
 
   -- Clear waypoint
@@ -1039,6 +1375,91 @@ local function cancelRace()
     core_groundMarkers.setPath(nil)
   end
 end
+
+-- ============================================================================
+-- PHASE PROGRESSION
+-- ============================================================================
+
+-- Get chapter data by phase number
+local function getChapterData(phase)
+  for _, chapterData in ipairs(storyRaces) do
+    if chapterData.chapter == phase then
+      return chapterData
+    end
+  end
+  return nil
+end
+
+-- Mapeo de fases a misiones y contactos
+local phaseMissionMap = {
+  [0] = { missionId = nil, contact = nil },  -- Phase 0 has no mission (tutorial)
+  [1] = { missionId = "ch1_mission", contact = "ghost" },
+  [2] = { missionId = "ch2_mission", contact = "ghost" },
+  [3] = { missionId = "ch3_mission", contact = "ghost" },
+  [4] = { missionId = "ch4_mission", contact = "shadow" },
+  [5] = { missionId = "ch5_mission", contact = "ghost" },
+  [6] = { missionId = "ch6_mission", contact = "ghost" },
+}
+
+-- Notify player when all races for a phase are completed
+local function notifyPhaseRacesCompleted(phase)
+  log("I", logTag, string.format("Phase %d: All races completed!", phase))
+
+  local phaseInfo = phaseMissionMap[phase]
+  if not phaseInfo or not phaseInfo.missionId then
+    log("I", logTag, "Phase " .. phase .. " has no contact mission")
+    return
+  end
+
+  -- Send SMS from contact
+  if career_modules_mysummerChat then
+    local messages = {
+      [1] = { -- Ghost ch1_mission
+        es = "Has demostrado tu valor en las calles, Miller. Tengo un trabajo que requiere... discreción. Revisa el mapa.",
+        en = "You've proven yourself on the streets, Miller. I have a job that requires... discretion. Check the map."
+      },
+      [2] = { -- Ghost ch2_mission
+        es = "Tienes manos firmes. Necesito que muevas algo caliente. La policía estará atenta. ¿Interesado?",
+        en = "You've got steady hands. I need you to move something hot. Police will be watching. Interested?"
+      },
+      [3] = { -- Ghost ch3_mission
+        es = "Hay una rata en mi operación. Necesito que la sigas sin que se dé cuenta. Nueva misión disponible.",
+        en = "There's a rat in my operation. I need you to tail them without being spotted. New mission available."
+      },
+      [4] = { -- Shadow ch4_mission
+        es = "Alguien está hablando demasiado. Encárgate. No quiero preguntas. Solo resultados.",
+        en = "Someone's been talking too much. Handle it. I don't want questions. Just results."
+      },
+      [5] = { -- Ghost ch5_mission
+        es = "El rally se acerca. Pero primero, un último trabajo. Revisa el mapa.",
+        en = "The rally is coming. But first, one last job. Check the map."
+      },
+      [6] = { -- Ghost ch6_mission
+        es = "Copa Covet. Es humillante, lo sé. Pero es el único camino de vuelta. Revisa el mapa.",
+        en = "Covet Cup. It's humiliating, I know. But it's the only way back. Check the map."
+      },
+    }
+
+    local message = messages[phase]
+    if message then
+      career_modules_mysummerChat.sendContactMessage(phaseInfo.contact, message, { silent = false })
+      log("I", logTag, string.format("Sent mission notification SMS from %s for phase %d", phaseInfo.contact, phase))
+    end
+  end
+
+  -- Trigger mission unlock notification in UI
+  if guihooks then
+    guihooks.trigger("mysummerMissionUnlocked", {
+      phase = phase,
+      missionId = phaseInfo.missionId,
+      contact = phaseInfo.contact,
+    })
+  end
+end
+
+-- ============================================================================
+-- RACE COMPLETION
+-- ============================================================================
 
 -- Complete a race (called from race manager when race finishes)
 local function completeRace(raceId, position, time)
@@ -1049,12 +1470,16 @@ local function completeRace(raceId, position, time)
       for _, race in ipairs(chapter.races) do
         if race.id == raceId then
           found = true
+          -- Calculate what race number this will be (based on completion count)
+          local nextRaceCount = (state.phaseRaceCount[chapter.chapter] or 0) + 1
           state.activeRace = {
             raceId = raceId,
             xpReward = race.xpReward,
             moneyReward = race.moneyReward,
             contact = race.contact,
             chapter = chapter.chapter,
+            phase = chapter.chapter,  -- Add phase for narrative
+            raceCount = nextRaceCount,  -- Based on completion count, not position
           }
           break
         end
@@ -1066,32 +1491,69 @@ local function completeRace(raceId, position, time)
 
   local raceData = state.completedRaces[raceId] or { completed = false, bestTime = nil, wins = 0 }
 
-  -- Update completion status
-  raceData.completed = true
+  -- Clear the waiting flag (completeRace has been called)
+  state.narrativeEvents.waitingForResult = false
+
+  -- Check if this is first victory (before updating flags)
+  local isFirstVictory = position == 1 and not raceData.countedForPhase
+
+  -- Update completion status (only mark as completed if player won)
   if position and position == 1 then
+    raceData.completed = true
     raceData.wins = (raceData.wins or 0) + 1
+
+    -- Increment phase race counter (only on first win)
+    if not raceData.countedForPhase then
+      local phase = state.activeRace.chapter or getCurrentPhase()
+      local previousCount = state.phaseRaceCount[phase] or 0
+      state.phaseRaceCount[phase] = previousCount + 1
+      raceData.countedForPhase = true
+      log("I", logTag, string.format("Phase %d race count: %d (won race: %s)", phase, state.phaseRaceCount[phase], raceId))
+
+      -- Check if all races for this phase are completed
+      local chapterData = getChapterData(phase)
+      if chapterData and state.phaseRaceCount[phase] >= #chapterData.races then
+        notifyPhaseRacesCompleted(phase)
+      end
+    end
+
+    -- Mark that mission ended successfully - race_end listener will trigger when player moves
+    state.narrativeEvents.missionEnded = true
+    log("I", logTag, "Race WON - race_end listener activated (waiting for player movement)")
+  else
+    -- Lost or DNF - reset narrative so player can experience it again
+    log("I", logTag, "Race NOT won (position: " .. tostring(position) .. ") - resetting narrative")
+    local racePhase = state.activeRace.phase or state.activeRace.chapter
+    local raceCount = state.activeRace.raceCount
+
+    if not raceCount and racePhase then
+      -- Fallback: calculate based on completion count
+      raceCount = (state.phaseRaceCount[racePhase] or 0) + 1
+    end
+
+    if racePhase and raceCount then
+      resetNarrativeEvents(racePhase, raceCount)
+    end
   end
+
+  -- Always track best time, even if didn't win
   if time and (not raceData.bestTime or time < raceData.bestTime) then
     raceData.bestTime = time
   end
 
   state.completedRaces[raceId] = raceData
 
-  -- Award XP based on position
-  local xpMultiplier = 1.0
-  if position == 1 then xpMultiplier = 1.0
-  elseif position == 2 then xpMultiplier = 0.75
-  elseif position == 3 then xpMultiplier = 0.5
-  else xpMultiplier = 0.25
-  end
+  -- Rewards are handled by BeamNG's native star system (info.json starRewards)
+  -- BeamNG automatically prevents duplicate rewards (only first time unlocking a star)
+  local xpGained = state.activeRace.xpReward or 0
+  local moneyGained = state.activeRace.moneyReward or 0
 
-  local xpGained = math.floor(state.activeRace.xpReward * xpMultiplier)
-  local moneyGained = (position and position <= 3) and math.floor(state.activeRace.moneyReward * xpMultiplier) or 0
-
-  -- Note: XP is handled by BeamNG's native star system (mysummer-streetracing attribute)
-  -- Money is also handled natively
+  log("I", logTag, "Rewards handled by BeamNG native system (first victory only)")
 
   log("I", logTag, "Race completed: " .. raceId .. " position: " .. tostring(position))
+
+  -- Narrative events are triggered during the race (start/mid/end) by onUpdate()
+  -- No need to call narrative system here
 
   -- Send completion dialogue
   if career_modules_mysummerChat and state.activeRace.contact ~= "system" then
@@ -1101,7 +1563,12 @@ local function completeRace(raceId, position, time)
     career_modules_mysummerChat.sendContactMessage(state.activeRace.contact, message, { silent = true })
   end
 
-  state.activeRace = nil
+  -- Don't clear activeRace if won - the race_end listener needs it
+  -- If not won, clear it now (narrative already reset)
+  if not (position and position == 1) then
+    state.activeRace = nil
+  end
+
   saveState()
 
   -- Notify UI
@@ -1208,14 +1675,23 @@ loadState = function()
   state.drivingDialogueTriggered = data.drivingDialogueTriggered or {}
   state.missionElapsedTime = 0 -- Reset on load, will be tracked during gameplay
 
-  -- If there's an active race waiting for arrival, restore the waypoint
-  if state.activeRace and state.activeRace.waitingForArrival and state.activeRace.startPos then
-    local startPos = vec3(state.activeRace.startPos.x, state.activeRace.startPos.y, state.activeRace.startPos.z)
-    if core_groundMarkers then
-      core_groundMarkers.setPath(startPos, { clearPathOnReachingTarget = false })
-      log("I", logTag, "Restored waypoint to race start")
+  -- Restore phase race counts (critical for narrative event reset logic)
+  if data.phaseRaceCount then
+    for phase, count in pairs(data.phaseRaceCount) do
+      state.phaseRaceCount[tonumber(phase)] = count
     end
+    log("I", logTag, string.format("Restored phaseRaceCount: Phase0=%d, Phase1=%d",
+      state.phaseRaceCount[0] or 0, state.phaseRaceCount[1] or 0))
   end
+
+  -- DISABLED: Restore waypoint (no longer needed since we don't auto-start)
+  -- if state.activeRace and state.activeRace.waitingForArrival and state.activeRace.startPos then
+  --   local startPos = vec3(state.activeRace.startPos.x, state.activeRace.startPos.y, state.activeRace.startPos.z)
+  --   if core_groundMarkers then
+  --     core_groundMarkers.setPath(startPos, { clearPathOnReachingTarget = false })
+  --     log("I", logTag, "Restored waypoint to race start")
+  --   end
+  -- end
 
   log("I", logTag, "Loaded story races state")
 end
@@ -1238,6 +1714,7 @@ saveState = function(currentSavePath)
     activeMission = state.activeMission,
     activeRace = state.activeRace, -- Save active race (may be waiting for arrival)
     drivingDialogueTriggered = state.drivingDialogueTriggered,
+    phaseRaceCount = state.phaseRaceCount, -- Track completed races per phase (for narrative reset)
     -- missionElapsedTime not saved - resets each mission
   }
   career_saveSystem.jsonWriteFileSafe(filePath, data, true)
@@ -1265,47 +1742,149 @@ end
 local function onUpdate(dtReal, dtSim, dtRaw)
   if not career_career or not career_career.isActive() then return end
 
-  -- Check for race arrival (player needs to drive to race start)
-  -- We control mission start to ensure REPEAT version is used if already won
-  if state.activeRace and state.activeRace.waitingForArrival then
-    local playerPos = getPlayerPosition()
-    if playerPos and state.activeRace.startPos then
-      local startPos = vec3(state.activeRace.startPos.x, state.activeRace.startPos.y, state.activeRace.startPos.z)
-      local distance = playerPos:distance(startPos)
-
-      -- Close enough to start race (15 meters)
-      if distance <= 15 then
-        log("I", logTag, "Player arrived at race start. Starting: " .. state.activeRace.missionId)
-
-        -- Clear waiting flag
-        state.activeRace.waitingForArrival = false
-        saveState()
-
-        -- Clear waypoint
-        if core_groundMarkers then
-          core_groundMarkers.setPath(nil)
-        end
-
-        -- Start the correct mission version (normal or REPEAT)
-        local missionToStart = state.activeRace.missionId:gsub("/info.json", "")
-        if career_modules_mysummerRaceManager then
-          career_modules_mysummerRaceManager.startNativeMission(missionToStart)
-        end
-
-        -- Notify UI
-        if guihooks then
-          guihooks.trigger("mysummerStoryRaceStarted", {
-            raceId = state.activeRace.raceId,
-            name = state.activeRace.name,
-          })
-        end
-      end
-    end
-  end
+  -- DISABLED: Auto-start race on arrival
+  -- Now the menu just navigates to the race location, player must manually start the mission
+  -- if state.activeRace and state.activeRace.waitingForArrival then
+  --   local playerPos = getPlayerPosition()
+  --   if playerPos and state.activeRace.startPos then
+  --     local startPos = vec3(state.activeRace.startPos.x, state.activeRace.startPos.y, state.activeRace.startPos.z)
+  --     local distance = playerPos:distance(startPos)
+  --
+  --     -- Close enough to start race (15 meters)
+  --     if distance <= 15 then
+  --       log("I", logTag, "Player arrived at race start. Starting: " .. state.activeRace.missionId)
+  --
+  --       -- Reset narrative events using stored phase/raceCount (for new race instance)
+  --       -- Handle legacy saves where phase/raceCount might not be stored
+  --       local racePhase = state.activeRace.phase or state.activeRace.chapter
+  --       local raceCount = state.activeRace.raceCount
+  --
+  --       if not raceCount and racePhase then
+  --         -- Fallback: calculate based on completion count
+  --         raceCount = (state.phaseRaceCount[racePhase] or 0) + 1
+  --       end
+  --
+  --       if racePhase and raceCount then
+  --         resetNarrativeEvents(racePhase, raceCount)
+  --       end
+  --
+  --       -- Clear waiting flag
+  --       state.activeRace.waitingForArrival = false
+  --       saveState()
+  --
+  --       -- Clear waypoint
+  --       if core_groundMarkers then
+  --         core_groundMarkers.setPath(nil)
+  --       end
+  --
+  --       -- Start the correct mission version (normal or REPEAT)
+  --       local missionToStart = state.activeRace.missionId:gsub("/info.json", "")
+  --       if career_modules_mysummerRaceManager then
+  --         career_modules_mysummerRaceManager.startNativeMission(missionToStart)
+  --       end
+  --
+  --       -- Notify UI
+  --       if guihooks then
+  --         guihooks.trigger("mysummerStoryRaceStarted", {
+  --           raceId = state.activeRace.raceId,
+  --           name = state.activeRace.name,
+  --         })
+  --       end
+  --     end
+  --   end
+  -- end
 
   -- Check story dialogues (for active missions)
   if state.activeMission then
     checkStoryDialogues(dtSim)
+  end
+
+  -- ========================================================================
+  -- NARRATIVE EVENT DETECTION (for active races)
+  -- ========================================================================
+  if state.activeRace and not state.activeRace.waitingForArrival then
+    local currentSpeed = getPlayerSpeed()
+    local currentTime = os.time()
+
+    -- Use stored phase and race count from activeRace
+    -- Handle legacy saves where phase/raceCount might not be stored
+    local currentPhase = state.activeRace.phase or state.activeRace.chapter
+    local currentRaceCount = state.activeRace.raceCount
+
+    if not currentRaceCount then
+      if currentPhase then
+        -- Fallback: calculate based on completion count
+        currentRaceCount = (state.phaseRaceCount[currentPhase] or 0) + 1
+      else
+        -- Cannot determine, skip narrative triggers
+        return
+      end
+    end
+
+    -- RACE_START: Player starts moving after spawn
+    if not state.narrativeEvents.raceStartTriggered and
+       currentSpeed > PLAYER_SPEED_THRESHOLD and
+       not state.narrativeEvents.playerMovedInRace then
+
+      state.narrativeEvents.playerMovedInRace = true
+      state.narrativeEvents.raceStartTriggered = true
+      state.narrativeEvents.raceStartTime = currentTime
+
+      triggerNarrativeEventByCount(currentPhase, currentRaceCount, "start")
+      log("I", logTag, string.format("race_start: Player started moving (speed: %.1f m/s) - Phase %d, Race #%d",
+        currentSpeed, currentPhase, currentRaceCount))
+    end
+
+    -- RACE_MID: 60 seconds after race_start (only if mission hasn't ended yet)
+    if state.narrativeEvents.playerMovedInRace and
+       not state.narrativeEvents.raceMidTriggered and
+       not state.narrativeEvents.missionEnded and
+       state.narrativeEvents.raceStartTime > 0 then
+
+      local elapsed = currentTime - state.narrativeEvents.raceStartTime
+      if elapsed >= RACE_MID_DELAY then
+        state.narrativeEvents.raceMidTriggered = true
+
+        triggerNarrativeEventByCount(currentPhase, currentRaceCount, "mid")
+        log("I", logTag, string.format("race_mid: %d seconds elapsed - Phase %d, Race #%d",
+          elapsed, currentPhase, currentRaceCount))
+      end
+    end
+
+    -- RACE_END LISTENER: Activated by completeRace(win), triggers when back in freeroam
+    -- Check if mission is no longer active (player spawned back in freeroam)
+    local missionActive = gameplay_missions_missionManager and
+                          gameplay_missions_missionManager.getForegroundMissionId() ~= nil
+
+    if state.narrativeEvents.missionEnded and
+       not state.narrativeEvents.raceEndTriggered and
+       not missionActive then
+
+      state.narrativeEvents.raceEndTriggered = true
+
+      triggerNarrativeEventByCount(currentPhase, currentRaceCount, "end")
+      log("I", logTag, string.format("race_end: Player returned to freeroam after winning - Phase %d, Race #%d",
+        currentPhase, currentRaceCount))
+
+      -- Clear activeRace now that race_end has been triggered
+      state.activeRace = nil
+      saveState()
+    end
+
+    -- TIMEOUT DETECTOR: If mission ended but completeRace not called after 2 seconds → cancelled/quit
+    if state.narrativeEvents.waitingForResult and
+       state.narrativeEvents.missionEndTime > 0 then
+
+      local elapsed = currentTime - state.narrativeEvents.missionEndTime
+      if elapsed >= 2 then
+        log("I", logTag, "Race quit/cancelled detected (completeRace not called) - resetting narrative")
+        if currentPhase and currentRaceCount then
+          resetNarrativeEvents(currentPhase, currentRaceCount)
+        end
+        state.activeRace = nil
+        saveState()
+      end
+    end
   end
 end
 
@@ -1338,5 +1917,118 @@ M.onCareerActive = onCareerActive
 M.onSaveCurrentSaveSlot = onSaveCurrentSaveSlot
 M.onExtensionLoaded = onExtensionLoaded
 M.onUpdate = onUpdate -- For story dialogues during missions
+
+-- Mission lifecycle callback (called when any mission state changes)
+M.onAnyMissionChanged = function(state_change, mission)
+  if not mission or not mission.id then return end
+
+  local missionId = mission.id
+
+  -- Filter: only process actual race missions, not levels or other stuff
+  if not missionId:find("/aiRace/") then
+    return
+  end
+
+  if state_change == "started" then
+    log("I", logTag, "onAnyMissionChanged: Race started - " .. tostring(missionId))
+
+    -- Handle race started from map (without going through selectRace menu)
+    if not state.activeRace then
+      log("I", logTag, "No activeRace state found, attempting auto-detection...")
+      -- Try to find this race in our story races
+      local raceId = findRaceIdByMission(missionId)
+      if raceId then
+        log("I", logTag, "Race started from map (not from menu): " .. raceId)
+
+        -- Find race data
+        local race = nil
+        local chapterData = nil
+        for _, chapter in ipairs(storyRaces) do
+          for _, r in ipairs(chapter.races) do
+            if r.id == raceId then
+              race = r
+              chapterData = chapter
+              break
+            end
+          end
+          if race then break end
+        end
+
+        if race and chapterData then
+          -- Create activeRace state automatically
+          local currentPhase = chapterData.chapter
+          local nextRaceCount = (state.phaseRaceCount[currentPhase] or 0) + 1
+
+          state.activeRace = {
+            raceId = raceId,
+            missionId = missionId,
+            isRepeat = false,
+            name = getLocalizedText(race.name),
+            contact = race.contact,
+            xpReward = race.xpReward,
+            moneyReward = race.moneyReward,
+            chapter = chapterData.chapter,
+            phase = currentPhase,
+            raceCount = nextRaceCount,
+            waitingForArrival = false,  -- Already started, not waiting
+          }
+
+          log("I", logTag, string.format("Auto-created activeRace state: Phase %d, Race #%d",
+            currentPhase, nextRaceCount))
+          saveState()
+        end
+      end
+    end
+
+    -- Reset narrative events when a race mission starts/restarts
+    if state.activeRace and state.activeRace.missionId == missionId then
+      log("I", logTag, "Race mission started/restarted: " .. missionId)
+
+      -- Mark that player has arrived and started the race (narrative system needs this)
+      state.activeRace.waitingForArrival = false
+      saveState()
+
+      -- Use stored phase and race count from activeRace
+      -- Handle legacy saves where phase/raceCount might not be stored
+      local racePhase = state.activeRace.phase or state.activeRace.chapter
+      local raceCount = state.activeRace.raceCount
+
+      if not raceCount and racePhase then
+        -- Fallback: calculate based on completion count
+        raceCount = (state.phaseRaceCount[racePhase] or 0) + 1
+      end
+
+      -- Only reset narrative if this race hasn't been completed before
+      -- This allows events to replay only for cancelled/failed races, not completed ones
+      if racePhase and raceCount then
+        local completedCount = state.phaseRaceCount[racePhase] or 0
+        if raceCount > completedCount then
+          -- This is a new race (not yet completed) - allow narrative events
+          log("D", logTag, string.format("New race (Phase %d, Race #%d) - narrative events ready", racePhase, raceCount))
+          resetNarrativeEvents(racePhase, raceCount)
+        else
+          -- This race was already completed - don't reset narrative
+          log("D", logTag, string.format("Already completed race (Phase %d, Race #%d) - narrative events preserved", racePhase, raceCount))
+        end
+      end
+
+      -- Trigger "selected" event now that race has actually started
+      if racePhase and raceCount then
+        triggerNarrativeEventByCount(racePhase, raceCount, "selected")
+      end
+    end
+
+  elseif state_change == "stopped" then
+    log("I", logTag, "onAnyMissionChanged: Race stopped - " .. tostring(missionId))
+
+    -- Mission ended - this is the event that triggers the "wait for movement" listener
+    if state.activeRace and state.activeRace.missionId == missionId then
+      -- Mark that mission ended - completeRace() will be called shortly with the result
+      state.narrativeEvents.missionEndTime = os.time()
+      state.narrativeEvents.waitingForResult = true  -- Flag to indicate we're waiting for completeRace
+      log("I", logTag, "Race mission ended: " .. missionId .. " (listener activated, waiting for result)")
+    end
+  end
+end
 
 return M

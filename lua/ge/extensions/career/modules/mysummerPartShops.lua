@@ -10,8 +10,8 @@ M.dependencies = {
   "career_saveSystem",
   "career_modules_payment",
   "career_modules_playerAttributes",
-  "career_modules_business_businessPartInventory",
-  "career_modules_mysummerCargo",  -- Native cargo integration
+  "career_modules_partInventory",
+  -- Note: career_modules_mysummerCargo is optional - depends on base game delivery modules that may not load
 }
 
 local logTag = "mysummerPartShops"
@@ -403,8 +403,8 @@ end
 
 -- Check if player owns a part (in part inventory or installed on ETK-I)
 local function playerOwnsPart(partName)
-  -- 1. Check business part inventory (loose parts in storage)
-  local partInventory = career_modules_business_businessPartInventory
+  -- 1. Check part inventory (loose parts in storage)
+  local partInventory = career_modules_partInventory
   if partInventory and partInventory.getInventory then
     local inventory = partInventory.getInventory() or {}
     for _, part in pairs(inventory) do
@@ -678,23 +678,34 @@ local function purchasePart(shopId, partName)
   end
 
   -- Add part to inventory
-  local partInventory = career_modules_business_businessPartInventory
-  if not partInventory or not partInventory.addPart then
+  if not career_modules_partInventory or not career_modules_partInventory.addPartToInventory then
     log("E", logTag, "Part inventory module not available")
     return { success = false, message = "Inventory system error" }
   end
 
+  local slotType = partToBuy.slotType or ""
   local partData = {
     name = partToBuy.name,
     vehicleModel = "etki",
-    partCondition = { integrityValue = 1, odometer = 0, visualValue = 1 },  -- New part
-    slot = partToBuy.slotType,
-    location = 0,  -- 0 = in storage (inventory)
-    value = partToBuy.shopPrice,
-    description = { description = partToBuy.niceName }
+    partCondition = { integrityValue = 1, odometer = 0, visualValue = 1 },
+    containingSlot = slotType,
+    partPath = slotType .. (partToBuy.name or ""),
+    location = 0,
+    tags = {},
+    mainPart = false,
+    value = partToBuy.shopPrice or 0,
+    description = { description = partToBuy.niceName or partToBuy.name }
   }
 
-  local newPartId = partInventory.addPart(partData)
+  career_modules_partInventory.addPartToInventory(partData)
+  -- Find the ID that was just assigned
+  local newPartId = nil
+  local inv = career_modules_partInventory.getInventory()
+  for id, p in pairs(inv) do
+    if p.name == partData.name and p.containingSlot == partData.containingSlot and p.location == 0 then
+      newPartId = id
+    end
+  end
   if newPartId then
     log("I", logTag, "Purchased and added to inventory: " .. partToBuy.niceName .. " for $" .. partToBuy.shopPrice)
 
@@ -800,47 +811,7 @@ local function placeOnlineOrder(orderDataJson)
     end
   end
 
-  -- Add required child parts for each item in order
-  local expandedItems = {}
-  local addedChildParts = {}  -- Track to avoid duplicates
-  
-  for _, item in ipairs(orderItems) do
-    -- Add the original item
-    table.insert(expandedItems, item)
-    
-    -- Check for required child parts
-    local childParts = getRequiredChildParts(item.name, onlinePriceMultiplier)
-    for _, childPart in ipairs(childParts) do
-      -- Skip if already added or in original order
-      if not addedChildParts[childPart.name] then
-        local alreadyInOrder = false
-        for _, existingItem in ipairs(orderItems) do
-          if existingItem.name == childPart.name then
-            alreadyInOrder = true
-            break
-          end
-        end
-        
-        if not alreadyInOrder then
-          table.insert(expandedItems, {
-            name = childPart.name,
-            niceName = childPart.niceName,
-            slotType = childPart.slotType,
-            price = childPart.price,
-            quantity = 1,
-            isChildPart = true,
-          })
-          addedChildParts[childPart.name] = true
-          log("I", logTag, "Auto-added required child part: " .. childPart.niceName)
-        end
-      end
-    end
-  end
-  
-  -- Use expanded items list
-  orderItems = expandedItems
-
-  -- Calculate total cost (including child parts)
+  -- Calculate total cost
   local totalCost = 0
   for _, item in ipairs(orderItems) do
     totalCost = totalCost + (item.price * (item.quantity or 1))
@@ -853,12 +824,12 @@ local function placeOnlineOrder(orderDataJson)
   end
 
   if playerFunds < totalCost then
-    return { success = false, message = "Insufficient funds (including required child parts)" }
+    return { success = false, message = "Insufficient funds" }
   end
 
   -- Deduct money
   if career_modules_payment and career_modules_payment.pay then
-    log("I", logTag, "Attempting payment of $" .. totalCost .. " (includes required child parts)")
+    log("I", logTag, "Attempting payment of $" .. totalCost)
     local payResult = career_modules_payment.pay(
       {money = {amount = totalCost}},
       {label = "Online Parts Order", tags = {"buying", "parts"}}
@@ -984,7 +955,6 @@ local function checkPlayerNearDelivery()
         if garagePos then
           local distance = (playerPos - garagePos):length()
           if distance <= 5 then
-            log("I", logTag, "Player near purchased garage '" .. (garage.name or garageId) .. "' (dist=" .. math.floor(distance) .. "m)")
             return true
           end
         end
@@ -1154,19 +1124,15 @@ end
 local function deliverPartsAtGarage()
   local cargoModule = career_modules_mysummerCargo
 
-  -- Get parts from native cargo system as primary source
-  local nativeCargoParts = cargoModule and cargoModule.getMysummerCargoInVehicles() or {}
-
-  -- Use state.carryingParts as fallback if native is empty
-  local partsToDeliver = #nativeCargoParts > 0 and nativeCargoParts or state.carryingParts
-
-  if #partsToDeliver == 0 then
-    log("W", logTag, "deliverPartsAtGarage called but no parts to deliver (state=" .. #state.carryingParts .. ", native=" .. #nativeCargoParts .. ")")
+  -- Only deliver from OUR state.carryingParts (not native cargo, which may belong to PartsBay)
+  if #state.carryingParts == 0 then
+    log("W", logTag, "deliverPartsAtGarage called but no parts to deliver")
     return { success = false, message = "No parts to deliver" }
   end
 
-  local partInventory = career_modules_business_businessPartInventory
-  if not partInventory or not partInventory.addPart then
+  local partsToDeliver = state.carryingParts
+
+  if not career_modules_partInventory or not career_modules_partInventory.addPartToInventory then
     log("E", logTag, "Part inventory module not available")
     return { success = false, message = "Inventory system error" }
   end
@@ -1177,7 +1143,7 @@ local function deliverPartsAtGarage()
     -- Handle both native cargo format and state.carryingParts format
     local partName = partInfo.partName or partInfo.name
     local partNiceName = partInfo.partNiceName or partInfo.niceName or partName
-    local partSlot = partInfo.slotType or partInfo.slot
+    local partSlot = partInfo.slotType or partInfo.slot or ""
     local partValue = partInfo.baseValue or partInfo.price or 0
     local partCondition = partInfo.condition or { integrityValue = 1, odometer = 0, visualValue = 1 }
     local cargoId = partInfo.cargoId
@@ -1186,13 +1152,24 @@ local function deliverPartsAtGarage()
       name = partName,
       vehicleModel = "etki",
       partCondition = partCondition,
-      slot = partSlot,
+      containingSlot = partSlot,
+      partPath = partSlot .. (partName or ""),
       location = 0,
+      tags = {},
+      mainPart = false,
       value = partValue,
       description = { description = partNiceName }
     }
 
-    local newPartId = partInventory.addPart(partData)
+    career_modules_partInventory.addPartToInventory(partData)
+    -- Find the ID that was just assigned
+    local newPartId = nil
+    local inv = career_modules_partInventory.getInventory()
+    for id, p in pairs(inv) do
+      if p.name == partData.name and p.containingSlot == partData.containingSlot and p.location == 0 then
+        newPartId = id
+      end
+    end
     if newPartId then
       deliveredCount = deliveredCount + 1
       log("I", logTag, string.format("Added part '%s' to inventory (id=%s)", partName, tostring(newPartId)))
@@ -1361,10 +1338,8 @@ local function onUpdate(dtReal, dtSim, dtRaw)
   end
 
   -- Step 2: Check if player arrived at garage to deliver parts
-  -- Check both state.carryingParts AND native cargo system
-  local cargoModule = career_modules_mysummerCargo
-  local nativeCargoParts = cargoModule and cargoModule.getMysummerCargoInVehicles() or {}
-  local hasCargoToDeliver = #state.carryingParts > 0 or #nativeCargoParts > 0
+  -- Only check OUR state.carryingParts (not native cargo, which may belong to PartsBay)
+  local hasCargoToDeliver = #state.carryingParts > 0
 
   if hasCargoToDeliver then
     local nearDelivery = checkPlayerNearDelivery()
@@ -1373,21 +1348,29 @@ local function onUpdate(dtReal, dtSim, dtRaw)
     if not state.deliveryDebugTime then state.deliveryDebugTime = 0 end
     state.deliveryDebugTime = state.deliveryDebugTime + dtReal
     if state.deliveryDebugTime >= 5 then
-      log("I", logTag, string.format("Carrying: state=%d, native=%d, nearDelivery=%s, state.nearDelivery=%s, deliveryLocation=%s",
-        #state.carryingParts, #nativeCargoParts, tostring(nearDelivery), tostring(state.nearDelivery),
+      log("I", logTag, string.format("Carrying: state=%d, nearDelivery=%s, state.nearDelivery=%s, deliveryLocation=%s",
+        #state.carryingParts, tostring(nearDelivery), tostring(state.nearDelivery),
         state.deliveryLocation and "set" or "nil"))
       state.deliveryDebugTime = 0
     end
 
-    if nearDelivery and not state.nearDelivery then
-      log("I", logTag, "Player arrived at garage, delivering parts (state=" .. #state.carryingParts .. ", native=" .. #nativeCargoParts .. ")")
-      deliverPartsAtGarage()
+    if nearDelivery then
+      -- Retry delivery while at garage with cargo (handles quickTravel/recovery where partInventory may be temporarily nil)
+      if not state.deliveryRetryTime then state.deliveryRetryTime = 0 end
+      state.deliveryRetryTime = state.deliveryRetryTime + dtReal
+      if not state.nearDelivery or state.deliveryRetryTime >= 2 then
+        state.deliveryRetryTime = 0
+        log("I", logTag, "Attempting delivery of " .. #state.carryingParts .. " SpeedParts parts" .. (state.nearDelivery and " (retry)" or ""))
+        deliverPartsAtGarage()
+      end
+    else
+      state.deliveryRetryTime = nil
     end
 
     state.nearDelivery = nearDelivery
 
     -- Show carrying message periodically
-    local totalParts = math.max(#state.carryingParts, #nativeCargoParts)
+    local totalParts = #state.carryingParts
     if not state.carryingMsgTime then state.carryingMsgTime = 0 end
     state.carryingMsgTime = state.carryingMsgTime + dtReal
     if state.carryingMsgTime >= 30 then  -- Every 30 seconds
@@ -1605,7 +1588,7 @@ local function setWaypointToDelivery()
 end
 
 -- Called when career save happens
-local function onSaveCareerData(currentSavePath)
+local function onSaveCurrentSaveSlot(currentSavePath)
   saveState(currentSavePath)
 end
 
@@ -1642,7 +1625,7 @@ end
 M.onExtensionLoaded = onExtensionLoaded
 M.onCareerActive = onCareerActive
 M.onUpdate = onUpdate
-M.onSaveCareerData = onSaveCareerData
+M.onSaveCurrentSaveSlot = onSaveCurrentSaveSlot
 
 -- POI hooks
 M.onGetRawPoiListForLevel = onGetRawPoiListForLevel
@@ -1729,31 +1712,21 @@ local function onVehicleTowed(vehId)
   local playerVeh = be:getPlayerVehicle(0)
   if not playerVeh or playerVeh:getID() ~= vehId then return end
 
-  -- Check if we have cargo in the vehicle
+  -- Check if we have OUR cargo in the vehicle
   local cargoModule = career_modules_mysummerCargo
-  local nativeCargoParts = cargoModule and cargoModule.getMysummerCargoInVehicles() or {}
 
-  if #state.carryingParts > 0 or #nativeCargoParts > 0 then
-    log("I", logTag, "Vehicle towed with cargo! Moving parts back to pendingPickup")
+  if #state.carryingParts > 0 then
+    log("I", logTag, "Vehicle towed with " .. #state.carryingParts .. " SpeedParts parts! Moving back to pendingPickup")
 
-    -- Move state.carryingParts back
+    -- Move state.carryingParts back to pendingPickup and unload native cargo
     for _, part in ipairs(state.carryingParts) do
       table.insert(state.pendingPickup, part)
-    end
-    state.carryingParts = {}
-
-    -- Unload native cargo and move to pendingPickup
-    for _, part in ipairs(nativeCargoParts) do
-      table.insert(state.pendingPickup, {
-        name = part.partName,
-        niceName = part.partNiceName,
-        slotType = part.slotType,
-        price = part.baseValue or 0,
-      })
+      -- Unload from native cargo if we have a cargoId
       if cargoModule and part.cargoId then
         cargoModule.unloadCargoItem(part.cargoId)
       end
     end
+    state.carryingParts = {}
 
     saveState()
     ui_message("Your cargo was returned to the warehouse for pickup.", 5, "Shop", "warning")

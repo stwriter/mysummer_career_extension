@@ -66,7 +66,7 @@ end
 
 -- Contact IDs and avatars (non-localized)
 -- Teammates (rook, nova) + Underground contacts + system + player (for internal thoughts)
-local contactIds = { "rook", "nova", "ghost", "techie", "muscle", "import", "shadow", "system", "player" }
+local contactIds = { "rook", "nova", "ghost", "techie", "muscle", "import", "shadow", "viper", "system", "player" }
 
 -- Returns localized contact definition
 local function getContactDefinition(contactId)
@@ -144,6 +144,12 @@ local state = {
   -- Recent events for context reactions
   -- Keys: policeEscape, policeCaught, raceWin, purchase
   recentEvents = {},
+
+  -- SMS trigger tracking (prevent duplicate sends)
+  triggeredSMS = {},
+
+  -- Loading flag (prevent message spam during save load)
+  isLoading = false,
 }
 
 -- Forward declarations for functions used before definition
@@ -184,7 +190,7 @@ local function getLocalizedText(textValue)
     return textValue
   elseif type(textValue) == "table" then
     -- Get current language from BeamNG settings
-    local lang = Lua and Lua.get("core_settings.locale") or "en_US"
+    local lang = Steam and Steam.language or "en_US"
     local langCode = string.sub(lang, 1, 2) -- "en_US" -> "en", "es_ES" -> "es"
 
     -- Try exact match, then fallback
@@ -222,6 +228,7 @@ local function applyEffects(effects)
 
   -- Trigger UI update
   guihooks.trigger("mysummerAffinityUpdated", deepcopy(state.affinityEffects))
+  saveState()
 end
 
 -- Get current value of an effect
@@ -262,6 +269,17 @@ local function getPlayerApproach()
   else
     return "balanced"
   end
+end
+
+-- Get chosen partner from romance choice in Phase 5
+-- Returns: "rook", "nova", or nil
+local function getChosenPartner()
+  local narrative = extensions.career_modules_mysummerNarrative
+  if narrative and narrative.getStoryFlags then
+    local flags = narrative.getStoryFlags()
+    return flags.chosen_partner
+  end
+  return nil
 end
 
 -- ============================================================================
@@ -310,15 +328,12 @@ end
 -- Get current narrative phase from streetracing skill level
 -- This controls which conversations are available based on story progression
 local function getCurrentNarrativePhase()
-  if not career_branches or not career_modules_playerAttributes then
-    return 0
+  -- Get the current narrative phase from mysummerCareer (phase0, phase1, etc.)
+  -- This is different from skill level - phases advance based on story progression
+  if career_modules_mysummerCareer and career_modules_mysummerCareer.getCurrentPhase then
+    return career_modules_mysummerCareer.getCurrentPhase()
   end
-
-  local skillId = "mysummer-streetracing"
-  local totalXP = career_modules_playerAttributes.getAttributeValue(skillId) or 0
-  local level = career_branches.calcBranchLevelFromValue(totalXP, skillId)
-
-  return level or 0
+  return 0
 end
 
 -- Get contact XP
@@ -385,13 +400,28 @@ local function getV3Conversation(contactId, scriptState)
     end
   end
 
-  -- Check required memory
+  -- Check required memory (AND logic - all must be present)
   if conversation.requiredMemory then
     for _, memKey in ipairs(conversation.requiredMemory) do
       if not memory[memKey] then
         log("I", logTag, "V3 conversation " .. convId .. " requires memory: " .. memKey)
         return nil
       end
+    end
+  end
+
+  -- Check required memory ANY (OR logic - at least one must be present)
+  if conversation.requiredMemoryAny then
+    local anyFound = false
+    for _, memKey in ipairs(conversation.requiredMemoryAny) do
+      if memory[memKey] then
+        anyFound = true
+        break
+      end
+    end
+    if not anyFound then
+      log("I", logTag, "V3 conversation " .. convId .. " requires any of: " .. table.concat(conversation.requiredMemoryAny, ", "))
+      return nil
     end
   end
 
@@ -454,7 +484,6 @@ local function processContextReaction(text, contactData)
   end
 
   -- Check recent events (priority order)
-  -- TODO: Integrate with actual game state tracking
   local selectedReaction = nil
 
   -- Check for recent police escape (example - would need real game state)
@@ -615,12 +644,49 @@ local function unlockContact(contactId)
       contactId = contactId,
       displayName = state.contacts[contactId].displayName,
     })
+    saveState()
   end
 end
 
 local function isContactUnlocked(contactId)
   initializeContact(contactId)
   return state.contacts[contactId] and state.contacts[contactId].isUnlocked
+end
+
+-- Disable a contact (they appear in the list but never respond to messages)
+-- Used when a romance partner "disappears" after the ETK-I theft (phase 5-6)
+local function disableContact(contactId)
+  initializeContact(contactId)
+  if state.contacts[contactId] then
+    state.contacts[contactId].isDisabled = true
+    log("I", logTag, "Contact disabled (will not respond): " .. contactId)
+    guihooks.trigger("mysummerChatContactUpdated", {
+      contactId = contactId,
+      isDisabled = true,
+    })
+    saveState()
+  end
+end
+
+-- Re-enable a contact so they respond again
+-- Used when the romance partner reappears in phase 7
+local function enableContact(contactId)
+  initializeContact(contactId)
+  if state.contacts[contactId] then
+    state.contacts[contactId].isDisabled = false
+    log("I", logTag, "Contact re-enabled: " .. contactId)
+    guihooks.trigger("mysummerChatContactUpdated", {
+      contactId = contactId,
+      isDisabled = false,
+    })
+    saveState()
+  end
+end
+
+-- Check if a contact is disabled (won't respond)
+local function isContactDisabled(contactId)
+  initializeContact(contactId)
+  return state.contacts[contactId] and state.contacts[contactId].isDisabled == true
 end
 
 local function getContactDisplayName(contactId)
@@ -773,14 +839,18 @@ local function sendContactMessage(contactId, content, options)
 
   -- Show toast notification (unless silent mode)
   if not options.silent then
+    -- Ensure content is a string for display
+    local displayContent = type(content) == "string" and content or (content.es or content.en or "")
     guihooks.trigger("toastrMsg", {
       type = "info",
       title = tr("mysummer.notifications.newMessage", "New Message"),
-      msg = getContactDisplayName(contactId) .. ": " .. string.sub(content, 1, 30),
+      msg = getContactDisplayName(contactId) .. ": " .. string.sub(displayContent, 1, 30),
     })
   end
 
-  log("I", logTag, "Contact message from " .. contactId .. ": " .. string.sub(content, 1, 30))
+  -- Safe log (content should be string, but handle tables just in case)
+  local logContent = type(content) == "string" and content or (content.es or content.en or "")
+  log("I", logTag, "Contact message from " .. contactId .. ": " .. string.sub(logContent, 1, 30))
 
   saveState()
   return message
@@ -804,7 +874,9 @@ local function sendPlayerMessage(contactId, content, options)
     newMessages = { deepcopy(message) },
   })
 
-  log("I", logTag, "Player message to " .. contactId .. ": " .. string.sub(content, 1, 30))
+  -- Safe log (content should always be a string now, but handle tables just in case)
+  local logContent = type(content) == "string" and content or tostring(content)
+  log("I", logTag, "Player message to " .. contactId .. ": " .. string.sub(logContent, 1, 30))
 
   saveState()
   return message
@@ -876,6 +948,7 @@ local function markAsRead(contactId, messageIds)
       unreadCount = state.unreadByContact[contactId],
       totalUnread = state.totalUnread,
     })
+    saveState()
   end
 end
 
@@ -926,28 +999,31 @@ end
 -- This prevents UI from showing choices too early when calling getConversation()
 local pendingChoicesQueue = {}
 
-local function setPendingChoices(contactId, choices, timeout, delay)
+local function setPendingChoices(contactId, choices, timeout, delay, smsId)
   -- If delay specified, queue EVERYTHING for later (don't save to state yet)
   if delay and delay > 0 then
     table.insert(pendingChoicesQueue, {
       contactId = contactId,
       choices = choices,
       timeout = timeout,
+      smsId = smsId,
       triggerAt = getTimestamp() + delay / 1000,  -- Convert ms to seconds
     })
-    log("I", logTag, string.format("Choices queued with %dms delay for %s", delay, contactId))
+    log("I", logTag, string.format("Choices queued with %dms delay for %s (smsId: %s)", delay, contactId, tostring(smsId)))
   else
     -- No delay: save to state and trigger immediately
     state.pendingChoices = {
       contactId = contactId,
       choices = choices,
       timeout = timeout,
+      smsId = smsId,
       setAt = getTimestamp(),
     }
     guihooks.trigger("mysummerChatChoices", {
       contactId = contactId,
       choices = choices,
       timeout = timeout,
+      smsId = smsId,  -- Include smsId for UI to determine response type
     })
   end
 end
@@ -966,15 +1042,17 @@ local function processPendingChoices()
         contactId = pending.contactId,
         choices = pending.choices,
         timeout = pending.timeout,
+        smsId = pending.smsId,
         setAt = now,
       }
-      -- And trigger UI
+      -- And trigger UI (include smsId so UI knows if it's SMS or V3 dialogue)
       guihooks.trigger("mysummerChatChoices", {
         contactId = pending.contactId,
         choices = pending.choices,
         timeout = pending.timeout,
+        smsId = pending.smsId,  -- Include smsId for UI to determine response type
       })
-      log("I", logTag, string.format("Choices now active for %s", pending.contactId))
+      log("I", logTag, string.format("Choices now active for %s (smsId: %s)", pending.contactId, tostring(pending.smsId)))
       table.insert(toRemove, i)
     end
   end
@@ -1011,8 +1089,13 @@ local function queueMessage(contactId, messageData, delay)
     messageData = messageData,
     sendAt = sendAt,
   })
+  -- Safe log (content might be bilingual table)
+  local logContent = messageData.content
+  if type(logContent) == "table" then
+    logContent = logContent.es or logContent.en or "(empty)"
+  end
   log("I", logTag, string.format("Message queued for %s, delay=%dms, content=%s",
-      contactId, delay or 0, string.sub(messageData.content or "", 1, 30)))
+      contactId, delay or 0, string.sub(logContent or "", 1, 30)))
 end
 
 -- Process pending messages (called from onUpdate)
@@ -1028,17 +1111,28 @@ local function processPendingMessages()
       local contactId = pending.contactId
       local msgData = pending.messageData
 
+      -- Safe log (content might be bilingual table or string)
+      local logContent = msgData.content
+      if type(logContent) == "table" then
+        logContent = logContent.es or logContent.en or "(empty)"
+      end
       log("I", logTag, string.format("Processing message for %s: %s",
-          contactId, string.sub(msgData.content or "", 1, 30)))
+          contactId, string.sub(logContent or "", 1, 30)))
 
       -- Clear typing indicator
       setContactTyping(contactId, false)
+
+      -- Localize content if it's bilingual
+      local content = msgData.content
+      if type(content) == "table" then
+        content = resolveBilingualText(content)
+      end
 
       -- Add the message
       addMessage(contactId, {
         sender = msgData.sender or contactId,
         senderType = msgData.senderType or "contact",
-        content = msgData.content,
+        content = content,
         contentType = "text",
       })
 
@@ -1061,6 +1155,15 @@ end
 -- Start a scripted V3 dialogue with a contact
 local function startDialogue(contactId)
   log("I", logTag, "Starting V3 dialogue with: " .. tostring(contactId))
+
+  -- Check if contact is disabled (disappeared / won't respond)
+  if isContactDisabled(contactId) then
+    log("I", logTag, "Contact " .. contactId .. " is disabled (will not respond)")
+    return {
+      success = false,
+      error = "contact_disabled",
+    }
+  end
 
   local conv = getOrCreateConversation(contactId)
   local scriptState = conv.scriptState
@@ -1297,7 +1400,8 @@ local function continueDialogue(contactId, choiceId)
   end
 
   -- Add player's response as a message
-  sendPlayerMessage(contactId, selectedChoice.text)
+  local playerResponseText = getLocalizedText(selectedChoice.text)
+  sendPlayerMessage(contactId, playerResponseText)
 
   local allMessages = {}
   local choices = nil
@@ -1546,12 +1650,379 @@ local function isContactAvailable(contactId)
 end
 
 -- ============================================================================
+-- SMS EVENT SYSTEM (NEW - NARRATIVE SMS MESSAGES)
+-- ============================================================================
+
+-- SMS message definitions triggered by narrative events
+-- Extracted from NARRATIVA_REEDIT.md
+local eventSMS = {
+  -- FASE 0: El Peso del Silencio
+  phase0_race1_post = {
+    id = "sms_phase0_race1_post",
+    contactId = "ghost",
+    message = {
+      es = "No ha estado mal, Miller. Tienes ese tic en las curvas que tenía tu abuelo... entras demasiado rápido. Vigila la temperatura del aceite, no queremos incendios tan pronto.",
+      en = "Not bad, Miller. You have that tic in corners that your grandfather had... you enter too fast. Watch the oil temperature, we don't want fires so soon.",
+    },
+    choices = {
+      {
+        id = "who_are_you",
+        text = {es = "¿Quién eres?", en = "Who are you?"},
+        effects = {ghost_trust = 5},
+        response = {
+          es = "Eso no importa ahora. Solo llámame Ghost. He oído que quieres correr en serio. Pero para eso, vas a necesitar algo más que un coche viejo y unas ganas enormes.",
+          en = "That doesn't matter now. Just call me Ghost. I heard you want to race seriously. But for that, you'll need more than an old car and huge desire.",
+        },
+      },
+    },
+  },
+
+  phase0_race2_post = {
+    id = "sms_phase0_race2_post",
+    contactId = "nova",
+    message = {
+      es = "Tienes manos, Miller. Pero ese coche es un ancla. Si quieres subir de nivel, deja de jugar con chatarra de museo.",
+      en = "You've got hands, Miller. But that car is an anchor. If you want to level up, stop playing with museum scrap.",
+    },
+  },
+
+  phase0_race3_post = {
+    id = "sms_phase0_race3_post",
+    contactId = "rook",
+    message = {
+      es = "Eh, lo de antes ha sido un poco sucio, ¿no? Nova dice que tienes potencial, pero a mí me pareces un peligro público. Ven a los muelles, Ghost tiene algo que proponerte.",
+      en = "Hey, that was a bit dirty back there, wasn't it? Nova says you have potential, but you seem like a public hazard to me. Come to the docks, Ghost has something to propose.",
+    },
+  },
+
+  -- FASE 1: Origins
+  phase1_race1 = {
+    id = "sms_phase1_race1",
+    contactId = "rook",
+    message = {
+      es = "Buena carrera, de verdad. Me gusta que no hayas entrado en las provocaciones de Nova. Ella es... intensa. Cree que todo es una película de acción, pero yo valoro a alguien que sabe cuándo soltar el acelerador para no perder el control. Si algún día quieres que te enseñe cómo ajustar la caída de las ruedas para este tipo de asfalto, pásate por mi garaje. Me vendría bien hablar con alguien que no intente batir un récord cada cinco minutos.",
+      en = "Good race, really. I like that you didn't fall for Nova's provocations. She's... intense. Thinks everything is an action movie, but I value someone who knows when to ease off the throttle to avoid losing control. If you ever want me to teach you how to adjust wheel camber for this kind of asphalt, stop by my garage. I could use talking to someone who doesn't try to break a record every five minutes.",
+    },
+    choices = {
+      {
+        id = "support_rook",
+        text = {es = "Me gusta tu estilo, Rook. La técnica gana carreras, no solo la suerte.", en = "I like your style, Rook. Technique wins races, not just luck."},
+        effects = {rook_affinity = 10, loyalty = 5},
+        response = {
+          es = "Exacto. Me alegra que alguien lo entienda. Estamos en contacto.",
+          en = "Exactly. I'm glad someone gets it. We'll be in touch.",
+        },
+      },
+      {
+        id = "neutral",
+        text = {es = "Solo intento no destrozar el coche del abuelo.", en = "Just trying not to wreck grandpa's car."},
+        effects = {caution = 5},
+        response = {
+          es = "Lo entiendo. Es una responsabilidad. Nos vemos en la próxima.",
+          en = "I understand. It's a responsibility. See you at the next one.",
+        },
+      },
+    },
+  },
+
+  phase1_race2 = {
+    id = "sms_phase1_race2",
+    contactId = "nova",
+    message = {
+      es = "Rook se está volviendo un blando, Miller. Esa 'charla técnica' casi me duerme en la recta. Tiene un talento increíble, pero se autoimpone tantas reglas que se frena a sí mismo. Y lo peor es que intenta frenarme a mí también. Tú tienes algo que él no tiene... esa chispa de Miller. No dejes que él te la apague con sus manuales de taller. Mañana vamos a correr de verdad, sin sermones.",
+      en = "Rook's going soft, Miller. That 'technical talk' almost put me to sleep on the straight. He's got incredible talent, but he imposes so many rules on himself that he holds himself back. And the worst part is he tries to hold me back too. You have something he doesn't... that Miller spark. Don't let him snuff it out with his workshop manuals. Tomorrow we're racing for real, no sermons.",
+    },
+  },
+
+  phase1_race3 = {
+    id = "sms_phase1_race3",
+    contactId = "rook",
+    message = {
+      es = "Siento si te hemos molestado hoy con nuestras discusiones. Las cosas están... complicadas. Nova quiere ir más rápido de lo que nuestro equipo puede permitirnos, y yo solo intento que no nos estrellamos contra un muro, literal o figuradamente. Eres un buen tipo, Miller. Me gustaría que nos viéramos fuera de las carreras. Ghost me ha dicho que necesitas a alguien que sepa de electrónica. Te he pasado el contacto de Techie. Es un tipo raro, pero si alguien puede hacer que ese ETK-I hable, es él.",
+      en = "Sorry if we bothered you today with our arguments. Things are... complicated. Nova wants to go faster than our team can handle, and I'm just trying to keep us from crashing into a wall, literally or figuratively. You're a good guy, Miller. I'd like to see you outside of races. Ghost told me you need someone who knows electronics. I've passed you Techie's contact. He's a weird guy, but if anyone can make that ETK-I talk, it's him.",
+    },
+  },
+
+  -- FASE 2: The Split
+  phase2_race1 = {
+    id = "sms_phase2_race1",
+    contactId = "nova",
+    message = {
+      es = "Rook me está asfixiando, Miller. Cree que soy una aprendiz que necesita que le miren la presión de los neumáticos cada cinco minutos. Tú entiendes que esto va de adrenalina, no de libros de mantenimiento. He oído que Ghost te va a presentar a alguien de la vieja escuela. Ten cuidado, esa gente vive en el pasado.",
+      en = "Rook is suffocating me, Miller. He thinks I'm an apprentice who needs her tire pressure checked every five minutes. You understand this is about adrenaline, not maintenance manuals. I heard Ghost is introducing you to someone from the old school. Be careful, those people live in the past.",
+    },
+    choices = {
+      {
+        id = "support_ambition",
+        text = {es = "A veces hay que romper algo para saber dónde está el límite.", en = "Sometimes you have to break something to know where the limit is."},
+        effects = {ambition = 10, nova_affinity = 5},
+        response = {
+          es = "Exacto. Alguien que habla mi idioma.",
+          en = "Exactly. Someone who speaks my language.",
+        },
+      },
+      {
+        id = "support_rook",
+        text = {es = "Rook solo se preocupa por ti, a su manera.", en = "Rook just cares about you, in his own way."},
+        effects = {loyalty = 5},
+        response = {
+          es = "Su manera me está haciendo lenta. Y eso es lo peor que me pueden hacer.",
+          en = "His way is making me slow. And that's the worst thing anyone can do to me.",
+        },
+      },
+    },
+  },
+
+  phase2_race2 = {
+    id = "sms_phase2_race2",
+    contactId = "ghost",
+    message = {
+      es = "Le has gustado. Dice que tienes el mismo giro de muñeca que el viejo. Mañana te espero en el desguace del sur. Trae el coche, Muscle quiere ver si lo que hay bajo el capó es tan bueno como lo que hay tras el volante.",
+      en = "She liked you. Says you have the same wrist turn as the old man. I'll be waiting for you tomorrow at the south scrapyard. Bring the car, Muscle wants to see if what's under the hood is as good as what's behind the wheel.",
+    },
+  },
+
+  -- FASE 3: The Crisis
+  phase3_race3 = {
+    id = "sms_phase3_race3",
+    contactId = "nova",
+    message = {
+      es = "No le digas nada a Rook de lo que te he dicho. Él no lo entendería. Cree que nos protege, pero solo nos está enterrando en este pueblo. Ghost me ha pasado el contacto de Shadow. Dice que tiene piezas que Rook nunca me dejaría montar. Voy a ir a verle. Deberías venir conmigo.",
+      en = "Don't tell Rook what I told you. He wouldn't understand. He thinks he's protecting us, but he's just burying us in this town. Ghost gave me Shadow's contact. Says he has parts Rook would never let me install. I'm going to see him. You should come with me.",
+    },
+  },
+
+  -- FASE 4: The Split (Ruptura)
+  phase4_race3 = {
+    id = "sms_phase4_race3",
+    contactId = "rook",
+    message = {
+      es = "Se acabó. No puedo ayudar a alguien que no quiere ser ayudado. Si vas a seguir con ella y con Shadow, hazlo, pero no esperes que vuelva a arreglar tus desastres. Me voy a centrar en mi propio coche. Nos vemos en la pista, Miller. Y esta vez, no voy a frenar para dejarte pasar.",
+      en = "It's over. I can't help someone who doesn't want to be helped. If you're going to continue with her and Shadow, do it, but don't expect me to fix your messes again. I'm going to focus on my own car. See you on the track, Miller. And this time, I'm not braking to let you pass.",
+    },
+  },
+
+  -- FASE 6: Copa Covet (based on romance choice)
+  phase6_covet_nova_mock = {
+    id = "sms_phase6_nova_mock",
+    contactId = "nova",
+    message = {
+      es = "Vaya, vaya. El caballero andante te dejó tirado en la cuneta, ¿eh? Te dije que Rook haría cualquier cosa por 'proteger' su visión del mundo. Espero que ese Covet sea cómodo, porque es lo único que vas a conducir en mucho tiempo.",
+      en = "Well, well. The knight in shining armor left you stranded on the roadside, huh? I told you Rook would do anything to 'protect' his worldview. I hope that Covet is comfortable, because it's all you're going to drive for a long time.",
+    },
+  },
+
+  phase6_covet_rook_pity = {
+    id = "sms_phase6_rook_pity",
+    contactId = "rook",
+    message = {
+      es = "Te lo advertí, Miller. La ambición de Nova no tiene fondo. Te usó para ganar el rally y luego te vendió a Shadow para saldar sus deudas. Lo siento por el coche del abuelo... no merecía terminar así.",
+      en = "I warned you, Miller. Nova's ambition has no bottom. She used you to win the rally and then sold you to Shadow to settle her debts. I'm sorry about your grandfather's car... it didn't deserve to end like this.",
+    },
+  },
+
+  -- FASE 7: Clasificatorias
+  phase7_clasif2 = {
+    id = "sms_phase7_anonymous",
+    contactId = "system",  -- Anonymous sender
+    message = {
+      es = "No todo lo que brilla es oro, ni todo lo que Techie ve en su pantalla es verdad. Shadow es un maestro de los espejismos digitales. Si quieres encontrar tu coche, busca en el contenedor 402 del puerto, no en las cuentas bancarias de quien te quiere.",
+      en = "Not everything that glitters is gold, nor everything Techie sees on his screen is true. Shadow is a master of digital mirages. If you want to find your car, look in container 402 at the port, not in the bank accounts of those who love you.",
+    },
+  },
+}
+
+-- Trigger SMS message based on narrative event
+local function triggerSMS(eventId)
+  if not career_career or not career_career.isActive() then
+    log("D", logTag, "SMS skipped (career not active): " .. tostring(eventId))
+    return false
+  end
+
+  -- Skip SMS sending during save load to prevent spam
+  if state.isLoading then
+    log("D", logTag, "SMS skipped (loading in progress): " .. tostring(eventId))
+    return false
+  end
+
+  local smsData = eventSMS[eventId]
+  if not smsData then
+    log("D", logTag, "No SMS defined for event: " .. tostring(eventId))
+    return false
+  end
+
+  -- Check if already triggered (using SMS id, not event id)
+  -- This allows the same event to be called multiple times but each unique SMS only sends once
+  local smsId = smsData.id or eventId
+  if state.triggeredSMS[smsId] then
+    log("D", logTag, "SMS already triggered: " .. tostring(smsId) .. " (event: " .. tostring(eventId) .. ")")
+    return false
+  end
+
+  log("I", logTag, "Queuing SMS for event: " .. tostring(eventId) .. " (SMS id: " .. tostring(smsId) .. ")")
+
+  -- Mark as triggered (using SMS id)
+  state.triggeredSMS[smsId] = true
+
+  -- Unlock contact (conditionally based on phase)
+  -- In Phase 0: Only Ghost should be unlocked
+  -- In Phase 1+: Nova, Rook, and others can be unlocked
+  local currentPhase = getCurrentNarrativePhase()
+  local canUnlock = true
+
+  if currentPhase == 0 then
+    -- Phase 0: Only allow Ghost to be unlocked
+    if smsData.contactId ~= "ghost" then
+      canUnlock = false
+      log("I", logTag, "Contact " .. smsData.contactId .. " NOT unlocked (Phase 0 - only Ghost accessible)")
+    end
+  end
+
+  if canUnlock then
+    unlockContact(smsData.contactId)
+  end
+
+  -- Resolve bilingual message
+  local messageText = resolveBilingualText(smsData.message)
+
+  -- Check if this SMS has choices
+  if smsData.choices and #smsData.choices > 0 then
+    -- Send message with choices
+    local choices = {}
+    for _, choiceData in ipairs(smsData.choices) do
+      table.insert(choices, {
+        id = choiceData.id,
+        text = resolveBilingualText(choiceData.text),
+        effects = choiceData.effects,
+        response = resolveBilingualText(choiceData.response),
+      })
+    end
+
+    -- Send the initial message
+    sendContactMessage(smsData.contactId, messageText, {
+      choices = choices,
+      silent = false,
+    })
+
+    -- Set up choices for UI
+    local uiChoices = {}
+    for _, choiceData in ipairs(choices) do
+      table.insert(uiChoices, {
+        id = choiceData.id,
+        text = choiceData.text,
+      })
+    end
+    setPendingChoices(smsData.contactId, uiChoices, nil, 1000, smsId)
+
+  else
+    -- Simple message without choices
+    sendContactMessage(smsData.contactId, messageText, {
+      silent = false,
+    })
+  end
+
+  log("I", logTag, "Triggered SMS: " .. eventId .. " from " .. smsData.contactId)
+  saveState()
+  return true
+end
+
+-- Handle SMS choice response
+local function respondToSMS(contactId, choiceId)
+  -- Get the SMS ID from pending choices
+  local smsId = state.pendingChoices and state.pendingChoices.smsId
+  if not smsId then
+    log("W", logTag, "No pending choices found for contact: " .. contactId)
+    return
+  end
+
+  -- Find the SMS by ID
+  local smsData = nil
+  for _, data in pairs(eventSMS) do
+    if data.id == smsId then
+      smsData = data
+      break
+    end
+  end
+
+  if not smsData then
+    log("W", logTag, "No SMS found with ID: " .. tostring(smsId))
+    return
+  end
+
+  -- Verify contactId matches
+  if smsData.contactId ~= contactId then
+    log("W", logTag, "SMS contactId mismatch: expected " .. smsData.contactId .. ", got " .. contactId)
+    return
+  end
+
+  -- Find the selected choice
+  local selectedChoice = nil
+  for _, choice in ipairs(smsData.choices) do
+    if choice.id == choiceId then
+      selectedChoice = choice
+      break
+    end
+  end
+
+  if not selectedChoice then
+    log("W", logTag, "Invalid choice ID: " .. choiceId)
+    return
+  end
+
+  -- Send player response
+  local responseText = resolveBilingualText(selectedChoice.text)
+  sendPlayerMessage(contactId, responseText)
+
+  -- Apply effects
+  if selectedChoice.effects then
+    applyEffects(selectedChoice.effects)
+  end
+
+  -- Send contact's response
+  if selectedChoice.response then
+    local contactResponse = resolveBilingualText(selectedChoice.response)
+    -- Queue with delay to simulate typing
+    queueMessage(contactId, {
+      sender = contactId,
+      senderType = "contact",
+      content = contactResponse,
+    }, 2000)
+    setContactTyping(contactId, true, 2)
+  end
+
+  -- Clear pending choices
+  clearPendingChoices()
+
+  log("I", logTag, "SMS choice selected: " .. choiceId .. " for contact " .. contactId)
+  saveState()
+end
+
+-- Integration with narrative system
+local function onNarrativeEvent(eventId)
+  -- Map narrative events to SMS triggers
+  -- This is called by mysummerNarrative.lua when events fire
+  return triggerSMS(eventId)
+end
+
+-- Reset triggered state for a specific event (for race replay)
+local function resetTriggered(eventId)
+  local sms = eventSMS[eventId]
+  if sms and sms.id then
+    state.triggeredSMS[sms.id] = nil
+    log("D", logTag, "Reset triggered state for SMS: " .. sms.id)
+  end
+end
+
+-- ============================================================================
 -- PERSISTENCE
 -- ============================================================================
 
 loadState = function()
   local _, savePath = career_saveSystem.getCurrentSaveSlot()
   if not savePath then return end
+
+  -- Set loading flag to prevent message spam during load
+  state.isLoading = true
 
   local filePath = savePath .. "/career/mysummer/" .. saveFile
   local data = jsonReadFile(filePath)
@@ -1563,6 +2034,7 @@ loadState = function()
     state.nextConversationId = data.nextConversationId or 1
     state.unreadByContact = data.unreadByContact or {}
     state.affinityEffects = data.affinityEffects or {}
+    state.triggeredSMS = data.triggeredSMS or {}
 
     -- Recalculate total unread
     state.totalUnread = 0
@@ -1572,6 +2044,10 @@ loadState = function()
 
     log("I", logTag, "Loaded chat state with " .. state.totalUnread .. " unread messages")
   end
+
+  -- Clear loading flag after a delay to allow narrative system to settle
+  -- This prevents re-triggering of already-sent SMS during load
+  state.isLoading = false
 end
 
 saveState = function(currentSavePath)
@@ -1592,6 +2068,7 @@ saveState = function(currentSavePath)
     nextConversationId = state.nextConversationId,
     unreadByContact = state.unreadByContact,
     affinityEffects = state.affinityEffects,
+    triggeredSMS = state.triggeredSMS,
   }
 
   career_saveSystem.jsonWriteFileSafe(filePath, data, true)
@@ -1606,9 +2083,18 @@ local function onExtensionLoaded()
   log("I", logTag, "MySummer Chat system loaded")
 end
 
+-- Forward declarations for dialogue system (used in onCareerActive, defined later)
+local dialogueQueue = {}
+local dialogueActive = false
+
 local function onCareerActive(active)
   if active then
     loadState()
+
+    -- Clear message queues on load (prevent processing old queued messages)
+    pendingMessages = {}
+    pendingChoicesQueue = {}
+    dialogueQueue = {}
 
     -- Initialize system contact
     initializeContact("system")
@@ -1625,8 +2111,11 @@ local function onCareerActive(active)
     state.totalUnread = 0
     state.activeDialogue = nil
     state.pendingChoices = nil
+    state.triggeredSMS = {}
+    state.isLoading = false
     pendingMessages = {}
     pendingChoicesQueue = {}
+    dialogueQueue = {}
     contactDataCache = {}
     conversationCooldowns = {}
   end
@@ -1649,9 +2138,7 @@ end
 -- ON-SCREEN DIALOGUE SYSTEM
 -- ============================================================================
 -- Shows narrative dialogue at the bottom of the screen (visual novel style)
-
-local dialogueQueue = {}
-local dialogueActive = false
+-- (dialogueQueue and dialogueActive are forward-declared before onCareerActive)
 
 -- Show dialogue messages on screen (immediate)
 local function showDialogue(contactId, messages)
@@ -1712,6 +2199,12 @@ end
 -- Queue dialogue to show after current one finishes
 -- Also adds messages to chat history so they appear in the phone app
 local function queueDialogue(contactId, messages, delay)
+  -- Skip during load to prevent message spam
+  if state.isLoading then
+    log("I", logTag, "Dialogue queuing skipped (loading in progress)")
+    return
+  end
+
   -- First, ensure contact is unlocked so messages can be received
   unlockContact(contactId)
 
@@ -1822,6 +2315,9 @@ M.unlockContact = unlockContact
 M.isContactUnlocked = isContactUnlocked
 M.isContactAvailable = isContactAvailable
 M.getContactDisplayName = getContactDisplayName
+M.disableContact = disableContact
+M.enableContact = enableContact
+M.isContactDisabled = isContactDisabled
 
 -- Typing indicators
 M.setContactTyping = setContactTyping
@@ -1855,6 +2351,34 @@ M.showDialogueMessage = showDialogueMessage
 M.showDialogueAndChat = showDialogueAndChat
 M.queueDialogue = queueDialogue
 M.hideDialogue = hideDialogue
+
+-- Mission status tracking
+M.onMissionStatusChanged = function(data)
+  if not data or not data.missionId then return end
+  local found = false
+  for _, conv in pairs(state.conversations) do
+    for _, msg in ipairs(conv.messages or {}) do
+      if msg.actionData and msg.actionData.missionId == data.missionId then
+        msg.actionStatus = data.status
+        if data.status == "active" then
+          msg.actionCompleted = true
+        end
+        found = true
+      end
+    end
+  end
+  if found then
+    saveState()
+    -- Notify UI so open conversations refresh
+    guihooks.trigger("mysummerChatMissionStatusChanged", data)
+  end
+end
+
+-- SMS event system (NEW)
+M.triggerSMS = triggerSMS
+M.respondToSMS = respondToSMS
+M.onNarrativeEvent = onNarrativeEvent
+M.resetTriggered = resetTriggered
 
 -- Lifecycle hooks
 M.onExtensionLoaded = onExtensionLoaded

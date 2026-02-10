@@ -89,6 +89,44 @@
       <a class="clear-link" @click="clearSelection">Clear selection</a>
     </div>
 
+    <!-- Success Banner -->
+    <div v-if="buySuccess" class="success-banner">
+      <span class="success-icon">[OK]</span>
+      <span>{{ buySuccess }}</span>
+    </div>
+
+    <!-- Error Banner -->
+    <div v-if="buyError" class="error-banner">
+      <span class="error-icon">[!]</span>
+      <span>{{ buyError }}</span>
+    </div>
+
+    <!-- Active Pickup Banner -->
+    <div v-if="activePickup" class="pickup-banner">
+      <div class="banner-icon">[!]</div>
+      <div class="banner-content">
+        <strong>Pickup scheduled!</strong>
+        <span>{{ activePickup.partNiceName || activePickup.partName }}</span>
+        <span>at {{ activePickup.location?.name || 'Unknown' }}</span>
+        <span>({{ formatDistance(activePickup.distance) }})</span>
+      </div>
+      <button class="banner-cancel" @click="cancelPickup">Cancel</button>
+    </div>
+
+    <!-- Pending Pickups Queue -->
+    <div v-if="pendingPickupsList.length > 0" class="pending-pickups">
+      <div class="pending-header">
+        <span class="pending-icon">[Q]</span>
+        <strong>Queued pickups ({{ pendingPickupsList.length }})</strong>
+      </div>
+      <div class="pending-list">
+        <div v-for="(p, idx) in pendingPickupsList" :key="idx" class="pending-item">
+          <span class="pending-name">{{ p.partNiceName || p.partName }}</span>
+          <span class="pending-price">${{ formatPrice(p.price) }}</span>
+        </div>
+      </div>
+    </div>
+
     <!-- Main Content -->
     <div class="main-content">
       <!-- Sidebar Filters -->
@@ -178,6 +216,7 @@
             <!-- Details -->
             <div class="card-details">
               <a class="card-title" href="#">{{ listing.partNiceName || listing.partName }}</a>
+              <p v-if="listing.description" class="card-description">{{ getLocalizedText(listing.description) }}</p>
 
               <div class="card-meta">
                 <span class="meta-seller">
@@ -199,18 +238,6 @@
                 <div class="spec-row">
                   <span class="spec-label">Distance:</span>
                   <span class="spec-value">{{ formatDistance(listing.distance) }} away</span>
-                </div>
-              </div>
-
-              <!-- Wear bar -->
-              <div class="wear-bar-wrap">
-                <span class="wear-label">Wear:</span>
-                <div class="wear-bar">
-                  <div
-                    class="wear-fill"
-                    :style="{ width: getMileagePercent(listing.condition?.odometer) + '%' }"
-                    :class="getMileageClass(listing.condition?.odometer)"
-                  ></div>
                 </div>
               </div>
 
@@ -238,18 +265,6 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Active Pickup Banner -->
-    <div v-if="activePickup && !activePickup.isIllegal" class="pickup-banner">
-      <div class="banner-icon">[!]</div>
-      <div class="banner-content">
-        <strong>Pickup scheduled!</strong>
-        <span>{{ activePickup.partNiceName || activePickup.partName }}</span>
-        <span>at {{ activePickup.location?.name || 'Unknown' }}</span>
-        <span>({{ formatDistance(activePickup.distance) }})</span>
-      </div>
-      <button class="banner-cancel" @click="cancelPickup">Cancel</button>
     </div>
 
     <!-- Orders Panel -->
@@ -371,6 +386,10 @@ const listings = computed(() => store.marketData.listings || [])
 const activePickup = computed(() => {
   const pickup = store.marketData.activePickup
   return pickup && !pickup.isIllegal ? pickup : null
+})
+
+const pendingPickupsList = computed(() => {
+  return store.marketData.pendingPickups || []
 })
 
 // Category system matching Lua backend (mysummerParts.lua)
@@ -520,24 +539,55 @@ const clearSelection = () => {
   selectedIds.value = []
 }
 
-const acceptSelectedListings = async () => {
+const acceptSelectedListings = () => {
   if (selectedIds.value.length === 0) return
-  const result = await store.acceptMultipleListings(selectedIds.value)
-  if (result && result.success !== false) {
-    selectedIds.value = []
+  const idsJson = JSON.stringify(selectedIds.value)
+  console.log("[PartsBay] Buy Selected clicked, ids:", idsJson)
+  if (window.bngApi) {
+    window.bngApi.engineLua(`career_modules_mysummerParts.acceptMultipleListings(${idsJson})`, (result) => {
+      console.log("[PartsBay] acceptMultipleListings result:", JSON.stringify(result))
+      if (result && result.success !== false) {
+        selectedIds.value = []
+      }
+    })
   }
 }
 
-const refreshListings = async () => {
-  await store.refreshListings()
+const refreshListings = () => {
+  if (window.bngApi) {
+    window.bngApi.engineLua('career_modules_mysummerParts.refreshListings()')
+  }
 }
 
-const acceptListing = async (listing) => {
-  await store.acceptListing(listing.id)
+const buyError = ref(null)
+const buySuccess = ref(null)
+let buyErrorTimer = null
+let buySuccessTimer = null
+
+const acceptListing = (listing) => {
+  console.log("[PartsBay] Buy It Now clicked, listing:", listing.id, listing.partNiceName || listing.partName)
+  if (window.bngApi) {
+    window.bngApi.engineLua(`career_modules_mysummerParts.acceptListing(${listing.id})`, (result) => {
+      console.log("[PartsBay] acceptListing result:", JSON.stringify(result))
+      if (result && result.success === false) {
+        buyError.value = result.message || "Purchase failed"
+        buySuccess.value = null
+        if (buyErrorTimer) clearTimeout(buyErrorTimer)
+        buyErrorTimer = setTimeout(() => { buyError.value = null }, 5000)
+      } else {
+        buyError.value = null
+        buySuccess.value = result.message || "Purchase successful!"
+        if (buySuccessTimer) clearTimeout(buySuccessTimer)
+        buySuccessTimer = setTimeout(() => { buySuccess.value = null }, 4000)
+      }
+    })
+  }
 }
 
-const cancelPickup = async () => {
-  await store.cancelPickup()
+const cancelPickup = () => {
+  if (window.bngApi) {
+    window.bngApi.engineLua('career_modules_mysummerParts.cancelActivePickup()')
+  }
 }
 
 const formatPrice = (value) => {
@@ -555,17 +605,11 @@ const formatMileage = (odometer) => {
   return `${Math.round(odometer / 1000).toLocaleString("en-US")} km`
 }
 
-const getMileagePercent = (odometer) => {
-  if (!odometer) return 0
-  return Math.min(100, (odometer / 200000) * 100)
-}
-
-const getMileageClass = (odometer) => {
-  if (!odometer) return "low"
-  const percent = (odometer / 200000) * 100
-  if (percent < 30) return "low"
-  if (percent < 70) return "medium"
-  return "high"
+const getLocalizedText = (text) => {
+  if (!text) return ""
+  if (typeof text === "string") return text
+  if (typeof text === "object") return text.en || text.es || ""
+  return String(text)
 }
 
 const getConditionClass = (condition) => {
@@ -1139,12 +1183,22 @@ $border-color: #dddddd;
   font-weight: bold;
   color: $text-link;
   text-decoration: none;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 
   &:hover {
     text-decoration: underline;
     color: darken($text-link, 10%);
   }
+}
+
+.card-description {
+  font-size: 10px;
+  color: #888;
+  font-style: italic;
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .card-meta {
@@ -1187,35 +1241,6 @@ $border-color: #dddddd;
 
 .spec-value {
   color: $text-dark;
-}
-
-.wear-bar-wrap {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 4px;
-}
-
-.wear-label {
-  font-size: 10px;
-  color: #666;
-  min-width: 35px;
-}
-
-.wear-bar {
-  flex: 1;
-  max-width: 100px;
-  height: 8px;
-  background: #e0e0e0;
-  border: 1px inset #ccc;
-}
-
-.wear-fill {
-  height: 100%;
-
-  &.low { background: $pb-green; }
-  &.medium { background: $pb-yellow; }
-  &.high { background: $pb-red; }
 }
 
 .time-left {
@@ -1294,6 +1319,98 @@ $border-color: #dddddd;
   &:hover {
     background: darken($bg-gray, 5%);
   }
+}
+
+// Success Banner
+.success-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin: 8px 12px;
+  background: #e8f5e9;
+  border: 1px solid $pb-green;
+  font-size: 11px;
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+.success-icon {
+  font-family: monospace;
+  font-size: 12px;
+  color: $pb-green;
+}
+
+// Error Banner
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin: 8px 12px;
+  background: #fdecea;
+  border: 1px solid $pb-red;
+  font-size: 11px;
+  color: $pb-red;
+  font-weight: bold;
+}
+
+.error-icon {
+  font-family: monospace;
+  font-size: 14px;
+}
+
+// Pending Pickups Queue
+.pending-pickups {
+  margin: 8px 12px;
+  background: #e8f4ff;
+  border: 1px solid $pb-blue;
+  font-size: 11px;
+}
+
+.pending-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: lighten($pb-blue, 45%);
+  border-bottom: 1px solid lighten($pb-blue, 30%);
+}
+
+.pending-icon {
+  font-family: monospace;
+  color: $pb-blue;
+  font-weight: bold;
+}
+
+.pending-list {
+  padding: 4px 10px;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.pending-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 0;
+  border-bottom: 1px dashed lighten($pb-blue, 35%);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.pending-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 8px;
+}
+
+.pending-price {
+  color: $pb-blue;
+  font-weight: bold;
 }
 
 // Pickup Banner

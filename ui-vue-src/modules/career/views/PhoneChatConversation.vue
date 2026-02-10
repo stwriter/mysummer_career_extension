@@ -211,25 +211,42 @@ const selectChoice = (choice) => {
   if (!window.bngApi || sendingChoice.value) return
 
   sendingChoice.value = true
-  window.bngApi.engineLua(`career_modules_mysummerChat.continueDialogue("${props.contactId}", "${choice.id}")`, (result) => {
-    sendingChoice.value = false
-    if (result && result.success) {
-      if (result.choices) {
-        pendingChoices.value = result.choices
-      } else {
-        pendingChoices.value = []
-      }
-      if (result.ended) {
-        hasActiveDialogue.value = false
-        canStartDialogue.value = false // Refresh this
-        window.bngApi.engineLua(`career_modules_mysummerChat.hasAvailableDialogue("${props.contactId}")`, (available) => {
-          canStartDialogue.value = available === true
-        })
-      }
+
+  // Check if this is an SMS choice or a V3 dialogue choice
+  // SMS choices: no active dialogue
+  // V3 dialogue choices: active dialogue exists
+  const isSMSChoice = !hasActiveDialogue.value
+
+  if (isSMSChoice) {
+    // SMS system - call respondToSMS
+    window.bngApi.engineLua(`career_modules_mysummerChat.respondToSMS("${props.contactId}", "${choice.id}")`, () => {
+      sendingChoice.value = false
+      pendingChoices.value = []
       // Reload to get updated messages
       loadConversation()
-    }
-  })
+    })
+  } else {
+    // V3 dialogue system - call continueDialogue
+    window.bngApi.engineLua(`career_modules_mysummerChat.continueDialogue("${props.contactId}", "${choice.id}")`, (result) => {
+      sendingChoice.value = false
+      if (result && result.success) {
+        if (result.choices) {
+          pendingChoices.value = result.choices
+        } else {
+          pendingChoices.value = []
+        }
+        if (result.ended) {
+          hasActiveDialogue.value = false
+          canStartDialogue.value = false // Refresh this
+          window.bngApi.engineLua(`career_modules_mysummerChat.hasAvailableDialogue("${props.contactId}")`, (available) => {
+            canStartDialogue.value = available === true
+          })
+        }
+        // Reload to get updated messages
+        loadConversation()
+      }
+    })
+  }
 }
 
 // Mission actions

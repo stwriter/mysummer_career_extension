@@ -1,225 +1,113 @@
 {
   "id": "nova",
   "name": "Nova",
-  "personality": "ambitious_impatient",
-  "specialty": "Driver",
-  "description": {
-    "es": "Tu copiloto ambiciosa. Te empuja a ganar a cualquier precio. Impaciente pero talentosa.",
-    "en": "Your ambitious co-driver. Pushes you to win at any cost. Impatient but talented."
-  },
+  "personality": "aggressive_ambitious",
+  "specialty": "Racer",
+  "description": {"es": "Piloto agresiva y ambiciosa. Busca el riesgo y la velocidad por encima de todo. Es pareja de Rook, aunque sus filosofias chocan constantemente.", "en": "Aggressive and ambitious racer. Seeks risk and speed above all else. She is Rook's partner, though their philosophies constantly clash."},
   "isV3Format": true,
-  "isTeammate": true,
+  "isTeammate": false,
 
   "contextReactions": {
     "recentPoliceEscape": [
-      {
-        "es": "¡Eso ha sido increíble! ¿Has visto cómo los has dejado?",
-        "en": "That was incredible! Did you see how you lost them?"
-      },
-      {
-        "es": "Adrenalina pura. Eso es lo que me gusta.",
-        "en": "Pure adrenaline. That's what I like."
-      },
-      {
-        "es": "La próxima vez avisa, quiero grabar el vídeo.",
-        "en": "Next time give me a heads up, I want to record it."
-      }
+      {"es": "¡Eso ha sido brutal! La adrenalina, Miller... eso es vivir.", "en": "That was brutal! The adrenaline, Miller... that's living."},
+      {"es": "¿Has visto sus caras? No tenian ni idea de por donde ibas. Me encanta.", "en": "Did you see their faces? They had no idea where you were going. I love it."},
+      {"es": "La proxima vez avisame, quiero ver la persecucion desde mi retrovisor.", "en": "Next time let me know, I want to see the chase from my rearview mirror."}
     ],
     "recentPoliceCaught": [
-      {
-        "es": "Mala suerte. Pero aprenderás de esto.",
-        "en": "Bad luck. But you'll learn from this."
-      },
-      {
-        "es": "Los polis tuvieron suerte. La próxima vez no la tendrán.",
-        "en": "Cops got lucky. Next time they won't."
-      },
-      {
-        "es": "¿Ya estás fuera? Bien. Hay trabajo que hacer.",
-        "en": "You're out already? Good. There's work to do."
-      }
+      {"es": "Mala suerte. Pero la proxima vez pisa mas fuerte y no te pillaran.", "en": "Bad luck. But next time floor it and they won't catch you."},
+      {"es": "Los polis tuvieron suerte. La proxima vez no tendran tanta.", "en": "Cops got lucky. Next time they won't be so lucky."},
+      {"es": "¿Ya estas fuera? Bien. Hay carreras que ganar.", "en": "You're out? Good. There are races to win."}
     ],
     "recentRaceWin": [
-      {
-        "es": "¡Así se hace! Sabía que podías.",
-        "en": "That's how it's done! I knew you could."
-      },
-      {
-        "es": "Victoria. Me encanta el sabor. Quiero más.",
-        "en": "Victory. I love the taste. I want more."
-      },
-      {
-        "es": "Bien. Pero no te relajes. El siguiente va a ser más difícil.",
-        "en": "Good. But don't relax. The next one will be harder."
-      }
+      {"es": "¡Asi se hace, Miller! Eso es velocidad pura, no manuales de taller.", "en": "That's how it's done, Miller! That's pure speed, not workshop manuals."},
+      {"es": "Victoria. Me encanta ese sabor. Quiero mas.", "en": "Victory. I love that taste. I want more."},
+      {"es": "Bien. Pero no te relajes. El siguiente rival sera mas rapido.", "en": "Good. But don't relax. The next rival will be faster."}
     ],
     "recentRaceLoss": [
-      {
-        "es": "Eso ha sido patético. ¿Qué ha pasado?",
-        "en": "That was pathetic. What happened?"
-      },
-      {
-        "es": "Perdemos tiempo con estas derrotas. Hay que mejorar.",
-        "en": "We're wasting time with these losses. We need to improve."
-      },
-      {
-        "es": "No pasa nada. Pero la próxima vez, ganas o ganas.",
-        "en": "It's fine. But next time, you win or you win."
-      }
+      {"es": "¿Que ha pasado? No puedes perder asi. Hay que pisar mas fuerte.", "en": "What happened? You can't lose like that. You need to push harder."},
+      {"es": "Perdemos tiempo con estas derrotas. Necesitas mas agallas, Miller.", "en": "We're wasting time with these losses. You need more guts, Miller."},
+      {"es": "No pasa nada. Pero la proxima vez, ganas o ganas.", "en": "It's fine. But next time, you win or you win."}
     ],
     "longAbsence": [
-      {
-        "es": "¿Dónde te habías metido? El tiempo no espera.",
-        "en": "Where have you been? Time doesn't wait."
-      },
-      {
-        "es": "Pensé que te habías rajado. Me alegra ver que no.",
-        "en": "Thought you'd chickened out. Glad to see you didn't."
-      },
-      {
-        "es": "Cada día que no corremos, otros nos adelantan.",
-        "en": "Every day we don't race, others pass us by."
-      }
+      {"es": "¿Donde te habias metido? El asfalto no espera a nadie.", "en": "Where have you been? The asphalt doesn't wait for anyone."},
+      {"es": "Pense que te habias rajado. Me alegra ver que no.", "en": "Thought you'd chickened out. Glad to see you didn't."},
+      {"es": "Cada dia que no corres, otros pilotos te adelantan. Despierta.", "en": "Every day you don't race, other drivers pass you. Wake up."}
     ]
   },
 
   "conversations": {
     "level1": {
-      "title": {
-        "es": "Primera Impresión",
-        "en": "First Impression"
-      },
+      "title": {"es": "Fuego en el Asfalto", "en": "Fire on the Asphalt"},
       "requiredPhase": 1,
       "phases": {
         "intro": {
           "exchanges": [
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "¿Habéis terminado de hablar? La parrilla se cierra en 5 minutos.",
-                "en": "You two done talking? Grid closes in 5 minutes."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Ese coche necesita mejoras serias, pero hoy... hoy es cuestión de agallas.",
-                "en": "That car needs serious upgrades, but today... today it's about guts."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "¿Las tienes?",
-                "en": "You got them?"
-              }
-            },
+            { "speaker": "nova", "text": {"es": "Miller. He visto como entras a las curvas. Tienes algo que la mayoria de estos pilotos de pueblo no tienen.", "en": "Miller. I've seen how you take corners. You have something most of these small-town drivers don't."} },
+            { "speaker": "nova", "text": {"es": "Agallas. La voluntad de pisar a fondo cuando otros levantan el pie.", "en": "Guts. The will to floor it when others lift off."} },
+            { "speaker": "nova", "text": {"es": "Rook dice que eres imprudente. Yo digo que tienes potencial. La diferencia esta en como lo canalices.", "en": "Rook says you're reckless. I say you have potential. The difference is how you channel it."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "confident",
-                  "text": {
-                    "es": "Vamos a ganar. No hemos venido a mirar.",
-                    "en": "We're going to win. We didn't come to watch."
-                  },
-                  "traits": ["ambitious", "confident"],
+                  "id": "ambitious",
+                  "text": {"es": "Me gusta tu forma de verlo. ¿Que propones?", "en": "I like how you see it. What do you propose?"},
+                  "traits": ["ambitious"],
                   "points": 20,
-                  "setsMemory": { "showedAmbition": true },
-                  "leadsTo": "intro_hyped"
+                  "setsMemory": { "novaAmbitionAlign": true },
+                  "leadsTo": "intro_fire"
                 },
                 {
-                  "id": "careful",
-                  "text": {
-                    "es": "Vamos a probar el coche, nada más. Sin locuras.",
-                    "en": "We're just testing the car, that's all. No craziness."
-                  },
+                  "id": "cautious",
+                  "text": {"es": "Rook tiene un punto. No puedes ganar si destrozas el coche.", "en": "Rook has a point. You can't win if you wreck the car."},
                   "traits": ["cautious"],
                   "points": -5,
-                  "setsMemory": { "showedCaution": true },
-                  "leadsTo": "intro_bored"
+                  "setsMemory": { "playerDefendsRook": true },
+                  "leadsTo": "intro_cold"
                 }
               ]
             }
           ],
           "branches": {
-            "intro_hyped": [
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Así se habla. Piso a fondo y ni mires atrás.",
-                  "en": "That's the spirit. Pedal to the metal and don't look back."
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Rook va a quejarse del motor, pero ignóralo.",
-                  "en": "Rook's gonna complain about the engine, but ignore him."
-                }
-              },
+            "intro_fire": [
+              { "speaker": "nova", "text": {"es": "Que dejemos de perder el tiempo en circuitos de pueblo y apuntemos mas alto.", "en": "That we stop wasting time on small-town circuits and aim higher."} },
+              { "speaker": "nova", "text": {"es": "Ghost me ha hablado de la Big One. La carrera definitiva. Pero para llegar ahi, hay que ganarse el nombre en la calle.", "en": "Ghost told me about the Big One. The ultimate race. But to get there, you need to earn your name on the street."} },
+              { "speaker": "nova", "text": {"es": "Rook prefiere pulir el coche cada noche en lugar de correr. Yo prefiero ganar con un coche sucio que perder con uno perfecto.", "en": "Rook prefers polishing the car every night instead of racing. I prefer winning with a dirty car than losing with a perfect one."} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "team_balance",
-                    "text": {
-                      "es": "Rook también es parte del equipo. Hay que escucharlo.",
-                      "en": "Rook's part of the team too. We should listen to him."
-                    },
-                    "traits": ["loyal"],
-                    "points": 5,
+                    "id": "all_in",
+                    "text": {"es": "Estoy dentro. Vamos a por la Big One.", "en": "I'm in. Let's go for the Big One."},
+                    "traits": ["ambitious"],
+                    "points": 20,
                     "continueToPhase": "nudo"
                   },
                   {
-                    "id": "agree",
-                    "text": {
-                      "es": "Tiene que aprender que a veces hay que arriesgar.",
-                      "en": "He needs to learn that sometimes you gotta risk it."
-                    },
-                    "traits": ["ambitious"],
-                    "points": 15,
+                    "id": "balance",
+                    "text": {"es": "Me gusta la ambicion, pero hay que ser inteligentes.", "en": "I like the ambition, but we need to be smart about it."},
+                    "points": 10,
                     "continueToPhase": "nudo"
                   }
                 ]
               }
             ],
-            "intro_bored": [
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Qué aburrido. No me hagas bostezar en la línea de salida.",
-                  "en": "Boring. Don't make me yawn at the start line."
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "¿Para qué hemos venido entonces? ¿A pasear?",
-                  "en": "Why did we come then? To take a cruise?"
-                }
-              },
+            "intro_cold": [
+              { "speaker": "nova", "text": {"es": "¿Otro sermon sobre la mecanica? Dios, pareces un clon de Rook.", "en": "Another sermon about mechanics? God, you sound like a Rook clone."} },
+              { "speaker": "nova", "text": {"es": "Mira, tu abuelo no llego a donde llego siendo precavido. Llego porque tenia hambre. Yo tambien la tengo.", "en": "Look, your grandfather didn't get where he got by being cautious. He got there because he was hungry. I am too."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "reconsider",
-                    "text": {
-                      "es": "Vale, tienes razón. Vamos a por todas.",
-                      "en": "Okay, you're right. Let's go all out."
-                    },
-                    "traits": ["ambitious"],
+                    "text": {"es": "Quizas tengas razon. No pierdo nada por escucharte.", "en": "Maybe you're right. Nothing to lose by listening."},
+                    "traits": ["honest"],
                     "points": 10,
-                    "setsMemory": { "changedMind": true },
+                    "setsMemory": { "reconsidered": true },
                     "continueToPhase": "nudo"
                   },
                   {
-                    "id": "stand_firm",
-                    "text": {
-                      "es": "A conocer el coche. Habrá tiempo para ganar.",
-                      "en": "To learn the car. There'll be time to win."
-                    },
-                    "traits": ["patient"],
+                    "id": "stay_cautious",
+                    "text": {"es": "Prefiero llegar lento que no llegar. Cada uno a su ritmo.", "en": "I'd rather arrive slow than not arrive. Each to their own."},
                     "points": -5,
                     "continueToPhase": "nudo"
                   }
@@ -231,49 +119,25 @@
 
         "nudo": {
           "exchanges": [
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Mira, voy a ser directa contigo.",
-                "en": "Look, I'm gonna be straight with you."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Llevo años esperando esta oportunidad. Un equipo, un coche, carreras de verdad.",
-                "en": "I've been waiting years for this opportunity. A team, a car, real racing."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "No voy a dejar que el miedo nos frene. ¿Lo entiendes?",
-                "en": "I'm not gonna let fear hold us back. You understand?"
-              }
-            },
+            { "speaker": "nova", "text": {"es": "Te voy a ser sincera, Miller. Llevo meses sintiendome atrapada.", "en": "I'll be honest with you, Miller. I've been feeling trapped for months."} },
+            { "speaker": "nova", "text": {"es": "Rook me quiere, lo se. Pero su forma de quererme es ponerme limites. 'No vayas tan rapido', 'revisa la presion', 'cuidado con esa curva'...", "en": "Rook loves me, I know. But his way of loving me is setting limits. 'Don't go so fast', 'check the pressure', 'careful with that corner'..."} },
+            { "speaker": "nova", "text": {"es": "Yo no naci para ir despacio. Naci para correr. Y este pueblo se me queda pequeño.", "en": "I wasn't born to go slow. I was born to race. And this town is too small for me."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "understand",
-                  "text": {
-                    "es": "Lo entiendo. Yo también quiero esto.",
-                    "en": "I understand. I want this too."
-                  },
+                  "id": "freedom",
+                  "text": {"es": "Te entiendo. A veces hay que soltar el lastre para volar.", "en": "I understand. Sometimes you have to drop the weight to fly."},
                   "traits": ["ambitious"],
-                  "points": 15,
-                  "setsMemory": { "sharedDream": true },
+                  "points": 20,
+                  "setsMemory": { "supportedNovaFreedom": true },
                   "continueToPhase": "desenlace"
                 },
                 {
-                  "id": "balance",
-                  "text": {
-                    "es": "Quiero ganar, pero no a cualquier precio.",
-                    "en": "I want to win, but not at any cost."
-                  },
-                  "traits": ["cautious"],
-                  "points": 0,
+                  "id": "rook_cares",
+                  "text": {"es": "Rook se preocupa por ti a su manera. Eso no es un limite, es carino.", "en": "Rook cares about you in his way. That's not a limit, it's care."},
+                  "traits": ["loyal"],
+                  "points": -5,
                   "continueToPhase": "desenlace"
                 }
               ]
@@ -282,66 +146,27 @@
         },
 
         "desenlace": {
-          "contextTransition": {
-            "default": {
-              "es": "Bien. Entonces estamos en la misma página.",
-              "en": "Good. Then we're on the same page."
-            },
-            "sharedDream": {
-              "es": "Sabía que lo entenderías. Por eso te elegí.",
-              "en": "I knew you'd understand. That's why I chose you."
-            }
-          },
           "exchanges": [
-            {
-              "speaker": "nova",
-              "text": "{{contextTransition}}"
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "El mundo de las carreras es cruel. Los débiles no sobreviven.",
-                "en": "The racing world is brutal. The weak don't survive."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Pero nosotros... nosotros vamos a ser los que queden en pie.",
-                "en": "But us... we're gonna be the ones left standing."
-              }
-            },
+            { "speaker": "nova", "text": {"es": "Mira, te propongo algo. La proxima carrera, corremos juntos. Sin reglas de Rook, sin limites de velocidad autoimpuestos.", "en": "Look, I'll propose something. Next race, we race together. No Rook rules, no self-imposed speed limits."} },
+            { "speaker": "nova", "text": {"es": "Si te gusta lo que sientes al pisar a fondo sin que nadie te diga que frenes, entonces sabras que tengo razon.", "en": "If you like how it feels to floor it without anyone telling you to brake, then you'll know I'm right."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "together",
-                  "text": {
-                    "es": "Juntos. Como equipo.",
-                    "en": "Together. As a team."
-                  },
-                  "traits": ["loyal"],
-                  "points": 10
-                },
-                {
-                  "id": "top",
-                  "text": {
-                    "es": "Hasta la cima. Sin importar lo que cueste.",
-                    "en": "To the top. No matter what it takes."
-                  },
+                  "id": "deal",
+                  "text": {"es": "Hecho. Pero si destrozamos el coche, no me culpes.", "en": "Deal. But if we wreck the car, don't blame me."},
                   "traits": ["ambitious"],
                   "points": 15,
-                  "setsMemory": { "ambitiousPact": true }
+                  "setsMemory": { "agreedToRaceNova": true }
+                },
+                {
+                  "id": "neutral_end",
+                  "text": {"es": "Lo pensare. No tengo prisa por decidir.", "en": "I'll think about it. No rush to decide."},
+                  "points": 5
                 }
               ]
             },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Perfecto. Ahora vamos. La carrera nos espera.",
-                "en": "Perfect. Now let's go. The race is waiting."
-              }
-            }
+            { "speaker": "nova", "text": {"es": "Eso me gusta, Miller. Tienes chispa. No dejes que nadie te la apague.", "en": "I like that, Miller. You've got spark. Don't let anyone put it out."} }
           ],
           "end": {
             "result": "success",
@@ -349,162 +174,87 @@
               "xp": 50
             },
             "cooldown": 120,
-            "teaser": {
-              "es": "Nova espera grandes cosas de ti. No la decepciones.",
-              "en": "Nova expects great things from you. Don't disappoint her."
-            }
+            "teaser": {"es": "Nova ve algo en ti que Rook no quiere ver. La pregunta es a quien vas a escuchar.", "en": "Nova sees something in you that Rook doesn't want to see. The question is who you'll listen to."}
           }
         }
       }
     },
 
     "level2": {
-      "title": {
-        "es": "La Oportunidad de Ghost",
-        "en": "Ghost's Opportunity"
-      },
+      "title": {"es": "Ambicion sin Frenos", "en": "Ambition Without Brakes"},
       "requiredPhase": 2,
       "requiredMemory": ["ghost_contact_made"],
-      "unlockMessage": {
-        "es": "Nova tiene planes...",
-        "en": "Nova has plans..."
-      },
+      "unlockMessage": {"es": "Nova quiere hablar. Parece agitada...", "en": "Nova wants to talk. She seems agitated..."},
 
       "phases": {
         "intro": {
           "exchanges": [
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Ese tal Ghost... ¿has visto las piezas que ofrece?",
-                "en": "That Ghost guy... did you see the parts he's offering?"
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Turbos, escapes de competición, electrónica de carrera...",
-                "en": "Turbos, race exhausts, competition electronics..."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Rook está asustado, pero yo veo una oportunidad.",
-                "en": "Rook's scared, but I see an opportunity."
-              }
-            },
+            { "speaker": "nova", "text": {"es": "Miller, estoy hasta las narices.", "en": "Miller, I've had it."} },
+            { "speaker": "nova", "text": {"es": "Ayer casi gano la carrera. CASI. Pero el coche me fallo en la ultima curva porque Rook insistio en usar neumáticos blandos 'por seguridad'.", "en": "Yesterday I almost won the race. ALMOST. But the car failed me in the last corner because Rook insisted on soft tires 'for safety'."} },
+            { "speaker": "nova", "text": {"es": "Necesito mas potencia, mejores piezas, un turbo que no se ahogue a los cuatro mil. Y Rook se niega a tocar nada que no este en el manual.", "en": "I need more power, better parts, a turbo that doesn't choke at four thousand. And Rook refuses to touch anything that's not in the manual."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "interested",
-                  "text": {
-                    "es": "¿Qué tienes en mente?",
-                    "en": "What do you have in mind?"
-                  },
-                  "points": 10,
-                  "leadsTo": "intro_plan"
+                  "id": "support_nova",
+                  "text": {"es": "Si el coche no da mas, hay que buscar otras fuentes de piezas.", "en": "If the car can't give more, you need to find other sources for parts."},
+                  "traits": ["ambitious"],
+                  "points": 20,
+                  "setsMemory": { "encouragedNovaSearch": true },
+                  "leadsTo": "intro_encouraged"
                 },
                 {
-                  "id": "cautious",
-                  "text": {
-                    "es": "Ghost es peligroso. Deberíamos ir con cuidado.",
-                    "en": "Ghost is dangerous. We should be careful."
-                  },
+                  "id": "side_rook",
+                  "text": {"es": "Quizas Rook tiene razon sobre los neumaticos. La seguridad importa.", "en": "Maybe Rook is right about the tires. Safety matters."},
                   "traits": ["cautious"],
-                  "points": -5,
-                  "leadsTo": "intro_annoyed"
+                  "points": -10,
+                  "setsMemory": { "defendedRookAgain": true },
+                  "leadsTo": "intro_frustrated"
                 }
               ]
             }
           ],
           "branches": {
-            "intro_plan": [
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Podemos saltarnos meses de ahorro. Conseguir las piezas ahora.",
-                  "en": "We can skip months of saving. Get the parts now."
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Sí, hay riesgo. Pero el que no arriesga, no gana.",
-                  "en": "Yes, there's risk. But nothing ventured, nothing gained."
-                }
-              },
+            "intro_encouraged": [
+              { "speaker": "nova", "text": {"es": "¡Exacto! Ghost me ha hablado de alguien. Un tipo llamado Shadow que tiene acceso a piezas de competicion que no vas a encontrar en ninguna tienda.", "en": "Exactly! Ghost told me about someone. A guy called Shadow who has access to competition parts you won't find in any shop."} },
+              { "speaker": "nova", "text": {"es": "Rook se pondria furioso si supiera, pero... ¿desde cuando necesito su permiso para correr como quiero?", "en": "Rook would go ballistic if he knew, but... since when do I need his permission to race how I want?"} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "agree",
-                    "text": {
-                      "es": "Estoy de acuerdo. Necesitamos ventaja.",
-                      "en": "I agree. We need an edge."
-                    },
+                    "id": "go_shadow",
+                    "text": {"es": "Si Shadow tiene lo que necesitas, ve a por ello. Yo te cubro.", "en": "If Shadow has what you need, go for it. I'll cover for you."},
                     "traits": ["ambitious"],
                     "points": 20,
-                    "setsMemory": { "agreedWithNova": true },
+                    "setsMemory": { "coveredForNova": true },
                     "continueToPhase": "nudo"
                   },
                   {
-                    "id": "think",
-                    "text": {
-                      "es": "Déjame pensarlo. Es una decisión importante.",
-                      "en": "Let me think about it. It's an important decision."
-                    },
-                    "traits": ["cautious"],
+                    "id": "careful_shadow",
+                    "text": {"es": "Ten cuidado con Shadow. Ghost no suele hablar de gente de fiar.", "en": "Be careful with Shadow. Ghost doesn't usually talk about trustworthy people."},
                     "points": 5,
                     "continueToPhase": "nudo"
                   }
                 ]
               }
             ],
-            "intro_annoyed": [
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "¿Peligroso? ¿Y qué no lo es en este mundo?",
-                  "en": "Dangerous? What isn't in this world?"
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "El precio de perder es peor. No lo olvides.",
-                  "en": "The price of losing is worse. Don't forget that."
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Cada carrera que perdemos, otros ganan. Otros avanzan.",
-                  "en": "Every race we lose, others win. Others advance."
-                }
-              },
+            "intro_frustrated": [
+              { "speaker": "nova", "text": {"es": "Dios, otro piloto que habla como un mecanico. ¿Es que nadie entiende lo que es querer ganar?", "en": "God, another driver who talks like a mechanic. Does nobody understand what it means to want to win?"} },
+              { "speaker": "nova", "text": {"es": "Sabes que, da igual. Voy a hacerlo sola. No necesito la aprobacion de nadie.", "en": "You know what, forget it. I'll do it alone. I don't need anyone's approval."} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "reconsider",
-                    "text": {
-                      "es": "Tienes un punto. ¿Qué propones?",
-                      "en": "You have a point. What do you suggest?"
-                    },
-                    "points": 10,
-                    "setsMemory": { "reconsidered": true },
+                    "id": "wait",
+                    "text": {"es": "Espera, no digo que no tengas razon. Solo que hay que ser inteligente.", "en": "Wait, I'm not saying you're wrong. Just that you need to be smart about it."},
+                    "traits": ["honest"],
+                    "points": 5,
                     "continueToPhase": "nudo"
                   },
                   {
-                    "id": "firm",
-                    "text": {
-                      "es": "Prefiero ganar limpio que arriesgar todo.",
-                      "en": "I'd rather win clean than risk everything."
-                    },
-                    "traits": ["cautious"],
-                    "points": -10,
+                    "id": "your_choice",
+                    "text": {"es": "Es tu decision, Nova. Solo no te metas en problemas.", "en": "It's your decision, Nova. Just don't get into trouble."},
+                    "points": 0,
                     "continueToPhase": "nudo"
                   }
                 ]
@@ -515,49 +265,27 @@
 
         "nudo": {
           "exchanges": [
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Mira, lo entiendo. Rook te ha metido miedo.",
-                "en": "Look, I get it. Rook scared you."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Pero piénsalo: ¿cuánto tiempo llevamos atascados?",
-                "en": "But think about it: how long have we been stuck?"
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Ghost es nuestra escalera. Subimos o nos quedamos abajo.",
-                "en": "Ghost is our ladder. We climb or we stay at the bottom."
-              }
-            },
+            { "speaker": "nova", "text": {"es": "Mira, te voy a contar algo que no le he dicho a nadie.", "en": "Look, I'm going to tell you something I haven't told anyone."} },
+            { "speaker": "nova", "text": {"es": "Antes de conocer a Rook, yo corria sola. Carreras ilegales en la capital. Sin reglas, sin limites, sin nadie que me dijera que frenara.", "en": "Before I met Rook, I raced alone. Illegal races in the capital. No rules, no limits, nobody telling me to brake."} },
+            { "speaker": "nova", "text": {"es": "Era libre. Y era buena. Muy buena. Pero un dia tuve un accidente gordo y Rook fue el unico que me ayudo a reconstruir el coche.", "en": "I was free. And I was good. Really good. But one day I had a bad crash and Rook was the only one who helped me rebuild the car."} },
+            { "speaker": "nova", "text": {"es": "Desde entonces, el cree que me 'salvo'. Y que me debe proteger para siempre. Pero yo no quiero proteccion, Miller. Quiero ganar.", "en": "Since then, he thinks he 'saved' me. And that he needs to protect me forever. But I don't want protection, Miller. I want to win."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "climb",
-                  "text": {
-                    "es": "Subimos. Haz lo que tengas que hacer.",
-                    "en": "We climb. Do what you need to do."
-                  },
-                  "traits": ["ambitious"],
-                  "points": 20,
-                  "setsMemory": { "gaveGreenLight": true },
+                  "id": "understand_both",
+                  "text": {"es": "Entiendo a los dos. Rook tiene miedo de perderte y tu tienes miedo de perder tu libertad.", "en": "I understand both of you. Rook is afraid of losing you and you're afraid of losing your freedom."},
+                  "traits": ["patient"],
+                  "points": 15,
+                  "setsMemory": { "understoodBothSides": true },
                   "continueToPhase": "desenlace"
                 },
                 {
-                  "id": "careful_climb",
-                  "text": {
-                    "es": "Subimos, pero con cuidado. Paso a paso.",
-                    "en": "We climb, but carefully. Step by step."
-                  },
-                  "traits": ["cautious"],
-                  "points": 10,
+                  "id": "nova_right",
+                  "text": {"es": "No dejes que un accidente del pasado te defina. Eres mas que eso.", "en": "Don't let a past crash define you. You're more than that."},
+                  "traits": ["ambitious"],
+                  "points": 20,
+                  "setsMemory": { "encouragedNovaIdentity": true },
                   "continueToPhase": "desenlace"
                 }
               ]
@@ -567,67 +295,31 @@
 
         "desenlace": {
           "contextTransition": {
-            "default": {
-              "es": "Perfecto.",
-              "en": "Perfect."
-            },
-            "gaveGreenLight": {
-              "es": "Sabía que podía contar contigo.",
-              "en": "I knew I could count on you."
-            },
-            "reconsidered": {
-              "es": "Al final usas la cabeza. Bien.",
-              "en": "You're using your head after all. Good."
-            }
+            "default": {"es": "En fin, ya sabes como soy. No voy a cambiar por nadie.", "en": "Anyway, now you know how I am. I'm not changing for anyone."},
+            "encouragedNovaSearch": {"es": "Me alegra que alguien me entienda. Rook jamas lo hara.", "en": "Glad someone understands me. Rook never will."},
+            "defendedRookAgain": {"es": "Sigues sin entenderme. Pero al menos has escuchado.", "en": "You still don't get me. But at least you listened."}
           },
           "exchanges": [
-            {
-              "speaker": "nova",
-              "text": "{{contextTransition}}"
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Voy a contactar con Ghost. Ver qué nos puede ofrecer.",
-                "en": "I'll reach out to Ghost. See what he can offer us."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Tú encárgate de mantener a Rook tranquilo. Ya sabes cómo es.",
-                "en": "You handle keeping Rook calm. You know how he is."
-              }
-            },
+            { "speaker": "nova", "text": "{{contextTransition}}" },
+            { "speaker": "nova", "text": {"es": "He oido que Muscle tiene un garaje lleno de motores V8 de la vieja escuela. Ghost me ha dicho que tu abuelo trabajaba con su padre.", "en": "I've heard Muscle has a garage full of old-school V8 engines. Ghost told me your grandfather worked with her father."} },
+            { "speaker": "nova", "text": {"es": "Si quieres potencia real para el ETK-I, ella es tu mejor opcion. Aunque dicen que tiene un caracter de mil demonios.", "en": "If you want real power for the ETK-I, she's your best bet. Though they say she has a hell of a temper."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "handle",
-                  "text": {
-                    "es": "Me encargo. Tú consigue esas piezas.",
-                    "en": "I'll handle it. You get those parts."
-                  },
-                  "traits": ["confident"],
-                  "points": 15
+                  "id": "interested_muscle",
+                  "text": {"es": "Gracias por el dato. Necesito toda la ayuda posible con el ETK-I.", "en": "Thanks for the tip. I need all the help I can get with the ETK-I."},
+                  "traits": ["patient"],
+                  "points": 10
                 },
                 {
-                  "id": "team",
-                  "text": {
-                    "es": "Intentaré, pero recuerda que Rook también importa.",
-                    "en": "I'll try, but remember Rook matters too."
-                  },
-                  "traits": ["loyal"],
-                  "points": 5
+                  "id": "more_about_shadow",
+                  "text": {"es": "¿Y que hay de Shadow? ¿Vas a ir a verle?", "en": "What about Shadow? Are you going to see him?"},
+                  "traits": ["ambitious"],
+                  "points": 15,
+                  "setsMemory": { "askedAboutShadow": true }
                 }
               ]
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Pronto estaremos compitiendo en otra liga. Ya lo verás.",
-                "en": "Soon we'll be competing in another league. You'll see."
-              }
             }
           ],
           "end": {
@@ -636,179 +328,91 @@
               "xp": 75
             },
             "cooldown": 180,
-            "teaser": {
-              "es": "Nova tiene grandes planes. Esperemos que no nos exploten en la cara.",
-              "en": "Nova has big plans. Let's hope they don't blow up in our faces."
-            }
+            "teaser": {"es": "La ambicion de Nova crece. Y la sombra de Shadow se acerca cada vez mas...", "en": "Nova's ambition grows. And Shadow's shadow draws ever closer..."}
           }
         }
       }
     },
 
     "level3": {
-      "title": {
-        "es": "La Carrera del Puerto",
-        "en": "The Port Race"
-      },
+      "title": {"es": "La Propuesta", "en": "The Proposal"},
       "requiredPhase": 3,
-      "unlockMessage": {
-        "es": "Nova tiene noticias importantes.",
-        "en": "Nova has important news."
-      },
+      "unlockMessage": {"es": "Nova tiene algo importante que contarte. A solas.", "en": "Nova has something important to tell you. In private."},
 
       "phases": {
         "intro": {
           "exchanges": [
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Ghost nos ofrece una carrera en el puerto.",
-                "en": "Ghost is offering us a race at the port."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Es ilegal de verdad. Mucha pasta, sin reglas.",
-                "en": "It's truly illegal. Big money, no rules."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Si ganamos esto, entramos en la liga mayor.",
-                "en": "If we win this, we enter the major league."
-              }
-            },
+            { "speaker": "nova", "text": {"es": "Miller, tenemos que hablar. Sin Rook.", "en": "Miller, we need to talk. Without Rook."} },
+            { "speaker": "nova", "text": {"es": "He ido a ver a Shadow. Si, ya se lo que vas a decir. Pero escuchame primero.", "en": "I went to see Shadow. Yes, I know what you're going to say. But hear me out first."} },
+            { "speaker": "nova", "text": {"es": "Tiene piezas que pueden transformar cualquier coche en una bestia. Turbos sin limitar, centralitas negras, inyectores de competicion...", "en": "He has parts that can turn any car into a beast. Unlimited turbos, black ECUs, competition injectors..."} },
+            { "speaker": "nova", "text": {"es": "Y me ha hecho una oferta. Si le ayudo con unos 'transportes', me da acceso a su inventario completo. Gratis.", "en": "And he made me an offer. If I help him with some 'deliveries', he'll give me access to his full inventory. Free."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "details",
-                  "text": {
-                    "es": "Cuéntame más. ¿Qué implica?",
-                    "en": "Tell me more. What does it involve?"
-                  },
-                  "points": 5,
+                  "id": "interested",
+                  "text": {"es": "¿Que tipo de transportes? Antes de juzgar, quiero saber.", "en": "What kind of deliveries? Before I judge, I want to know."},
+                  "traits": ["ambitious"],
+                  "points": 15,
+                  "setsMemory": { "askedAboutDeliveries": true },
                   "leadsTo": "intro_details"
                 },
                 {
-                  "id": "rook_says",
-                  "text": {
-                    "es": "Rook dice que es una ratonera.",
-                    "en": "Rook says it's a trap."
-                  },
+                  "id": "bad_idea",
+                  "text": {"es": "Nova, eso suena a mercado negro. Es peligroso.", "en": "Nova, that sounds like black market. It's dangerous."},
                   "traits": ["cautious"],
                   "points": -5,
-                  "leadsTo": "intro_rook"
+                  "leadsTo": "intro_defensive"
                 }
               ]
             }
           ],
           "branches": {
             "intro_details": [
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Carrera nocturna. Circuito cerrado en los muelles.",
-                  "en": "Night race. Closed circuit at the docks."
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Los mejores del underground. Premio gordo.",
-                  "en": "The underground's best. Huge prize."
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Rook dice que no. Pero si ganamos esto...",
-                  "en": "Rook says no. But if we win this..."
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Nuestra reputación se dispara. Ofertas, sponsors, todo.",
-                  "en": "Our reputation skyrockets. Offers, sponsors, everything."
-                }
-              },
+              { "speaker": "nova", "text": {"es": "Piezas de un lado a otro. Sin preguntas. Shadow dice que es inofensivo, solo logistica.", "en": "Parts from one place to another. No questions. Shadow says it's harmless, just logistics."} },
+              { "speaker": "nova", "text": {"es": "Pero las piezas, Miller... son de otro nivel. Con ellas podriamos ganar cualquier carrera de aqui a la capital.", "en": "But the parts, Miller... they're next level. With them we could win any race from here to the capital."} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "side_nova",
-                    "text": {
-                      "es": "Lo hacemos. Necesitamos crecer o moriremos en el olvido.",
-                      "en": "We do it. We need to grow or we'll die in obscurity."
-                    },
+                    "id": "join_nova",
+                    "text": {"es": "Si es solo logistica... cuenta conmigo. Vamos a ganar esto.", "en": "If it's just logistics... count me in. Let's win this."},
                     "traits": ["ambitious"],
-                    "points": 30,
-                    "setsMemory": { "sidedWithNova": true, "phase3Choice": "nova" },
-                    "continueToPhase": "desenlace_nova"
+                    "points": 25,
+                    "setsMemory": { "joinedNovaShadow": true, "phase3NovaChoice": "nova" },
+                    "continueToPhase": "nudo"
                   },
                   {
-                    "id": "side_rook",
-                    "text": {
-                      "es": "Es demasiado pronto. Pasamos esta vez.",
-                      "en": "It's too soon. We pass this time."
-                    },
-                    "traits": ["cautious"],
-                    "points": -20,
-                    "setsMemory": { "sidedWithRook": true, "phase3Choice": "rook" },
-                    "continueToPhase": "desenlace_rook"
+                    "id": "just_you",
+                    "text": {"es": "Es tu decision. Pero a mi no me metas. Ya tengo bastante con Ghost.", "en": "It's your call. But leave me out. I already have enough with Ghost."},
+                    "points": 5,
+                    "setsMemory": { "phase3NovaChoice": "neutral" },
+                    "continueToPhase": "nudo"
                   }
                 ]
               }
             ],
-            "intro_rook": [
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Rook dice muchas cosas. Rook tiene miedo de su sombra.",
-                  "en": "Rook says a lot of things. Rook's afraid of his own shadow."
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "¿Vas a dejar que el miedo de otro decida tu futuro?",
-                  "en": "You gonna let someone else's fear decide your future?"
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Esta es LA oportunidad. No habrá otra igual.",
-                  "en": "This is THE opportunity. There won't be another like it."
-                }
-              },
+            "intro_defensive": [
+              { "speaker": "nova", "text": {"es": "¿Peligroso? ¿Sabes que es peligroso? Quedarse estancada en un circuito de pueblo viendo como otros pilotos con menos talento te adelantan porque tienen mejores piezas.", "en": "Dangerous? Know what's dangerous? Staying stuck on a small-town circuit watching less talented drivers pass you because they have better parts."} },
+              { "speaker": "nova", "text": {"es": "Rook me tiene atada con su miedo. No voy a dejar que tu tambien me frenes.", "en": "Rook has me tied down with his fear. I'm not going to let you hold me back too."} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "side_nova",
-                    "text": {
-                      "es": "Tienes razón. Vamos a por ello.",
-                      "en": "You're right. Let's go for it."
-                    },
-                    "traits": ["ambitious"],
-                    "points": 30,
-                    "setsMemory": { "sidedWithNova": true, "phase3Choice": "nova" },
-                    "continueToPhase": "desenlace_nova"
+                    "id": "change_mind",
+                    "text": {"es": "Vale, quizas he sido demasiado duro. Cuentame mas sobre Shadow.", "en": "Okay, maybe I was too harsh. Tell me more about Shadow."},
+                    "traits": ["honest"],
+                    "points": 10,
+                    "setsMemory": { "phase3NovaChoice": "neutral" },
+                    "continueToPhase": "nudo"
                   },
                   {
-                    "id": "side_rook",
-                    "text": {
-                      "es": "Esta vez no, Nova. El riesgo es demasiado alto.",
-                      "en": "Not this time, Nova. The risk is too high."
-                    },
+                    "id": "stand_firm",
+                    "text": {"es": "No te estoy frenando. Te estoy avisando. No es lo mismo.", "en": "I'm not holding you back. I'm warning you. It's not the same."},
                     "traits": ["cautious"],
-                    "points": -20,
-                    "setsMemory": { "sidedWithRook": true, "phase3Choice": "rook" },
-                    "continueToPhase": "desenlace_rook"
+                    "points": -10,
+                    "setsMemory": { "phase3NovaChoice": "against" },
+                    "continueToPhase": "nudo"
                   }
                 ]
               }
@@ -816,375 +420,146 @@
           }
         },
 
-        "desenlace_nova": {
+        "nudo": {
           "exchanges": [
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "¡Sí! Sabía que tenías sangre en las venas.",
-                "en": "Yes! I knew you had blood in your veins."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Rook va a protestar, pero ya se le pasará.",
-                "en": "Rook's gonna protest, but he'll get over it."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Cuando estemos arriba, nos lo agradecerá.",
-                "en": "When we're at the top, he'll thank us."
-              }
-            },
+            { "speaker": "nova", "text": {"es": "Hay algo mas que necesitas saber, Miller.", "en": "There's something else you need to know, Miller."} },
+            { "speaker": "nova", "text": {"es": "He estado hablando con gente en la capital. Pilotos de verdad, con circuitos de verdad.", "en": "I've been talking to people in the capital. Real drivers, with real circuits."} },
+            { "speaker": "nova", "text": {"es": "Dicen que buscan pilotos nuevos con nuestro perfil. Jovenes, rapidos, sin miedo.", "en": "They say they're looking for new drivers with our profile. Young, fast, fearless."} },
+            { "speaker": "nova", "text": {"es": "Rook no quiere ir. Dice que no estamos listos. Pero yo se que si lo estamos. Tu y yo, Miller.", "en": "Rook doesn't want to go. Says we're not ready. But I know we are. You and me, Miller."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "lets_win",
-                  "text": {
-                    "es": "Vamos a ganar esto. Por el equipo.",
-                    "en": "We're gonna win this. For the team."
-                  },
-                  "traits": ["ambitious", "loyal"],
-                  "points": 20,
-                  "setsMemory": { "motivatedWin": true }
+                  "id": "capital_dream",
+                  "text": {"es": "La capital... suena increible. Pero primero hay que demostrar aqui.", "en": "The capital... sounds incredible. But first we need to prove ourselves here."},
+                  "traits": ["ambitious"],
+                  "points": 15,
+                  "setsMemory": { "capitalDreamShared": true },
+                  "continueToPhase": "desenlace"
                 },
                 {
-                  "id": "hope",
-                  "text": {
-                    "es": "Espero que tengas razón sobre esto.",
-                    "en": "I hope you're right about this."
-                  },
-                  "points": 5
+                  "id": "too_fast",
+                  "text": {"es": "Estas yendo demasiado rapido, Nova. Ni siquiera hemos ganado las carreras de aqui.", "en": "You're going too fast, Nova. We haven't even won the races here."},
+                  "points": -5,
+                  "continueToPhase": "desenlace"
                 }
               ]
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Vamos a prepararnos. Esta noche cambia todo.",
-                "en": "Let's get ready. Tonight changes everything."
-              }
             }
-          ],
-          "end": {
-            "result": "success",
-            "rewards": {
-              "xp": 100,
-              "unlocks": ["nova_trust_boost"]
-            },
-            "setsMemory": { "novaTrustsYou": true },
-            "cooldown": 240,
-            "teaser": {
-              "es": "Nova confía en ti completamente. Pero Rook está decepcionado...",
-              "en": "Nova trusts you completely. But Rook is disappointed..."
-            }
-          }
+          ]
         },
 
-        "desenlace_rook": {
+        "desenlace": {
           "exchanges": [
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Increíble. La oportunidad de nuestra vida y la tiramos por miedo.",
-                "en": "Unbelievable. Opportunity of a lifetime and we throw it away out of fear."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Genial. Simplemente genial.",
-                "en": "Great. Just great."
-              }
-            },
+            { "speaker": "nova", "text": {"es": "Una ultima cosa. No le digas nada de Shadow a Rook.", "en": "One last thing. Don't say anything about Shadow to Rook."} },
+            { "speaker": "nova", "text": {"es": "El no lo entenderia. Cree que nos protege, pero solo nos esta enterrando en este pueblo.", "en": "He wouldn't understand. He thinks he's protecting us, but he's just burying us in this town."} },
+            { "speaker": "nova", "text": {"es": "Tu y yo sabemos que hay algo mas alla de estas calles. Solo necesitamos el valor para ir a buscarlo.", "en": "You and I know there's something beyond these streets. We just need the courage to go find it."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "next_time",
-                  "text": {
-                    "es": "Habrá otras oportunidades. Mejores.",
-                    "en": "There'll be other opportunities. Better ones."
-                  },
-                  "traits": ["patient"],
-                  "points": -5
+                  "id": "secret_safe",
+                  "text": {"es": "Tu secreto esta a salvo conmigo. Rook no sabra nada.", "en": "Your secret is safe with me. Rook won't know."},
+                  "traits": ["ambitious"],
+                  "points": 20,
+                  "setsMemory": { "keptNovaShadowSecret": true }
                 },
                 {
-                  "id": "sorry",
-                  "text": {
-                    "es": "Lo siento, Nova. Pero es lo correcto.",
-                    "en": "I'm sorry, Nova. But it's the right call."
-                  },
-                  "traits": ["honest"],
+                  "id": "no_promise",
+                  "text": {"es": "No puedo prometerte eso. Rook es mi amigo tambien.", "en": "I can't promise that. Rook is my friend too."},
+                  "traits": ["loyal"],
                   "points": -10,
-                  "setsMemory": { "apologizedToNova": true }
+                  "setsMemory": { "refusedToKeepSecret": true }
                 }
               ]
             },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Espero que no te arrepientas de esto.",
-                "en": "I hope you don't regret this."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Porque yo ya me estoy arrepintiendo de haberte elegido.",
-                "en": "Because I'm already regretting choosing you."
-              }
-            }
+            { "speaker": "nova", "text": {"es": "Piensalo, Miller. El reloj corre y el asfalto no espera a los indecisos.", "en": "Think about it, Miller. The clock is ticking and the asphalt doesn't wait for the undecided."} }
           ],
           "end": {
             "result": "success",
             "rewards": {
-              "xp": 50
+              "xp": 100
             },
-            "setsMemory": { "novaDisappointed": true },
             "cooldown": 240,
-            "teaser": {
-              "es": "Nova está furiosa. Esto va a tardar en curarse...",
-              "en": "Nova is furious. This will take time to heal..."
-            }
+            "teaser": {"es": "Nova tiene un plan con Shadow. ¿Vas a seguirla o vas a delatarla?", "en": "Nova has a plan with Shadow. Will you follow her or expose her?"}
           }
         }
       }
     },
 
     "level4": {
-      "title": {
-        "es": "Ambición Sin Límites",
-        "en": "Limitless Ambition"
-      },
+      "title": {"es": "Sin Cadenas", "en": "Unchained"},
       "requiredPhase": 4,
-      "requiredMemory": ["novaTrustsYou", "novaDisappointed"],
-      "unlockMessage": {
-        "es": "Nova tiene grandes planes...",
-        "en": "Nova has big plans..."
-      },
+      "requiredMemory": ["rookRivalStatus"],
+      "unlockMessage": {"es": "Nova ha cortado con Rook. Quiere celebrarlo... contigo.", "en": "Nova has broken up with Rook. She wants to celebrate... with you."},
 
       "phases": {
         "intro": {
-          "contextTransition": {
-            "novaTrustsYou": {
-              "es": "¿Has oído hablar de Shadow? Ghost nos ha conectado.",
-              "en": "Have you heard of Shadow? Ghost connected us."
-            },
-            "novaDisappointed": {
-              "es": "Necesitamos hablar. Y esta vez, espero que estés dispuesto a escuchar.",
-              "en": "We need to talk. And this time, I hope you're willing to listen."
-            }
-          },
           "exchanges": [
-            {
-              "speaker": "nova",
-              "text": "{{contextTransition}}"
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Shadow tiene conexiones en el mercado negro. Piezas de alto rendimiento, imposibles de conseguir.",
-                "en": "Shadow has connections in the black market. High-performance parts, impossible to get elsewhere."
-              },
-              "condition": "novaTrustsYou"
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Sé que la cagamos con la carrera del puerto. Pero tengo otra opción.",
-                "en": "I know we screwed up with the port race. But I have another option."
-              },
-              "condition": "novaDisappointed"
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Shadow puede conseguirnos todo lo que necesitamos para The Big One.",
-                "en": "Shadow can get us everything we need for The Big One."
-              }
-            },
+            { "speaker": "nova", "text": {"es": "Se acabó, Miller. Por fin.", "en": "It's over, Miller. Finally."} },
+            { "speaker": "nova", "text": {"es": "Rook y yo hemos terminado. Como pareja, como equipo, como todo.", "en": "Rook and I are done. As a couple, as a team, as everything."} },
+            { "speaker": "nova", "text": {"es": "Y sabes que... me siento libre. Por primera vez en mucho tiempo, puedo respirar.", "en": "And you know what... I feel free. For the first time in a long while, I can breathe."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "enthusiastic",
-                  "text": {
-                    "es": "¿Qué estamos esperando? Vamos a hacerlo.",
-                    "en": "What are we waiting for? Let's do it."
-                  },
-                  "traits": ["ambitious"],
-                  "points": 25,
-                  "condition": "novaTrustsYou",
-                  "leadsTo": "trust_path"
-                },
-                {
-                  "id": "second_chance",
-                  "text": {
-                    "es": "Esta vez te escucho. ¿Qué necesitas?",
-                    "en": "This time I'm listening. What do you need?"
-                  },
-                  "traits": ["humble"],
+                  "id": "celebrate",
+                  "text": {"es": "Si es lo que necesitabas, me alegro por ti.", "en": "If that's what you needed, I'm happy for you."},
+                  "traits": ["honest"],
                   "points": 15,
-                  "condition": "novaDisappointed",
-                  "leadsTo": "redemption_path"
+                  "leadsTo": "intro_positive"
                 },
                 {
-                  "id": "cautious_interest",
-                  "text": {
-                    "es": "Shadow... suena peligroso. ¿Qué tipo de piezas?",
-                    "en": "Shadow... sounds dangerous. What kind of parts?"
-                  },
-                  "traits": ["cautious"],
-                  "points": 5,
-                  "leadsTo": "details"
+                  "id": "rook_ok",
+                  "text": {"es": "¿Y Rook? ¿Como esta el?", "en": "And Rook? How is he?"},
+                  "traits": ["loyal"],
+                  "points": -5,
+                  "leadsTo": "intro_annoyed"
                 }
               ]
             }
           ],
           "branches": {
-            "trust_path": [
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Ese es mi copiloto. Sabía que lo entenderías.",
-                  "en": "That's my co-driver. I knew you'd understand."
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Shadow nos puede conseguir turbos de competición, sistemas de inyección modificados, hasta tracción integral.",
-                  "en": "Shadow can get us competition turbos, modified injection systems, even AWD conversion."
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "El coche que llevemos a The Big One no tendrá rival.",
-                  "en": "The car we bring to The Big One will have no rival."
-                }
-              },
+            "intro_positive": [
+              { "speaker": "nova", "text": {"es": "Lo necesitaba. Rook es un gran piloto, pero me estaba convirtiendo en algo que no soy.", "en": "I needed it. Rook is a great driver, but he was turning me into something I'm not."} },
+              { "speaker": "nova", "text": {"es": "A partir de ahora, corro por mi. Y contigo, si quieres unirte.", "en": "From now on, I race for myself. And with you, if you want to join."} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "all_in",
-                    "text": {
-                      "es": "Vamos con todo. Es nuestra única oportunidad.",
-                      "en": "Let's go all in. It's our only chance."
-                    },
+                    "id": "race_together",
+                    "text": {"es": "Contigo, el asfalto es mas interesante. Cuenta conmigo.", "en": "With you, the asphalt is more interesting. Count me in."},
                     "traits": ["ambitious"],
-                    "points": 30,
-                    "setsMemory": { "novaAmbitionLevel": "extreme" },
-                    "continueToPhase": "desenlace"
-                  },
-                  {
-                    "id": "smart_approach",
-                    "text": {
-                      "es": "De acuerdo, pero vamos con cuidado. Paso a paso.",
-                      "en": "Okay, but let's be smart. Step by step."
-                    },
-                    "traits": ["cautious", "ambitious"],
-                    "points": 15,
-                    "setsMemory": { "novaAmbitionLevel": "controlled" },
-                    "continueToPhase": "desenlace"
-                  }
-                ]
-              }
-            ],
-            "redemption_path": [
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Bien. Al menos ahora prestas atención.",
-                  "en": "Good. At least now you're paying attention."
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Shadow puede darnos lo que necesitamos. Piezas de alto nivel, sin preguntas.",
-                  "en": "Shadow can give us what we need. Top-tier parts, no questions asked."
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Sí, es arriesgado. Pero después de perder la carrera del puerto, necesitamos recuperar terreno.",
-                  "en": "Yes, it's risky. But after missing the port race, we need to catch up."
-                }
-              },
-              {
-                "type": "choice",
-                "choices": [
-                  {
-                    "id": "redemption",
-                    "text": {
-                      "es": "Tienes razón. Déjame compensar mi error.",
-                      "en": "You're right. Let me make up for my mistake."
-                    },
-                    "traits": ["honest", "ambitious"],
                     "points": 20,
-                    "setsMemory": { "novaAmbitionLevel": "controlled" },
-                    "continueToPhase": "desenlace"
+                    "setsMemory": { "alliedWithNova": true },
+                    "continueToPhase": "nudo"
                   },
                   {
-                    "id": "still_cautious",
-                    "text": {
-                      "es": "Te escucho, pero no prometo nada todavía.",
-                      "en": "I'm listening, but I'm not promising anything yet."
-                    },
-                    "traits": ["cautious"],
+                    "id": "independent",
+                    "text": {"es": "Prefiero correr por mi cuenta, pero nos vemos en pista.", "en": "I prefer racing on my own, but see you on track."},
                     "points": 5,
-                    "continueToPhase": "desenlace"
+                    "continueToPhase": "nudo"
                   }
                 ]
               }
             ],
-            "details": [
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Turbos ilegales. Kits de suspensión profesionales. Electrónica de carrera modificada.",
-                  "en": "Illegal turbos. Professional suspension kits. Modified racing electronics."
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Todo lo que las regulaciones prohiben. Todo lo que necesitamos para ganar.",
-                  "en": "Everything regulations forbid. Everything we need to win."
-                }
-              },
+            "intro_annoyed": [
+              { "speaker": "nova", "text": {"es": "¿Rook? Estara bien. Tiene sus datos y sus graficos para hacerle compania.", "en": "Rook? He'll be fine. He has his data and graphs to keep him company."} },
+              { "speaker": "nova", "text": {"es": "No me mires asi. El eligio sus limites, yo elegi mi libertad.", "en": "Don't look at me like that. He chose his limits, I chose my freedom."} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "convinced",
-                    "text": {
-                      "es": "Vale, me has convencido. Hagámoslo.",
-                      "en": "Okay, you've convinced me. Let's do it."
-                    },
-                    "traits": ["ambitious"],
-                    "points": 20,
-                    "setsMemory": { "novaAmbitionLevel": "controlled" },
-                    "continueToPhase": "desenlace"
+                    "id": "harsh_truth",
+                    "text": {"es": "Quizas fuisteis malos el uno para el otro. No todo es culpa suya.", "en": "Maybe you were bad for each other. It's not all his fault."},
+                    "traits": ["honest"],
+                    "points": 0,
+                    "continueToPhase": "nudo"
                   },
                   {
-                    "id": "limits",
-                    "text": {
-                      "es": "Hay una línea que no deberíamos cruzar.",
-                      "en": "There's a line we shouldn't cross."
-                    },
-                    "traits": ["cautious"],
-                    "points": -10,
-                    "setsMemory": { "novaAmbitionLevel": "minimal" },
-                    "continueToPhase": "desenlace"
+                    "id": "move_on",
+                    "text": {"es": "Lo hecho, hecho esta. ¿Que es lo siguiente?", "en": "What's done is done. What's next?"},
+                    "points": 10,
+                    "continueToPhase": "nudo"
                   }
                 ]
               }
@@ -1192,72 +567,68 @@
           }
         },
 
-        "desenlace": {
-          "contextTransition": {
-            "extreme": {
-              "es": "Perfecto. Así es como se gana. Sin límites.",
-              "en": "Perfect. That's how you win. No limits."
-            },
-            "controlled": {
-              "es": "Bien. Seremos inteligentes con esto.",
-              "en": "Good. We'll be smart about this."
-            },
-            "minimal": {
-              "es": "No estoy de acuerdo, pero respeto tu decisión.",
-              "en": "I don't agree, but I respect your decision."
-            }
-          },
+        "nudo": {
           "exchanges": [
-            {
-              "speaker": "nova",
-              "text": "{{contextTransition}}"
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Voy a contactar con Shadow esta noche. Empezamos a construir el coche perfecto.",
-                "en": "I'll contact Shadow tonight. We start building the perfect car."
-              },
-              "condition": "!minimal"
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Espero que cuando llegue The Big One, no te arrepientas de habernos limitado.",
-                "en": "I hope when The Big One comes, you don't regret holding us back."
-              },
-              "condition": "minimal"
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "The Big One está cada vez más cerca. Tenemos que estar listos.",
-                "en": "The Big One is getting closer. We need to be ready."
-              }
-            },
+            { "speaker": "nova", "text": {"es": "Shadow me ha dado las piezas que necesitaba. El coche va como un cohete.", "en": "Shadow gave me the parts I needed. The car goes like a rocket."} },
+            { "speaker": "nova", "text": {"es": "Pero no te voy a mentir... la deuda crece. Shadow no regala nada.", "en": "But I won't lie to you... the debt is growing. Shadow doesn't give anything away."} },
+            { "speaker": "nova", "text": {"es": "Me ha pedido que haga unos 'encargos' mas pesados. No me gusta, pero es el precio de la velocidad.", "en": "He's asked me to do some heavier 'jobs'. I don't like it, but it's the price of speed."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "committed",
-                  "text": {
-                    "es": "Vamos a ganar esa carrera. Haré lo que haga falta.",
-                    "en": "We're gonna win that race. I'll do whatever it takes."
-                  },
+                  "id": "help_debt",
+                  "text": {"es": "Si estas en problemas con Shadow, dejame ayudarte.", "en": "If you're in trouble with Shadow, let me help."},
+                  "traits": ["loyal"],
+                  "points": 20,
+                  "setsMemory": { "offeredToHelpNova": true },
+                  "continueToPhase": "desenlace"
+                },
+                {
+                  "id": "your_problem",
+                  "text": {"es": "Eso es problema tuyo, Nova. Yo te avise sobre Shadow.", "en": "That's your problem, Nova. I warned you about Shadow."},
+                  "points": -10,
+                  "continueToPhase": "desenlace"
+                }
+              ]
+            }
+          ]
+        },
+
+        "desenlace": {
+          "exchanges": [
+            {
+              "speaker": "nova",
+              "text": {
+                "contextIf": "offeredToHelpNova",
+                "value": {"es": "Gracias, Miller. De verdad. A veces pienso que eres la unica persona en este mundo que no intenta controlarme.", "en": "Thanks, Miller. Really. Sometimes I think you're the only person in this world who doesn't try to control me."}
+              }
+            },
+            {
+              "speaker": "nova",
+              "text": {
+                "contextIf": "!offeredToHelpNova",
+                "value": {"es": "Bien. Me las arreglare sola. Como siempre.", "en": "Fine. I'll manage on my own. Like always."}
+              }
+            },
+            { "speaker": "nova", "text": {"es": "Oye, una cosa. El Rally Regional se acerca. Es nuestra oportunidad de demostrar que no necesitamos a nadie mas.", "en": "Hey, one thing. The Regional Rally is coming. It's our chance to prove we don't need anyone else."} },
+            { "speaker": "nova", "text": {"es": "Tu con el ETK-I, yo con mi coche preparado... vamos a arrasar.", "en": "You with the ETK-I, me with my tuned car... we're going to dominate."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "rally_hype",
+                  "text": {"es": "El Rally es nuestro, Nova. Vamos a ensenarles de que estamos hechos.", "en": "The Rally is ours, Nova. Let's show them what we're made of."},
                   "traits": ["ambitious"],
                   "points": 15
                 },
                 {
-                  "id": "together",
-                  "text": {
-                    "es": "Lo conseguiremos. Juntos, como equipo.",
-                    "en": "We'll make it. Together, as a team."
-                  },
-                  "traits": ["loyal"],
-                  "points": 10
+                  "id": "rally_careful",
+                  "text": {"es": "Primero asegurate de que tu coche puede aguantar un rally entero.", "en": "First make sure your car can handle a full rally."},
+                  "points": 0
                 }
               ]
-            }
+            },
+            { "speaker": "nova", "text": {"es": "Nos vemos en la linea de salida. Y esta vez, sin nadie que nos diga que frenemos.", "en": "See you at the start line. And this time, nobody telling us to brake."} }
           ],
           "end": {
             "result": "success",
@@ -1265,230 +636,84 @@
               "xp": 125
             },
             "cooldown": 300,
-            "teaser": {
-              "es": "Nova está cada vez más obsesionada con The Big One. ¿Hasta dónde llegará?",
-              "en": "Nova is becoming increasingly obsessed with The Big One. How far will she go?"
-            }
+            "teaser": {"es": "Nova esta libre pero endeudada. El Rally se acerca y las deudas con Shadow crecen...", "en": "Nova is free but in debt. The Rally approaches and debts with Shadow grow..."}
           }
         }
       }
     },
 
     "level5": {
-      "title": {
-        "es": "El Plan",
-        "en": "The Plan"
-      },
+      "title": {"es": "Antes de la Tormenta", "en": "Before the Storm"},
       "requiredPhase": 5,
-      "requiredMemory": ["novaAmbitionLevel"],
-      "unlockMessage": {
-        "es": "Nova quiere hablar sobre el futuro...",
-        "en": "Nova wants to talk about the future..."
-      },
+      "unlockMessage": {"es": "Nova quiere verte antes del Rally. Parece nerviosa...", "en": "Nova wants to see you before the Rally. She seems nervous..."},
 
       "phases": {
         "intro": {
           "exchanges": [
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "El coche está casi listo. Otro mes y estará perfecto para The Big One.",
-                "en": "The car's almost ready. Another month and it'll be perfect for The Big One."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Pero... ha surgido algo.",
-                "en": "But... something came up."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Un comprador. Oferta seria. Mucha pasta por el coche.",
-                "en": "A buyer. Serious offer. Lots of cash for the car."
-              },
-              "condition": "novaTrustsYou"
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Tengo... opciones. Necesito saber si puedo confiar en ti.",
-                "en": "I have... options. I need to know if I can trust you."
-              },
-              "condition": "novaDisappointed"
-            },
+            { "speaker": "nova", "text": {"es": "Miller, el Rally es manana y estoy... asustada.", "en": "Miller, the Rally is tomorrow and I'm... scared."} },
+            { "speaker": "nova", "text": {"es": "No me mires asi. Si, Nova tiene miedo. ¿Contento?", "en": "Don't look at me like that. Yes, Nova is scared. Happy?"} },
+            { "speaker": "nova", "text": {"es": "Shadow me ha dicho que si no gano el rally, la deuda se duplica. Y no estoy hablando de dinero.", "en": "Shadow told me that if I don't win the rally, the debt doubles. And I'm not talking about money."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "what_offer",
-                  "text": {
-                    "es": "¿Qué oferta? ¿De quién estamos hablando?",
-                    "en": "What offer? Who are we talking about?"
-                  },
-                  "points": 5,
-                  "leadsTo": "reveal"
-                },
-                {
-                  "id": "trust_me",
-                  "text": {
-                    "es": "Siempre puedes confiar en mí, Nova. ¿Qué pasa?",
-                    "en": "You can always trust me, Nova. What's going on?"
-                  },
+                  "id": "protect",
+                  "text": {"es": "No te va a pasar nada, Nova. No voy a dejar que Shadow te toque.", "en": "Nothing's going to happen to you, Nova. I won't let Shadow touch you."},
                   "traits": ["loyal"],
-                  "points": 15,
-                  "leadsTo": "trust"
+                  "points": 25,
+                  "setsMemory": { "promisedToProtectNova": true },
+                  "leadsTo": "intro_emotional"
                 },
                 {
-                  "id": "suspicious",
-                  "text": {
-                    "es": "¿Por qué me estás contando esto? ¿Qué estás planeando?",
-                    "en": "Why are you telling me this? What are you planning?"
-                  },
-                  "traits": ["cautious"],
+                  "id": "warned_you",
+                  "text": {"es": "Te lo dije, Nova. Shadow no es alguien con quien jugar.", "en": "I told you, Nova. Shadow isn't someone to mess with."},
                   "points": -10,
-                  "leadsTo": "defensive"
+                  "leadsTo": "intro_cold"
                 }
               ]
             }
           ],
           "branches": {
-            "reveal": [
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Un tipo que Shadow conoce. Coleccionista de coches de carrera.",
-                  "en": "A guy Shadow knows. Race car collector."
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Dice que pagaría el doble de lo que vale el coche. En efectivo.",
-                  "en": "Says he'd pay double what the car's worth. Cash."
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Con ese dinero... podríamos empezar de nuevo. Mejor. Más rápido.",
-                  "en": "With that money... we could start over. Better. Faster."
-                }
-              },
+            "intro_emotional": [
+              { "speaker": "nova", "text": {"es": "... Gracias. Nadie me habia dicho eso sin añadir un 'pero' detras.", "en": "... Thanks. Nobody has ever said that to me without adding a 'but' afterwards."} },
+              { "speaker": "nova", "text": {"es": "Rook siempre decia: 'te protegere, PERO tienes que hacer lo que yo diga'. Tu solo... me proteges.", "en": "Rook always said: 'I'll protect you, BUT you have to do what I say'. You just... protect me."} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "tempted",
-                    "text": {
-                      "es": "Es... tentador. Pero ese coche es nuestro proyecto.",
-                      "en": "That's... tempting. But that car is our project."
-                    },
-                    "traits": ["loyal", "ambitious"],
+                    "id": "together",
+                    "text": {"es": "Estamos juntos en esto, Nova. Hasta el final.", "en": "We're in this together, Nova. Until the end."},
+                    "traits": ["loyal"],
+                    "points": 20,
+                    "continueToPhase": "nudo"
+                  },
+                  {
+                    "id": "focus",
+                    "text": {"es": "Primero ganemos el rally. Despues nos preocupamos de Shadow.", "en": "First let's win the rally. Then we'll worry about Shadow."},
+                    "traits": ["ambitious"],
+                    "points": 15,
+                    "continueToPhase": "nudo"
+                  }
+                ]
+              }
+            ],
+            "intro_cold": [
+              { "speaker": "nova", "text": {"es": "¿Te crees que no lo se? No necesito que me restriegues mis errores, Miller.", "en": "Think I don't know that? I don't need you rubbing my mistakes in my face, Miller."} },
+              { "speaker": "nova", "text": {"es": "Lo que necesito es ganar ese maldito rally y salir de esta pesadilla.", "en": "What I need is to win that damn rally and get out of this nightmare."} },
+              {
+                "type": "choice",
+                "choices": [
+                  {
+                    "id": "sorry",
+                    "text": {"es": "Perdona. No es momento de reproches. Vamos a ganar esto.", "en": "Sorry. This isn't the time for blame. Let's win this."},
+                    "traits": ["honest"],
                     "points": 10,
                     "continueToPhase": "nudo"
                   },
                   {
-                    "id": "no_way",
-                    "text": {
-                      "es": "Ni de coña. Ese coche nos lleva a The Big One.",
-                      "en": "No way. That car takes us to The Big One."
-                    },
-                    "traits": ["loyal", "confident"],
-                    "points": 20,
-                    "setsMemory": { "firmlyLoyal": true },
-                    "continueToPhase": "nudo"
-                  }
-                ]
-              }
-            ],
-            "trust": [
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Eso espero. Porque esto es grande.",
-                  "en": "I hope so. Because this is big."
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Alguien quiere comprar el coche. Una fortuna. Suficiente para retirarnos y empezar de cero.",
-                  "en": "Someone wants to buy the car. A fortune. Enough to retire and start fresh."
-                }
-              },
-              {
-                "type": "choice",
-                "choices": [
-                  {
-                    "id": "our_dream",
-                    "text": {
-                      "es": "Pero ese coche es nuestro sueño. The Big One es nuestro sueño.",
-                      "en": "But that car is our dream. The Big One is our dream."
-                    },
-                    "traits": ["loyal"],
-                    "points": 20,
-                    "setsMemory": { "firmlyLoyal": true },
-                    "continueToPhase": "nudo"
-                  },
-                  {
-                    "id": "consider",
-                    "text": {
-                      "es": "¿Y tú qué quieres hacer?",
-                      "en": "What do you want to do?"
-                    },
-                    "points": 5,
-                    "continueToPhase": "nudo"
-                  }
-                ]
-              }
-            ],
-            "defensive": [
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Relájate. No estoy planeando nada.",
-                  "en": "Relax. I'm not planning anything."
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Solo... hay una oferta por el coche. Y quería ser honesta contigo.",
-                  "en": "Just... there's an offer for the car. And I wanted to be honest with you."
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Pero si vas a sospechar de todo lo que digo, olvídalo.",
-                  "en": "But if you're gonna suspect everything I say, forget it."
-                }
-              },
-              {
-                "type": "choice",
-                "choices": [
-                  {
-                    "id": "apologize",
-                    "text": {
-                      "es": "Perdona. Cuéntame. ¿Qué oferta?",
-                      "en": "Sorry. Tell me. What offer?"
-                    },
-                    "traits": ["honest"],
-                    "points": 5,
-                    "continueToPhase": "nudo"
-                  },
-                  {
-                    "id": "firm",
-                    "text": {
-                      "es": "No vamos a vender el coche. Fin de la conversación.",
-                      "en": "We're not selling the car. End of conversation."
-                    },
-                    "traits": ["confident"],
-                    "points": -5,
-                    "setsMemory": { "firmlyLoyal": true },
+                    "id": "tough_love",
+                    "text": {"es": "La verdad duele. Pero la motivacion viene de dentro, no del miedo a Shadow.", "en": "The truth hurts. But motivation comes from within, not from fear of Shadow."},
+                    "points": 0,
                     "continueToPhase": "nudo"
                   }
                 ]
@@ -1499,393 +724,143 @@
 
         "nudo": {
           "exchanges": [
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Mira, no sé qué hacer. Y eso me asusta.",
-                "en": "Look, I don't know what to do. And that scares me."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Por un lado, The Big One es todo lo que he soñado. Ganar. Demostrar que somos los mejores.",
-                "en": "On one hand, The Big One is everything I've dreamed of. Winning. Proving we're the best."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Pero por otro... el dinero es real. Seguro. No es un sueño.",
-                "en": "But on the other... the money is real. Secure. It's not a dream."
-              }
-            },
+            { "speaker": "nova", "text": {"es": "Hay algo que no te he contado sobre el ETK-I.", "en": "There's something I haven't told you about the ETK-I."} },
+            { "speaker": "nova", "text": {"es": "Shadow lo quiere. No las piezas, no el motor. El coche entero.", "en": "Shadow wants it. Not the parts, not the engine. The whole car."} },
+            { "speaker": "nova", "text": {"es": "Me ofrecio borrar toda mi deuda a cambio de conseguirle el ETK-I. Le dije que no, pero... cada dia que pasa la presion es mayor.", "en": "He offered to erase all my debt in exchange for getting him the ETK-I. I said no, but... every day the pressure gets worse."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "loyalty",
-                  "text": {
-                    "es": "Los sueños valen más que el dinero. Tú me enseñaste eso.",
-                    "en": "Dreams are worth more than money. You taught me that."
-                  },
-                  "traits": ["loyal", "ambitious"],
-                  "points": 25,
-                  "setsMemory": { "novaIntentions": "trusted" },
-                  "continueToPhase": "desenlace_loyal"
+                  "id": "never",
+                  "text": {"es": "El ETK-I no se toca. Es el legado de mi abuelo.", "en": "The ETK-I is off limits. It's my grandfather's legacy."},
+                  "traits": ["loyal"],
+                  "points": 15,
+                  "setsMemory": { "protectedETKI": true },
+                  "continueToPhase": "desenlace"
                 },
                 {
-                  "id": "question",
-                  "text": {
-                    "es": "¿Me estás diciendo que vas a vendernos por pasta?",
-                    "en": "Are you telling me you're gonna sell us out for cash?"
-                  },
-                  "traits": ["honest"],
-                  "points": -15,
-                  "setsMemory": { "novaIntentions": "questioned" },
-                  "continueToPhase": "desenlace_questioned"
-                },
-                {
-                  "id": "practical",
-                  "text": {
-                    "es": "Haz lo que tengas que hacer. Pero yo sigo adelante.",
-                    "en": "Do what you gotta do. But I'm moving forward."
-                  },
-                  "traits": ["confident"],
-                  "points": 0,
-                  "setsMemory": { "novaIntentions": "questioned" },
-                  "continueToPhase": "desenlace_questioned"
+                  "id": "worried",
+                  "text": {"es": "¿Shadow sabe donde tengo el coche? Esto es serio, Nova.", "en": "Does Shadow know where I keep the car? This is serious, Nova."},
+                  "traits": ["cautious"],
+                  "points": 10,
+                  "setsMemory": { "suspectedDanger": true },
+                  "continueToPhase": "desenlace"
                 }
               ]
             }
           ]
         },
 
-        "desenlace_loyal": {
+        "desenlace": {
           "exchanges": [
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Tienes razón. ¿En qué estaba pensando?",
-                "en": "You're right. What was I thinking?"
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "El coche se queda. Vamos a The Big One. Y vamos a ganar.",
-                "en": "The car stays. We go to The Big One. And we're gonna win."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Gracias por mantenerme en el camino correcto.",
-                "en": "Thanks for keeping me on track."
-              }
-            },
+            { "speaker": "nova", "text": {"es": "Mira, te lo cuento porque confio en ti. No dejes que Shadow se acerque al ETK-I despues del rally.", "en": "Look, I'm telling you because I trust you. Don't let Shadow near the ETK-I after the rally."} },
+            { "speaker": "nova", "text": {"es": "Ese coche es lo unico bueno que queda de esta historia. No dejes que se lo lleve.", "en": "That car is the only good thing left of this story. Don't let him take it."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "together",
-                  "text": {
-                    "es": "Siempre. Somos un equipo.",
-                    "en": "Always. We're a team."
-                  },
+                  "id": "trust_nova",
+                  "text": {"es": "Confio en ti, Nova. Cuidaremos el uno del otro.", "en": "I trust you, Nova. We'll look out for each other."},
                   "traits": ["loyal"],
-                  "points": 20
+                  "points": 20,
+                  "setsMemory": { "trustedNova": true }
                 },
                 {
-                  "id": "win",
-                  "text": {
-                    "es": "Ahora concentrémonos en ganar.",
-                    "en": "Now let's focus on winning."
-                  },
-                  "traits": ["ambitious"],
-                  "points": 15
+                  "id": "guard_up",
+                  "text": {"es": "Gracias por el aviso. Estare alerta despues del rally.", "en": "Thanks for the warning. I'll be on guard after the rally."},
+                  "traits": ["cautious"],
+                  "points": 10
                 }
               ]
-            }
+            },
+            { "speaker": "nova", "text": {"es": "Vamos a ganar ese rally, Miller. Por ti, por mi, y por ese coche que tu abuelo nunca llego a correr.", "en": "Let's win that rally, Miller. For you, for me, and for that car your grandfather never got to race."} }
           ],
           "end": {
             "result": "success",
             "rewards": {
-              "xp": 150,
-              "unlocks": ["nova_loyalty_max"]
+              "xp": 150
             },
             "cooldown": 360,
-            "teaser": {
-              "es": "Nova ha renovado su compromiso con el equipo. The Big One se acerca...",
-              "en": "Nova has renewed her commitment to the team. The Big One approaches..."
-            }
-          }
-        },
-
-        "desenlace_questioned": {
-          "exchanges": [
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Ya veo. Así es como me ves.",
-                "en": "I see. That's how you see me."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Vale. Mensaje recibido.",
-                "en": "Fine. Message received."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "No te preocupes. Seguiré con el plan. Por ahora.",
-                "en": "Don't worry. I'll stick with the plan. For now."
-              }
-            },
-            {
-              "type": "choice",
-              "choices": [
-                {
-                  "id": "apologize",
-                  "text": {
-                    "es": "Nova, espera. No quise decir eso...",
-                    "en": "Nova, wait. I didn't mean it like that..."
-                  },
-                  "traits": ["honest"],
-                  "points": 5
-                },
-                {
-                  "id": "firm",
-                  "text": {
-                    "es": "Bien. Porque el equipo te necesita.",
-                    "en": "Good. Because the team needs you."
-                  },
-                  "traits": ["confident"],
-                  "points": -5
-                }
-              ]
-            }
-          ],
-          "end": {
-            "result": "success",
-            "rewards": {
-              "xp": 100
-            },
-            "cooldown": 360,
-            "teaser": {
-              "es": "Nova sigue con el equipo, pero algo ha cambiado. ¿Puedes confiar en ella?",
-              "en": "Nova stays with the team, but something has changed. Can you trust her?"
-            }
+            "teaser": {"es": "El rally se acerca. Shadow quiere el ETK-I. Y Nova esta entre la espada y la pared...", "en": "The rally approaches. Shadow wants the ETK-I. And Nova is between a rock and a hard place..."}
           }
         }
       }
     },
 
     "level6": {
-      "title": {
-        "es": "La Traición o La Lealtad",
-        "en": "Betrayal or Loyalty"
-      },
-      "requiredPhase": 6,
+      "title": {"es": "La Verdad de Nova", "en": "Nova's Truth"},
+      "requiredPhase": 7,
       "requiredMemory": ["car_recovered", "knowsAboutBetrayal"],
-      "unlockMessage": {
-        "es": "Nova tiene que explicarse...",
-        "en": "Nova has to explain herself..."
-      },
+      "unlockMessage": {"es": "Nova ha aparecido. Tiene algo urgente que contarte.", "en": "Nova has appeared. She has something urgent to tell you."},
 
       "phases": {
         "intro": {
-          "contextTransition": {
-            "high_affinity_trusted": {
-              "es": "Necesito que sepas la verdad. Todo.",
-              "en": "I need you to know the truth. All of it."
-            },
-            "low_affinity_questioned": {
-              "es": "Supongo que quieres respuestas. Las tendrás.",
-              "en": "I guess you want answers. You'll get them."
-            }
-          },
           "exchanges": [
-            {
-              "speaker": "nova",
-              "text": "{{contextTransition}}"
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Cuando te conté lo de la oferta por el coche... no te lo conté todo.",
-                "en": "When I told you about the offer for the car... I didn't tell you everything."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Shadow me contactó antes. Me dijo que había gente que quería sabotear The Big One.",
-                "en": "Shadow contacted me earlier. Said there were people who wanted to sabotage The Big One."
-              },
-              "condition": "novaIntentions:trusted"
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Yo... consideré la oferta seriamente. Muy seriamente.",
-                "en": "I... considered the offer seriously. Very seriously."
-              },
-              "condition": "novaIntentions:questioned"
-            },
+            { "speaker": "nova", "text": {"es": "Miller. Antes de que digas nada, dejame hablar.", "en": "Miller. Before you say anything, let me talk."} },
+            { "speaker": "nova", "text": {"es": "Se lo que piensas. Que te vendi. Que le di el ETK-I a Shadow por mis deudas.", "en": "I know what you think. That I sold you out. That I gave the ETK-I to Shadow for my debts."} },
+            { "speaker": "nova", "text": {"es": "Pues es mentira. Todo. Shadow lo planeo para destruir nuestra confianza y quedarse con el coche.", "en": "Well it's a lie. All of it. Shadow planned it to destroy our trust and keep the car."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "listen",
-                  "text": {
-                    "es": "Sigue. Te escucho.",
-                    "en": "Go on. I'm listening."
-                  },
+                  "text": {"es": "Habla. Te escucho. Pero necesito pruebas, no solo palabras.", "en": "Talk. I'm listening. But I need proof, not just words."},
+                  "traits": ["patient"],
                   "points": 10,
-                  "leadsTo": "explanation"
+                  "leadsTo": "intro_continue"
                 },
                 {
                   "id": "angry",
-                  "text": {
-                    "es": "¿Me estás diciendo que tú...?",
-                    "en": "Are you telling me that you...?"
-                  },
-                  "traits": ["honest"],
-                  "points": -10,
-                  "leadsTo": "confrontation"
+                  "text": {"es": "¿Y las transacciones? ¿Y tu desaparicion? Eso no se inventa.", "en": "And the transactions? And your disappearance? You can't make that up."},
+                  "points": -5,
+                  "leadsTo": "intro_confrontation"
                 }
               ]
             }
           ],
           "branches": {
-            "explanation": [
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Había un plan para robar el coche. Shadow me lo contó.",
-                  "en": "There was a plan to steal the car. Shadow told me."
-                },
-                "condition": "novaIntentions:trusted"
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Intenté infiltrarme. Descubrir quién estaba detrás. Y lo conseguí.",
-                  "en": "I tried to infiltrate. Find out who was behind it. And I did."
-                },
-                "condition": "novaIntentions:trusted"
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Cuando cuestionaste mi lealtad... me dolió. Pensé en tomar el dinero y largarme.",
-                  "en": "When you questioned my loyalty... it hurt. I thought about taking the money and leaving."
-                },
-                "condition": "novaIntentions:questioned"
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Pero al final no pude. Porque a pesar de todo... este equipo significa algo para mí.",
-                  "en": "But in the end I couldn't. Because despite everything... this team means something to me."
-                },
-                "condition": "novaIntentions:questioned"
-              },
+            "intro_continue": [
+              { "speaker": "nova", "text": {"es": "Las transacciones eran falsas. Shadow hackeo las cuentas de Techie para incriminarnos.", "en": "The transactions were fake. Shadow hacked Techie's accounts to frame us."} },
+              { "speaker": "nova", "text": {"es": "Y mi desaparicion... Shadow me encerro. Me amenazo con hacerte dano si no cooperaba.", "en": "And my disappearance... Shadow locked me up. Threatened to hurt you if I didn't cooperate."} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "trust_her",
-                    "text": {
-                      "es": "Te creo. Y te agradezco que nos protegieras.",
-                      "en": "I believe you. And I thank you for protecting us."
-                    },
-                    "traits": ["loyal", "honest"],
-                    "points": 30,
-                    "condition": "novaIntentions:trusted",
-                    "continueToPhase": "desenlace_loyal"
-                  },
-                  {
-                    "id": "forgive",
-                    "text": {
-                      "es": "Todos consideramos rendirrnos a veces. Lo importante es que no lo hiciste.",
-                      "en": "We all consider giving up sometimes. What matters is you didn't."
-                    },
-                    "traits": ["loyal", "patient"],
+                    "id": "believe",
+                    "text": {"es": "Dios, Nova... lo siento. Deberia haber confiado en ti.", "en": "God, Nova... I'm sorry. I should have trusted you."},
+                    "traits": ["honest"],
                     "points": 20,
-                    "condition": "novaIntentions:questioned",
-                    "continueToPhase": "desenlace_complicated"
+                    "setsMemory": { "believedNova": true },
+                    "continueToPhase": "revelation"
                   },
                   {
-                    "id": "still_doubt",
-                    "text": {
-                      "es": "No sé si puedo confiar en ti después de esto.",
-                      "en": "I don't know if I can trust you after this."
-                    },
-                    "traits": ["cautious"],
-                    "points": -15,
-                    "continueToPhase": "desenlace_damaged"
+                    "id": "half_believe",
+                    "text": {"es": "Es una historia conveniente. Pero... los datos de Techie lo confirman.", "en": "It's a convenient story. But... Techie's data confirms it."},
+                    "points": 10,
+                    "continueToPhase": "revelation"
                   }
                 ]
               }
             ],
-            "confrontation": [
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "¡No! Escúchame antes de juzgar.",
-                  "en": "No! Listen before you judge."
-                }
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Sí, me tentaron. Sí, lo consideré. Pero no lo hice.",
-                  "en": "Yes, I was tempted. Yes, I considered it. But I didn't do it."
-                },
-                "condition": "novaIntentions:questioned"
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "Estaba infiltrándome en la organización que planeaba robarnos. Descubrí todo el plan.",
-                  "en": "I was infiltrating the organization planning to rob us. I discovered the whole plan."
-                },
-                "condition": "novaIntentions:trusted"
-              },
-              {
-                "speaker": "nova",
-                "text": {
-                  "es": "¿Crees que fue fácil? ¿Crees que no quise contártelo?",
-                  "en": "You think it was easy? You think I didn't want to tell you?"
-                }
-              },
+            "intro_confrontation": [
+              { "speaker": "nova", "text": {"es": "¡Las transacciones eran FALSAS! Shadow es un genio de la manipulacion, Miller. ¿Crees que no puede falsificar unos numeros en una pantalla?", "en": "The transactions were FAKE! Shadow is a manipulation genius, Miller. You think he can't forge some numbers on a screen?"} },
+              { "speaker": "nova", "text": {"es": "Y desapareci porque me encerro. Me amenazo con hacerte dano si no me quedaba callada. ¿Eso te parece inventado?", "en": "And I disappeared because he locked me up. Threatened to hurt you if I didn't stay quiet. Does that sound made up to you?"} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "calm_down",
-                    "text": {
-                      "es": "Vale, vale. Cálmate. Explícame todo.",
-                      "en": "Okay, okay. Calm down. Explain everything."
-                    },
-                    "traits": ["patient"],
-                    "points": 5,
-                    "continueToPhase": "nudo"
+                    "id": "sorry",
+                    "text": {"es": "... Tienes razon. He sido un idiota. Lo siento.", "en": "... You're right. I've been an idiot. I'm sorry."},
+                    "traits": ["honest"],
+                    "points": 15,
+                    "setsMemory": { "believedNova": true },
+                    "continueToPhase": "revelation"
                   },
                   {
-                    "id": "believe",
-                    "text": {
-                      "es": "Te creo. Perdona por dudar.",
-                      "en": "I believe you. Sorry for doubting."
-                    },
-                    "traits": ["loyal"],
-                    "points": 20,
-                    "continueToPhase": "desenlace_loyal"
+                    "id": "proof",
+                    "text": {"es": "Quiero creerte. Pero necesito verlo con mis propios ojos.", "en": "I want to believe you. But I need to see it with my own eyes."},
+                    "points": 5,
+                    "continueToPhase": "revelation"
                   }
                 ]
               }
@@ -1893,279 +868,108 @@
           }
         },
 
-        "nudo": {
+        "revelation": {
           "exchanges": [
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Todo empezó cuando Shadow me dijo que había un coleccionista interesado.",
-                "en": "It all started when Shadow told me there was a collector interested."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Pero luego descubrí que no era un coleccionista. Era alguien que quería eliminarnos de The Big One.",
-                "en": "But then I discovered it wasn't a collector. It was someone who wanted to eliminate us from The Big One."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Seguí el juego. Fingí interés. Y descubrí quién estaba detrás del plan para robarnos.",
-                "en": "I played along. Pretended interest. And discovered who was behind the plan to rob us."
-              },
-              "condition": "novaIntentions:trusted"
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Cuando me cuestionaste, pensé... quizás debería tomar el dinero. Pero no pude traicionaros.",
-                "en": "When you questioned me, I thought... maybe I should take the money. But I couldn't betray you."
-              },
-              "condition": "novaIntentions:questioned"
-            },
+            { "speaker": "nova", "text": {"es": "Shadow no queria dinero, Miller. Queria el ETK-I. Para Viper.", "en": "Shadow didn't want money, Miller. He wanted the ETK-I. For Viper."} },
+            { "speaker": "nova", "text": {"es": "Viper cree que ese coche le pertenece porque tu abuelo lo construyo para ella. Y Shadow es su perro faldero.", "en": "Viper believes that car belongs to her because your grandfather built it for her. And Shadow is her lapdog."} },
+            { "speaker": "nova", "text": {"es": "Ahora Shadow va a correr la Big One con TU coche. Y va a ganar a menos que lo detengamos.", "en": "Now Shadow is going to race the Big One with YOUR car. And he'll win unless we stop him."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "hero",
-                  "text": {
-                    "es": "Nos salvaste. Eres una heroína.",
-                    "en": "You saved us. You're a hero."
-                  },
-                  "traits": ["loyal"],
-                  "points": 25,
-                  "condition": "novaIntentions:trusted",
-                  "continueToPhase": "desenlace_loyal"
+                  "id": "stop_him",
+                  "text": {"es": "Vamos a recuperar ese coche y a machacar a Shadow en la Big One.", "en": "We're getting that car back and crushing Shadow at the Big One."},
+                  "traits": ["ambitious"],
+                  "points": 20,
+                  "setsMemory": { "novaAllyBigOne": true },
+                  "continueToPhase": "nudo"
                 },
                 {
-                  "id": "understand",
-                  "text": {
-                    "es": "Entiendo. Has sido honesta al final. Eso cuenta.",
-                    "en": "I understand. You were honest in the end. That counts."
-                  },
-                  "traits": ["honest"],
-                  "points": 15,
-                  "continueToPhase": "desenlace_complicated"
-                },
-                {
-                  "id": "still_angry",
-                  "text": {
-                    "es": "Deberías habérnoslo dicho desde el principio.",
-                    "en": "You should have told us from the beginning."
-                  },
+                  "id": "how",
+                  "text": {"es": "¿Como? Shadow tiene el coche y nosotros solo tenemos un Covet.", "en": "How? Shadow has the car and all we have is a Covet."},
                   "traits": ["cautious"],
-                  "points": -10,
-                  "continueToPhase": "desenlace_damaged"
+                  "points": 10,
+                  "setsMemory": { "novaAllyBigOne": true },
+                  "continueToPhase": "nudo"
                 }
               ]
             }
           ]
         },
 
-        "desenlace_loyal": {
+        "nudo": {
           "exchanges": [
             {
               "speaker": "nova",
               "text": {
-                "es": "Gracias. Por confiar en mí. Por creer en mí.",
-                "en": "Thank you. For trusting me. For believing in me."
+                "contextIf": "alliedWithNova",
+                "value": {"es": "Miller, durante estas semanas encerrada, lo unico que me mantenia era pensar en volver a correr contigo.", "en": "Miller, during those weeks locked up, the only thing keeping me going was thinking about racing with you again."}
               }
             },
             {
               "speaker": "nova",
               "text": {
-                "es": "Sé que no ha sido fácil. Pero por eso valoras tanto este equipo.",
-                "en": "I know it hasn't been easy. But that's why I value this team so much."
+                "contextIf": "!alliedWithNova",
+                "value": {"es": "Se que no siempre he tomado las mejores decisiones. Pero nunca, NUNCA te habria traicionado.", "en": "I know I haven't always made the best decisions. But I would NEVER have betrayed you."}
               }
             },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Vamos a ganar The Big One. Juntos. Y nadie nos va a detener.",
-                "en": "We're gonna win The Big One. Together. And nobody's gonna stop us."
-              }
-            },
+            { "speaker": "nova", "text": {"es": "He estudiado los circuitos de la Big One. Shadow es rapido, pero predecible. Siempre elige la linea mas agresiva.", "en": "I've studied the Big One circuits. Shadow is fast, but predictable. He always takes the most aggressive line."} },
+            { "speaker": "nova", "text": {"es": "Si le obligas a frenar en las zonas tecnicas, se desquiciara. No tiene la paciencia de Rook ni tu talento natural.", "en": "If you force him to brake in the technical zones, he'll crack. He doesn't have Rook's patience or your natural talent."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "together",
-                  "text": {
-                    "es": "Juntos hasta el final.",
-                    "en": "Together till the end."
-                  },
-                  "traits": ["loyal"],
-                  "points": 30
+                  "id": "team_up",
+                  "text": {"es": "Juntos otra vez. Tu agresividad y mi instinto. Shadow no tiene nada que hacer.", "en": "Together again. Your aggression and my instinct. Shadow doesn't stand a chance."},
+                  "traits": ["ambitious"],
+                  "points": 30,
+                  "setsMemory": { "novaFinalStanding": "loyal" },
+                  "continueToPhase": "desenlace"
                 },
                 {
-                  "id": "victory",
-                  "text": {
-                    "es": "Nadie puede con nosotros.",
-                    "en": "Nobody can beat us."
-                  },
-                  "traits": ["confident", "ambitious"],
-                  "points": 25
+                  "id": "forgive",
+                  "text": {"es": "Nova... siento haber dudado de ti. Todo este tiempo pensando lo peor...", "en": "Nova... I'm sorry I doubted you. All this time thinking the worst..."},
+                  "traits": ["honest"],
+                  "points": 25,
+                  "setsMemory": { "novaFinalStanding": "complicated" },
+                  "continueToPhase": "desenlace"
+                }
+              ]
+            }
+          ]
+        },
+
+        "desenlace": {
+          "exchanges": [
+            { "speaker": "nova", "text": {"es": "No me pidas perdon, Miller. Shadow nos engano a todos. Lo importante es lo que hacemos ahora.", "en": "Don't apologize, Miller. Shadow fooled us all. What matters is what we do now."} },
+            { "speaker": "nova", "text": {"es": "Cuando te enfrentes a Shadow en la Big One, recuerda: el conduce con rabia, tu conduces con hambre. La rabia se agota, el hambre no.", "en": "When you face Shadow at the Big One, remember: he drives with rage, you drive with hunger. Rage runs out, hunger doesn't."} },
+            {
+              "type": "choice",
+              "choices": [
+                {
+                  "id": "hungry",
+                  "text": {"es": "Tengo mas hambre que nunca. Shadow va a desear no haber tocado el ETK-I.", "en": "I'm hungrier than ever. Shadow is going to wish he never touched the ETK-I."},
+                  "traits": ["ambitious"],
+                  "points": 20
+                },
+                {
+                  "id": "justice",
+                  "text": {"es": "No es solo por ganar. Es por justicia. Por el abuelo, por ti, por todos.", "en": "It's not just about winning. It's about justice. For grandpa, for you, for everyone."},
+                  "traits": ["loyal"],
+                  "points": 20
                 }
               ]
             },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Esto es solo el principio. Lo mejor está por venir.",
-                "en": "This is just the beginning. The best is yet to come."
-              }
-            }
+            { "speaker": "nova", "text": {"es": "Pase lo que pase en la Big One, Miller... corre como solo tu sabes. Sin frenos. Sin miedo. Sin limites.", "en": "Whatever happens at the Big One, Miller... race like only you know how. No brakes. No fear. No limits."} }
           ],
           "end": {
             "result": "success",
             "rewards": {
               "xp": 200,
-              "unlocks": ["nova_true_loyalty", "team_unbreakable"]
+              "unlocks": ["nova_ultimate_loyalty"]
             },
-            "setsMemory": { "novaFinalStanding": "loyal" },
             "cooldown": 480,
-            "teaser": {
-              "es": "Nova ha demostrado su lealtad absoluta. El equipo está más fuerte que nunca.",
-              "en": "Nova has proven her absolute loyalty. The team is stronger than ever."
-            }
-          }
-        },
-
-        "desenlace_complicated": {
-          "exchanges": [
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Entiendo que necesites tiempo para confiar en mí otra vez.",
-                "en": "I understand you need time to trust me again."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Cometí errores. Debí ser más clara desde el principio.",
-                "en": "I made mistakes. I should have been clearer from the start."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Pero voy a demostrarte que merezco estar aquí. En The Big One y después.",
-                "en": "But I'm gonna prove I deserve to be here. At The Big One and after."
-              }
-            },
-            {
-              "type": "choice",
-              "choices": [
-                {
-                  "id": "second_chance",
-                  "text": {
-                    "es": "Todos merecemos una segunda oportunidad.",
-                    "en": "Everyone deserves a second chance."
-                  },
-                  "traits": ["patient", "loyal"],
-                  "points": 15
-                },
-                {
-                  "id": "actions",
-                  "text": {
-                    "es": "Los actos hablan más que las palabras. Demuéstralo.",
-                    "en": "Actions speak louder than words. Prove it."
-                  },
-                  "traits": ["cautious"],
-                  "points": 5
-                }
-              ]
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Lo haré. Ya lo verás.",
-                "en": "I will. You'll see."
-              }
-            }
-          ],
-          "end": {
-            "result": "success",
-            "rewards": {
-              "xp": 175,
-              "unlocks": ["nova_redemption_arc"]
-            },
-            "setsMemory": { "novaFinalStanding": "complicated" },
-            "cooldown": 480,
-            "teaser": {
-              "es": "La confianza está dañada, pero no rota. Nova intentará ganarla de vuelta.",
-              "en": "Trust is damaged but not broken. Nova will try to earn it back."
-            }
-          }
-        },
-
-        "desenlace_damaged": {
-          "exchanges": [
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Vale. Entiendo.",
-                "en": "Fine. I understand."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "No confías en mí. No puedo forzarte.",
-                "en": "You don't trust me. I can't force you."
-              }
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Seguiré con el equipo hasta The Big One. Después... ya veremos.",
-                "en": "I'll stay with the team till The Big One. After that... we'll see."
-              }
-            },
-            {
-              "type": "choice",
-              "choices": [
-                {
-                  "id": "try",
-                  "text": {
-                    "es": "Nova, espera. Podemos arreglar esto.",
-                    "en": "Nova, wait. We can fix this."
-                  },
-                  "traits": ["honest"],
-                  "points": 10
-                },
-                {
-                  "id": "accept",
-                  "text": {
-                    "es": "Está bien. Gracias por quedarte hasta The Big One.",
-                    "en": "That's fair. Thanks for staying till The Big One."
-                  },
-                  "points": 0
-                }
-              ]
-            },
-            {
-              "speaker": "nova",
-              "text": {
-                "es": "Nos vemos en la pista.",
-                "en": "See you on the track."
-              }
-            }
-          ],
-          "end": {
-            "result": "success",
-            "rewards": {
-              "xp": 125
-            },
-            "setsMemory": { "novaFinalStanding": "traitor" },
-            "cooldown": 480,
-            "teaser": {
-              "es": "La relación con Nova está rota. ¿Sobrevivirá el equipo a The Big One?",
-              "en": "The relationship with Nova is broken. Will the team survive The Big One?"
-            }
+            "teaser": {"es": "Nova esta de vuelta. La verdad ha salido a la luz. La Big One espera.", "en": "Nova is back. The truth has come out. The Big One awaits."}
           }
         }
       }
@@ -2175,342 +979,111 @@
   "pools": {
     "acquaintance": [
       {
-        "id": "rival_trash",
-        "text": {
-          "es": "Ese tal 'Bullet' ha estado hablando mal de ti. Dice que eres lento.",
-          "en": "That guy 'Bullet' has been trash talking you. Says you're slow."
-        },
+        "id": "speed_philosophy",
+        "text": {"es": "¿Sabes cual es la diferencia entre un piloto rapido y uno lento? El rapido pisa a fondo cuando los demas dudan.", "en": "Know the difference between a fast driver and a slow one? The fast one floors it when others hesitate."},
         "choices": [
-          {
-            "id": "ignore",
-            "text": {
-              "es": "Que hable. Yo hablo en la pista.",
-              "en": "Let him talk. I talk on the track."
-            },
-            "traits": ["confident"],
-            "points": 10
-          },
-          {
-            "id": "angry",
-            "text": {
-              "es": "¿Dónde está? Voy a cerrarle la boca.",
-              "en": "Where is he? I'm gonna shut his mouth."
-            },
-            "traits": ["aggressive"],
-            "points": -5
-          }
+          { "id": "agree", "text": {"es": "Tienes razon. La duda es el peor enemigo en la pista.", "en": "You're right. Doubt is the worst enemy on the track."}, "traits": ["ambitious"], "points": 10 },
+          { "id": "disagree", "text": {"es": "O el rapido es el que frena a tiempo y vive para correr otro dia.", "en": "Or the fast one is the one who brakes in time and lives to race another day."}, "points": -5 }
         ]
       },
       {
-        "id": "lap_time",
-        "text": {
-          "es": "¿Has visto el tiempo de vuelta de ayer? Podemos bajarlo 2 segundos.",
-          "en": "Did you see yesterday's lap time? We can shave 2 seconds off."
-        },
+        "id": "rook_complaint",
+        "text": {"es": "Rook me ha vuelto a decir que voy demasiado rapido. ¿Sabes que le he contestado? 'El problema no es mi velocidad, es tu miedo'.", "en": "Rook told me again I'm going too fast. Know what I told him? 'The problem isn't my speed, it's your fear'."},
         "choices": [
-          {
-            "id": "how",
-            "text": {
-              "es": "¿Cómo? ¿Arriesgando más en la horquilla?",
-              "en": "How? Risking more at the hairpin?"
-            },
-            "traits": ["ambitious"],
-            "points": 10
-          },
-          {
-            "id": "limit",
-            "text": {
-              "es": "El coche está al límite, Nova.",
-              "en": "The car's at its limit, Nova."
-            },
-            "traits": ["cautious"],
-            "points": -5
-          }
+          { "id": "funny", "text": {"es": "Duro, pero justo. Rook necesita soltar el freno de mano mental.", "en": "Harsh, but fair. Rook needs to release the mental handbrake."}, "traits": ["ambitious"], "points": 10 },
+          { "id": "harsh", "text": {"es": "Eso es un poco cruel, Nova. Rook se preocupa por ti.", "en": "That's a bit cruel, Nova. Rook cares about you."}, "traits": ["loyal"], "points": -5 }
         ]
       },
       {
-        "id": "driving_style",
-        "text": {
-          "es": "Frenas demasiado pronto en la curva 3. Pierdes inercia.",
-          "en": "You brake too early in turn 3. You lose momentum."
-        },
+        "id": "car_talk",
+        "text": {"es": "He visto tu coche despues de la carrera. Ese motor pide a gritos un turbo mas grande. ¿A que esperas?", "en": "I saw your car after the race. That engine is screaming for a bigger turbo. What are you waiting for?"},
         "choices": [
-          {
-            "id": "teach",
-            "text": {
-              "es": "¿Qué sugieres?",
-              "en": "What do you suggest?"
-            },
-            "traits": ["humble"],
-            "points": 10
-          },
-          {
-            "id": "defend",
-            "text": {
-              "es": "Es mi estilo. Funciona.",
-              "en": "It's my style. It works."
-            },
-            "points": -5
-          }
+          { "id": "soon", "text": {"es": "Estoy en ello. En cuanto tenga las piezas, se lo monto.", "en": "I'm on it. As soon as I have the parts, I'm installing it."}, "traits": ["ambitious"], "points": 10 },
+          { "id": "fine", "text": {"es": "El motor esta bien como esta. No quiero forzarlo.", "en": "The engine is fine as it is. I don't want to push it."}, "points": -5 }
         ]
       },
       {
-        "id": "new_rival",
-        "text": {
-          "es": "Hay un nuevo equipo en la zona. Dicen que son buenos.",
-          "en": "There's a new team in the area. They say they're good."
-        },
+        "id": "capital_dreams",
+        "text": {"es": "¿Has estado alguna vez en la capital? Los circuitos alli son de otro nivel. Luces, publico, dinero real... No como estas carreras de grava.", "en": "Have you ever been to the capital? The circuits there are next level. Lights, crowds, real money... Not like these gravel races."},
         "choices": [
-          {
-            "id": "bring_it",
-            "text": {
-              "es": "Mejor. Más competencia, más diversión.",
-              "en": "Good. More competition, more fun."
-            },
-            "traits": ["confident"],
-            "points": 10
-          },
-          {
-            "id": "worried",
-            "text": {
-              "es": "¿Deberíamos preocuparnos?",
-              "en": "Should we be worried?"
-            },
-            "points": -5
-          }
+          { "id": "dream", "text": {"es": "Suena increible. Algun dia llegaremos ahi.", "en": "Sounds incredible. Someday we'll get there."}, "traits": ["ambitious"], "points": 10 },
+          { "id": "here_first", "text": {"es": "Primero hay que ganar aqui. Un paso cada vez.", "en": "First we need to win here. One step at a time."}, "points": 0 }
         ]
       }
     ],
     "associate": [
       {
-        "id": "big_dream",
-        "text": {
-          "es": "¿Alguna vez piensas en The Big One? Dicen que el premio es suficiente para retirarse.",
-          "en": "Ever think about The Big One? They say the prize is enough to retire."
-        },
+        "id": "racing_life",
+        "text": {"es": "Sabes lo que mas me gusta de las carreras? Que cuando estas a doscientos por hora, nada mas importa. Ni las deudas, ni los dramas, ni Rook quejandose.", "en": "Know what I love most about racing? When you're at two hundred per hour, nothing else matters. Not debts, not drama, not Rook complaining."},
         "choices": [
-          {
-            "id": "dream",
-            "text": {
-              "es": "Todos los días. Llegaremos allí.",
-              "en": "Every day. We'll get there."
-            },
-            "traits": ["ambitious"],
-            "points": 20
-          },
-          {
-            "id": "focus",
-            "text": {
-              "es": "Primero ganemos la carrera de mañana.",
-              "en": "Let's win tomorrow's race first."
-            },
-            "traits": ["patient"],
-            "points": 5
-          }
+          { "id": "same", "text": {"es": "Yo siento lo mismo. La pista es el unico lugar donde todo se simplifica.", "en": "I feel the same. The track is the only place where everything gets simple."}, "traits": ["ambitious"], "points": 15 },
+          { "id": "running", "text": {"es": "Suena a que estas huyendo de tus problemas, no resolviendolos.", "en": "Sounds like you're running from your problems, not solving them."}, "points": -5 }
         ]
       },
       {
-        "id": "rook_complain",
-        "text": {
-          "es": "Rook es un buen mecánico, pero a veces es un lastre. Demasiado miedo.",
-          "en": "Rook's a good mechanic, but sometimes he's dead weight. Too much fear."
-        },
+        "id": "grandfather_legacy",
+        "text": {"es": "Tu abuelo tenia lo que hace falta, Miller. Construyo un coche que podia ganar cualquier cosa. El problema es que no tuvo los huevos de sentarse al volante.", "en": "Your grandfather had what it takes, Miller. He built a car that could win anything. The problem is he didn't have the guts to get behind the wheel."},
         "choices": [
-          {
-            "id": "defend",
-            "text": {
-              "es": "Nos mantiene vivos. Respétalo.",
-              "en": "He keeps us alive. Respect him."
-            },
-            "traits": ["loyal"],
-            "points": -5
-          },
-          {
-            "id": "agree",
-            "text": {
-              "es": "A veces sí. Pero lo necesitamos.",
-              "en": "Sometimes yeah. But we need him."
-            },
-            "points": 10
-          }
+          { "id": "defend", "text": {"es": "Mi abuelo paso por cosas muy duras. No le juzgues sin conocer la historia.", "en": "My grandfather went through very tough things. Don't judge him without knowing the story."}, "traits": ["loyal"], "points": 5 },
+          { "id": "agree", "text": {"es": "Tienes razon. Pero yo no voy a cometer su error.", "en": "You're right. But I'm not going to make his mistake."}, "traits": ["ambitious"], "points": 15 }
         ]
       },
       {
-        "id": "sacrifice",
-        "text": {
-          "es": "¿Qué estarías dispuesto a sacrificar por ganar The Big One?",
-          "en": "What would you be willing to sacrifice to win The Big One?"
-        },
+        "id": "shadow_defense",
+        "text": {"es": "La gente dice que Shadow es peligroso. Yo digo que es el unico que tiene las piezas que necesitamos. ¿Cual es el crimen, querer ser mas rapido?", "en": "People say Shadow is dangerous. I say he's the only one with the parts we need. What's the crime, wanting to be faster?"},
         "choices": [
-          {
-            "id": "everything",
-            "text": {
-              "es": "Todo. Es el sueño de mi vida.",
-              "en": "Everything. It's my life's dream."
-            },
-            "traits": ["ambitious"],
-            "points": 15
-          },
-          {
-            "id": "limits",
-            "text": {
-              "es": "Hay límites. No todo vale.",
-              "en": "There are limits. Not everything's worth it."
-            },
-            "traits": ["cautious"],
-            "points": -5
-          }
+          { "id": "careful", "text": {"es": "Querer ser rapido no es un crimen. Pero las piezas ilegales si pueden serlo.", "en": "Wanting to be fast isn't a crime. But illegal parts can be."}, "traits": ["cautious"], "points": 5 },
+          { "id": "worth_it", "text": {"es": "Si las piezas funcionan, no me importa de donde vengan.", "en": "If the parts work, I don't care where they come from."}, "traits": ["ambitious"], "points": 15 }
         ]
       },
       {
-        "id": "trust",
-        "text": {
-          "es": "¿Confías en mí? De verdad, no de boquilla.",
-          "en": "Do you trust me? Really, not just lip service."
-        },
+        "id": "future_ambitions",
+        "text": {"es": "Cuando salgamos de este pueblo, Miller, vamos a hacer historia. Tu con el ETK-I y yo con lo que sea que pueda pagar. Pero juntos.", "en": "When we get out of this town, Miller, we're going to make history. You with the ETK-I and me with whatever I can afford. But together."},
         "choices": [
-          {
-            "id": "yes",
-            "text": {
-              "es": "Completamente. Eres mi compañera.",
-              "en": "Completely. You're my partner."
-            },
-            "traits": ["loyal"],
-            "points": 20
-          },
-          {
-            "id": "mostly",
-            "text": {
-              "es": "La mayoría del tiempo. Pero a veces me asustas.",
-              "en": "Most of the time. But sometimes you scare me."
-            },
-            "traits": ["honest"],
-            "points": 5
-          }
+          { "id": "deal", "text": {"es": "Hecho. Tu y yo contra el mundo.", "en": "Deal. You and me against the world."}, "traits": ["ambitious"], "points": 20 },
+          { "id": "slow_down", "text": {"es": "Vamos paso a paso. Primero la Big One, despues el mundo.", "en": "Let's take it step by step. First the Big One, then the world."}, "points": 5 }
         ]
       }
     ]
   },
 
   "confrontations": {
-    "afterLoss": {
-      "chance": 0.6,
-      "text": {
-        "es": "¿Qué ha pasado ahí fuera? No has dado el 100%.",
-        "en": "What happened out there? You didn't give 100%."
-      },
+    "afterDangerousRace": {
+      "chance": 0.5,
+      "text": {"es": "¡Eso ha sido increible! La forma en que has tomado esa ultima curva... al limite. Rook habria tenido un infarto.", "en": "That was incredible! The way you took that last corner... on the limit. Rook would've had a heart attack."},
       "responses": [
-        {
-          "id": "a",
-          "text": {
-            "es": "El coche no respondía bien. No es excusa, pero es la verdad.",
-            "en": "The car wasn't responding well. Not an excuse, but it's the truth."
-          },
-          "traits": ["honest"],
-          "points": 5
-        },
-        {
-          "id": "b",
-          "text": {
-            "es": "Tienes razón. La próxima vez será diferente.",
-            "en": "You're right. Next time will be different."
-          },
-          "traits": ["humble"],
-          "points": 10
-        },
-        {
-          "id": "c",
-          "text": {
-            "es": "He dado todo. A veces se pierde.",
-            "en": "I gave everything. Sometimes you lose."
-          },
-          "points": -10
-        }
+        { "id": "a", "text": {"es": "Ha sido instinto puro. A veces hay que dejar que el cuerpo decida.", "en": "Pure instinct. Sometimes you gotta let the body decide."}, "traits": ["ambitious"], "points": 15 },
+        { "id": "b", "text": {"es": "Ha sido arriesgado, pero calculado. No estoy loco.", "en": "It was risky, but calculated. I'm not crazy."}, "traits": ["cautious"], "points": 5 },
+        { "id": "c", "text": {"es": "Casi no lo cuento. Quizas deberia haber frenado antes.", "en": "I almost didn't make it. Maybe I should've braked earlier."}, "traits": ["honest"], "points": -5 }
       ]
     },
-    "afterSafeRace": {
-      "chance": 0.4,
-      "text": {
-        "es": "Has corrido muy conservador. Podrías haber ganado si arriesgabas más.",
-        "en": "You raced too conservatively. You could've won if you'd risked more."
-      },
+    "afterCarDamage": {
+      "chance": 0.6,
+      "text": {"es": "El coche esta hecho polvo, pero tú sigues vivo. Eso es lo unico que importa. Los coches se reparan, los pilotos no.", "en": "The car is trashed, but you're alive. That's all that matters. Cars get fixed, drivers don't."},
       "responses": [
-        {
-          "id": "a",
-          "text": {
-            "es": "Preferí asegurar el podio.",
-            "en": "I preferred to secure the podium."
-          },
-          "traits": ["cautious"],
-          "points": -10
-        },
-        {
-          "id": "b",
-          "text": {
-            "es": "Tienes razón. Debí arriesgar más.",
-            "en": "You're right. I should have risked more."
-          },
-          "traits": ["humble"],
-          "points": 10
-        },
-        {
-          "id": "c",
-          "text": {
-            "es": "El coche no daba para más.",
-            "en": "The car couldn't give more."
-          },
-          "points": 0
-        }
+        { "id": "a", "text": {"es": "Tienes razon. Lo importante es poder volver a correr.", "en": "You're right. The important thing is being able to race again."}, "traits": ["ambitious"], "points": 10 },
+        { "id": "b", "text": {"es": "El coche me importa. Es lo unico que tengo del abuelo.", "en": "I care about the car. It's all I have from grandpa."}, "traits": ["loyal"], "points": 5 },
+        { "id": "c", "text": {"es": "Ha sido mi culpa. Deberia haber ido mas despacio.", "en": "It was my fault. I should've gone slower."}, "points": -5 }
       ]
     }
   },
 
   "exitLines": {
     "normal": [
-      {
-        "es": "Tengo que ir a estudiar las líneas del próximo circuito.",
-        "en": "I need to go study the lines for the next circuit."
-      },
-      {
-        "es": "Nos vemos. Hay trabajo que hacer.",
-        "en": "See you. There's work to do."
-      },
-      {
-        "es": "Voy a revisar los vídeos de la competencia.",
-        "en": "I'm gonna review videos of the competition."
-      },
-      {
-        "es": "El tiempo no espera. Yo tampoco.",
-        "en": "Time doesn't wait. Neither do I."
-      }
+      {"es": "Me voy a preparar el coche para manana. Nos vemos en la pista.", "en": "Going to prep the car for tomorrow. See you on track."},
+      {"es": "Tengo cosas que hacer. El asfalto no me espera.", "en": "Got things to do. The asphalt won't wait for me."},
+      {"es": "Hasta luego, Miller. No te oxides.", "en": "Later, Miller. Don't rust up."},
+      {"es": "Voy a buscar un circuito nuevo para esta noche. ¿Te apuntas? Ya te digo.", "en": "Going to find a new circuit for tonight. You in? I'll let you know."}
     ],
     "positive": [
-      {
-        "es": "Buena charla. Sabía que podía contar contigo.",
-        "en": "Good talk. I knew I could count on you."
-      },
-      {
-        "es": "Así me gusta. Con hambre de victoria.",
-        "en": "That's what I like. Hungry for victory."
-      },
-      {
-        "es": "Vamos a llegar lejos. Lo sé.",
-        "en": "We're gonna go far. I know it."
-      }
+      {"es": "Eres de los pocos que no me miran como si estuviera loca. Gracias, Miller.", "en": "You're one of the few who don't look at me like I'm crazy. Thanks, Miller."},
+      {"es": "Me gusta hablar contigo. No me juzgas como Rook.", "en": "I like talking to you. You don't judge me like Rook."},
+      {"es": "Tenemos algo, Miller. No se que es, pero me gusta.", "en": "We have something, Miller. I don't know what it is, but I like it."}
     ],
     "negative": [
-      {
-        "es": "Como quieras. Pero piensa en lo que te he dicho.",
-        "en": "Whatever you want. But think about what I said."
-      },
-      {
-        "es": "Espero que no te arrepientas.",
-        "en": "I hope you don't regret it."
-      },
-      {
-        "es": "Seguiremos hablando. Cuando cambies de opinión.",
-        "en": "We'll keep talking. When you change your mind."
-      }
+      {"es": "Como quieras. Yo voy a seguir corriendo con o sin tu aprobacion.", "en": "Whatever. I'm going to keep racing with or without your approval."},
+      {"es": "Pareces Rook con ese discurso. Pensaba que eras diferente.", "en": "You sound like Rook with that speech. I thought you were different."},
+      {"es": "Si no tienes el valor de arriesgar, no se que haces aqui.", "en": "If you don't have the guts to take risks, I don't know what you're doing here."}
     ]
   }
 }

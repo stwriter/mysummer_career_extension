@@ -1,7 +1,5 @@
 {
-  "additionalAttributes": {
-    "difficulty": "hard"
-  },
+  "additionalAttributes": {},
   "author": "MySummer Team",
   "careerSetup": {
     "defaultStarKeys": [
@@ -9,7 +7,7 @@
       "finishSilver",
       "finishGold"
     ],
-    "showInCareer": false,
+    "showInCareer": true,
     "showInFreeroam": false,
     "skill": "mysummer-streetracing",
     "starOutroTexts": {},
@@ -23,11 +21,11 @@
       "finishGold": [
         {
           "attributeKey": "money",
-          "rewardAmount": 4500
+          "rewardAmount": 1200
         },
         {
           "attributeKey": "mysummer-streetracing",
-          "rewardAmount": 280
+          "rewardAmount": 250
         }
       ],
       "finishSilver": [

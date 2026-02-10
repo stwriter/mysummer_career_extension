@@ -36,18 +36,21 @@
 
   "conversations": {
     "level1": {
-      "title": {"es": "Campo de Pruebas", "en": "Proving Ground"},
+      "title": {"es": "Viejas Heridas", "en": "Old Wounds"},
+      "requiredPhase": 2,
       "phases": {
         "intro": {
           "exchanges": [
-            { "speaker": "muscle", "text": {"es": "Otra cara nueva.", "en": "Another new face."} },
-            { "speaker": "muscle", "text": {"es": "Déjame adivinar: oíste hablar de mis piezas y pensaste que simplemente entrarías.", "en": "Let me guess - heard about my parts and thought you'd just waltz in."} },
+            { "speaker": "muscle", "text": {"es": "Así que este es el famoso nieto.", "en": "So this is the famous grandson."} },
+            { "speaker": "muscle", "text": {"es": "Ghost dice que tienes talento, pero yo solo veo a un chaval con un apellido demasiado grande para sus hombros.", "en": "Ghost says you've got talent, but all I see is a kid with a last name too big for his shoulders."} },
+            { "speaker": "muscle", "text": {"es": "Miller.", "en": "Miller."} },
+            { "speaker": "muscle", "text": {"es": "Ese nombre significa algo en este mundo. ¿Sabes por qué?", "en": "That name means something in this world. Do you know why?"} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "respect",
-                  "text": {"es": "He oído que eres la mejor para el rendimiento clásico. Vine a aprender.", "en": "Heard you're the best for classic performance. I came to learn."},
+                  "text": {"es": "Mi abuelo era el mejor mecánico de su generación. Vine a honrar eso.", "en": "My grandfather was the best mechanic of his generation. I came to honor that."},
                   "traits": ["respectful", "humble"],
                   "points": 15,
                   "setsMemory": { "showedRespect": true },
@@ -55,7 +58,7 @@
                 },
                 {
                   "id": "reputation",
-                  "text": {"es": "Tu reputación te precede. Dicen que Muscle sabe de motores.", "en": "Your reputation precedes you. They say Muscle knows engines."},
+                  "text": {"es": "Sé que preparaba coches para los mejores. Ghost me habló de ti.", "en": "I know he built cars for the best. Ghost told me about you."},
                   "traits": ["respectful"],
                   "points": 10,
                   "leadsTo": "intro_reputation"
@@ -72,24 +75,24 @@
           ],
           "branches": {
             "intro_respect": [
-              { "speaker": "muscle", "text": {"es": "¿Aprender, dices?", "en": "Learn, huh?"} },
-              { "speaker": "muscle", "text": {"es": "Eso no es algo que oiga a menudo. La mayoría de la gente solo tira pasta a los problemas.", "en": "That's not something I hear often. Most people just throw money at problems."} },
-              { "speaker": "muscle", "text": {"es": "Déjame preguntarte algo.", "en": "Let me ask you something."} },
-              { "speaker": "muscle", "text": {"es": "¿Alguna vez has usado de verdad una llave inglesa? ¿O solo ves vídeos y finges?", "en": "You ever actually turned a wrench? Or you just watch videos and pretend?"} },
+              { "speaker": "muscle", "text": {"es": "¿Honrar?", "en": "Honor?"} },
+              { "speaker": "muscle", "text": {"es": "Tu abuelo fue muchas cosas. Un genio con las llaves inglesas, sin duda.", "en": "Your grandfather was many things. A genius with a wrench, no doubt."} },
+              { "speaker": "muscle", "text": {"es": "Pero también fue un hombre que dejó las herramientas cuando más se necesitaban.", "en": "But he was also a man who put down his tools when they were needed most."} },
+              { "speaker": "muscle", "text": {"es": "¿Alguna vez te has preguntado por qué dejó de correr?", "en": "Ever wondered why he stopped racing?"} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "built_engine",
-                    "text": {"es": "Construí mi primer motor cuando tenía 16. Tengo grasa en la sangre.", "en": "Built my first engine when I was 16. Got grease in my blood."},
-                    "traits": ["hardworking", "honest"],
+                    "id": "know_something",
+                    "text": {"es": "Ghost mencionó un accidente. Algo que le rompió.", "en": "Ghost mentioned an accident. Something that broke him."},
+                    "traits": ["honest"],
                     "points": 20,
-                    "setsMemory": { "provenMechanic": true },
+                    "setsMemory": { "knowsAboutAccident": true },
                     "continueToPhase": "nudo"
                   },
                   {
                     "id": "learning",
-                    "text": {"es": "Estoy aprendiendo. Empecé con mantenimiento básico, voy subiendo.", "en": "I'm learning. Started basic maintenance, working my way up."},
+                    "text": {"es": "No sé toda la historia. Pero estoy aquí para entenderla.", "en": "I don't know the whole story. But I'm here to understand it."},
                     "traits": ["humble", "honest"],
                     "points": 10,
                     "setsMemory": { "willingToLearn": true },
@@ -99,23 +102,24 @@
               }
             ],
             "intro_reputation": [
-              { "speaker": "muscle", "text": {"es": "Reputación.", "en": "Reputation."} },
-              { "speaker": "muscle", "text": {"es": "Llevo cuarenta años haciendo esto. Empecé cuando tenía doce, ayudando a mi viejo.", "en": "Forty years I've been doing this. Started when I was twelve, helping my old man."} },
-              { "speaker": "muscle", "text": {"es": "Motores, transmisiones, suspensiones... he hecho de todo.", "en": "Engines, transmissions, suspensions - done it all."} },
-              { "speaker": "muscle", "text": {"es": "Así que sí. Sé una cosa o dos.", "en": "So yeah. I know a thing or two."} },
+              { "speaker": "muscle", "text": {"es": "Ghost.", "en": "Ghost."} },
+              { "speaker": "muscle", "text": {"es": "Sí, ese viejo cotilla te habrá contado su versión.", "en": "Yeah, that old gossip would have told you his version."} },
+              { "speaker": "muscle", "text": {"es": "Déjame contarte la mía.", "en": "Let me tell you mine."} },
+              { "speaker": "muscle", "text": {"es": "Crecí en un garaje. Literalmente. Mi padre vivía debajo de los coches.", "en": "I grew up in a garage. Literally. My father lived under cars."} },
+              { "speaker": "muscle", "text": {"es": "Y tu abuelo... él era el que hacía que esos coches volaran.", "en": "And your grandfather... he was the one who made those cars fly."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "respect_earned",
-                    "text": {"es": "Cuarenta años de experiencia. Eso es lo que busco.", "en": "Forty years of experience. That's what I'm looking for."},
-                    "traits": ["respectful"],
+                    "text": {"es": "¿Conociste a mi abuelo personalmente?", "en": "You knew my grandfather personally?"},
+                    "traits": ["curious"],
                     "points": 15,
                     "continueToPhase": "nudo"
                   },
                   {
                     "id": "teach_me",
-                    "text": {"es": "Quiero aprender de alguien que lo ha visto todo.", "en": "I want to learn from someone who's seen it all."},
+                    "text": {"es": "Me gustaría oír tu versión de la historia.", "en": "I'd like to hear your side of the story."},
                     "traits": ["humble"],
                     "points": 10,
                     "continueToPhase": "nudo"
@@ -125,15 +129,15 @@
             ],
             "intro_impatient": [
               { "speaker": "muscle", "text": {"es": "Saltarnos la presentación.", "en": "Skip the introduction."} },
-              { "speaker": "muscle", "text": {"es": "Chaval, he tratado con gente impaciente toda mi vida.", "en": "Kid, I've been dealing with impatient people my whole life."} },
-              { "speaker": "muscle", "text": {"es": "Gente que cree que puede saltarse la cola porque tienen pasta.", "en": "People who think they can skip the line 'cause they got money."} },
-              { "speaker": "muscle", "text": {"es": "¿Quieres ser uno de esos? La puerta está ahí.", "en": "You want to be another one of those? Door's right there."} },
+              { "speaker": "muscle", "text": {"es": "Chaval, ¿sabes quién era mi padre?", "en": "Kid, do you know who my father was?"} },
+              { "speaker": "muscle", "text": {"es": "Murió en una pista. En un coche que tu abuelo no preparó, pero él se culpó igualmente.", "en": "He died on a track. In a car your grandfather didn't build, but he blamed himself anyway."} },
+              { "speaker": "muscle", "text": {"es": "No me vienes con prisas. La puerta está ahí.", "en": "Don't come at me with impatience. Door's right there."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "apologize",
-                    "text": {"es": "Tienes razón. Eso fue de mala educación. Solo estoy frustrado buscando calidad.", "en": "You're right. That was rude. I'm just frustrated finding quality."},
+                    "text": {"es": "Lo siento. No sabía... no conocía esa historia.", "en": "I'm sorry. I didn't know... I didn't know that story."},
                     "traits": ["humble"],
                     "points": 5,
                     "setsMemory": { "apologized": true },
@@ -156,115 +160,120 @@
 
         "nudo": {
           "contextTransition": {
-            "default": {"es": "De acuerdo. Vamos a ver de qué pasta estás hecho.", "en": "Alright. Let's see what you're made of."},
-            "provenMechanic": {"es": "Bien. Alguien que de verdad sabe moverse con un motor.", "en": "Good. Someone who actually knows their way around an engine."},
-            "willingToLearn": {"es": "Estar dispuesto a aprender es un comienzo. Lo más importante es poner el trabajo.", "en": "Willing to learn is a start. Most important thing is putting in the work."},
-            "apologized": {"es": "Al menos puedes reconocer cuando te equivocas. Eso es algo.", "en": "At least you can recognize when you're wrong. That's something."}
+            "default": {"es": "De acuerdo. Escucha bien, porque solo lo cuento una vez.", "en": "Alright. Listen close, I only tell this once."},
+            "knowsAboutAccident": {"es": "Bien. Al menos sabes algo. Deja que te cuente el resto.", "en": "Good. At least you know something. Let me fill in the rest."},
+            "willingToLearn": {"es": "Está bien. Mereces saber de dónde vienes.", "en": "Fair enough. You deserve to know where you come from."},
+            "apologized": {"es": "Al menos sabes disculparte. Eso es algo. Escucha.", "en": "At least you know how to apologize. That's something. Listen."}
           },
           "exchanges": [
             { "speaker": "muscle", "text": {"es": "{{contextTransition}}", "en": "{{contextTransition}}"} },
-            { "speaker": "muscle", "text": {"es": "Déjame decirte algo sobre este negocio.", "en": "Let me tell you something about this business."} },
-            { "speaker": "muscle", "text": {"es": "Hoy en día, todos quieren resultados instantáneos. Potencia de atornillar y listo.", "en": "These days, everyone wants instant results. Bolt-on power."} },
-            { "speaker": "muscle", "text": {"es": "No entienden que una preparación de verdad lleva tiempo. Paciencia. Sensibilidad.", "en": "They don't understand that a real build takes time. Patience. Feel."} },
-            { "speaker": "muscle", "text": {"es": "No puedes simplemente comprar velocidad. Tienes que ganártela.", "en": "You can't just buy speed. You gotta earn it."} },
+            { "speaker": "muscle", "text": {"es": "Tu abuelo Miller era la mano derecha de la mejor piloto que ha pisado un circuito.", "en": "Your grandfather Miller was the right hand of the best driver to ever touch a track."} },
+            { "speaker": "muscle", "text": {"es": "Él ponía la lógica. Ella ponía la rabia.", "en": "He brought the logic. She brought the rage."} },
+            { "speaker": "muscle", "text": {"es": "Juntos, eran imbatibles.", "en": "Together, they were unbeatable."} },
+            { "speaker": "muscle", "text": {"es": "Pero eso se acabó. Todo se acabó una noche.", "en": "But that ended. It all ended one night."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "agree",
-                  "text": {"es": "Por eso estoy aquí. Quiero hacerlo bien.", "en": "That's why I'm here. I want to do it right."},
-                  "traits": ["patient", "dedicated"],
+                  "id": "what_night",
+                  "text": {"es": "¿Qué pasó esa noche?", "en": "What happened that night?"},
+                  "traits": ["curious"],
                   "points": 15,
-                  "leadsTo": "nudo_dedicated"
+                  "leadsTo": "nudo_accident"
                 },
                 {
-                  "id": "time",
-                  "text": {"es": "Tengo tiempo. No tengo prisa con mi preparación.", "en": "I've got time. No rush on my build."},
-                  "traits": ["patient"],
+                  "id": "the_pilot",
+                  "text": {"es": "¿Quién era esa piloto?", "en": "Who was that driver?"},
+                  "traits": ["curious"],
                   "points": 10,
-                  "leadsTo": "nudo_patient"
+                  "leadsTo": "nudo_pilot"
                 },
                 {
                   "id": "shortcut",
-                  "text": {"es": "Pero unos atajos no harán daño, ¿no?", "en": "But a few shortcuts won't hurt, right?"},
+                  "text": {"es": "¿Y qué tiene que ver esto con las piezas?", "en": "And what does this have to do with parts?"},
                   "points": -10,
-                  "leadsTo": "nudo_shortcut"
+                  "leadsTo": "nudo_impatient"
                 }
               ]
             }
           ],
           "branches": {
-            "nudo_dedicated": [
-              { "speaker": "muscle", "text": {"es": "Hacerlo bien.", "en": "Do it right."} },
-              { "speaker": "muscle", "text": {"es": "¿Sabes cuántas veces he oído eso?", "en": "You know how many times I've heard that?"} },
-              { "speaker": "muscle", "text": {"es": "Y tres meses después vuelven, quejándose de que su motor explotó porque se saltaron el rodaje.", "en": "Then three months later they're back, complaining their engine blew because they skipped the break-in."} },
-              { "speaker": "muscle", "text": {"es": "O su suspensión está jodida porque escatimaron en casquillos.", "en": "Or their suspension's shot 'cause they cheaped out on bushings."} },
+            "nudo_accident": [
+              { "speaker": "muscle", "text": {"es": "Mi padre murió.", "en": "My father died."} },
+              { "speaker": "muscle", "text": {"es": "En una carrera nocturna. En un coche que NO preparó tu abuelo.", "en": "In a night race. In a car your grandfather did NOT build."} },
+              { "speaker": "muscle", "text": {"es": "Pero Miller se hundió igualmente. Se culpó porque creía que debería haber revisado ese motor antes de la salida.", "en": "But Miller sank anyway. He blamed himself because he thought he should have checked that engine before the start."} },
+              { "speaker": "muscle", "text": {"es": "Dejó las llaves inglesas. Dejó las carreras. Dejó todo.", "en": "Put down the wrenches. Left racing. Left everything."} },
+              { "speaker": "muscle", "text": {"es": "Y con él, se fue el mejor equipo que estas calles han visto.", "en": "And with him, the best team these streets ever saw was gone."} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "not_me",
-                    "text": {"es": "Lo pillo. Los cimientos importan. No cortaré esquinas.", "en": "I get it. Foundations matter. I won't cut corners."},
-                    "traits": ["dedicated", "honest"],
+                    "id": "sorry_father",
+                    "text": {"es": "Lo siento mucho. No sabía que tu padre...", "en": "I'm so sorry. I didn't know your father..."},
+                    "traits": ["empathetic", "honest"],
                     "points": 15,
+                    "setsMemory": { "empathyShown": true },
                     "continueToPhase": "desenlace"
                   },
                   {
-                    "id": "learned_lesson",
-                    "text": {"es": "Cometí ese error una vez. Aprendí la lección por las malas.", "en": "Made that mistake once. Learned my lesson the hard way."},
-                    "traits": ["honest"],
+                    "id": "not_his_fault",
+                    "text": {"es": "No fue culpa de mi abuelo. Él no preparó ese coche.", "en": "It wasn't my grandfather's fault. He didn't build that car."},
+                    "traits": ["loyal", "honest"],
                     "points": 10,
-                    "setsMemory": { "learnedFromMistake": true },
+                    "setsMemory": { "defendedGrandfather": true },
                     "continueToPhase": "desenlace"
                   }
                 ]
               }
             ],
-            "nudo_patient": [
-              { "speaker": "muscle", "text": {"es": "Sin prisas. Bien.", "en": "No rush. Good."} },
-              { "speaker": "muscle", "text": {"es": "Mi mujer solía decir que pasaba más tiempo en el garaje que con ella.", "en": "My wife used to say I spent more time in the garage than with her."} },
-              { "speaker": "muscle", "text": {"es": "No se equivocaba. Pero lo entendía.", "en": "She wasn't wrong. But she understood."} },
-              { "speaker": "muscle", "text": {"es": "Una preparación no es solo un proyecto. Es una relación.", "en": "A build isn't just a project. It's a relationship."} },
+            "nudo_pilot": [
+              { "speaker": "muscle", "text": {"es": "No importa su nombre. No todavía.", "en": "Her name doesn't matter. Not yet."} },
+              { "speaker": "muscle", "text": {"es": "Solo necesitas saber que mi padre fue su marido.", "en": "You just need to know my father was her husband."} },
+              { "speaker": "muscle", "text": {"es": "Él murió en una carrera. En un coche que no era del taller de tu abuelo.", "en": "He died in a race. In a car that wasn't from your grandfather's shop."} },
+              { "speaker": "muscle", "text": {"es": "Pero Miller se hundió como si el motor se lo hubiera llevado a él también.", "en": "But Miller sank as if the engine had taken him too."} },
+              { "speaker": "muscle", "text": {"es": "Y con su retirada, mi madre perdió a su mecánico, su equipo, y su futuro.", "en": "And with his retirement, my mother lost her mechanic, her team, and her future."} },
               {
                 "type": "choice",
                 "choices": [
                   {
-                    "id": "understand",
-                    "text": {"es": "Lo entiendo. No se trata solo del destino.", "en": "I get that. It's not just about the destination."},
-                    "traits": ["passionate"],
+                    "id": "mother_racer",
+                    "text": {"es": "Tu madre era la piloto... ¿Sigues en contacto con ella?", "en": "Your mother was the driver... Are you still in touch?"},
+                    "traits": ["perceptive"],
                     "points": 15,
+                    "setsMemory": { "askedAboutMother": true },
                     "continueToPhase": "desenlace"
                   },
                   {
-                    "id": "lucky",
-                    "text": {"es": "Suerte de tener a alguien que lo entendiera.", "en": "Lucky to have someone who understood."},
-                    "traits": ["honest"],
-                    "points": 10,
+                    "id": "understand_pain",
+                    "text": {"es": "Perdiste a tu padre y mi abuelo se fue. Todo a la vez.", "en": "You lost your father and my grandfather left. All at once."},
+                    "traits": ["empathetic"],
+                    "points": 15,
+                    "setsMemory": { "empathyShown": true },
                     "continueToPhase": "desenlace"
                   }
                 ]
               }
             ],
-            "nudo_shortcut": [
-              { "speaker": "muscle", "text": {"es": "Atajos.", "en": "Shortcuts."} },
-              { "speaker": "muscle", "text": {"es": "Déjame contarte sobre los atajos.", "en": "Let me tell you about shortcuts."} },
-              { "speaker": "muscle", "text": {"es": "En el 89, estaba compitiendo con un tío que tomó atajos con sus frenos.", "en": "In '89, I was racing a guy who took shortcuts on his brakes."} },
-              { "speaker": "muscle", "text": {"es": "Se ahorró quizás doscientos pavos.", "en": "Saved maybe two hundred bucks."} },
-              { "speaker": "muscle", "text": {"es": "Su coche sigue enrollado en un árbol por ahí si quieres visitarlo.", "en": "His car's still wrapped around a tree somewhere if you want to visit it."} },
+            "nudo_impatient": [
+              { "speaker": "muscle", "text": {"es": "¿Que qué tiene que ver?", "en": "What does it have to do?"} },
+              { "speaker": "muscle", "text": {"es": "Todo, chaval. Absolutamente todo.", "en": "Everything, kid. Absolutely everything."} },
+              { "speaker": "muscle", "text": {"es": "Las piezas que tengo son del legado de tu abuelo. De la era en la que él y mi madre dominaban las calles.", "en": "The parts I have are from your grandfather's legacy. From the era when he and my mother ruled these streets."} },
+              { "speaker": "muscle", "text": {"es": "Mi padre murió en esas calles. Tu abuelo se rompió por dentro. Y yo crecí recogiendo los pedazos.", "en": "My father died on those streets. Your grandfather broke inside. And I grew up picking up the pieces."} },
+              { "speaker": "muscle", "text": {"es": "Así que no. No nos saltamos la presentación.", "en": "So no. We don't skip introductions."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "point_taken",
-                    "text": {"es": "Captado el mensaje. La seguridad primero.", "en": "Point taken. Safety first."},
-                    "traits": ["honest"],
+                    "text": {"es": "Tienes razón. Perdona. Cuéntame más.", "en": "You're right. I'm sorry. Tell me more."},
+                    "traits": ["humble"],
                     "points": 10,
                     "setsMemory": { "learnedLesson": true },
                     "continueToPhase": "desenlace"
                   },
                   {
                     "id": "sorry",
-                    "text": {"es": "Lo siento. No lo pensé de esa manera.", "en": "I'm sorry. Didn't think of it that way."},
+                    "text": {"es": "No lo sabía. De verdad que no lo sabía.", "en": "I didn't know. I really didn't know."},
                     "traits": ["humble"],
                     "points": 5,
                     "continueToPhase": "desenlace"
@@ -277,34 +286,35 @@
 
         "desenlace": {
           "exchanges": [
-            { "speaker": "muscle", "text": {"es": "Mira, no cuento estas historias para asustarte.", "en": "Look, I don't tell these stories to scare you."} },
-            { "speaker": "muscle", "text": {"es": "Las cuento porque necesito que entiendas.", "en": "I tell them because I need you to understand."} },
+            { "speaker": "muscle", "text": {"es": "Mira, no te cuento esto para darte pena.", "en": "Look, I'm not telling you this for pity."} },
+            { "speaker": "muscle", "text": {"es": "Te lo cuento porque necesito que entiendas lo que llevas encima.", "en": "I'm telling you because I need you to understand what you're carrying."} },
+            { "speaker": "muscle", "text": {"es": "Ese ETK-I que tienes en el garaje... tu abuelo lo diseñó para cerrar el círculo.", "en": "That ETK-I you've got in the garage... your grandfather designed it to close the circle."} },
+            { "speaker": "muscle", "text": {"es": "Nunca tuvo el valor de terminarlo. Pero tú estás aquí.", "en": "He never had the courage to finish it. But you're here."} },
             { "speaker": "muscle", "text": {"es": "¿Las piezas con las que trato? No son solo metal y goma.", "en": "The parts I deal in? They're not just metal and rubber."} },
-            { "speaker": "muscle", "text": {"es": "Son artesanía. Historia. Alma.", "en": "They're craftsmanship. History. Soul."} },
-            { "speaker": "muscle", "text": {"es": "Las tratas bien y te servirán bien.", "en": "You treat them right, they'll serve you well."} },
+            { "speaker": "muscle", "text": {"es": "Son artesanía. Historia. El alma de mi padre y de tu abuelo.", "en": "They're craftsmanship. History. The soul of my father and your grandfather."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "promise",
-                  "text": {"es": "Te lo prometo. Cada pieza recibirá el respeto que merece.", "en": "I promise. Every part gets the respect it deserves."},
+                  "text": {"es": "Te lo prometo. Honraré ese legado con cada pieza.", "en": "I promise. I'll honor that legacy with every part."},
                   "traits": ["respectful", "passionate"],
                   "points": 15,
                   "setsMemory": { "promisedRespect": true }
                 },
                 {
                   "id": "understand",
-                  "text": {"es": "Lo entiendo. Esto no es solo negocio para ti.", "en": "I understand. This isn't just business for you."},
+                  "text": {"es": "Ahora entiendo por qué Ghost me trajo aquí.", "en": "Now I understand why Ghost brought me here."},
                   "traits": ["honest"],
-                  "points": 10
+                  "points": 10,
+                  "setsMemory": { "promisedRespect": true }
                 }
               ]
             },
-            { "speaker": "muscle", "text": {"es": "De acuerdo. Voy a darte acceso a algo de inventario básico.", "en": "Alright. I'm gonna give you access to some basic inventory."} },
-            { "speaker": "muscle", "text": {"es": "Demuéstrame que sabes lo que haces, y hablaremos de las cosas buenas.", "en": "Show me you know what you're doing, and we'll talk about the good stuff."} },
-            { "speaker": "muscle", "text": {"es": "Ahora lárgate. Tengo un motor que reconstruir.", "en": "Now get out. I've got an engine to rebuild."} },
-            { "speaker": "muscle", "text": {"es": "¿Y chaval?", "en": "And kid?"} },
-            { "speaker": "muscle", "text": {"es": "No hagas que me arrepienta de esto.", "en": "Don't make me regret this."} }
+            { "speaker": "muscle", "text": {"es": "De acuerdo. Voy a darte acceso a algo de inventario.", "en": "Alright. I'm gonna give you access to some inventory."} },
+            { "speaker": "muscle", "text": {"es": "Piezas de la vieja escuela. De las que no se rompen por un poco de presión.", "en": "Old-school parts. The kind that don't break under a little pressure."} },
+            { "speaker": "muscle", "text": {"es": "Demuéstrame que no eres como tu abuelo.", "en": "Show me you're not like your grandfather."} },
+            { "speaker": "muscle", "text": {"es": "Demuéstrame que tú no vas a frenar.", "en": "Show me you won't hit the brakes."} }
           ],
           "end": {
             "result": "success",
@@ -313,7 +323,7 @@
               "unlocks": ["muscle_basic_inventory"]
             },
             "cooldown": 180,
-            "teaser": {"es": "Vuelve cuando te hayas ensuciado las manos. Entonces veremos si mereces mi tiempo.", "en": "Come back when you've gotten your hands dirty. Then we'll see if you're worth my time."}
+            "teaser": {"es": "Vuelve cuando hayas puesto esas piezas a trabajar. Entonces veremos de qué pasta estás hecho.", "en": "Come back when you've put those parts to work. Then we'll see what you're made of."}
           }
         }
       },
@@ -333,32 +343,32 @@
     },
 
     "level2": {
-      "title": {"es": "Los Viejos Tiempos", "en": "The Old Ways"},
+      "title": {"es": "La Noche del Accidente", "en": "The Night of the Crash"},
       "requiredMemory": ["promisedRespect"],
-      "unlockMessage": {"es": "Muscle parece estar ablandándose contigo. Lista para hablar más.", "en": "Muscle seems to be warming up to you. Ready to talk more."},
+      "unlockMessage": {"es": "Muscle quiere contarte la verdad sobre aquella noche.", "en": "Muscle wants to tell you the truth about that night."},
 
       "phases": {
         "intro": {
           "contextAware": true,
           "exchanges": [
-            { "speaker": "muscle", "text": {"es": "De vuelta otra vez.", "en": "Back again."} },
+            { "speaker": "muscle", "text": {"es": "De vuelta.", "en": "Back again."} },
             { "speaker": "muscle", "text": {"es": "{{contextReaction}}", "en": "{{contextReaction}}"} },
-            { "speaker": "muscle", "text": {"es": "La mayoría de la gente que dice que quiere aprender... desaparecen después de la primera vez.", "en": "Most people who say they want to learn... they disappear after the first time."} },
-            { "speaker": "muscle", "text": {"es": "Pero aquí estás.", "en": "But here you are."} },
+            { "speaker": "muscle", "text": {"es": "La última vez te conté lo básico. Hoy voy a contarte lo que nadie sabe.", "en": "Last time I told you the basics. Today I'm going to tell you what nobody knows."} },
+            { "speaker": "muscle", "text": {"es": "Sobre mi padre. Sobre tu abuelo. Sobre aquella noche.", "en": "About my father. About your grandfather. About that night."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "meant_it",
-                  "text": {"es": "Decía lo que dije. Quiero aprender de la mejor.", "en": "Meant what I said. I want to learn from the best."},
+                  "text": {"es": "Estoy listo para escuchar.", "en": "I'm ready to listen."},
                   "traits": ["honest", "dedicated"],
                   "points": 15,
                   "continueToPhase": "nudo"
                 },
                 {
                   "id": "good_parts",
-                  "text": {"es": "Tus piezas merecen que vuelva. La calidad se nota.", "en": "Your parts are worth coming back for. Quality shows."},
-                  "traits": ["honest"],
+                  "text": {"es": "Si necesitas contarlo, estoy aquí.", "en": "If you need to tell it, I'm here."},
+                  "traits": ["empathetic"],
                   "points": 10,
                   "continueToPhase": "nudo"
                 }
@@ -369,54 +379,55 @@
 
         "nudo": {
           "exchanges": [
-            { "speaker": "muscle", "text": {"es": "Déjame contarte sobre mi primera carrera.", "en": "Let me tell you about my first race."} },
-            { "speaker": "muscle", "text": {"es": "1987. Un pequeño circuito de tierra fuera de la ciudad.", "en": "1987. A small dirt track outside the city."} },
-            { "speaker": "muscle", "text": {"es": "Me presenté con mi Gavril Bluebuck. Lo construí de un cacharro.", "en": "Showed up with my Gavril Bluebuck. Built it from a junker."} },
-            { "speaker": "muscle", "text": {"es": "En aquel entonces, nadie esperaba mucho de mí.", "en": "Back then, nobody expected much from me."} },
-            { "speaker": "muscle", "text": {"es": "Una cría de la nada con un muscle car destrozado.", "en": "Small kid from nowhere with a beat-up muscle car."} },
+            { "speaker": "muscle", "text": {"es": "Mi padre era piloto. Piloto de verdad, no un aficionado.", "en": "My father was a driver. A real driver, not an amateur."} },
+            { "speaker": "muscle", "text": {"es": "Estaba casado con la mujer más rápida del circuito. Mi madre.", "en": "He was married to the fastest woman on the circuit. My mother."} },
+            { "speaker": "muscle", "text": {"es": "Tu abuelo les preparaba los coches. Los tres eran inseparables.", "en": "Your grandfather built their cars. The three of them were inseparable."} },
+            { "speaker": "muscle", "text": {"es": "Hasta aquella noche.", "en": "Until that night."} },
+            { "speaker": "muscle", "text": {"es": "Una carrera nocturna. Mi padre quiso probar un coche nuevo. No era del taller de Miller.", "en": "A night race. My father wanted to try a new car. It wasn't from Miller's shop."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "what_happened",
-                  "text": {"es": "¿Qué pasó?", "en": "What happened?"},
+                  "text": {"es": "¿Qué falló?", "en": "What went wrong?"},
                   "points": 10,
-                  "leadsTo": "nudo_race"
+                  "leadsTo": "nudo_crash"
                 },
                 {
                   "id": "showed_them",
-                  "text": {"es": "Les demostraste, ¿verdad?", "en": "You showed them, didn't you?"},
-                  "traits": ["passionate"],
+                  "text": {"es": "Y mi abuelo no revisó ese motor...", "en": "And my grandfather didn't check that engine..."},
+                  "traits": ["perceptive"],
                   "points": 15,
-                  "leadsTo": "nudo_race"
+                  "leadsTo": "nudo_crash"
                 }
               ]
             }
           ],
           "branches": {
-            "nudo_race": [
-              { "speaker": "muscle", "text": {"es": "Acabé tercera.", "en": "Finished third."} },
-              { "speaker": "muscle", "text": {"es": "Tercer puesto. Contra tíos que llevaban años compitiendo.", "en": "Third place. Against guys who'd been racing for years."} },
-              { "speaker": "muscle", "text": {"es": "Un niñato rico con un coche nuevo vino después. Se rió.", "en": "Some rich kid with a brand new car came up after. Laughed."} },
-              { "speaker": "muscle", "text": {"es": "'Carrera de suerte', dijo.", "en": "'Lucky run,' he said."} },
+            "nudo_crash": [
+              { "speaker": "muscle", "text": {"es": "El motor se gripó en la recta principal. A más de ciento ochenta.", "en": "The engine seized on the main straight. At over a hundred and eighty."} },
+              { "speaker": "muscle", "text": {"es": "Mi padre no tuvo opción.", "en": "My father didn't have a chance."} },
               { "speaker": "muscle", "text": {"es": "...", "en": "..."} },
-              { "speaker": "muscle", "text": {"es": "Carrera de suerte.", "en": "Lucky run."} },
-              { "speaker": "muscle", "text": {"es": "Pasé seis meses reconstruyendo ese motor. Aprendiendo todo.", "en": "Spent six months rebuilding that engine. Learning everything."} },
+              { "speaker": "muscle", "text": {"es": "Tu abuelo llegó al circuito cinco minutos después. Vio los restos.", "en": "Your grandfather arrived at the track five minutes later. He saw the wreckage."} },
+              { "speaker": "muscle", "text": {"es": "Se arrodilló junto al coche y no se levantó en una hora.", "en": "He knelt by the car and didn't get up for an hour."} },
+              { "speaker": "muscle", "text": {"es": "Al día siguiente, cerró el taller. Para siempre.", "en": "Next day, he closed the shop. For good."} },
+              { "speaker": "muscle", "text": {"es": "El motor que falló no era suyo. Pero él se sentía responsable de todo coche que pisaba esa pista.", "en": "The engine that failed wasn't his. But he felt responsible for every car that touched that track."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "then_what",
-                    "text": {"es": "¿Y la siguiente carrera?", "en": "And the next race?"},
-                    "points": 10,
+                    "text": {"es": "¿Y tu madre? ¿Cómo lo llevó?", "en": "And your mother? How did she cope?"},
+                    "points": 15,
+                    "setsMemory": { "askedAboutMother": true },
                     "continueToPhase": "desenlace"
                   },
                   {
                     "id": "fuel",
-                    "text": {"es": "Esa duda se convirtió en combustible, ¿verdad?", "en": "That doubt became fuel, didn't it?"},
-                    "traits": ["passionate"],
+                    "text": {"es": "Mi abuelo cargó con una culpa que no era suya.", "en": "My grandfather carried a guilt that wasn't his."},
+                    "traits": ["empathetic"],
                     "points": 15,
-                    "setsMemory": { "understandsAnger": true },
+                    "setsMemory": { "understandsGuilt": true },
                     "continueToPhase": "desenlace"
                   }
                 ]
@@ -427,33 +438,36 @@
 
         "desenlace": {
           "exchanges": [
-            { "speaker": "muscle", "text": {"es": "La siguiente carrera, gané.", "en": "Next race, I won."} },
-            { "speaker": "muscle", "text": {"es": "Y la carrera siguiente. Y la siguiente.", "en": "And the race after that. And the one after that."} },
-            { "speaker": "muscle", "text": {"es": "Al final de la temporada, nadie se reía.", "en": "By the end of the season, nobody was laughing."} },
+            { "speaker": "muscle", "text": {"es": "Mi madre siguió corriendo. Es lo único que sabe hacer.", "en": "My mother kept racing. It's the only thing she knows."} },
+            { "speaker": "muscle", "text": {"es": "Pero sin Miller, ya no era lo mismo. Le faltaba la mitad del equipo.", "en": "But without Miller, it wasn't the same. She was missing half the team."} },
+            { "speaker": "muscle", "text": {"es": "Yo crecí entre motores. Aprendí de ella. De los restos del taller de tu abuelo.", "en": "I grew up among engines. Learned from her. From the remains of your grandfather's shop."} },
+            { "speaker": "muscle", "text": {"es": "Uso otro nombre. No quiero que la gente me asocie con ella.", "en": "I use a different name. I don't want people connecting me to her."} },
+            { "speaker": "muscle", "text": {"es": "No por vergüenza. Por protección.", "en": "Not out of shame. For protection."} },
             { "speaker": "muscle", "text": {"es": "...", "en": "..."} },
-            { "speaker": "muscle", "text": {"es": "El punto es... no dejes que nadie te diga lo que puedes o no puedes hacer.", "en": "Point is... don't let anyone tell you what you can or can't do."} },
-            { "speaker": "muscle", "text": {"es": "Demuéstralo en la pista. En el garaje. Con tus manos.", "en": "Prove it on the track. In the garage. With your hands."} },
+            { "speaker": "muscle", "text": {"es": "La cuestión es que tu abuelo dejó un coche sin terminar. Y tú lo estás terminando.", "en": "Point is, your grandfather left a car unfinished. And you're finishing it."} },
+            { "speaker": "muscle", "text": {"es": "Eso significa algo para mí, chaval. Más de lo que crees.", "en": "That means something to me, kid. More than you know."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "thank_you",
-                  "text": {"es": "Gracias por compartir eso. Significa mucho.", "en": "Thanks for sharing that. It means a lot."},
+                  "text": {"es": "Gracias por contármelo. No voy a defraudar a ninguno de los dos.", "en": "Thanks for telling me. I won't let either of them down."},
                   "traits": ["respectful"],
                   "points": 15,
                   "setsMemory": { "sharedMoment": true }
                 },
                 {
                   "id": "same_drive",
-                  "text": {"es": "Tengo ese mismo empuje. Me demostraré.", "en": "I've got that same drive. I'll prove myself."},
+                  "text": {"es": "Terminaré lo que mi abuelo empezó. Te lo prometo.", "en": "I'll finish what my grandfather started. I promise."},
                   "traits": ["dedicated"],
-                  "points": 10
+                  "points": 10,
+                  "setsMemory": { "sharedMoment": true }
                 }
               ]
             },
-            { "speaker": "muscle", "text": {"es": "Vale, suficiente nostalgia.", "en": "Alright, enough nostalgia."} },
-            { "speaker": "muscle", "text": {"es": "Tengo algunas piezas de rendimiento entrando. Clásicos de verdad.", "en": "Got some performance parts coming in. Real classics."} },
-            { "speaker": "muscle", "text": {"es": "Sigues apareciendo, tendrás primera opción.", "en": "You keep showing up, you get first pick."} },
+            { "speaker": "muscle", "text": {"es": "Vale. Suficiente nostalgia por hoy.", "en": "Alright. Enough nostalgia for today."} },
+            { "speaker": "muscle", "text": {"es": "Tengo piezas de rendimiento de la vieja era. Las que mi madre usaba.", "en": "I've got performance parts from the old era. The ones my mother used."} },
+            { "speaker": "muscle", "text": {"es": "Son tuyas si demuestras que las mereces.", "en": "They're yours if you prove you deserve them."} },
             { "speaker": "muscle", "text": {"es": "Ahora lárgate antes de que me ponga sentimental.", "en": "Now get out before I start getting sentimental."} }
           ],
           "end": {
@@ -463,22 +477,22 @@
               "unlocks": ["muscle_performance_inventory"]
             },
             "cooldown": 180,
-            "teaser": {"es": "La próxima vez, puede que te deje ayudarme con un proyecto. Si te atreves.", "en": "Next time, might let you help me with a project. If you're up for it."}
+            "teaser": {"es": "La próxima vez hablaremos del verdadero legado. Hay más que contar.", "en": "Next time we'll talk about the real legacy. There's more to tell."}
           }
         }
       }
     },
 
     "level3": {
-      "title": {"es": "Legado", "en": "Legacy"},
+      "title": {"es": "Sangre y Aceite", "en": "Blood and Oil"},
       "requiredMemory": ["sharedMoment"],
-      "unlockMessage": {"es": "Muscle quiere mostrarte algo especial.", "en": "Muscle wants to show you something special."},
+      "unlockMessage": {"es": "Muscle está lista para revelarte toda la verdad.", "en": "Muscle is ready to reveal the whole truth."},
 
       "phases": {
         "intro": {
           "exchanges": [
-            { "speaker": "muscle", "text": {"es": "Ven conmigo. Quiero mostrarte algo.", "en": "Come with me. Want to show you something."} },
-            { "speaker": "muscle", "text": {"es": "Algo que no le muestro a cualquiera.", "en": "Something I don't show just anyone."} },
+            { "speaker": "muscle", "text": {"es": "Ven. Quiero enseñarte algo en la parte de atrás.", "en": "Come. I want to show you something in the back."} },
+            { "speaker": "muscle", "text": {"es": "Algo que no le muestro a nadie.", "en": "Something I don't show anyone."} },
             {
               "type": "choice",
               "choices": [
@@ -491,7 +505,7 @@
                 },
                 {
                   "id": "honor",
-                  "text": {"es": "Es un honor.", "en": "I'm honored."},
+                  "text": {"es": "Confío en ti.", "en": "I trust you."},
                   "traits": ["respectful"],
                   "points": 10,
                   "continueToPhase": "nudo"
@@ -503,80 +517,54 @@
 
         "nudo": {
           "exchanges": [
-            { "speaker": "muscle", "text": {"es": "Este...", "en": "This..."} },
-            { "speaker": "muscle", "text": {"es": "Este es el Bluebuck. El original.", "en": "This is the Bluebuck. The original one."} },
-            { "speaker": "muscle", "text": {"es": "El coche que empezó todo.", "en": "The car that started everything."} },
-            { "speaker": "muscle", "text": {"es": "Llevo veinte años restaurándolo. De vez en cuando.", "en": "Been restoring it for twenty years. Off and on."} },
-            { "speaker": "muscle", "text": {"es": "Cada pieza auténtica. Cada tornillo de época correcta.", "en": "Every part authentic. Every bolt period-correct."} },
+            { "speaker": "muscle", "text": {"es": "¿Ves esta foto?", "en": "See this photo?"} },
+            { "speaker": "muscle", "text": {"es": "Son tres personas delante de un coche. 1989.", "en": "Three people in front of a car. 1989."} },
+            { "speaker": "muscle", "text": {"es": "Tu abuelo Miller a la izquierda, con la llave inglesa. Mi padre en medio, sonriendo.", "en": "Your grandfather Miller on the left, wrench in hand. My father in the middle, smiling."} },
+            { "speaker": "muscle", "text": {"es": "Y a la derecha... mi madre. La mejor piloto que ha pisado un circuito.", "en": "And on the right... my mother. The best driver to ever touch a track."} },
+            { "speaker": "muscle", "text": {"es": "No te voy a decir su nombre. Todavía no. Pero la conocerás algún día.", "en": "I'm not going to tell you her name. Not yet. But you'll meet her someday."} },
             {
               "type": "choice",
               "choices": [
                 {
-                  "id": "beautiful",
-                  "text": {"es": "Es precioso. Puedes sentir la historia.", "en": "It's beautiful. You can feel the history."},
-                  "traits": ["passionate", "respectful"],
+                  "id": "mother_racer",
+                  "text": {"es": "Tu madre era piloto... ¿Sigue corriendo?", "en": "Your mother was a driver... Is she still racing?"},
+                  "traits": ["perceptive"],
                   "points": 15,
-                  "leadsTo": "nudo_history"
+                  "leadsTo": "nudo_revelation"
                 },
                 {
-                  "id": "why_not_finished",
-                  "text": {"es": "¿Veinte años? ¿Por qué no está acabado?", "en": "Twenty years? Why isn't it finished?"},
-                  "points": 5,
-                  "leadsTo": "nudo_why"
+                  "id": "ghost_knew",
+                  "text": {"es": "Ghost nunca me dijo que tu familia estaba tan metida en esto.", "en": "Ghost never told me your family was this deep in it."},
+                  "points": 10,
+                  "leadsTo": "nudo_revelation"
                 }
               ]
             }
           ],
           "branches": {
-            "nudo_history": [
-              { "speaker": "muscle", "text": {"es": "Historia. Sí.", "en": "History. Yeah."} },
-              { "speaker": "muscle", "text": {"es": "Cada rasguño cuenta una historia.", "en": "Every scratch tells a story."} },
-              { "speaker": "muscle", "text": {"es": "¿Esta abolladura? Primera carrera. Me golpearon en la curva tres.", "en": "This dent? First race. Got bumped in turn three."} },
-              { "speaker": "muscle", "text": {"es": "¿Este parche? Donde corté el óxido después de que estuviera cinco años en un granero.", "en": "This patch? Where I cut out rust after it sat in a barn five years."} },
-              { "speaker": "muscle", "text": {"es": "Este coche... soy yo. Todo lo que pasé.", "en": "This car... it's me. Everything I went through."} },
+            "nudo_revelation": [
+              { "speaker": "muscle", "text": {"es": "Mi madre sigue en el mundillo. Nunca lo dejó.", "en": "My mother is still in the scene. She never left."} },
+              { "speaker": "muscle", "text": {"es": "Uso otro nombre para que la gente no me asocie con ella. No por vergüenza. Por protección.", "en": "I use a different name so people don't connect me to her. Not out of shame. For protection."} },
+              { "speaker": "muscle", "text": {"es": "Ella no guarda rencor a tu abuelo. Nunca lo hizo.", "en": "She doesn't hold a grudge against your grandfather. She never did."} },
+              { "speaker": "muscle", "text": {"es": "Pero hay cosas sin resolver entre ellos. Cosas que llevan treinta años esperando.", "en": "But there are things unresolved between them. Things that have been waiting thirty years."} },
+              { "speaker": "muscle", "text": {"es": "No es el momento de hablar de eso. Todavía no.", "en": "It's not the time to talk about that. Not yet."} },
               {
                 "type": "choice",
                 "choices": [
                   {
                     "id": "understand",
-                    "text": {"es": "Lo entiendo. Algunas cosas valen más que el dinero.", "en": "I get it. Some things are worth more than money."},
-                    "traits": ["passionate"],
+                    "text": {"es": "Cuando estés lista para contarme, estaré aquí.", "en": "When you're ready to tell me, I'll be here."},
+                    "traits": ["patient", "loyal"],
                     "points": 15,
-                    "setsMemory": { "understandsValue": true },
+                    "setsMemory": { "respectedSecret": true },
                     "continueToPhase": "desenlace"
                   },
                   {
                     "id": "finish_together",
-                    "text": {"es": "Déjame ayudarte a terminarlo.", "en": "Let me help you finish it."},
-                    "traits": ["hardworking", "loyal"],
+                    "text": {"es": "Sea lo que sea, quiero ayudar a resolverlo.", "en": "Whatever it is, I want to help resolve it."},
+                    "traits": ["diplomatic", "loyal"],
                     "points": 20,
-                    "setsMemory": { "offeredHelp": true },
-                    "continueToPhase": "desenlace"
-                  }
-                ]
-              }
-            ],
-            "nudo_why": [
-              { "speaker": "muscle", "text": {"es": "Porque terminarlo significa... admitir que se acabó.", "en": "Because finishing it means... admitting it's over."} },
-              { "speaker": "muscle", "text": {"es": "Mis días de carreras. Mi mejor momento.", "en": "My racing days. My prime."} },
-              { "speaker": "muscle", "text": {"es": "Mientras este coche necesite trabajo, todavía estoy en el juego.", "en": "As long as this car needs work, I'm still in the game."} },
-              { "speaker": "muscle", "text": {"es": "¿Tiene sentido?", "en": "Does that make sense?"} },
-              {
-                "type": "choice",
-                "choices": [
-                  {
-                    "id": "makes_sense",
-                    "text": {"es": "Tiene todo el sentido. Algunos proyectos son sobre el viaje.", "en": "Makes perfect sense. Some projects are about the journey."},
-                    "traits": ["honest"],
-                    "points": 15,
-                    "setsMemory": { "understandsJourney": true },
-                    "continueToPhase": "desenlace"
-                  },
-                  {
-                    "id": "never_over",
-                    "text": {"es": "No tiene que acabarse. Todavía puedes correr.", "en": "Doesn't have to be over. You can still race."},
-                    "traits": ["passionate"],
-                    "points": 10,
+                    "setsMemory": { "offeredAlliance": true },
                     "continueToPhase": "desenlace"
                   }
                 ]
@@ -587,37 +575,38 @@
 
         "desenlace": {
           "exchanges": [
-            { "speaker": "muscle", "text": {"es": "Sabes...", "en": "You know..."} },
-            { "speaker": "muscle", "text": {"es": "Aprendí esto de alguien. Hace mucho tiempo.", "en": "I learned this from someone. A long time ago."} },
-            { "speaker": "muscle", "text": {"es": "Una piloto. Una de las mejores que he visto.", "en": "A racer. One of the best I ever saw."} },
-            { "speaker": "muscle", "text": {"es": "Me enseñó todo. La sensibilidad con los motores. El respeto por el oficio.", "en": "She taught me everything. The feel for engines. The respect for the craft."} },
+            { "speaker": "muscle", "text": {"es": "Mira...", "en": "Look..."} },
+            { "speaker": "muscle", "text": {"es": "Yo estoy en medio de todo esto. Hija de una leyenda, heredera del dolor de tu abuelo.", "en": "I'm caught in the middle of all this. Daughter of a legend, inheritor of your grandfather's pain."} },
+            { "speaker": "muscle", "text": {"es": "Crecí arreglando lo que aquella noche rompió.", "en": "I grew up fixing what that night broke."} },
+            { "speaker": "muscle", "text": {"es": "Cada motor que reconstruyo es un poco de mi padre volviendo a la vida.", "en": "Every engine I rebuild is a little bit of my father coming back to life."} },
             { "speaker": "muscle", "text": {"es": "...", "en": "..."} },
-            { "speaker": "muscle", "text": {"es": "Ya no hablamos mucho. Caminos diferentes.", "en": "We don't talk much anymore. Different paths."} },
-            { "speaker": "muscle", "text": {"es": "Pero todo lo que soy... empezó con ella.", "en": "But everything I am? It started with her."} },
+            { "speaker": "muscle", "text": {"es": "Ten cuidado ahí fuera, chaval.", "en": "Be careful out there, kid."} },
+            { "speaker": "muscle", "text": {"es": "Hay gente en este mundillo que no tiene el respeto que tú y yo tenemos por el oficio.", "en": "There are people in this scene who don't have the respect that you and I have for the craft."} },
             {
               "type": "choice",
               "choices": [
                 {
                   "id": "who",
-                  "text": {"es": "Suena como si dejara una huella.", "en": "She sounds like she made an impact."},
+                  "text": {"es": "Gracias por confiar en mí con todo esto.", "en": "Thank you for trusting me with all of this."},
                   "traits": ["respectful"],
                   "points": 15,
                   "setsMemory": { "askedAboutMentor": true }
                 },
                 {
                   "id": "legacy",
-                  "text": {"es": "Suena como si llevaras algo importante.", "en": "Sounds like you're carrying on something important."},
-                  "traits": ["perceptive"],
-                  "points": 20
+                  "text": {"es": "Protegeré ese coche. Y honraré a tu padre.", "en": "I'll protect that car. And honor your father."},
+                  "traits": ["loyal"],
+                  "points": 20,
+                  "setsMemory": { "sworeProtection": true }
                 }
               ]
             },
             { "speaker": "muscle", "text": {"es": "Sí.", "en": "Yeah."} },
-            { "speaker": "muscle", "text": {"es": "Por eso presiono tanto. Por qué no tomo atajos.", "en": "That's why I push so hard. Why I don't take shortcuts."} },
-            { "speaker": "muscle", "text": {"es": "Algunas cosas son más grandes que tú solo.", "en": "Some things are bigger than just you."} },
-            { "speaker": "muscle", "text": {"es": "Mira, te voy a dar acceso a todo.", "en": "Look, I'm giving you access to everything."} },
-            { "speaker": "muscle", "text": {"es": "Las cosas raras. Piezas vintage. Cosas que he atesorado durante años.", "en": "The rare stuff. Vintage pieces. Things I've hoarded for years."} },
-            { "speaker": "muscle", "text": {"es": "Úsalas bien.", "en": "Use them well."} }
+            { "speaker": "muscle", "text": {"es": "Te voy a dar acceso a todo lo que tengo.", "en": "I'm giving you access to everything I've got."} },
+            { "speaker": "muscle", "text": {"es": "Las piezas raras. Las vintage. Cosas de la era de mi padre y tu abuelo.", "en": "The rare stuff. The vintage pieces. Things from my father's and your grandfather's era."} },
+            { "speaker": "muscle", "text": {"es": "Piezas del legado. Úsalas para terminar lo que ellos empezaron.", "en": "Legacy parts. Use them to finish what they started."} },
+            { "speaker": "muscle", "text": {"es": "Y Miller...", "en": "And Miller..."} },
+            { "speaker": "muscle", "text": {"es": "Cuando llegue el momento de enfrentarte a lo que viene... recuerda que no estás solo.", "en": "When the time comes to face what's coming... remember you're not alone."} }
           ],
           "end": {
             "result": "success",
@@ -627,7 +616,7 @@
             },
             "setsMemory": { "earnedFullTrust": true },
             "cooldown": 180,
-            "teaser": {"es": "Te has ganado mi confianza. Hazme sentir orgullosa, chaval.", "en": "You've earned my trust. Make me proud, kid."}
+            "teaser": {"es": "Te has ganado mi confianza. Ahora haz que mi padre y tu abuelo se sientan orgullosos.", "en": "You've earned my trust. Now make my father and your grandfather proud."}
           }
         }
       }

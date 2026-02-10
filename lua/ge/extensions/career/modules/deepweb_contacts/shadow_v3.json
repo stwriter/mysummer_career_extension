@@ -16,6 +16,7 @@
   },
   "conversationStructure": {
     "level1": {
+      "requiredPhase": 3,
       "intro": {
         "variants": [
           {
@@ -23,16 +24,16 @@
             "condition": "firstContact",
             "exchanges": [
               { "speaker": "shadow", "text": {"es": "Nueva conexión.", "en": "New connection."} },
-              { "speaker": "shadow", "text": {"es": "¿Cómo encontraste este canal?", "en": "How did you find this channel?"} },
-              { "speaker": "shadow", "text": {"es": "Alguien habló. Siempre hablan.", "en": "Someone talked. Someone always talks."} },
-              { "speaker": "shadow", "text": {"es": "La cuestión es. ¿Se puede confiar en ti?", "en": "Question is. Can you be trusted?"} }
+              { "speaker": "shadow", "text": {"es": "Nova te trajo. Interesante elección por su parte.", "en": "Nova brought you. Interesting choice on her part."} },
+              { "speaker": "shadow", "text": {"es": "Ella necesita cosas que sus amiguitos legales no pueden darle.", "en": "She needs things her legal little friends can't provide."} },
+              { "speaker": "shadow", "text": {"es": "La cuestión es. ¿Tú también?", "en": "Question is. Do you?"} }
             ],
             "requiresResponse": true,
             "responseOptions": [
-              { "id": "a", "text": {"es": "No revelo mis fuentes.", "en": "I don't reveal my sources."}, "traits": ["discreet"], "points": 15 },
-              { "id": "b", "text": {"es": "Un amigo del mundo de las piezas me señaló aquí.", "en": "A friend in the parts scene pointed me here."}, "traits": ["honest"], "points": 10 },
-              { "id": "c", "text": {"es": "¿Importa? Estoy aquí ahora.", "en": "Does it matter? I'm here now."}, "traits": ["direct"], "points": 5 },
-              { "id": "d", "text": {"es": "Podría preguntarte lo mismo.", "en": "I could ask you the same thing."}, "traits": ["bold"], "points": 8 }
+              { "id": "a", "text": {"es": "No revelo mis necesidades hasta saber con quién trato.", "en": "I don't reveal my needs until I know who I'm dealing with."}, "traits": ["discreet"], "points": 15 },
+              { "id": "b", "text": {"es": "Depende de lo que ofrezcas.", "en": "Depends on what you're offering."}, "traits": ["business"], "points": 10 },
+              { "id": "c", "text": {"es": "Solo vengo a echar un vistazo.", "en": "Just here to take a look."}, "traits": ["cautious"], "points": 5 },
+              { "id": "d", "text": {"es": "Si Nova confía en ti, me basta.", "en": "If Nova trusts you, that's enough for me."}, "traits": ["naive"], "points": 3 }
             ]
           },
           {
@@ -41,7 +42,7 @@
             "exchanges": [
               { "speaker": "shadow", "text": {"es": "Tú otra vez.", "en": "You again."} },
               { "speaker": "shadow", "text": {"es": "Persistente.", "en": "Persistent."} },
-              { "speaker": "shadow", "text": {"es": "Buena cualidad. O peligrosa.", "en": "Good trait. Or dangerous one."} }
+              { "speaker": "shadow", "text": {"es": "Buena cualidad. En mi negocio, la persistencia se recompensa.", "en": "Good trait. In my business, persistence gets rewarded."} }
             ]
           }
         ]
@@ -49,17 +50,18 @@
       "nudo": {
         "branches": {
           "nudo_service": [
-            { "speaker": "shadow", "text": {"es": "Trabajo con información.", "en": "I deal in information."} },
-            { "speaker": "shadow", "text": {"es": "Historiales de piezas. Trasfondos de vehículos. Rastros de papel.", "en": "Part histories. Vehicle backgrounds. Paper trails."} },
-            { "speaker": "shadow", "text": {"es": "Cosas que la gente quiere ocultar.", "en": "Things people want hidden."} },
-            { "speaker": "shadow", "text": {"es": "Yo las encuentro.", "en": "I find them."} }
+            { "speaker": "shadow", "text": {"es": "Mi mercancía no es legal. Ni bonita.", "en": "My merchandise isn't legal. Or pretty."} },
+            { "speaker": "shadow", "text": {"es": "Pero hará que tu coche vuele.", "en": "But it'll make your car fly."} },
+            { "speaker": "shadow", "text": {"es": "Turbos sin limitar. Centralitas negras. Nitro.", "en": "Unlimited turbos. Black ECUs. Nitro."} },
+            { "speaker": "shadow", "text": {"es": "Cosas que tus amigos Rook y Ghost nunca te dejarían montar.", "en": "Things your friends Rook and Ghost would never let you install."} },
+            { "speaker": "shadow", "text": {"es": "Pero los resultados... los resultados hablan solos.", "en": "But the results... results speak for themselves."} }
           ],
           "nudo_rules": [
             { "speaker": "shadow", "text": {"es": "Reglas.", "en": "Rules."} },
-            { "speaker": "shadow", "text": {"es": "No preguntes quién soy.", "en": "Don't ask who I am."} },
-            { "speaker": "shadow", "text": {"es": "No preguntes de dónde saco la información.", "en": "Don't ask where I get information."} },
-            { "speaker": "shadow", "text": {"es": "No menciones este canal a nadie.", "en": "Don't mention this channel to anyone."} },
-            { "speaker": "shadow", "text": {"es": "Rompe una regla. Terminamos.", "en": "Break any rule. We're done."} }
+            { "speaker": "shadow", "text": {"es": "No preguntes de dónde viene la mercancía.", "en": "Don't ask where the merchandise comes from."} },
+            { "speaker": "shadow", "text": {"es": "No menciones mi nombre a la policía. Ni a Ghost.", "en": "Don't mention my name to the police. Or to Ghost."} },
+            { "speaker": "shadow", "text": {"es": "Y sobre todo: las deudas se pagan. Siempre.", "en": "And above all: debts get paid. Always."} },
+            { "speaker": "shadow", "text": {"es": "Rompe una regla. Descubrirás por qué me llaman Shadow.", "en": "Break a rule. You'll find out why they call me Shadow."} }
           ]
         },
         "randomEvents": {
@@ -67,11 +69,11 @@
           "events": [
             {
               "id": "test_loyalty",
-              "text": {"es": "Alguien preguntó por ti hace poco. Quería saber si eras real.", "en": "Someone asked about you recently. Wanted to know if you were real."},
+              "text": {"es": "Nova me contó que Rook anda husmeando. Preocupado por lo que ella monta en su coche.", "en": "Nova told me Rook's been snooping. Worried about what she's putting in her car."},
               "responses": [
-                { "id": "a", "text": {"es": "¿Qué les dijiste?", "en": "What did you tell them?"}, "traits": ["concerned"], "points": 5 },
-                { "id": "b", "text": {"es": "No existo. Tú tampoco.", "en": "I don't exist. Neither do you."}, "traits": ["gets_it"], "points": 15 },
-                { "id": "c", "text": {"es": "¿Quién preguntaba?", "en": "Who was asking?"}, "traits": ["curious"], "points": 0 }
+                { "id": "a", "text": {"es": "Rook solo se preocupa por la seguridad.", "en": "Rook just cares about safety."}, "traits": ["loyal"], "points": 0 },
+                { "id": "b", "text": {"es": "Lo que haga Nova con sus piezas es problema suyo.", "en": "What Nova does with her parts is her business."}, "traits": ["pragmatic"], "points": 15 },
+                { "id": "c", "text": {"es": "¿Debería preocuparme yo también?", "en": "Should I be worried too?"}, "traits": ["cautious"], "points": 5 }
               ]
             }
           ]
@@ -84,17 +86,17 @@
             "condition": "default",
             "exchanges": [
               { "speaker": "shadow", "text": {"es": "Suficiente por ahora.", "en": "That's enough for now."} },
-              { "speaker": "shadow", "text": {"es": "Estaré observando.", "en": "I'll be watching."} },
-              { "speaker": "shadow", "text": {"es": "No me decepciones.", "en": "Don't disappoint me."} }
+              { "speaker": "shadow", "text": {"es": "Piénsalo. Cuando quieras velocidad de verdad, ya sabes dónde estoy.", "en": "Think it over. When you want real speed, you know where I am."} },
+              { "speaker": "shadow", "text": {"es": "Y Miller... no le cuentes a Ghost que hemos hablado.", "en": "And Miller... don't tell Ghost we've talked."} }
             ]
           },
           {
             "id": "end_interested",
             "condition": "goodInteraction",
             "exchanges": [
-              { "speaker": "shadow", "text": {"es": "Entiendes la discreción.", "en": "You understand discretion."} },
-              { "speaker": "shadow", "text": {"es": "Cualidad rara.", "en": "Rare quality."} },
-              { "speaker": "shadow", "text": {"es": "Hablaremos de nuevo.", "en": "We'll talk again."} }
+              { "speaker": "shadow", "text": {"es": "Entiendes cómo funciona esto.", "en": "You understand how this works."} },
+              { "speaker": "shadow", "text": {"es": "Nova tenía razón sobre ti.", "en": "Nova was right about you."} },
+              { "speaker": "shadow", "text": {"es": "Hablaremos de nuevo. Pronto.", "en": "We'll talk again. Soon."} }
             ]
           }
         ]
@@ -107,9 +109,9 @@
             "id": "intro_verified",
             "condition": "default",
             "exchanges": [
-              { "speaker": "shadow", "text": {"es": "Verificado.", "en": "Verified."} },
-              { "speaker": "shadow", "text": {"es": "Te mantuviste callado. Bien.", "en": "You kept quiet. Good."} },
-              { "speaker": "shadow", "text": {"es": "Hora de hablar de lo que puedo hacer realmente.", "en": "Time to discuss what I can actually do."} }
+              { "speaker": "shadow", "text": {"es": "Has vuelto. Bien.", "en": "You came back. Good."} },
+              { "speaker": "shadow", "text": {"es": "Nova ya está usando mi mercancía. Su coche empuja como un demonio.", "en": "Nova is already using my merchandise. Her car pushes like a demon."} },
+              { "speaker": "shadow", "text": {"es": "¿Quieres saber qué más puedo ofrecerte?", "en": "Want to know what else I can offer you?"} }
             ]
           }
         ]
@@ -117,26 +119,25 @@
       "nudo": {
         "branches": {
           "nudo_capabilities": [
-            { "speaker": "shadow", "text": {"es": "Puedo rastrear cualquier pieza.", "en": "I can trace any part."} },
-            { "speaker": "shadow", "text": {"es": "Números de serie. Dueños previos. Modificaciones.", "en": "Serial numbers. Previous owners. Modifications."} },
+            { "speaker": "shadow", "text": {"es": "No solo vendo piezas, Miller.", "en": "I don't just sell parts, Miller."} },
+            { "speaker": "shadow", "text": {"es": "Vendo ventaja. Información. Acceso.", "en": "I sell advantage. Information. Access."} },
+            { "speaker": "shadow", "text": {"es": "Sé quién compra qué. Quién debe dinero a quién.", "en": "I know who buys what. Who owes money to whom."} },
             { "speaker": "shadow", "text": {"es": "Registros de seguros. Informes policiales. Historiales de subastas.", "en": "Insurance records. Police reports. Auction histories."} },
-            { "speaker": "shadow", "text": {"es": "Todo deja un rastro.", "en": "Everything leaves a trail."} },
-            { "speaker": "shadow", "text": {"es": "La mayoría no lo ve. Yo sí.", "en": "Most people can't see it. I can."} }
+            { "speaker": "shadow", "text": {"es": "Todo deja un rastro. Yo controlo los rastros.", "en": "Everything leaves a trail. I control the trails."} }
           ],
-          "nudo_origin": [
-            { "speaker": "shadow", "text": {"es": "Empecé joven. Ordenadores.", "en": "Started young. Computers."} },
-            { "speaker": "shadow", "text": {"es": "Solía ayudar a un amigo con proyectos técnicos.", "en": "Used to help a friend with tech projects."} },
-            { "speaker": "shadow", "text": {"es": "Tío listo. Hardware sobre todo. ECUs y cajas de tuning.", "en": "Smart guy. Hardware mostly. ECUs and tuning boxes."} },
-            { "speaker": "shadow", "text": {"es": "Yo manejaba el software. Investigación.", "en": "I handled the software side. Research."} },
-            { "speaker": "shadow", "text": {"es": "Nos distanciamos. Métodos diferentes. Mismos objetivos.", "en": "We grew apart. Different methods. Same goals."} },
-            { "speaker": "shadow", "text": {"es": "Él sigue construyendo. Yo sigo buscando. A veces nuestros caminos se cruzan.", "en": "He still builds. I still search. Sometimes our paths cross."} }
+          "nudo_ambition": [
+            { "speaker": "shadow", "text": {"es": "Este underground necesita orden.", "en": "This underground needs order."} },
+            { "speaker": "shadow", "text": {"es": "Demasiados vendedores de pueblo. Demasiado caos.", "en": "Too many small-town dealers. Too much chaos."} },
+            { "speaker": "shadow", "text": {"es": "Alguien tiene que poner las reglas. Controlar el flujo.", "en": "Someone has to set the rules. Control the flow."} },
+            { "speaker": "shadow", "text": {"es": "Ghost cree que él manda aquí. Se equivoca.", "en": "Ghost thinks he runs things here. He's wrong."} },
+            { "speaker": "shadow", "text": {"es": "El que controla las piezas, controla las carreras.", "en": "Whoever controls the parts, controls the races."} }
           ],
           "nudo_warning": [
             { "speaker": "shadow", "text": {"es": "Una advertencia.", "en": "A warning."} },
-            { "speaker": "shadow", "text": {"es": "Lo que hago no es legal. No técnicamente.", "en": "What I do isn't legal. Not technically."} },
-            { "speaker": "shadow", "text": {"es": "Usas mis servicios. Aceptas el riesgo.", "en": "You use my services. You accept the risk."} },
-            { "speaker": "shadow", "text": {"es": "Protejo mis fuentes. Siempre.", "en": "I protect my sources. Always."} },
-            { "speaker": "shadow", "text": {"es": "No puedo decir lo mismo de los clientes.", "en": "Can't say the same for clients."} }
+            { "speaker": "shadow", "text": {"es": "Rook está empezando a hacer preguntas incómodas.", "en": "Rook is starting to ask uncomfortable questions."} },
+            { "speaker": "shadow", "text": {"es": "Ha visto la telemetría de Nova. Los picos de potencia.", "en": "He's seen Nova's telemetry. The power spikes."} },
+            { "speaker": "shadow", "text": {"es": "Si te pregunta, no sabes nada. ¿Entendido?", "en": "If he asks, you know nothing. Understood?"} },
+            { "speaker": "shadow", "text": {"es": "La discreción protege a todos.", "en": "Discretion protects everyone."} }
           ]
         },
         "randomEvents": {
@@ -144,20 +145,20 @@
           "events": [
             {
               "id": "hot_info",
-              "text": {"es": "Datos interesantes cruzaron mi pantalla. Lote de piezas. Origen cuestionable.", "en": "Interesting data crossed my screen. A batch of parts. Questionable origin."},
+              "text": {"es": "Intercepté un envío interesante. Piezas de competición de un equipo profesional. Robadas.", "en": "Intercepted an interesting shipment. Competition parts from a pro team. Stolen."},
               "responses": [
-                { "id": "a", "text": {"es": "¿Robadas?", "en": "Stolen?"}, "traits": ["direct"], "points": 5 },
-                { "id": "b", "text": {"es": "Me interesa. ¿Qué puedes decirme?", "en": "I'm interested. What can you tell me?"}, "traits": ["business"], "points": 10 },
-                { "id": "c", "text": {"es": "No me importa a menos que me afecte.", "en": "Not my concern unless it affects me."}, "traits": ["careful"], "points": 15 }
+                { "id": "a", "text": {"es": "¿Robadas? No quiero problemas.", "en": "Stolen? I don't want trouble."}, "traits": ["cautious"], "points": 5 },
+                { "id": "b", "text": {"es": "¿Qué tipo de piezas?", "en": "What kind of parts?"}, "traits": ["business"], "points": 10 },
+                { "id": "c", "text": {"es": "El origen no me importa si el precio es bueno.", "en": "Origin doesn't matter if the price is right."}, "traits": ["ruthless"], "points": 15 }
               ]
             },
             {
-              "id": "competitor",
-              "text": {"es": "Alguien más hace trabajo similar. Chapucero. Dejando rastros.", "en": "Someone else is doing similar work. Sloppy. Leaving traces."},
+              "id": "rook_nova_split",
+              "text": {"es": "Rook y Nova discutieron otra vez. Él encontró mis piezas en su motor.", "en": "Rook and Nova argued again. He found my parts in her engine."},
               "responses": [
-                { "id": "a", "text": {"es": "¿Competencia?", "en": "Competition?"}, "traits": ["curious"], "points": 5 },
-                { "id": "b", "text": {"es": "Su problema. No nuestro.", "en": "Their problem. Not ours."}, "traits": ["detached"], "points": 15 },
-                { "id": "c", "text": {"es": "Sería útil saber quién.", "en": "Could be useful to know who."}, "traits": ["strategic"], "points": 10 }
+                { "id": "a", "text": {"es": "Eso no es bueno para nadie.", "en": "That's not good for anyone."}, "traits": ["concerned"], "points": 5 },
+                { "id": "b", "text": {"es": "Era cuestión de tiempo.", "en": "It was a matter of time."}, "traits": ["detached"], "points": 15 },
+                { "id": "c", "text": {"es": "¿Puedo aprovechar esa situación?", "en": "Can I use that situation?"}, "traits": ["strategic"], "points": 10 }
               ]
             }
           ]
@@ -169,9 +170,9 @@
             "id": "end_business",
             "condition": "default",
             "exchanges": [
-              { "speaker": "shadow", "text": {"es": "Suficiente charla.", "en": "Enough talk."} },
-              { "speaker": "shadow", "text": {"es": "Sabes lo que ofrezco.", "en": "You know what I offer."} },
-              { "speaker": "shadow", "text": {"es": "Contacta cuando necesites encontrar algo.", "en": "Reach out when you need something found."} }
+              { "speaker": "shadow", "text": {"es": "Las cosas se están moviendo, Miller.", "en": "Things are moving, Miller."} },
+              { "speaker": "shadow", "text": {"es": "Rook y Nova se rompen. Y cuando se rompen los equipos, surgen oportunidades.", "en": "Rook and Nova are breaking apart. And when teams break, opportunities arise."} },
+              { "speaker": "shadow", "text": {"es": "Quédate cerca. Vas a necesitarme más de lo que crees.", "en": "Stay close. You'll need me more than you think."} }
             ]
           }
         ]
@@ -184,9 +185,9 @@
             "id": "intro_trusted",
             "condition": "default",
             "exchanges": [
-              { "speaker": "shadow", "text": {"es": "Estado de confianza.", "en": "Trusted status."} },
-              { "speaker": "shadow", "text": {"es": "Te has ganado mi respeto.", "en": "You've proven yourself."} },
-              { "speaker": "shadow", "text": {"es": "Hora de acceso más profundo.", "en": "Time for deeper access."} }
+              { "speaker": "shadow", "text": {"es": "Miller. Justo a tiempo.", "en": "Miller. Right on time."} },
+              { "speaker": "shadow", "text": {"es": "Tengo algo grande entre manos.", "en": "I've got something big in the works."} },
+              { "speaker": "shadow", "text": {"es": "Y tú estás en medio, te guste o no.", "en": "And you're in the middle of it, like it or not."} }
             ]
           }
         ]
@@ -194,38 +195,37 @@
       "nudo": {
         "branches": {
           "nudo_network": [
-            { "speaker": "shadow", "text": {"es": "La red es más grande de lo que piensas.", "en": "The network is larger than you think."} },
-            { "speaker": "shadow", "text": {"es": "Mecánicos. Importadores. Coleccionistas. Corredores.", "en": "Mechanics. Importers. Collectors. Racers."} },
-            { "speaker": "shadow", "text": {"es": "Todos conectados. La información fluye entre ellos.", "en": "All connected. Information flows between them."} },
-            { "speaker": "shadow", "text": {"es": "Yo en el medio. Veo todo.", "en": "I sit in the middle. See everything."} },
-            { "speaker": "shadow", "text": {"es": "Conocimiento es poder. Literalmente.", "en": "Knowledge is power. Literally."} }
+            { "speaker": "shadow", "text": {"es": "Te estás haciendo un nombre, Miller.", "en": "You're making a name for yourself, Miller."} },
+            { "speaker": "shadow", "text": {"es": "Eso es bueno. Y peligroso.", "en": "That's good. And dangerous."} },
+            { "speaker": "shadow", "text": {"es": "En este mundillo, la fama atrae a dos tipos de gente.", "en": "In this world, fame attracts two kinds of people."} },
+            { "speaker": "shadow", "text": {"es": "Los que quieren correr contigo. Y los que quieren lo que tú tienes.", "en": "Those who want to race with you. And those who want what you have."} },
+            { "speaker": "shadow", "text": {"es": "Yo puedo decirte cuáles son cuáles. Por un precio.", "en": "I can tell you which is which. For a price."} }
           ],
           "nudo_past": [
-            { "speaker": "shadow", "text": {"es": "Quieres saber sobre mí.", "en": "You want to know about me."} },
-            { "speaker": "shadow", "text": {"es": "Todos lo hacen eventualmente.", "en": "Everyone does eventually."} },
-            { "speaker": "shadow", "text": {"es": "Fui otra persona una vez. Nombre diferente. Vida diferente.", "en": "I was someone else once. Different name. Different life."} },
-            { "speaker": "shadow", "text": {"es": "Cometí errores. Confié en la gente equivocada.", "en": "Made mistakes. Trusted wrong people."} },
-            { "speaker": "shadow", "text": {"es": "Ahora confío en datos. Los números no mienten.", "en": "Now I trust data. Numbers don't lie."} },
-            { "speaker": "shadow", "text": {"es": "Las personas siempre lo hacen.", "en": "People always do."} }
+            { "speaker": "shadow", "text": {"es": "Quieres saber sobre mí. Todos lo hacen.", "en": "You want to know about me. Everyone does."} },
+            { "speaker": "shadow", "text": {"es": "Fui otra persona una vez. Con reglas. Con límites.", "en": "I was someone else once. With rules. With limits."} },
+            { "speaker": "shadow", "text": {"es": "Pero aprendí algo: los que juegan limpio pierden.", "en": "But I learned something: those who play fair lose."} },
+            { "speaker": "shadow", "text": {"es": "Ghost juega limpio. Mira dónde está. En las sombras, como yo, pero sin el poder.", "en": "Ghost plays fair. Look where he is. In the shadows, like me, but without the power."} },
+            { "speaker": "shadow", "text": {"es": "Yo no quiero ser una sombra. Quiero ser el que mueve las sombras.", "en": "I don't want to be a shadow. I want to be the one who moves the shadows."} }
           ],
           "nudo_connections": [
-            { "speaker": "shadow", "text": {"es": "Hay un importador con el que trabajo a veces.", "en": "There's an importer I work with sometimes."} },
-            { "speaker": "shadow", "text": {"es": "Especialista JDM. Obsesionado con la autenticidad.", "en": "JDM specialist. Obsessed with authenticity."} },
-            { "speaker": "shadow", "text": {"es": "Verifico la procedencia de sus piezas raras.", "en": "I verify provenance for his rare pieces."} },
-            { "speaker": "shadow", "text": {"es": "Él conoce sus piezas. Yo conozco sus historias.", "en": "He knows his parts. I know their histories."} },
-            { "speaker": "shadow", "text": {"es": "Buena asociación. Sin preguntas. Solo resultados.", "en": "Good partnership. No questions. Just results."} }
+            { "speaker": "shadow", "text": {"es": "Tengo contactos en todas partes, Miller.", "en": "I've got contacts everywhere, Miller."} },
+            { "speaker": "shadow", "text": {"es": "Gente de la capital. Del circuito profesional. De más arriba.", "en": "People from the capital. The pro circuit. Even higher."} },
+            { "speaker": "shadow", "text": {"es": "Algunos preguntan por ti. Por tu apellido. Por tu progreso.", "en": "Some ask about you. About your name. About your progress."} },
+            { "speaker": "shadow", "text": {"es": "No sé si eso debería halagarte o asustarte.", "en": "I don't know if that should flatter or scare you."} },
+            { "speaker": "shadow", "text": {"es": "Pero si quieres saber quién te vigila, ya sabes mi precio.", "en": "But if you want to know who's watching, you know my price."} }
           ]
         },
         "randomEvents": {
           "chance": 0.2,
           "events": [
             {
-              "id": "legend",
-              "text": {"es": "Oí algo interesante. Corredor viejo. Mujer. De los primeros días.", "en": "Heard something interesting. Old racer. Woman. From the early days."},
+              "id": "viper_hint",
+              "text": {"es": "Alguien muy viejo y muy peligroso ha preguntado por ti. No me dejó nombre.", "en": "Someone very old and very dangerous has asked about you. Didn't leave a name."},
               "responses": [
-                { "id": "a", "text": {"es": "¿Sigue activa?", "en": "Still active?"}, "traits": ["curious"], "points": 5 },
-                { "id": "b", "text": {"es": "Quien dura tanto sabe lo que hace.", "en": "Those who lasted that long know what they're doing."}, "traits": ["respectful"], "points": 15 },
-                { "id": "c", "text": {"es": "¿Cuál es su historia?", "en": "What's her story?"}, "traits": ["interested"], "points": 10 }
+                { "id": "a", "text": {"es": "¿Quién es?", "en": "Who is it?"}, "traits": ["curious"], "points": 5 },
+                { "id": "b", "text": {"es": "Que pregunten lo que quieran. El coche es mío.", "en": "Let them ask. The car is mine."}, "traits": ["defiant"], "points": 15 },
+                { "id": "c", "text": {"es": "¿Debería preocuparme?", "en": "Should I be worried?"}, "traits": ["cautious"], "points": 10 }
               ]
             }
           ]
@@ -237,24 +237,26 @@
             "id": "end_deep",
             "condition": "default",
             "exchanges": [
-              { "speaker": "shadow", "text": {"es": "Estás metido hasta el fondo ahora.", "en": "You're in deep now."} },
-              { "speaker": "shadow", "text": {"es": "No hay vuelta atrás.", "en": "No going back."} },
-              { "speaker": "shadow", "text": {"es": "Recuerda las reglas. Siempre.", "en": "Remember the rules. Always."} }
+              { "speaker": "shadow", "text": {"es": "Estás metido hasta el fondo, Miller.", "en": "You're in deep now, Miller."} },
+              { "speaker": "shadow", "text": {"es": "Tu apellido te pinta una diana en la espalda.", "en": "Your name puts a target on your back."} },
+              { "speaker": "shadow", "text": {"es": "Yo puedo ser tu escudo. O tu peor pesadilla.", "en": "I can be your shield. Or your worst nightmare."} },
+              { "speaker": "shadow", "text": {"es": "Elige sabiamente.", "en": "Choose wisely."} }
             ]
           }
         ]
       }
     },
     "level4": {
+      "requiredPhase": 7,
       "intro": {
         "variants": [
           {
-            "id": "intro_ghost",
+            "id": "intro_confrontation",
             "condition": "default",
             "exchanges": [
-              { "speaker": "shadow", "text": {"es": "Ghost Protocol.", "en": "Ghost protocol."} },
-              { "speaker": "shadow", "text": {"es": "Acceso total.", "en": "Full access."} },
-              { "speaker": "shadow", "text": {"es": "Sin límites.", "en": "No limits."} }
+              { "speaker": "shadow", "text": {"es": "Ah, Miller.", "en": "Ah, Miller."} },
+              { "speaker": "shadow", "text": {"es": "Sabía que vendrías.", "en": "I knew you'd come."} },
+              { "speaker": "shadow", "text": {"es": "Siempre vuelven cuando pierden lo que más quieren.", "en": "They always come back when they lose what they love most."} }
             ]
           }
         ]
@@ -262,18 +264,18 @@
       "nudo": {
         "branches": {
           "nudo_truth": [
-            { "speaker": "shadow", "text": {"es": "Quieres la verdad.", "en": "You want the truth."} },
-            { "speaker": "shadow", "text": {"es": "Llevo haciendo esto quince años.", "en": "I've been doing this for fifteen years."} },
-            { "speaker": "shadow", "text": {"es": "Empezó como hobby. Se volvió profesión.", "en": "Started as a hobby. Became a profession."} },
-            { "speaker": "shadow", "text": {"es": "Ahora es todo lo que sé.", "en": "Now it's all I know."} },
-            { "speaker": "shadow", "text": {"es": "Las sombras se volvieron hogar.", "en": "The shadows became home."} }
+            { "speaker": "shadow", "text": {"es": "¿Quieres la verdad? Qué concepto más bonito.", "en": "You want the truth? What a pretty concept."} },
+            { "speaker": "shadow", "text": {"es": "La verdad es que las cosas desaparecen, Miller. Coches. Personas. Confianzas.", "en": "Truth is, things disappear, Miller. Cars. People. Trust."} },
+            { "speaker": "shadow", "text": {"es": "Y cuando desaparecen, siempre hay alguien que se beneficia.", "en": "And when they disappear, someone always benefits."} },
+            { "speaker": "shadow", "text": {"es": "¿De verdad crees que sabes quién te traicionó? ¿De verdad?", "en": "Do you really think you know who betrayed you? Really?"} },
+            { "speaker": "shadow", "text": {"es": "Yo nunca dejo huellas. Esa es la diferencia entre un sospechoso y un fantasma.", "en": "I never leave prints. That's the difference between a suspect and a ghost."} }
           ],
           "nudo_final": [
-            { "speaker": "shadow", "text": {"es": "En este nivel...", "en": "At this level..."} },
-            { "speaker": "shadow", "text": {"es": "Puedo encontrar cualquier cosa. Cualquiera.", "en": "I can find anything. Anyone."} },
-            { "speaker": "shadow", "text": {"es": "Registros que no existen. Gente que desapareció.", "en": "Records that don't exist. People who disappeared."} },
-            { "speaker": "shadow", "text": {"es": "Usa esto con cuidado.", "en": "Use this carefully."} },
-            { "speaker": "shadow", "text": {"es": "Algunas puertas no deberían abrirse.", "en": "Some doors shouldn't be opened."} }
+            { "speaker": "shadow", "text": {"es": "Me diviertes, Miller. De verdad.", "en": "You amuse me, Miller. Truly."} },
+            { "speaker": "shadow", "text": {"es": "Vienes aquí buscando respuestas, pero las respuestas no cambian nada.", "en": "You come here looking for answers, but answers don't change anything."} },
+            { "speaker": "shadow", "text": {"es": "Tu abuelo también buscó respuestas. Y mira cómo acabó.", "en": "Your grandfather searched for answers too. And look how he ended up."} },
+            { "speaker": "shadow", "text": {"es": "Solo te diré una cosa: nada de lo que ha pasado ha sido casualidad.", "en": "I'll only tell you one thing: nothing that's happened was coincidence."} },
+            { "speaker": "shadow", "text": {"es": "Pero el quién y el por qué... eso tendrás que ganártelo.", "en": "But the who and the why... you'll have to earn that."} }
           ]
         }
       },
@@ -283,11 +285,10 @@
             "id": "end_final",
             "condition": "default",
             "exchanges": [
-              { "speaker": "shadow", "text": {"es": "Hemos llegado al final.", "en": "We've reached the end."} },
-              { "speaker": "shadow", "text": {"es": "O el principio. Depende de cómo lo veas.", "en": "Or the beginning. Depends how you see it."} },
-              { "speaker": "shadow", "text": {"es": "Tienes acceso a todo ahora.", "en": "You have access to everything now."} },
-              { "speaker": "shadow", "text": {"es": "Lo que hagas con ello...", "en": "What you do with it..."} },
-              { "speaker": "shadow", "text": {"es": "Es tu elección.", "en": "That's your choice."} }
+              { "speaker": "shadow", "text": {"es": "Disfruta de las clasificatorias, Miller.", "en": "Enjoy the qualifiers, Miller."} },
+              { "speaker": "shadow", "text": {"es": "Quién sabe. Quizá nos veamos en la Big One.", "en": "Who knows. Maybe we'll see each other at the Big One."} },
+              { "speaker": "shadow", "text": {"es": "Y quizá ese día entiendas por qué pasó todo esto.", "en": "And maybe that day you'll understand why all of this happened."} },
+              { "speaker": "shadow", "text": {"es": "O quizá no. Depende de lo lejos que estés dispuesto a llegar.", "en": "Or maybe not. Depends on how far you're willing to go."} }
             ]
           }
         ]

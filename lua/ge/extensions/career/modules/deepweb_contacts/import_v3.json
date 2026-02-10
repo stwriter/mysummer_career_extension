@@ -16,6 +16,7 @@
   },
   "conversationStructure": {
     "level1": {
+      "requiredPhase": 1,
       "intro": {
         "variants": [
           {

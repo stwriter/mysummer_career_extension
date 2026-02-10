@@ -6,8 +6,8 @@ local M = {}
 M.dependencies = {
   "career_career",
   "career_saveSystem",
-  "career_modules_delivery_parcelManager",
-  "career_modules_delivery_general",
+  -- Note: career_modules_delivery_parcelManager and career_modules_delivery_general are optional
+  -- They are base game modules that may not always load. All usages have nil guards.
 }
 
 -- Part weight/slots definitions (in kg and cargo slots)

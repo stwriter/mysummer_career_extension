@@ -16,12 +16,12 @@
             :type="app.icon"
             :style="{ color: app.iconColor }"
           />
-          <!-- Notification badge for Messages and Deep Web apps -->
+          <!-- Notification badges -->
           <div
-            v-if="(app.name === 'Messages' || app.name === 'Deep Web') && (app.name === 'Deep Web' ? chatUnreadCount : unreadCount) > 0"
+            v-if="getAppBadge(app) > 0"
             class="notification-badge"
           >
-            {{ app.name === 'Deep Web' ? chatUnreadCount : unreadCount }}
+            {{ getAppBadge(app) }}
           </div>
         </button>
         <span class="app-name">{{ app.name }}</span>
@@ -40,6 +40,7 @@ import { lua } from "@/bridge"
 const router = useRouter()
 const unreadCount = ref(0)
 const chatUnreadCount = ref(0)
+const pickupCount = ref(0)
 
 const apps = ref([
   { name: 'Messages', icon: icons.documentText, route: '/career/phone-chat', color: '#25D366', iconColor: '#ffffff' },
@@ -47,6 +48,7 @@ const apps = ref([
   { name: 'Bank', icon: icons.beamCurrency, route: '/career/phone-bank', color: '#10b981', iconColor: '#ffffff' },
   { name: 'Marketplace', icon: icons.shoppingCart, route: '/career/phone-marketplace', color: '#228B22', iconColor: '#ffffff' },
   { name: 'Parts Market', icon: icons.engine, route: '/career/phone-parts-market', color: '#f54900', iconColor: '#ffffff' },
+  { name: 'Parts Bay', icon: icons.shoppingCart, route: '/career/phone-parts-bay', color: '#0654ba', iconColor: '#ffffff' },
   { name: 'Races', icon: icons.racingFlag, route: '/career/phone-races', color: '#ff3333', iconColor: '#ffffff' },
   { name: 'Deep Web', icon: icons.wifi, route: '/career/phone-deepweb', color: '#0a0a0a', iconColor: '#00ff41' },
   { name: 'Car Meet', icon: icons.cars, route: '/career/car-meets-phone', color: '#696969', iconColor: '#ffffff' },
@@ -54,6 +56,13 @@ const apps = ref([
   { name: 'Taxi', icon: icons.taxiCar3, route: '/career/phone-taxi', color: '#ffd700', iconColor: '#000000' },
   { name: 'Quarry', icon: icons.cogs, route: '/career/phone-quarry', color: '#8B4513', iconColor: '#ffffff' }
 ])
+
+const getAppBadge = (app) => {
+  if (app.name === 'Messages') return unreadCount.value
+  if (app.name === 'Deep Web') return chatUnreadCount.value
+  if (app.name === 'Parts Bay') return pickupCount.value
+  return 0
+}
 
 const navigateTo = (route) => {
   router.push(route)
@@ -71,6 +80,12 @@ const updateUnreadCount = async () => {
     // Get unread chat count (for Deep Web contacts)
     const chatCounts = await lua.career_modules_mysummerChat.getUnreadCounts()
     chatUnreadCount.value = chatCounts?.total || 0
+
+    // Get pending pickup count (for Parts Bay)
+    const marketData = await lua.career_modules_mysummerParts.getMarketData()
+    const active = marketData?.activePickup && !marketData.activePickup.isIllegal ? 1 : 0
+    const pending = marketData?.pendingCount || 0
+    pickupCount.value = active + pending
   } catch (e) {
     console.error("Failed to get unread count", e)
   }
